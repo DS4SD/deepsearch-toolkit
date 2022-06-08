@@ -1,0 +1,23 @@
+language: python
+
+python:
+  - "3.8"
+  - "3.9"
+  - "3.10"
+
+before_install:
+  # Install poetry
+  - pip install poetry
+
+install:
+  - poetry install
+
+script:
+  - poetry run pre-commit run --all-files
+  - poetry run mkdocs build --clean #--strict
+
+deploy:
+  provider: script
+  script: git fetch origin gh-pages && poetry run mkdocs gh-deploy --clean --force
+  on:
+    branch: master

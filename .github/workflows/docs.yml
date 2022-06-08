@@ -1,0 +1,29 @@
+name: "Build docs"
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  POETRY_VIRTUALENVS_CREATE: false
+
+
+jobs:
+  deploy:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pip install poetry
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+          cache: 'pip'
+          cache-dependency-path: 'poetry.lock'
+      - name: Install dependencies
+        run: poetry install
+      - name: Build and push docs
+        run: mkdocs gh-deploy --force

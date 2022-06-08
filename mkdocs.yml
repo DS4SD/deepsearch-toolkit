@@ -1,0 +1,139 @@
+site_name: DeepSearch Toolkit
+site_description: Documentation for Deepsearch Toolkit - Accelerating Discoveries
+# site_url :
+# Repository
+repo_name: DS4SD/deepsearch-toolkit
+repo_url: https://github.com/DS4SD/deepsearch-toolkit
+edit_uri: edit/main/docs/
+
+# Theme
+theme:
+  name: material
+  font:
+    text: IBM Plex Sans
+    code: IBM Plex Mono
+  icon:
+    # .svg automatically appended
+    # logo: ibm_8bar_reverse_2
+    logo: material/library
+  features:
+    - content.code.annotate
+    # - content.tabs.link
+    - content.tooltips
+    # - header.autohide
+    # - navigation.expand
+    - navigation.indexes
+    # - navigation.instant
+    # - navigation.sections
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  # - toc.integrate
+
+  palette:
+    - scheme: default
+      primary: black
+      accent: blue
+      toggle: 
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      accent: blue
+      toggle: 
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+  language: en
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - "getting_started/index.md"
+      - Configure login: getting_started/authentication.md
+  - User guide:
+      - "guide/index.md"
+      - Projects : guide/projects.md
+      - Data Indices : guide/data_indices.md
+      - Document Conversion: guide/convert_doc.md
+      - Knowledge graphs: guide/kgs.md
+      - APIs: guide/apis.md
+      - Plugin system: guide/cli_plugins.md
+  - Example gallery: gallery/index.md
+  - API reference:
+      - Toolkit reference: api-reference.md
+      - OpenAPI:
+        - User API: apis/user/UserApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
+        - Public API: apis/public/KnowledgeGraphsApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
+      - CLI reference: cli-reference.md
+
+# Copyright
+copyright: Copyright &copy; 2022 <strong>IBM</strong> Research Europe - DeepSearch Team
+
+# Customization
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/DS4SD/deepsearch-toolkit
+  generator: false
+
+# Plugins
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_source: false
+
+markdown_extensions:
+  - mkdocs-typer
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - md_in_html
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_css:
+- css/termynal.css
+- css/custom.css
+extra_javascript:
+- js/termynal.js
+- js/custom.js

@@ -1,0 +1,44 @@
+{
+    "version": "1",
+    "tasks": [
+        {
+            "id": "elastic-search",
+            "kind": "ElasticQuery",
+            "inputs": {},
+            "parameters": {
+                "source": [
+                    "subject.names"
+                ],
+                "elastic_query": {
+                    "query_string": {
+                        "query": "*"
+                    }
+                },
+                "sort": [
+                    {
+                        "file-info.document-hash": "asc"
+                    }
+                ]
+            },
+            "@resource": {
+                "type": "elastic",
+                "elastic_id": "materials",
+                "index": "drugbank"
+            }
+    }
+    ],
+    "outputs": {
+        "elastic_outputs": {
+            "task_id": "elastic-search",
+            "output_id": "items"
+        },
+        "elastic_count": {
+            "task_id": "elastic-search",
+            "output_id": "total"
+        },
+        "elastic_aggs": {
+            "task_id": "elastic-search",
+            "output_id": "aggregations"
+        }
+    }
+}

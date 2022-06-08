@@ -1,0 +1,3 @@
+.generated/* linguist-generated=true
+
+*.sh eol=lf

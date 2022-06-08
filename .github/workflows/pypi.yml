@@ -1,0 +1,32 @@
+name: Build and publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+env:
+  POETRY_VIRTUALENVS_CREATE: false
+  PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pip install poetry
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.x
+          cache: 'pip'
+          cache-dependency-path: 'poetry.lock'
+      - name: Install dependencies
+        run: poetry install
+      # - name: Config PyPI token
+      #   # According to this issue, the ENV variable is ignored https://github.com/python-poetry/poetry/issues/2210.
+      #   run: poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+      - name: Build and publish
+        run: poetry publish --build --no-interaction --username=__token__ --password=${{ secrets.PYPI_TOKEN }}

@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use the DeepSearch Toolkit, please consider citing as below."
+authors:
+  - family-names: Team
+    given-names: DeepSearch
+title: "DeepSearch Toolkit"
+version: 1.0.0
+url: "https://github.com/DS4SD/deepsearch-toolkit"
+# doi: TBD
+date-released: 2022-06-15

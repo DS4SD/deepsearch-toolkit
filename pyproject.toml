@@ -1,0 +1,152 @@
+[tool.poetry]
+name = "deepsearch-toolkit"
+version = "0.1.0"
+description = "Interact with the Deep Search platform for new knowledge explorations and discoveries"
+authors = ["Michele Dolfi <dol@zurich.ibm.com>", "André Carvalho <andre.carvalho2@ibm.com>", "Lokesh Mishra <mis@zurich.ibm.com>", "Christoph Auer <cau@zurich.ibm.com>", "Kasper Dinkla <dkl@zurich.ibm.com>", "Cesar Berrospi Ramis <ceb@zurich.ibm.com>", "Peter Staar <taa@zurich.ibm.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://ds4sd.github.io/deepsearch-toolkit/"
+repository = "https://github.com/DS4SD/deepsearch-toolkit"
+documentation = "https://ds4sd.github.io/deepsearch-toolkit/"
+keywords= ["deepsearch", "convert", "knowledge graph", "discovery", "nlp"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Typing :: Typed"
+]
+packages = [
+    { include = "deepsearch" }
+]
+include = ["deepsearch/py.typed"]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/DS4SD/deepsearch-toolkit/issues"
+"Discussion forum" = "https://github.com/DS4SD/deepsearch-toolkit/discussions"
+
+[tool.poetry.scripts]
+deepsearch = "deepsearch.cli:app"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+# Dependencies for "extras" extra
+ipython-blocking = {version = "^0.3.1", optional = true}
+ipywidgets = {version = "^7.6.5", optional = true}
+
+# Dependencies from generated packages
+urllib3 = "^1.26.8"
+six = "^1.16.0"
+certifi = "^2021.10.8"
+python-dateutil = "^2.8.2"
+
+# Actual dependencies
+pydantic = "^1.9.0"
+requests = "^2.27.1"
+python-jose = "^3.3.0"
+typer = "^0.4.0"
+appdirs = "^1.4.4"
+tabulate = "^0.8.9"
+pluggy = "^1.0.0"
+tqdm = "^4.64.0"
+tqdm-stubs = "^0.2.0"
+numpy = {version = "^1.22.4", optional = true}
+jupyter = {version = "^1.0.0", optional = true}
+pandas = {version = "^1.4.2", optional = true}
+
+[tool.poetry.extras]
+examples = ["numpy", "jupyter", "pandas", "ipython-blocking", "ipywidgets"]
+
+[tool.poetry.dev-dependencies]
+black = {extras = ["jupyter"], version = "^22.1.0"}
+pylint = "^2.12.2"
+pytest = "^7.0.1"
+pre-commit = "^2.17.0"
+mypy = "^0.931"
+isort = "^5.10.1"
+mkdocs = "^1.2.3"
+Jinja2 = "<3.1.0" # See https://github.com/mkdocs/mkdocs/issues/2794
+mkdocs-material = "^8.2.6"
+mkdocstrings = {version = "^0.18.1", extras = ["python-legacy", "python"]}
+mkdocs-typer = "^0.0.2"
+
+# Types for packages.
+types-requests = "^2.27.10"
+types-tabulate = "^0.8.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+include = '\.pyi?$'
+extend-exclude = """
+# Exclude generated API code
+^/deepsearch/cps/apis/.+$
+"""
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip_glob = ["docs", "deepsearch/cps/apis"]
+py_version=38
+known_first_party = ["cps"]
+
+[tool.mypy]
+pretty = true
+# strict = true
+no_implicit_optional = true
+python_version = 3.8
+
+# We are not going to bother about generated code...
+[[tool.mypy.overrides]]
+module = "deepsearch.cps.apis.*"
+ignore_errors = true
+# https://stackoverflow.com/a/60744115
+implicit_reexport = true
+
+# Silence errors for third-party packages that don't have
+# typings available.
+[[tool.mypy.overrides]]
+module = "jose.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "IPython.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "ipywidgets.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "ipython_blocking.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rdkit.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "numpy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pandas.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "mhfp.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "appdirs.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pluggy.*"
+ignore_missing_imports = true
+

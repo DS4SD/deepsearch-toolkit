@@ -1,0 +1,99 @@
+{
+    "proj_key": "f21574fe745fa0b8213cb08d0c4166513108158c",
+    "bag_key": "80511ed4a524fe446dc102e704fd7577f2c2a26c",
+    "description": "",
+    "name": "keywords in challenge themes",
+    "outputs": {
+      "3": {
+        "name": "keyphrases"
+      }
+    },
+    "template": [
+      {
+        "edges": {
+          "in": [],
+          "out": [
+            0
+          ]
+        },
+        "operation": {
+          "parameters": {
+            "names": [
+              "SG1: Mastering Language",
+              "SG3: Neuro-Symbolic AI"
+            ],
+            "type": "equal"
+          },
+          "type": "SEARCH"
+        },
+        "type": "INPUT"
+      },
+      {
+        "edges": {
+          "in": [
+            0
+          ],
+          "out": [
+            1
+          ]
+        },
+        "operation": {
+          "parameters": {
+            "edges": [
+              {
+                "index": 0,
+                "name": "challenges-to-themes"
+              }
+            ]
+          },
+          "type": "EDGE-TRAVERSAL"
+        },
+        "type": "AUXILIARY"
+      },
+      {
+        "edges": {
+          "in": [
+            1
+          ],
+          "out": [
+            2
+          ]
+        },
+        "operation": {
+          "parameters": {
+            "edges": [
+              {
+                "index": 1,
+                "name": "challenges-to-texts"
+              }
+            ]
+          },
+          "type": "EDGE-TRAVERSAL"
+        },
+        "type": "AUXILIARY"
+      },
+      {
+        "edges": {
+          "in": [
+            2
+          ],
+          "out": [
+            3
+          ]
+        },
+        "operation": {
+          "parameters": {
+            "edges": [
+              {
+                "index": 2,
+                "name": "texts-to-key-phrases"
+              }
+            ]
+          },
+          "type": "EDGE-TRAVERSAL"
+        },
+        "type": "OUTPUT"
+      }
+    ],
+    "variables": {}
+  }

@@ -1,0 +1,76 @@
+{
+    "bag_key": "80511ed4a524fe446dc102e704fd7577f2c2a26c",
+    "description": "",
+    "name": "Conference stats",
+    "outputs": {
+      "2": {
+        "name": "challenges"
+      }
+    },
+    "proj_key": "f21574fe745fa0b8213cb08d0c4166513108158c",
+    "template": [
+      {
+        "edges": {
+          "in": [],
+          "out": [
+            0
+          ]
+        },
+        "operation": {
+          "parameters": {
+            "ids": [
+              "${parent.selected.conferences}"
+            ]
+          },
+          "type": "SEARCH"
+        },
+        "type": "INPUT"
+      },
+      {
+        "edges": {
+          "in": [
+            0
+          ],
+          "out": [
+            1
+          ]
+        },
+        "operation": {
+          "parameters": {
+            "edges": [
+              {
+                "index": 0,
+                "name": "papers-to-conferences"
+              }
+            ]
+          },
+          "type": "EDGE-TRAVERSAL"
+        },
+        "type": "AUXILIARY"
+      },
+      {
+        "edges": {
+          "in": [
+            1
+          ],
+          "out": [
+            2
+          ]
+        },
+        "operation": {
+          "parameters": {
+            "edges": [
+              {
+                "index": 1,
+                "name": "papers-to-challenges"
+              }
+            ]
+          },
+          "outputs": {"nodes": {"type": "NODE_LIST", "parameters": {"limit": -1}}},
+          "type": "EDGE-TRAVERSAL"
+        },
+        "type": "OUTPUT"
+      }
+    ],
+    "variables": {}
+  }

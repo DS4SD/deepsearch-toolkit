@@ -1,0 +1,12 @@
+# BagFlavourDefaultQuota
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**default_quota** | **float** |  | [optional] 
+**display_name** | **str** |  | 
+**name** | **str** |  | 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+
