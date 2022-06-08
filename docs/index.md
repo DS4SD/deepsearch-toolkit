@@ -1,4 +1,4 @@
-# IBM Deep Search Toolkit
+# Deep Search Toolkit
 
 [![PyPI version](https://img.shields.io/pypi/v/deepsearch-toolkit)](https://pypi.org/project/deepsearch-toolkit/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deepsearch-toolkit)](https://pypi.org/project/deepsearch-toolkit/)
