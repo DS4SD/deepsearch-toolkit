@@ -2,9 +2,9 @@
 
 ::: deepsearch
     options:
+        show_if_no_docstring: true
+        show_submodules: true
         filters:
             - "!^_[^_]"
-            - "!deepsearch.cps.apis.*"
-            - "!deepsearch/cps/apis/*"
-            - "!deepsearch.cps.apis.public"
-            - "!deepsearch.cps.apis.kgs"
+            - "!apis"
+            - "!cli"
