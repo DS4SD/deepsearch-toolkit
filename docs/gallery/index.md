@@ -2,9 +2,9 @@
 
 *Examples of complete analysis and usages*
 
-Examples are usually demonstrated as Jupyter notebooks which are listed in the [examples](https://github.com/ds4sd/deepsearch-toolkit/notebooks/) folder.
+Examples are usually demonstrated as Jupyter notebooks which are listed in the [examples](https://github.com/DS4SD/deepsearch-toolkit/tree/main/examples) folder.
 
-[To the examples :octicons-link-external-16:](https://github.com/ds4sd/deepsearch-toolkit/notebooks/){ .md-button .md-button--primary }
+[To the examples :octicons-link-external-16:](https://github.com/DS4SD/deepsearch-toolkit/tree/main/examples){ .md-button .md-button--primary }
 
 
 !!! tip "Dependencies"
