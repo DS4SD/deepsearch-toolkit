@@ -12,10 +12,8 @@ theme:
   font:
     text: IBM Plex Sans
     code: IBM Plex Mono
-  icon:
-    # .svg automatically appended
-    # logo: ibm_8bar_reverse_2
-    logo: material/library
+  logo: favicon.svg
+  favicon: favicon.svg
   features:
     - content.code.annotate
     # - content.tabs.link
@@ -39,13 +37,13 @@ theme:
     - scheme: default
       primary: black
       accent: blue
-      toggle: 
+      toggle:
         icon: material/toggle-switch
         name: Switch to dark mode
     - scheme: slate
       primary: black
       accent: blue
-      toggle: 
+      toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to light mode
   language: en
@@ -57,8 +55,8 @@ nav:
       - Configure login: getting_started/authentication.md
   - User guide:
       - "guide/index.md"
-      - Projects : guide/projects.md
-      - Data Indices : guide/data_indices.md
+      - Projects: guide/projects.md
+      - Data Indices: guide/data_indices.md
       - Document Conversion: guide/convert_doc.md
       - Knowledge graphs: guide/kgs.md
       - APIs: guide/apis.md
@@ -67,8 +65,8 @@ nav:
   - API reference:
       - Toolkit reference: api-reference.md
       - OpenAPI:
-        - User API: apis/user/UserApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
-        - Public API: apis/public/KnowledgeGraphsApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
+          - User API: apis/user/UserApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
+          - Public API: apis/public/KnowledgeGraphsApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
       - CLI reference: cli-reference.md
 
 # Copyright
@@ -126,14 +124,14 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
 
 extra_css:
-- css/termynal.css
-- css/custom.css
+  - css/termynal.css
+  - css/custom.css
 extra_javascript:
-- js/termynal.js
-- js/custom.js
+  - js/termynal.js
+  - js/custom.js
