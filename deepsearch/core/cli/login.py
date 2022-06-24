@@ -11,7 +11,7 @@ app = typer.Typer(invoke_without_command=True)
 @app.callback(help="Save authentication configuration")
 def save_auth(
     *,
-    host: str = typer.Option("https://cps.foc-deepsearch.zurich.ibm.com", prompt=True),
+    host: str = typer.Option("https://deepsearch-experience.res.ibm.com", prompt=True),
     email: str = typer.Option(..., prompt=True),
     api_key: str = typer.Option(..., prompt=True, hide_input=True),
     verify_ssl: bool = typer.Option(True, prompt=True),
