@@ -120,16 +120,13 @@ def batch_single_files(local_file: Path, root_dir: Path) -> List[List[str]]:
                 except FileNotFoundError:
                     pass
                 # build name to avoid duplicate names inside batch
-                # Following is for python 3.9^
-                # arcname = (
-                #     str(single_doc)
-                #     .removeprefix(os.path.commonpath(files_pdf) + "/")
-                #     .replace("/", "__")
-                # )
-                # Otherwise:
-                arcname = str(single_doc)[
-                    len(os.path.commonpath(files_pdf)) + 1 :
-                ].replace("/", "__")
+                if len(files_pdf) >1:
+                    arcname = str(single_doc)[
+                        len(os.path.commonpath(files_pdf)) + 1 :
+                    ].replace("/", "__")
+                else:
+                    arcname = os.path.basename(single_doc)
+
                 with z.ZipFile(current_zipbatch, mode="a") as zipf:
                     zipf.write(filename=single_doc, arcname=arcname)
                 # store batch/file name for creating report
