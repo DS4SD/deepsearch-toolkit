@@ -1,13 +1,16 @@
+import datetime
 import glob
+import logging
 import os
 import pathlib
 import zipfile as z
 from pathlib import Path
 from typing import Any, List
 
-import typer
 import urllib3
 from tqdm import tqdm
+
+from deepsearch.cps.client.api import CpsApi
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -20,30 +23,32 @@ from .convert import (
 )
 from .create_report import report_docs, report_urls
 
+logger = logging.getLogger(__name__)
+
 # set up basic urls
 url_user_management = "/user/v1"
 url_public_apis = "/public/v4"
 
 
-def process_local_input(cps_proj_key: str, local_file: Path):
+def process_local_input(api: CpsApi, cps_proj_key: str, local_file: Path):
     """
     Classify the user provided local input and take appropriate action.
     """
     if not os.path.exists(local_file):
-        typer.echo("Error: File not found. Check input.")
+        logger.error("Error: File not found. Check input.")
     else:
         root_dir = create_root_dir()
         batched_files = batch_single_files(local_file=local_file, root_dir=root_dir)
         task_ids = send_files_for_conversion(
-            cps_proj_key=cps_proj_key, local_file=local_file, root_dir=root_dir
+            api=api, cps_proj_key=cps_proj_key, local_file=local_file, root_dir=root_dir
         )
         statuses = check_status_running_tasks(
-            cps_proj_key=cps_proj_key, task_ids=task_ids
+            api=api, cps_proj_key=cps_proj_key, task_ids=task_ids
         )
         download_converted_docs(
-            cps_proj_key=cps_proj_key, task_ids=task_ids, root_dir=root_dir
+            api=api, cps_proj_key=cps_proj_key, task_ids=task_ids, root_dir=root_dir
         )
-        typer.echo(f"{success_message}\nResults: {os.path.abspath(root_dir)}")
+        logger.info("%s\nResults: %s", success_message, os.path.abspath(root_dir))
         report_docs(
             root_dir=root_dir,
             batched_files=batched_files,
@@ -59,12 +64,8 @@ def create_root_dir() -> Path:
     """
     Creates root directory labelled with timestamp
     """
-    import datetime
-    import time
-
     # get timestamp
-    ts_now = time.time()
-    ts = datetime.datetime.fromtimestamp(ts_now).strftime("%Y-%m-%d_%Hh%Mm%Ss")
+    ts = datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
     root_dir = Path(f"./results_{ts}/")
 
     if not os.path.isdir(root_dir):
@@ -120,7 +121,7 @@ def batch_single_files(local_file: Path, root_dir: Path) -> List[List[str]]:
                 except FileNotFoundError:
                     pass
                 # build name to avoid duplicate names inside batch
-                if len(files_pdf) >1:
+                if len(files_pdf) > 1:
                     arcname = str(single_doc)[
                         len(os.path.commonpath(files_pdf)) + 1 :
                     ].replace("/", "__")
@@ -155,33 +156,18 @@ def cleanup(root_dir: Path):
     return
 
 
-def process_url_input(cps_proj_key: str, url: str):
+def process_urls_input(api: CpsApi, cps_proj_key: str, urls: List[str]):
     """
     Classify user provided url(s) and take appropriate action.
     """
-    if not os.path.isfile(url):
-        # deal with single url input
-        urls = [url]
-    elif os.path.isfile(url):
-        # deal with file
-        urls = get_urls(url)
     root_dir = create_root_dir()
-    task_ids = send_urls_for_conversion(cps_proj_key=cps_proj_key, urls=urls)
-    statuses = check_status_running_tasks(cps_proj_key=cps_proj_key, task_ids=task_ids)
-    download_converted_docs(
-        cps_proj_key=cps_proj_key, task_ids=task_ids, root_dir=root_dir
+    task_ids = send_urls_for_conversion(api=api, cps_proj_key=cps_proj_key, urls=urls)
+    statuses = check_status_running_tasks(
+        api=api, cps_proj_key=cps_proj_key, task_ids=task_ids
     )
-    typer.echo(f"{success_message}\nResults: {os.path.abspath(root_dir)}")
+    download_converted_docs(
+        api=api, cps_proj_key=cps_proj_key, task_ids=task_ids, root_dir=root_dir
+    )
+    logger.info("%s\nResults: %s", success_message, os.path.abspath(root_dir))
     report_urls(root_dir=root_dir, urls=urls, task_ids=task_ids, statuses=statuses)
     return
-
-
-def get_urls(url: str) -> List[str]:
-    """
-    Returns list of url from input file.
-    """
-    with open(file=url, mode="r") as f:
-        lines = f.read()
-
-    urls = [line for line in lines.split("\n") if line.strip() != ""]
-    return urls

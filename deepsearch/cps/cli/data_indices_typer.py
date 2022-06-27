@@ -1,5 +1,6 @@
 from enum import Enum
 from pathlib import Path
+from typing import List
 
 import typer
 
@@ -106,6 +107,16 @@ def delete_data_index(
     return
 
 
+def get_urls(path: Path) -> List[str]:
+    """
+    Returns list of url from input file.
+    """
+
+    lines = path.read_text()
+    urls = [line.strip() for line in lines.split("\n") if line.strip() != ""]
+    return urls
+
+
 @app.command(name="upload", help="Upload files/urls to index", no_args_is_help=True)
 def upload_files(
     proj_key: str = PROJ_KEY,
@@ -116,6 +127,12 @@ def upload_files(
     """
     Upload pdfs, zips, or online documents to a data index in a project
     """
+
+    urls = None
+    if url is not None:
+        p = Path(url)
+        urls = get_urls(p) if p.exists() else [url]
+
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
     utils.upload_files(coords=coords, url=url, local_file=local_file)
     return

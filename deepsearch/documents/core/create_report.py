@@ -9,8 +9,6 @@ from typing import Any, List
 
 import typer
 
-from .common_routines import WELCOME
-
 
 def report_urls(
     root_dir: Path, urls: List[str], statuses: List[str], task_ids: List[str]

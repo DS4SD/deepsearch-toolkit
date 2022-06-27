@@ -111,7 +111,12 @@ class CpsApi:
         Connect to CPS's API using a configured environment file
         """
 
-        config = DeepSearchConfig.parse_file(config_file_path())
+        config_file = config_file_path()
+        if not config_file.exists():
+            raise RuntimeError(
+                f"Config file {config_file} does not exist. Please configure your default authentication with `$ deepsearch login`"
+            )
+        config = DeepSearchConfig.parse_file(config_file)
 
         client = CpsApiClient(config)
 
