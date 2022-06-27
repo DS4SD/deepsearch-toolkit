@@ -34,8 +34,8 @@ After registering with Deep Search, you will get the following login information
 
     # API key authorization
     auth = ds.DeepSearchKeyAuth(
-        username="USER-EMAIL",
-        api_key="API-KEY",
+        username=USER-EMAIL,
+        api_key=API-KEY,
     )
     # In case you have already a valid temporary access_token
     # auth = DeepSearchAuth(bearer_token="TOKEN")
@@ -43,6 +43,7 @@ After registering with Deep Search, you will get the following login information
     config = ds.DeepSearchConfig(
         host="https://deepsearch-experience.res.ibm.com",
         auth=auth,
+        verify_ssl = False
     )
 
     client = ds.CpsApiClient(config)
