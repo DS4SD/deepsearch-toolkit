@@ -1,1 +1,1 @@
-from .main import convert_document
+from .main import convert_documents

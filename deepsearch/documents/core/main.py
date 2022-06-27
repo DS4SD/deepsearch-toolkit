@@ -1,18 +1,21 @@
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional, Union
 
-from deepsearch.documents.core.common_routines import WELCOME
+from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.input_process import (
     process_local_input,
-    process_url_input,
+    process_urls_input,
 )
 
 
-def convert_document(
-    proj_key: str, url: Optional[str] = None, local_file: Optional[Path] = None
+def convert_documents(
+    proj_key: str,
+    url: Optional[Union[str, List[str]]] = None,
+    local_file: Optional[Path] = None,
+    api: Optional[CpsApi] = None,
 ):
     """
-    Document conversion via DeepSearch Technology. Function to orchestrate document conversion.
+    Document conversion via Deep Search Technology. Function to orchestrate document conversion.
 
     Inputs
     ------
@@ -28,23 +31,26 @@ def convert_document(
 
     NOTE: Either url or local_file should be supplied.
     """
-    print(WELCOME)
+
+    # initialize default Api if not specified
+    if api is None:
+        api = CpsApi.default_from_env()
+
     # check required inputs are present
     if url is None and local_file is None:
-        # if type(url) is not str and type(local_file) is not PosixPath:
-        print("Please provide either a url or a local file for conversion.")
-        print("Aborting!")
-        return
-    elif url is not None and local_file is not None:
-        # elif type(url) is str and type(local_file) is PosixPath:
-        print("Please provide only one input: url or local file.")
-        print("Aborting!")
-        return
+        raise ValueError(
+            "No input provided. Please provide either a url or a local file for conversion."
+        )
     elif url is not None and local_file is None:
-        # elif type(url) is str and type(local_file) is not PosixPath:
-        process_url_input(cps_proj_key=proj_key, url=url)
-    elif url is None and local_file is not None:
-        # elif type(url) is not str and type(local_file) is PosixPath:
-        process_local_input(cps_proj_key=proj_key, local_file=Path(local_file))
+        if isinstance(url, str):
+            urls = [url]
+        else:
+            urls = url
 
-    return
+        return process_urls_input(api=api, cps_proj_key=proj_key, urls=urls)
+    elif url is None and local_file is not None:
+        return process_local_input(
+            api=api, cps_proj_key=proj_key, local_file=Path(local_file)
+        )
+
+    raise ValueError("Please provide only one input: url or local file.")

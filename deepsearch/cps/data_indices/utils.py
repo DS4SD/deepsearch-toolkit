@@ -1,4 +1,5 @@
 import glob
+import logging
 import os
 from pathlib import Path
 from typing import Any, List, Optional, Union
@@ -16,50 +17,53 @@ from deepsearch.documents.core.common_routines import (
 )
 from deepsearch.documents.core.create_report import report_docs, report_urls
 
+logger = logging.getLogger(__name__)
+
 
 def upload_files(
     coords: ElasticProjectDataCollectionSource,
-    url: Optional[str] = None,
+    url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
+    api: Optional[CpsApi] = None,
 ):
     """
     Orchestrate document conversion and upload to an index in a project
     """
 
-    print(WELCOME)
+    # initialize default Api if not specified
+    if api is None:
+        api = CpsApi.default_from_env()
+
+    # check required inputs are present
     if url is None and local_file is None:
-        print("Please provide either a url or a local file for conversion.")
-        print("Aborting!")
-        return
-    elif url is not None and local_file is not None:
-        print("Please provide only one input: url or local file.")
-        print("Aborting!")
-        return
+        raise ValueError(
+            "No input provided. Please provide either a url or a local file for conversion."
+        )
     elif url is not None and local_file is None:
-        process_url_input(coords=coords, url=url)
+        if isinstance(url, str):
+            urls = [url]
+        else:
+            urls = url
+
+        return process_url_input(api=api, coords=coords, urls=urls)
     elif url is None and local_file is not None:
-        process_local_file(
+        return process_local_file(
+            api=api,
             coords=coords,
             local_file=Path(local_file),
         )
-    return
+
+    raise ValueError("Please provide only one input: url or local file.")
 
 
-def process_url_input(coords: ElasticProjectDataCollectionSource, url: str):
+def process_url_input(
+    api: CpsApi, coords: ElasticProjectDataCollectionSource, urls: List[str]
+):
     """
     Individual urls are uploaded for conversion and storage in data index.
     """
-    api = CpsApi.default_from_env()
 
     root_dir = input_process.create_root_dir()
-
-    # single vs multiple urls
-    if not os.path.isfile(url):
-        # deal with single url input
-        urls = [url]
-    elif os.path.isfile(url):
-        # deal with file
-        urls = input_process.get_urls(url)
 
     # container list for task_ids
     task_ids = []
@@ -77,7 +81,7 @@ def process_url_input(coords: ElasticProjectDataCollectionSource, url: str):
 
     # check status
     statuses = convert.check_status_running_tasks(
-        cps_proj_key=coords.proj_key, task_ids=task_ids
+        api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
     print(success_message)
     report_urls(root_dir=root_dir, urls=urls, task_ids=task_ids, statuses=statuses)
@@ -85,11 +89,12 @@ def process_url_input(coords: ElasticProjectDataCollectionSource, url: str):
     return
 
 
-def process_local_file(coords: ElasticProjectDataCollectionSource, local_file: Path):
+def process_local_file(
+    api: CpsApi, coords: ElasticProjectDataCollectionSource, local_file: Path
+):
     """
     Individual files are uploaded for conversion and storage in data index.
     """
-    api = CpsApi.default_from_env()
 
     # process multiple files from local directory
     root_dir = input_process.create_root_dir()
@@ -126,7 +131,7 @@ def process_local_file(coords: ElasticProjectDataCollectionSource, local_file: P
         for single_zip in files_zip:
             # upload file
             private_download_url = convert.upload_single_file(
-                cps_proj_key=coords.proj_key, file=Path(single_zip)
+                api=api, cps_proj_key=coords.proj_key, file=Path(single_zip)
             )
             payload = {"file_url": private_download_url}
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
@@ -135,7 +140,7 @@ def process_local_file(coords: ElasticProjectDataCollectionSource, local_file: P
 
     # check status of running tasks
     statuses = convert.check_status_running_tasks(
-        cps_proj_key=coords.proj_key, task_ids=task_ids
+        api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
     print(success_message)
     report_docs(

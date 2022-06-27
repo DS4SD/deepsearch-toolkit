@@ -3,6 +3,8 @@
 cps-auth.json
 cps_client.json
 
+results_*/
+
 # Created by https://www.gitignore.io/api/linux,macos,python,windows,pycharm+all,visualstudiocode,virtualenv
 # Edit at https://www.gitignore.io/?templates=linux,macos,python,windows,pycharm+all,visualstudiocode,virtualenv
 
