@@ -37,6 +37,7 @@ Note: Managing and querying knowledge graphs is only enabled on dedicated Deep S
 
 |    | Name              | Description |
 | -- | ----------------- | ----------- |
+| 1. | [Convert_Documents.ipynb](notebooks/Convert_Documents.ipynb) | Full example on programmatic document conversion |
 | 1. | [Query_NodeData.ipynb](notebooks/Query_NodeData.ipynb) | Simple query search for terms and output the text containing them |
 | 2. | [Query_WF_Execute.ipynb](notebooks/Query_WF_Execute.ipynb) | Run query copied from the UI editor |
 | 3. | Query_FTS.ipynb | Using the FullTextSearch functionality |
