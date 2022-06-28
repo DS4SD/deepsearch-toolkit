@@ -1,16 +1,15 @@
-## Authentication to the Deep Search platform
+### Authentication
 
-After registering with Deep Search, you will get the following login information:
+After registering with [Deep Search](https://ds4sd.github.io/), you can obtain your login information by clicking on API in the top-right corner. Your login information consists of your `USER-EMAIL` (User name as shown below) and an `API-KEY`.
 
-- `USER-EMAIL`
-- `API-KEY`
+![Deep Search Authentication Info](../images/deepsearch-auth-info.png)
 
 
 ---
-### Configure login
+### Configure
 
 === "CLI"
-    Using the [`deepsearch login`](../cli-reference.md#login) command
+    Using the [`deepsearch login`](../cli-reference.md#login) command:
     <div class="termy">
 
     ```console
