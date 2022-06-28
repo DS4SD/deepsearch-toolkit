@@ -55,7 +55,7 @@ nav:
       - "guide/index.md"
       - Document Conversion: guide/convert_doc.md
       - Projects: guide/projects.md
-      - Data Indices: guide/data_indices.md
+      - Data: guide/data_indices.md
       - Knowledge graphs: guide/kgs.md
       - APIs: guide/apis.md
       - Plugin system: guide/cli_plugins.md
