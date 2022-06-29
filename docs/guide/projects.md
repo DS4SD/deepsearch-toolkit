@@ -1,5 +1,5 @@
 !!! tip
-        The features described on this page are not available on the public release. [Contact us](https://ds4sd.github.io/) to know more.
+        The features described on this page are not available in the public service. [Contact us](https://ds4sd.github.io/) to know more.
         
 # Projects
 
