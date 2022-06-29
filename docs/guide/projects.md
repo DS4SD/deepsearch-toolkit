@@ -1,3 +1,6 @@
+!!! tip
+        The features described on this page are not available in the public service. [Contact us](https://ds4sd.github.io/) to know more.
+        
 # Projects
 
 Deep Search projects allow users to collaborate.

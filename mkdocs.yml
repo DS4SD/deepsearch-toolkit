@@ -50,14 +50,12 @@ theme:
 
 nav:
   - Home: index.md
-  - Getting started:
-      - "getting_started/index.md"
-      - Configure login: getting_started/authentication.md
+  - Getting started: getting_started/authentication.md
   - User guide:
       - "guide/index.md"
-      - Projects: guide/projects.md
-      - Data Indices: guide/data_indices.md
       - Document Conversion: guide/convert_doc.md
+      - Projects: guide/projects.md
+      - Data: guide/data_indices.md
       - Knowledge graphs: guide/kgs.md
       - APIs: guide/apis.md
       - Plugin system: guide/cli_plugins.md

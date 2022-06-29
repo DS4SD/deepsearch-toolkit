@@ -1,3 +1,6 @@
+!!! tip
+        The features described on this page are not available in the public service. [Contact us](https://ds4sd.github.io/) to know more.
+
 # Data indices
 
 A data index stores a collection of documents in a project. This page shows how to create and delete a data index, and to list all data indices in a project. 
