@@ -16,7 +16,7 @@ def get_server_version():
 def get_client_version():
     import importlib.metadata
 
-    return importlib.metadata.version("deepsearch")
+    return importlib.metadata.version("deepsearch-toolkit")
 
 
 def version() -> VersionSpecs:
