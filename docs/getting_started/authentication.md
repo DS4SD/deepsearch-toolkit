@@ -52,7 +52,7 @@ After registering with [Deep Search](https://ds4sd.github.io/), you can obtain y
 
 ### Verify Login
 
-All capabilities of the toolkit can only occur after a successful login configuration. Here, we verify our login configurations by checking the version Deep Search Toolkit. In addition, we recommend trying some simple operations like [listing your projects](../guide/projects.md#listprojects).
+All capabilities of the toolkit can only occur after a successful login configuration. Here, we verify our login configurations by checking the version Deep Search Toolkit. In addition, we recommend trying some simple operations like [listing your projects](../guide/projects.md#listprojects) or [converting a document](../guide/convert_doc.md) as shown below.
 
 === "CLI"
     Using the [`deepsearch version`](../cli-reference.md#version) command
@@ -71,3 +71,26 @@ All capabilities of the toolkit can only occur after a successful login configur
     import deepsearch as ds
     versions = ds.version()
     ```
+
+---
+
+### Convert Documents
+
+Here, we show a simple way to convert documents using [Deep Search](https://ds4sd.github.io/). See the guide on [document conversion](../guide/convert_doc.md) for more details. Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in your local machine:
+
+=== "CLI"
+    <div class="termy">
+
+    ```console
+    $ deepsearch documents convert -p PROJ_KEY -i PATH_DOCS
+    ```
+
+    </div>
+
+=== "Python"       
+    ```python
+    import deepsearch as ds                                         
+    documents = ds.convert_documents(proj_key=PROJ_KEY, local_file=PATH_DOCS)
+    ```
+
+--- 
