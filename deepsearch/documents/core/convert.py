@@ -1,3 +1,4 @@
+from faulthandler import disable
 import glob
 import os
 import pathlib
@@ -262,7 +263,6 @@ def get_download_url(
     urls = []
     for task_id in task_ids:
         url_result = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
-        print(url_result)
         request_result = api.client.session.get(url=url_result)
         request_result.raise_for_status()
         try:
@@ -274,7 +274,35 @@ def get_download_url(
     return urls
 
 
-# def download_docs(result_dir: Path, download_urls: list(str)):
+def download_converted_documents(
+    result_dir: Path, download_urls: List[str], progress_bar=False
+):
+    """
+    Download converted documents.
+
+    Input
+    -----
+
+    result_dir : path
+        directory for saving converted json doc
+    download_urls: list
+        url of converted json
+    progress_bar: boolean (default False)
+        shows progress bar if True
+    """
+
+    with tqdm(
+        total=len(download_urls),
+        desc=f'{"Downloading result:":<{progressbar_padding}}',
+        disable=not (progress_bar),
+    ) as progress:
+        count = 1
+        for url in download_urls:
+            download_name = Path(os.path.join(result_dir, f"json_{count:06}.zip"))
+            download_url(url, download_name),
+            count += 1
+            progress.update(1)
+    return
 
 
 def download_converted_docs(
