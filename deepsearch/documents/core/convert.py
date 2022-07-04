@@ -366,7 +366,7 @@ def upload_single_file(api: CpsApi, cps_proj_key: str, file: Path) -> str:
 
 
 def send_urls_for_conversion(
-    api: CpsApi, cps_proj_key: str, urls: List[str]
+    api: CpsApi, cps_proj_key: str, urls: List[str], progress_bar=False
 ) -> List[Any]:
     """
     Send multiple online documents for conversion.
@@ -376,6 +376,7 @@ def send_urls_for_conversion(
     with tqdm(
         total=count_urls,
         desc=f'{"Submitting input:":<{progressbar_padding}}',
+        disable=not (progress_bar),
     ) as progress:
         for url in urls:
             task_id = submit_url_for_conversion(
