@@ -2,7 +2,7 @@ import glob
 import os
 import pathlib
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Optional
 
 import requests
 import urllib3
@@ -209,17 +209,22 @@ def send_files_for_conversion(
     return task_ids
 
 
-def check_status_running_tasks(api: CpsApi, cps_proj_key: str, task_ids) -> List[str]:
+def check_status_running_tasks(
+    cps_proj_key: str,
+    task_ids,
+    api: Optional[CpsApi] = None,
+) -> List[str]:
     """
     Check status of multiple running tasks and display progress with progress bar.
     """
+    if api is None:
+        api = CpsApi.default_from_env()
     count_total = len(task_ids)
 
     # get ccs proj keys
     ccs_proj_key, collection_name = get_ccs_project_key(
         api=api, cps_proj_key=cps_proj_key
     )
-
     statuses = []
 
     with tqdm(
@@ -234,6 +239,42 @@ def check_status_running_tasks(api: CpsApi, cps_proj_key: str, task_ids) -> List
                 statuses.append(str(request_status.json()["state"]))
 
     return statuses
+
+
+def get_download_url(
+    cps_proj_key: str,
+    task_ids: list,
+    api: Optional[CpsApi] = None,
+) -> List[str]:
+    """
+    Get the url of converted document.
+    """
+    if api is None:
+        api = CpsApi.default_from_env()
+
+    url_host = api.client.swagger_client.configuration.host
+    url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
+
+    # get ccs proj keys
+    ccs_proj_key, collection_name = get_ccs_project_key(
+        api=api, cps_proj_key=cps_proj_key
+    )
+    urls = []
+    for task_id in task_ids:
+        url_result = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
+        print(url_result)
+        request_result = api.client.session.get(url=url_result)
+        request_result.raise_for_status()
+        try:
+            packages = request_result.json()["packages"]
+            for p in packages:
+                urls.append(p["url"])
+        except IndexError:
+            print(f"Error: Empty package received.\n{ERROR_MSG}")
+    return urls
+
+
+# def download_docs(result_dir: Path, download_urls: list(str)):
 
 
 def download_converted_docs(
