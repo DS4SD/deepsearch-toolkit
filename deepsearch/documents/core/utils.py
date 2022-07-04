@@ -10,7 +10,9 @@ from typing import Any, List
 from .common_routines import progressbar_padding
 
 
-def batch_single_files(local_file: Path, root_dir: Path) -> List[List[str]]:
+def batch_single_files(
+    local_file: Path, root_dir: Path, progress_bar=False
+) -> List[List[str]]:
     """
     Batch individual pdfs into zip files.
     """
@@ -45,6 +47,7 @@ def batch_single_files(local_file: Path, root_dir: Path) -> List[List[str]]:
         with tqdm(
             total=len(files_pdf),
             desc=f'{"Processing input:":<{progressbar_padding}}',
+            disable=not (progress_bar),
         ) as progress:
             # loop over pdfs
             for single_doc in files_pdf:
