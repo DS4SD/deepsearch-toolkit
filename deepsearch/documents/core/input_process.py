@@ -87,14 +87,39 @@ def process_local_input(
             )
 
 
-def process_urls_input(api: CpsApi, cps_proj_key: str, urls: List[str]):
+def process_urls_input(
+    api: CpsApi, cps_proj_key: str, urls: List[str], progress_bar=False, cli_use=False
+):
     """
     Classify user provided url(s) and take appropriate action.
     """
-    task_ids = send_urls_for_conversion(api=api, cps_proj_key=cps_proj_key, urls=urls)
+    task_ids = send_urls_for_conversion(
+        api=api, cps_proj_key=cps_proj_key, urls=urls, progress_bar=progress_bar
+    )
     statuses = check_status_running_tasks(
-        api=api, cps_proj_key=cps_proj_key, task_ids=task_ids
+        api=api, cps_proj_key=cps_proj_key, task_ids=task_ids, progress_bar=progress_bar
     )
-    return DocumentConversionResult(
-        proj_key=cps_proj_key, task_ids=task_ids, statuses=statuses, source_urls=urls
-    )
+    if cli_use == False:
+        return DocumentConversionResult(
+            proj_key=cps_proj_key,
+            task_ids=task_ids,
+            statuses=statuses,
+            source_urls=urls,
+        )
+    else:
+        result_dir = create_root_dir()
+        urls = get_download_url(
+            cps_proj_key=cps_proj_key,
+            task_ids=task_ids,
+            api=api,
+        )
+        download_converted_documents(
+            download_urls=urls, result_dir=result_dir, progress_bar=True
+        )
+        logger.info("%s\nResults: %s", success_message, os.path.abspath(result_dir))
+        report_urls(
+            result_dir=result_dir,
+            task_ids=task_ids,
+            statuses=statuses,
+            urls=urls,
+        )
