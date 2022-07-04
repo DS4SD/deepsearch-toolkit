@@ -74,12 +74,6 @@ class DocumentConversionResult:
 
         return
 
-    # some of the methods are
-
-    # number converted
-    # number successful
-    # number failed
-    # download_all
     # __iter__ --> objects of class DocumentResult
 
 
