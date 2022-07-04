@@ -1,17 +1,18 @@
 from pathlib import Path
 from typing import List, Optional, Union
-
+import urllib
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.input_process import (
     process_local_input,
     process_urls_input,
 )
+from .utils import get_urls
 
 
 def convert_documents(
     proj_key: str,
     url: Optional[Union[str, List[str]]] = None,
-    local_file: Optional[Path] = None,
+    source_file: Optional[Path] = None,
     api: Optional[CpsApi] = None,
 ):
     """
@@ -25,7 +26,7 @@ def convert_documents(
     url : string [OPTIONAL]
     For converting a document from the web, please provide its url.
 
-    local_file : path [OPTIONAL]
+    source_file : path [OPTIONAL]
     For converting local files, please provide absolute path to file or to directory
     containing multiple files.
 
@@ -37,20 +38,20 @@ def convert_documents(
         api = CpsApi.default_from_env()
 
     # check required inputs are present
-    if url is None and local_file is None:
+    if url is None and source_file is None:
         raise ValueError(
             "No input provided. Please provide either a url or a local file for conversion."
         )
-    elif url is not None and local_file is None:
-        if isinstance(url, str):
+    elif url is not None and source_file is None:
+        if urllib.parse.urlparse(url).scheme in ("http", "https"):
             urls = [url]
         else:
-            urls = url
+            urls = get_urls(Path(url))
 
         return process_urls_input(api=api, cps_proj_key=proj_key, urls=urls)
-    elif url is None and local_file is not None:
+    elif url is None and source_file is not None:
         return process_local_input(
-            api=api, cps_proj_key=proj_key, local_file=Path(local_file)
+            api=api, cps_proj_key=proj_key, source_file=Path(source_file)
         )
 
     raise ValueError("Please provide only one input: url or local file.")
