@@ -1,4 +1,3 @@
-from faulthandler import disable
 import glob
 import os
 import pathlib
@@ -16,6 +15,7 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar_padding
+from .utils import download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -40,17 +40,6 @@ def make_payload(url_document: str, collection_name: str = "_default"):
         "target": {"type": "zip", "content_type": "json", "add_cells": "true"},
     }
     return payload
-
-
-def download_url(url: str, save_path: Path, chunk_size=128):
-    """
-    Download contents from a url.
-    """
-    r = requests.get(url, stream=True, verify=False)
-    with open(save_path, "wb") as fd:
-        for chunk in r.iter_content(chunk_size=chunk_size):
-            fd.write(chunk)
-    return
 
 
 def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
@@ -305,49 +294,49 @@ def download_converted_documents(
     return
 
 
-def download_converted_docs(
-    api: CpsApi, cps_proj_key: str, task_ids: list, root_dir: Path
-):
-    """
-    Download all converted documents
-    """
-    url_host = api.client.swagger_client.configuration.host
-    url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
+# def download_converted_docs(
+#     api: CpsApi, cps_proj_key: str, task_ids: list, root_dir: Path
+# ):
+#     """
+#     Download all converted documents
+#     """
+#     url_host = api.client.swagger_client.configuration.host
+#     url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
 
-    # get ccs proj keys
-    ccs_proj_key, collection_name = get_ccs_project_key(
-        api=api, cps_proj_key=cps_proj_key
-    )
+#     # get ccs proj keys
+#     ccs_proj_key, collection_name = get_ccs_project_key(
+#         api=api, cps_proj_key=cps_proj_key
+#     )
 
-    # setup result directory
-    result_dir = root_dir
-    if not os.path.isdir(result_dir):
-        os.makedirs(result_dir)
+#     # setup result directory
+#     result_dir = root_dir
+#     if not os.path.isdir(result_dir):
+#         os.makedirs(result_dir)
 
-    count_taskids = len(task_ids)
+#     count_taskids = len(task_ids)
 
-    with tqdm(
-        total=count_taskids, desc=f'{"Downloading result:":<{progressbar_padding}}'
-    ) as progress:
-        count = 1
-        for task_id in task_ids:
-            url_result = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
-            request_result = api.client.session.get(url=url_result)
-            request_result.raise_for_status()
+#     with tqdm(
+#         total=count_taskids, desc=f'{"Downloading result:":<{progressbar_padding}}'
+#     ) as progress:
+#         count = 1
+#         for task_id in task_ids:
+#             url_result = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
+#             request_result = api.client.session.get(url=url_result)
+#             request_result.raise_for_status()
 
-            try:
-                packages = request_result.json()["packages"]
-                for p in packages:
-                    url_converted_document = p["url"]
-                    download_name = Path(
-                        os.path.join(result_dir, f"json_{count:06}.zip")
-                    )
-                    download_url(url_converted_document, download_name),
-                    count += 1
-                    progress.update(1)
-            except IndexError:
-                print(f"Error: Empty package received.\n{ERROR_MSG}")
-    return
+#             try:
+#                 packages = request_result.json()["packages"]
+#                 for p in packages:
+#                     url_converted_document = p["url"]
+#                     download_name = Path(
+#                         os.path.join(result_dir, f"json_{count:06}.zip")
+#                     )
+#                     download_url(url_converted_document, download_name),
+#                     count += 1
+#                     progress.update(1)
+#             except IndexError:
+#                 print(f"Error: Empty package received.\n{ERROR_MSG}")
+#     return
 
 
 def upload_single_file(api: CpsApi, cps_proj_key: str, file: Path) -> str:
