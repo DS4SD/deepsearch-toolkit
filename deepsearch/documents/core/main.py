@@ -58,7 +58,13 @@ def convert_documents(
         else:
             urls = get_urls(Path(url))
 
-        return process_urls_input(api=api, cps_proj_key=proj_key, urls=urls)
+        return process_urls_input(
+            api=api,
+            cps_proj_key=proj_key,
+            urls=urls,
+            progress_bar=progress_bar,
+            cli_use=cli_use,
+        )
     elif url is None and source_file is not None:
         return process_local_input(
             api=api,
