@@ -154,7 +154,7 @@ def submit_url_for_conversion(
 
 
 def send_files_for_conversion(
-    api: CpsApi, cps_proj_key: str, local_file: Path, root_dir: Path
+    api: CpsApi, cps_proj_key: str, local_file: Path, root_dir: Path, progress_bar=False
 ) -> list:
     """
     Send multiple files for conversion.
@@ -182,6 +182,7 @@ def send_files_for_conversion(
     with tqdm(
         total=count_total_files,
         desc=f'{"Submitting input:":<{progressbar_padding}}',
+        disable=not (progress_bar),
     ) as progress:
         # loop over all files
         for single_zip in files_zip:
@@ -200,9 +201,7 @@ def send_files_for_conversion(
 
 
 def check_status_running_tasks(
-    cps_proj_key: str,
-    task_ids,
-    api: Optional[CpsApi] = None,
+    cps_proj_key: str, task_ids, api: Optional[CpsApi] = None, progress_bar=False
 ) -> List[str]:
     """
     Check status of multiple running tasks and display progress with progress bar.
@@ -218,7 +217,9 @@ def check_status_running_tasks(
     statuses = []
 
     with tqdm(
-        total=count_total, desc=f'{"Converting input:":<{progressbar_padding}}'
+        total=count_total,
+        desc=f'{"Converting input:":<{progressbar_padding}}',
+        disable=not (progress_bar),
     ) as progress:
         for task_id in task_ids:
             request_status = check_single_task_status(
