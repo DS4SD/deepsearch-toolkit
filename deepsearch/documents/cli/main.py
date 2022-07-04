@@ -10,16 +10,6 @@ from deepsearch.documents.core.main import convert_documents
 app = typer.Typer(no_args_is_help=True)
 
 
-def get_urls(path: Path) -> List[str]:
-    """
-    Returns list of url from input file.
-    """
-
-    lines = path.read_text()
-    urls = [line.strip() for line in lines.split("\n") if line.strip() != ""]
-    return urls
-
-
 @app.command(
     name="convert",
     help="Convert pdf documents using Deep Search Technology",
