@@ -6,6 +6,7 @@ from deepsearch.documents.core.convert import (
     get_download_url,
     download_converted_documents,
 )
+from deepsearch.documents.core.create_report import report_docs, report_urls
 
 if TYPE_CHECKING:
     from deepsearch.cps.client import CpsApi
@@ -16,10 +17,19 @@ class DocumentConversionResult:
     An instance of DocumentConversionResult is generated when document conversion is requested.
     """
 
-    def __init__(self, proj_key: str, task_ids: list, statuses: List[str]) -> None:
+    def __init__(
+        self,
+        proj_key: str,
+        task_ids: list,
+        statuses: List[str],
+        source_file: Optional[Path] = None,
+        source_urls: Optional[List[str]] = None,
+    ) -> None:
         self.proj_key = proj_key
         self.task_ids = task_ids
         self.statuses = statuses
+        self._source_file = source_file
+        self._source_urls = source_urls
 
     def download_json(self, result_dir: Path, progress_bar=False):
         """
@@ -39,11 +49,33 @@ class DocumentConversionResult:
         )
         return
 
+    def generate_report(
+        self,
+        result_dir: Path,
+    ):
+        """
+        Generate csv report file for detailed information about the document conversion job.
+        """
+        if self._source_urls == None:
+            report_docs(
+                result_dir=result_dir,
+                task_ids=self.task_ids,
+                statuses=self.statuses,
+                local_file=self._source_file,
+            )
+
+        if self._source_file == None:
+            report_urls(
+                result_dir=result_dir,
+                urls=self._source_urls,
+                statuses=self.statuses,
+                task_ids=self.task_ids,
+            )
+
+        return
+
     # some of the methods are
-    # def download_json(self, )
-    # download_converted_docs(
-    #     api=api, cps_proj_key=cps_proj_key, task_ids=task_ids, root_dir=root_dir
-    # )
+
     # number converted
     # number successful
     # number failed
