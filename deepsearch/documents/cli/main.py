@@ -1,5 +1,6 @@
 from pathlib import Path, PosixPath
 from typing import List
+import urllib
 
 import typer
 
@@ -41,14 +42,16 @@ def convert(
     """
     typer.echo(WELCOME)
 
-    urls = None
-    if url is not None:
-        p = Path(url)
-        urls = get_urls(p) if p.exists() else [url]
+    # urls = None
+    # if url is not None:
+    #     if urllib.parse.urlparse(url).scheme in ("http", "https"):
+    #         urls = [url]
+    #     else:
+    #         urls = get_urls(Path(url))
 
     convert_documents(
         proj_key=proj_key,
-        url=urls,
+        url=url,
         source_file=local_file,
         progress_bar=progress_bar,
         cli_use=True,
