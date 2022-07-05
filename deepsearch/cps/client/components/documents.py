@@ -44,8 +44,7 @@ class DocumentConversionResult:
         """
         urls = get_download_url(cps_proj_key=self.proj_key, task_ids=self.task_ids)
         download_converted_documents(
-            result_dir=result_dir,
-            download_urls=urls,
+            result_dir=result_dir, download_urls=urls, progress_bar=progress_bar
         )
         return
 
@@ -74,9 +73,43 @@ class DocumentConversionResult:
 
         return
 
-    # __iter__ --> objects of class DocumentResult
+    def __iter__(self):
+        for index in range(len(self.task_ids)):
+            yield DocumentResult(
+                proj_key=self.proj_key,
+                task_id=self.task_ids[index],
+                status=self.statuses[index],
+            )
 
 
-# class DocumentResult:
-#     def __init__():
-#         pass
+class DocumentResult:
+    """
+    Instance of an individual DocumentConversionResult.
+    """
+
+    def __init__(
+        self,
+        proj_key: str,
+        task_id: str,
+        status: str,
+    ):
+        self.proj_key = proj_key
+        self.task_id = task_id
+        self.status = status
+
+    def download(self, result_dir: Path, progress_bar=False):
+        """
+        Download result of an individual conversion task.
+
+        Input
+        -----
+        result_dir : path
+            local directory where converted documents are stored
+        progress_bar: boolean, optional (default = False)
+            shows progress bar is True
+        """
+        urls = get_download_url(cps_proj_key=self.proj_key, task_ids=[self.task_id])
+        download_converted_documents(
+            result_dir=result_dir, download_urls=urls, progress_bar=progress_bar
+        )
+        return
