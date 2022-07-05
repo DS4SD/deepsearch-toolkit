@@ -97,6 +97,12 @@ class DocumentResult:
         self.task_id = task_id
         self.status = status
 
+    def url_json(self):
+        """
+        Returns the url of a converted json object.
+        """
+        return get_download_url(cps_proj_key=self.proj_key, task_ids=[self.task_id])[0]
+
     def download(self, result_dir: Path, progress_bar=False):
         """
         Download result of an individual conversion task.
