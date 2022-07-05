@@ -40,8 +40,6 @@ def convert(
 
     NOTE: Either url or source_path should be supplied.
     """
-    typer.echo(WELCOME)
-
     convert_documents(
         proj_key=proj_key,
         url=url,
