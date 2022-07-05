@@ -42,13 +42,6 @@ def convert(
     """
     typer.echo(WELCOME)
 
-    # urls = None
-    # if url is not None:
-    #     if urllib.parse.urlparse(url).scheme in ("http", "https"):
-    #         urls = [url]
-    #     else:
-    #         urls = get_urls(Path(url))
-
     convert_documents(
         proj_key=proj_key,
         url=url,
