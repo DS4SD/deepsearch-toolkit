@@ -35,7 +35,7 @@ def report_docs(
     result_dir: Path,
     statuses: List[str],
     task_ids: List[str],
-    local_file: Path,
+    source_path: Path,
 ):
     """
     Function to create report when DeepSearch is converting local documents.
@@ -43,17 +43,17 @@ def report_docs(
     report_name = os.path.join(result_dir, "report.csv")
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        batched_files = batch_single_files(local_file=local_file, root_dir=tmpdir)
+        batched_files = batch_single_files(source_path=source_path, root_dir=tmpdir)
 
         # batched_files only contains information about single pdfs
         # user zips are collected again
         files_zip: List[Any] = []
-        if os.path.isdir(local_file):
-            files_zip = glob.glob(os.path.join(local_file, "**/*.zip"), recursive=True)
-        elif os.path.isfile(local_file):
-            file_extension = pathlib.Path(local_file).suffix
+        if os.path.isdir(source_path):
+            files_zip = glob.glob(os.path.join(source_path, "**/*.zip"), recursive=True)
+        elif os.path.isfile(source_path):
+            file_extension = pathlib.Path(source_path).suffix
             if file_extension == ".zip":
-                files_zip = [local_file]
+                files_zip = [source_path]
 
         count_total_docs = len(batched_files) + len(files_zip)
 

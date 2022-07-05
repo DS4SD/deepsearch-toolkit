@@ -24,7 +24,7 @@ URL = typer.Option(
             multiple urls separated by empty lines.""",
 )
 
-LOCAL_FILE = typer.Option(
+SOURCE_PATH = typer.Option(
     None,
     "--input-file",
     "-i",

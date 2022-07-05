@@ -12,7 +12,7 @@ from .utils import get_urls
 def convert_documents(
     proj_key: str,
     url: Optional[Union[str, List[str]]] = None,
-    source_file: Optional[Path] = None,
+    source_path: Optional[Path] = None,
     api: Optional[CpsApi] = None,
     progress_bar=False,
     cli_use=False,
@@ -40,7 +40,7 @@ def convert_documents(
     A flag that allows automatic download of converted document and
     generation of conversion report when used via CLI.
 
-    NOTE: Either url or local_file should be supplied.
+    NOTE: Either url or source_path should be supplied.
     """
 
     # initialize default Api if not specified
@@ -48,11 +48,11 @@ def convert_documents(
         api = CpsApi.default_from_env()
 
     # check required inputs are present
-    if url is None and source_file is None:
+    if url is None and source_path is None:
         raise ValueError(
             "No input provided. Please provide either a url or a local file for conversion."
         )
-    elif url is not None and source_file is None:
+    elif url is not None and source_path is None:
         if urllib.parse.urlparse(url).scheme in ("http", "https"):
             urls = [url]
         else:
@@ -65,11 +65,11 @@ def convert_documents(
             progress_bar=progress_bar,
             cli_use=cli_use,
         )
-    elif url is None and source_file is not None:
+    elif url is None and source_path is not None:
         return process_local_input(
             api=api,
             cps_proj_key=proj_key,
-            local_file=Path(source_file),
+            source_path=Path(source_path),
             progress_bar=progress_bar,
             cli_use=cli_use,
         )

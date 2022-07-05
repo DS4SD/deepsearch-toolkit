@@ -4,7 +4,7 @@ import urllib
 
 import typer
 
-from deepsearch.cps.cli.cli_options import LOCAL_FILE, PROJ_KEY, URL, PROGRESS_BAR
+from deepsearch.cps.cli.cli_options import SOURCE_PATH, PROJ_KEY, URL, PROGRESS_BAR
 from deepsearch.documents.core.common_routines import WELCOME
 from deepsearch.documents.core.main import convert_documents
 from deepsearch.documents.core.utils import get_urls
@@ -20,7 +20,7 @@ app = typer.Typer(no_args_is_help=True)
 def convert(
     proj_key: str = PROJ_KEY,
     url: str = URL,
-    local_file: Path = LOCAL_FILE,
+    source_path: Path = SOURCE_PATH,
     progress_bar=PROGRESS_BAR,
 ):
     """
@@ -34,18 +34,18 @@ def convert(
     url : string [OPTIONAL]
     For converting a document from the web, please provide its url.
 
-    local_file : string/path [OPTIONAL]
+    source_path : string/path [OPTIONAL]
     For converting local files, please provide absolute path to file or to directory
     containing multiple files.
 
-    NOTE: Either url or local_file should be supplied.
+    NOTE: Either url or source_path should be supplied.
     """
     typer.echo(WELCOME)
 
     convert_documents(
         proj_key=proj_key,
         url=url,
-        source_file=local_file,
+        source_path=source_path,
         progress_bar=progress_bar,
         cli_use=True,
     )

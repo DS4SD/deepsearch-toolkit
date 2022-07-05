@@ -11,7 +11,7 @@ from .common_routines import progressbar_padding
 
 
 def batch_single_files(
-    local_file: Path, root_dir: Path, progress_bar=False
+    source_path: Path, root_dir: Path, progress_bar=False
 ) -> List[List[str]]:
     """
     Batch individual pdfs into zip files.
@@ -34,12 +34,12 @@ def batch_single_files(
 
     # get input pdf files
     files_pdf: List[Any] = []
-    if os.path.isdir(local_file):
-        files_pdf = glob.glob(os.path.join(local_file, "**/*.pdf"), recursive=True)
-    elif os.path.isfile(local_file):
-        file_extension = pathlib.Path(local_file).suffix
+    if os.path.isdir(source_path):
+        files_pdf = glob.glob(os.path.join(source_path, "**/*.pdf"), recursive=True)
+    elif os.path.isfile(source_path):
+        file_extension = pathlib.Path(source_path).suffix
         if file_extension == ".pdf":
-            files_pdf = [local_file]
+            files_pdf = [source_path]
 
     # catch all filenames and batch names
     batched_files = []
@@ -120,11 +120,11 @@ def download_url(url: str, save_path: Path, chunk_size=128):
     return
 
 
-def get_urls(path: Path) -> List[str]:
+def get_urls(url_path: Path) -> List[str]:
     """
     Returns list of url from input file.
     """
 
-    lines = path.read_text()
+    lines = url_path.read_text()
     urls = [line.strip() for line in lines.split("\n") if line.strip() != ""]
     return urls

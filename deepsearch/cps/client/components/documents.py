@@ -60,7 +60,7 @@ class DocumentConversionResult:
                 result_dir=result_dir,
                 task_ids=self.task_ids,
                 statuses=self.statuses,
-                local_file=self._source_file,
+                source_path=self._source_file,
             )
 
         if self._source_file == None:

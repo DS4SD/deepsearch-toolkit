@@ -154,19 +154,23 @@ def submit_url_for_conversion(
 
 
 def send_files_for_conversion(
-    api: CpsApi, cps_proj_key: str, local_file: Path, root_dir: Path, progress_bar=False
+    api: CpsApi,
+    cps_proj_key: str,
+    source_path: Path,
+    root_dir: Path,
+    progress_bar=False,
 ) -> list:
     """
     Send multiple files for conversion.
     """
     # collect'em all
     files_zip: List[Any] = []
-    if os.path.isdir(local_file):
-        files_zip = glob.glob(os.path.join(local_file, "**/*.zip"), recursive=True)
-    elif os.path.isfile(local_file):
-        file_extension = pathlib.Path(local_file).suffix
+    if os.path.isdir(source_path):
+        files_zip = glob.glob(os.path.join(source_path, "**/*.zip"), recursive=True)
+    elif os.path.isfile(source_path):
+        file_extension = pathlib.Path(source_path).suffix
         if file_extension == ".zip":
-            files_zip = [local_file]
+            files_zip = [source_path]
 
     if root_dir is not None:
         files_tmpzip = glob.glob(
@@ -188,7 +192,7 @@ def send_files_for_conversion(
         for single_zip in files_zip:
             # upload file
             private_download_url = upload_single_file(
-                api=api, cps_proj_key=cps_proj_key, file=Path(single_zip)
+                api=api, cps_proj_key=cps_proj_key, source_path=Path(single_zip)
             )
             # submit url for conversion
             task_id = submit_url_for_conversion(
@@ -295,56 +299,11 @@ def download_converted_documents(
     return
 
 
-# def download_converted_docs(
-#     api: CpsApi, cps_proj_key: str, task_ids: list, root_dir: Path
-# ):
-#     """
-#     Download all converted documents
-#     """
-#     url_host = api.client.swagger_client.configuration.host
-#     url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
-
-#     # get ccs proj keys
-#     ccs_proj_key, collection_name = get_ccs_project_key(
-#         api=api, cps_proj_key=cps_proj_key
-#     )
-
-#     # setup result directory
-#     result_dir = root_dir
-#     if not os.path.isdir(result_dir):
-#         os.makedirs(result_dir)
-
-#     count_taskids = len(task_ids)
-
-#     with tqdm(
-#         total=count_taskids, desc=f'{"Downloading result:":<{progressbar_padding}}'
-#     ) as progress:
-#         count = 1
-#         for task_id in task_ids:
-#             url_result = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
-#             request_result = api.client.session.get(url=url_result)
-#             request_result.raise_for_status()
-
-#             try:
-#                 packages = request_result.json()["packages"]
-#                 for p in packages:
-#                     url_converted_document = p["url"]
-#                     download_name = Path(
-#                         os.path.join(result_dir, f"json_{count:06}.zip")
-#                     )
-#                     download_url(url_converted_document, download_name),
-#                     count += 1
-#                     progress.update(1)
-#             except IndexError:
-#                 print(f"Error: Empty package received.\n{ERROR_MSG}")
-#     return
-
-
-def upload_single_file(api: CpsApi, cps_proj_key: str, file: Path) -> str:
+def upload_single_file(api: CpsApi, cps_proj_key: str, source_path: Path) -> str:
     """
     Uploads a single file. Return internal download url.
     """
-    filename = os.path.basename(file)
+    filename = os.path.basename(source_path)
     # url_host = api.client.swagger_client.configuration.host
     sw_api = sw_client.UploadsApi(api.client.swagger_client)
 
@@ -355,8 +314,8 @@ def upload_single_file(api: CpsApi, cps_proj_key: str, file: Path) -> str:
     upload = get_pointer.upload
     private_download_url = get_pointer.download_private.url
 
-    with open(file, "rb") as f:
-        files = {"file": (os.path.basename(file), f)}
+    with open(source_path, "rb") as f:
+        files = {"file": (os.path.basename(source_path), f)}
         request_upload = requests.post(
             url=upload.url, data=upload.fields, files=files, verify=False
         )
