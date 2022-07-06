@@ -22,13 +22,13 @@ class DocumentConversionResult:
         proj_key: str,
         task_ids: list,
         statuses: List[str],
-        source_file: Optional[Path] = None,
+        source_path: Optional[Path] = None,
         source_urls: Optional[List[str]] = None,
     ) -> None:
         self.proj_key = proj_key
         self.task_ids = task_ids
         self.statuses = statuses
-        self._source_file = source_file
+        self._source_path = source_path
         self._source_urls = source_urls
 
     def download_json(self, result_dir: Path, progress_bar=False):
@@ -60,10 +60,10 @@ class DocumentConversionResult:
                 result_dir=result_dir,
                 task_ids=self.task_ids,
                 statuses=self.statuses,
-                source_path=self._source_file,
+                source_path=self._source_path,
             )
 
-        if self._source_file == None:
+        if self._source_path == None:
             report_urls(
                 result_dir=result_dir,
                 urls=self._source_urls,
