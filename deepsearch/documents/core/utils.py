@@ -12,9 +12,8 @@ from deepsearch.cps.client.api import CpsApi
 
 
 class URLNavigator:
-    api = CpsApi.default_from_env()
-
-    def __init__(self) -> None:
+    def __init__(self, api: CpsApi) -> None:
+        self.api = api
         self.url_host = self.api.client.swagger_client.configuration.host
         self.url_linked_ccs = (
             self.url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"

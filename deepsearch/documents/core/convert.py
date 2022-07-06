@@ -46,7 +46,7 @@ def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
     current_state = False
     while current_state is False:
         request_status = api.client.session.get(
-            url=URLNavigator().url_request_status(
+            url=URLNavigator(api).url_request_status(
                 ccs_proj_key=ccs_proj_key, task_id=task_id
             )
         )
@@ -82,7 +82,7 @@ def submit_url_for_conversion(
 
     try:
         request_conversion_task_id = api.client.session.post(
-            url=URLNavigator().url_convert(ccs_proj_key=ccs_proj_key),
+            url=URLNavigator(api).url_convert(ccs_proj_key=ccs_proj_key),
             json=payload,
         )
         request_conversion_task_id.raise_for_status()
@@ -196,7 +196,7 @@ def get_download_url(
     urls = []
     for task_id in task_ids:
         request_result = api.client.session.get(
-            url=URLNavigator().url_result(ccs_proj_key=ccs_proj_key, task_id=task_id)
+            url=URLNavigator(api).url_result(ccs_proj_key=ccs_proj_key, task_id=task_id)
         )
         request_result.raise_for_status()
         try:
