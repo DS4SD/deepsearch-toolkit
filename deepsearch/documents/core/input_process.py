@@ -1,11 +1,6 @@
-import datetime
-import glob
 import logging
 import os
-import pathlib
 import tempfile
-from threading import local
-import zipfile as z
 from pathlib import Path
 from typing import Any, List
 
@@ -18,7 +13,7 @@ from .utils import batch_single_files, create_root_dir
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-from .common_routines import ERROR_MSG, progressbar_padding, success_message
+from .common_routines import success_message
 from .convert import (
     check_status_running_tasks,
     download_converted_documents,
@@ -29,10 +24,6 @@ from .convert import (
 from .create_report import report_docs, report_urls
 
 logger = logging.getLogger(__name__)
-
-# set up basic urls
-url_user_management = "/user/v1"
-url_public_apis = "/public/v4"
 
 
 def process_local_input(
@@ -46,13 +37,15 @@ def process_local_input(
     else:
         with tempfile.TemporaryDirectory() as tmpdir:
             batched_files = batch_single_files(
-                source_path=source_path, root_dir=tmpdir, progress_bar=progress_bar
+                source_path=source_path,
+                root_dir=Path(tmpdir),
+                progress_bar=progress_bar,
             )
             task_ids = send_files_for_conversion(
                 api=api,
                 cps_proj_key=cps_proj_key,
                 source_path=source_path,
-                root_dir=tmpdir,
+                root_dir=Path(tmpdir),
                 progress_bar=progress_bar,
             )
             statuses = check_status_running_tasks(
