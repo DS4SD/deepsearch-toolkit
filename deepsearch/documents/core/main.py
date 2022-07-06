@@ -1,12 +1,14 @@
 from pathlib import Path
 from typing import List, Optional, Union
-import urllib
+import urllib, urllib3
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.input_process import (
     process_local_input,
     process_urls_input,
 )
 from .utils import get_urls
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def convert_documents(

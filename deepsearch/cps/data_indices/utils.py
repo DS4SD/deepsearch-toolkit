@@ -3,7 +3,9 @@ import logging
 import os
 from pathlib import Path
 from typing import Any, List, Optional, Union
+import urllib3
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from tqdm import tqdm
 
 from deepsearch.cps.client.api import CpsApi

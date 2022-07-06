@@ -1,6 +1,8 @@
 from pathlib import Path, PosixPath
 from typing import List
-import urllib
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import typer
 

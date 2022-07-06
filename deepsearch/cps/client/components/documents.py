@@ -1,5 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
+import urllib3
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 from deepsearch.documents.core.convert import (
@@ -10,6 +11,7 @@ from deepsearch.documents.core.create_report import report_docs, report_urls
 
 if TYPE_CHECKING:
     from deepsearch.cps.client import CpsApi
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class DocumentConversionResult:
