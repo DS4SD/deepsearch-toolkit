@@ -92,31 +92,6 @@ def get_ccs_project_key(api: CpsApi, cps_proj_key: str):
     return (ccs_proj_key, collection_name)
 
 
-def get_converted_doc(api: CpsApi, ccs_proj_key: str, task_id: str):
-    """
-    Download converted document
-    """
-    url_host = api.client.swagger_client.configuration.host
-    url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
-    url_result = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
-    request_result = api.client.session.get(url=url_result)
-    request_result.raise_for_status()
-
-    try:
-        url_converted_document = request_result.json()["packages"][0]["url"]
-        if request_result.json()["done"]:
-            print(
-                "Document Conversion is finished. Downloading your converted document."
-            )
-            download_url(url_converted_document, Path("./converted_document.zip"))
-            print("Your converted document is now downloaded. Ciao!")
-            return
-    except IndexError:
-        print(f"Error: Empty package received.\n{ERROR_MSG}")
-        print("Aborting!")
-        return
-
-
 def submit_url_for_conversion(
     api: CpsApi,
     cps_proj_key: str,
