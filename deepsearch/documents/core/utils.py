@@ -20,12 +20,15 @@ class URLNavigator:
         self.url_user_management = "/user/v1"
         self.url_public_apis = "/public/v4"
 
-    def url_request_status(self, ccs_proj_key, task_id):
+    def url_request_status(self, ccs_proj_key: str, task_id: str):
         wait = 5
         return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/tasks/{task_id}/status?wait={wait}"
 
-    def url_convert(self, ccs_proj_key):
+    def url_convert(self, ccs_proj_key: str):
         return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/pipelines/convert"
+
+    def url_result(self, ccs_proj_key: str, task_id: str):
+        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
 
 
 def batch_single_files(
