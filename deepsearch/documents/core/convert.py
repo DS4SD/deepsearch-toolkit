@@ -3,7 +3,7 @@ import os
 import pathlib
 from pathlib import Path
 from typing import Any, List, Optional
-
+import logging
 import requests
 import urllib3
 from tqdm import tqdm
@@ -18,6 +18,7 @@ from .common_routines import ERROR_MSG, progressbar_padding
 from .utils import download_url, URLNavigator
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+logger = logging.getLogger(__name__)
 
 
 def make_payload(url_document: str, collection_name: str = "_default"):
@@ -58,29 +59,6 @@ def get_ccs_project_key(api: CpsApi, cps_proj_key: str):
     Given a cps project key, returns ccs project key and collection name.
     """
     sw_api = sw_client.ProjectApi(api.client.swagger_client)
-
-    # TODO: Do we actually need to handle these exceptions here?
-    # If yes, let's chain a custom-exception, e.g. CcsClientException
-
-    # try:
-    #     request_ccs_project_key = sw_api.get_project_default_values(
-    #         proj_key=cps_proj_key
-    #     )
-    #     ccs_proj_key = request_ccs_project_key.ccs_project.proj_key
-    #     collection_name = request_ccs_project_key.ccs_project.collection_name
-    # except requests.exceptions.HTTPError as err:
-    #     print(f"HTTPError {err}.\n{ERROR_MSG}")
-    #     print("Aborting!")
-    #     return
-    # except KeyError as err:
-    #     print(f"Error: Received unexpected response.\n{ERROR_MSG}")
-    #     print("Aborting!")
-    #     return
-    # except urllib3.exceptions.MaxRetryError as err:
-    #     print(f"Error: err.\n{ERROR_MSG}")
-    #     print("Aborting!")
-    #     return
-
     request_ccs_project_key = sw_api.get_project_default_values(proj_key=cps_proj_key)
     ccs_proj_key = request_ccs_project_key.ccs_project.proj_key
     collection_name = request_ccs_project_key.ccs_project.collection_name
@@ -110,7 +88,7 @@ def submit_url_for_conversion(
         request_conversion_task_id.raise_for_status()
 
     except requests.exceptions.HTTPError as err:
-        print(f"HTTPError {err}.\n{ERROR_MSG}\nAborting!")
+        logger.error(f"HTTPError {err}.\n{ERROR_MSG}\nAborting!")
         raise
 
     task_id = list(request_conversion_task_id.json().values())[0]
@@ -226,7 +204,7 @@ def get_download_url(
             for p in packages:
                 urls.append(p["url"])
         except IndexError:
-            print(f"Error: Empty package received.\n{ERROR_MSG}")
+            logger.error(f"Error: Empty package received.\n{ERROR_MSG}")
     return urls
 
 
