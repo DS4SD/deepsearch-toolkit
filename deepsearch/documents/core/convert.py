@@ -15,13 +15,9 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar_padding
-from .utils import download_url
+from .utils import download_url, URLNavigator
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-# set up basic urls
-url_user_management = "/user/v1"
-url_public_apis = "/public/v4"
 
 
 def make_payload(url_document: str, collection_name: str = "_default"):
@@ -50,9 +46,7 @@ def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
     url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
     current_state = False
     while current_state is False:
-        wait = 5
-        url_request_status = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/tasks/{task_id}/status?wait={wait}"
-        request_status = api.client.session.get(url=url_request_status)
+        request_status = api.client.session.get(url=URLNavigator.url_request_status(ccs_proj_key=ccs_proj_key,task_id=task_id))
         current_state = request_status.json()["done"]
 
     return request_status
