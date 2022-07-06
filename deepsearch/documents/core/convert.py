@@ -42,13 +42,14 @@ def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
     """
     Check status of individual tasks.
     """
-    url_host = api.client.swagger_client.configuration.host
-    url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
     current_state = False
     while current_state is False:
-        request_status = api.client.session.get(url=URLNavigator.url_request_status(ccs_proj_key=ccs_proj_key,task_id=task_id))
+        request_status = api.client.session.get(
+            url=URLNavigator.url_request_status(
+                ccs_proj_key=ccs_proj_key, task_id=task_id
+            )
+        )
         current_state = request_status.json()["done"]
-
     return request_status
 
 
@@ -94,21 +95,16 @@ def submit_url_for_conversion(
     """
     Convert an online pdf using DeepSearch Technology.
     """
-    # define urls
-    url_host = api.client.swagger_client.configuration.host
-    url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
-
     # get ccs project key and collection name
     ccs_proj_key, collection_name = get_ccs_project_key(
         api=api, cps_proj_key=cps_proj_key
     )
-
     # submit conversion request
     payload = make_payload(url, collection_name)
 
     try:
         request_conversion_task_id = api.client.session.post(
-            url=f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/pipelines/convert",
+            url=URLNavigator.url_convert(ccs_proj_key=ccs_proj_key),
             json=payload,
         )
         request_conversion_task_id.raise_for_status()
@@ -215,17 +211,13 @@ def get_download_url(
     """
     if api is None:
         api = CpsApi.default_from_env()
-
-    url_host = api.client.swagger_client.configuration.host
-    url_linked_ccs = url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
-
     # get ccs proj keys
     ccs_proj_key, collection_name = get_ccs_project_key(
         api=api, cps_proj_key=cps_proj_key
     )
     urls = []
     for task_id in task_ids:
-        url_result = f"{url_linked_ccs}{url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
+        url_result = URLNavigator.url_result(ccs_proj_key=ccs_proj_key, task_id=task_id)
         request_result = api.client.session.get(url=url_result)
         request_result.raise_for_status()
         try:
@@ -273,7 +265,6 @@ def upload_single_file(api: CpsApi, cps_proj_key: str, source_path: Path) -> str
     Uploads a single file. Return internal download url.
     """
     filename = os.path.basename(source_path)
-    # url_host = api.client.swagger_client.configuration.host
     sw_api = sw_client.UploadsApi(api.client.swagger_client)
 
     get_pointer: TemporaryUploadFileResult = sw_api.create_project_scratch_file(
