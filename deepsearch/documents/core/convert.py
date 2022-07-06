@@ -217,8 +217,9 @@ def get_download_url(
     )
     urls = []
     for task_id in task_ids:
-        url_result = URLNavigator.url_result(ccs_proj_key=ccs_proj_key, task_id=task_id)
-        request_result = api.client.session.get(url=url_result)
+        request_result = api.client.session.get(
+            url=URLNavigator.url_result(ccs_proj_key=ccs_proj_key, task_id=task_id)
+        )
         request_result.raise_for_status()
         try:
             packages = request_result.json()["packages"]
