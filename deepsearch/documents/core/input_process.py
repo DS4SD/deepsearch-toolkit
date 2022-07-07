@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 def process_local_input(
-    api: CpsApi, cps_proj_key: str, source_path: Path, progress_bar=False, cli_use=False
+    api: CpsApi, cps_proj_key: str, source_path: Path, progress_bar=False
 ) -> DocumentConversionResult:
     """
     Classify the user provided local input and take appropriate action.
@@ -54,34 +54,16 @@ def process_local_input(
                 task_ids=task_ids,
                 progress_bar=progress_bar,
             )
-        if cli_use == False:
-            return DocumentConversionResult(
-                proj_key=cps_proj_key,
-                task_ids=task_ids,
-                statuses=statuses,
-                source_path=source_path,
-            )
-        else:
-            result_dir = create_root_dir()
-            urls = get_download_url(
-                cps_proj_key=cps_proj_key,
-                task_ids=task_ids,
-                api=api,
-            )
-            download_converted_documents(
-                download_urls=urls, result_dir=result_dir, progress_bar=True
-            )
-            logger.info("%s\nResults: %s", success_message, os.path.abspath(result_dir))
-            report_docs(
-                result_dir=result_dir,
-                task_ids=task_ids,
-                statuses=statuses,
-                source_path=source_path,
-            )
+        return DocumentConversionResult(
+            proj_key=cps_proj_key,
+            task_ids=task_ids,
+            statuses=statuses,
+            source_path=source_path,
+        )
 
 
 def process_urls_input(
-    api: CpsApi, cps_proj_key: str, urls: List[str], progress_bar=False, cli_use=False
+    api: CpsApi, cps_proj_key: str, urls: List[str], progress_bar=False
 ):
     """
     Classify user provided url(s) and take appropriate action.
@@ -92,27 +74,9 @@ def process_urls_input(
     statuses = check_status_running_tasks(
         api=api, cps_proj_key=cps_proj_key, task_ids=task_ids, progress_bar=progress_bar
     )
-    if cli_use == False:
-        return DocumentConversionResult(
-            proj_key=cps_proj_key,
-            task_ids=task_ids,
-            statuses=statuses,
-            source_urls=urls,
-        )
-    else:
-        result_dir = create_root_dir()
-        urls = get_download_url(
-            cps_proj_key=cps_proj_key,
-            task_ids=task_ids,
-            api=api,
-        )
-        download_converted_documents(
-            download_urls=urls, result_dir=result_dir, progress_bar=True
-        )
-        logger.info("%s\nResults: %s", success_message, os.path.abspath(result_dir))
-        report_urls(
-            result_dir=result_dir,
-            task_ids=task_ids,
-            statuses=statuses,
-            urls=urls,
-        )
+    return DocumentConversionResult(
+        proj_key=cps_proj_key,
+        task_ids=task_ids,
+        statuses=statuses,
+        source_urls=urls,
+    )

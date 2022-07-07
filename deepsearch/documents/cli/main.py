@@ -9,7 +9,12 @@ import typer
 from deepsearch.cps.cli.cli_options import SOURCE_PATH, PROJ_KEY, URL, PROGRESS_BAR
 from deepsearch.documents.core.common_routines import WELCOME
 from deepsearch.documents.core.main import convert_documents
-from deepsearch.documents.core.utils import get_urls
+from deepsearch.documents.core.utils import create_root_dir
+from deepsearch.documents.core.convert import (
+    download_converted_documents,
+    get_download_url,
+)
+from deepsearch.documents.core.create_report import report_docs, report_urls
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -42,13 +47,33 @@ def convert(
 
     NOTE: Either url or source_path should be supplied.
     """
-    convert_documents(
+    result = convert_documents(
         proj_key=proj_key,
         url=url,
         source_path=source_path,
         progress_bar=progress_bar,
-        cli_use=True,
     )
+
+    result_dir = create_root_dir()
+    urls = get_download_url(
+        cps_proj_key=result.proj_key,
+        task_ids=result.task_ids,
+    )
+    download_converted_documents(
+        download_urls=urls, result_dir=result_dir, progress_bar=True
+    )
+    if source_path is not None:
+        report_docs(
+            result_dir=result_dir,
+            task_ids=result.task_ids,
+            statuses=result.statuses,
+            source_path=source_path,
+        )
+    elif url is not None:
+        report_urls(
+            result_dir=result_dir, task_ids=result.task_ids, statuses=result.statuses
+        )
+
     return
 
 

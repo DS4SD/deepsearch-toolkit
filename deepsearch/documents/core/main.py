@@ -17,7 +17,6 @@ def convert_documents(
     source_path: Optional[Path] = None,
     api: Optional[CpsApi] = None,
     progress_bar=False,
-    cli_use=False,
 ):
     """
     Document conversion via Deep Search Technology. Function to orchestrate document conversion.
@@ -37,10 +36,6 @@ def convert_documents(
     progress_bar : Boolean (default is False in code, True in CLI)
     Show progress bar for processing, submitting, converting input and
     downloading converted document.
-
-    cli_use : Boolean (default is False in code, True in CLI)
-    A flag that allows automatic download of converted document and
-    generation of conversion report when used via CLI.
 
     NOTE: Either url or source_path should be supplied.
     """
@@ -65,7 +60,6 @@ def convert_documents(
             cps_proj_key=proj_key,
             urls=urls,
             progress_bar=progress_bar,
-            cli_use=cli_use,
         )
     elif url is None and source_path is not None:
         return process_local_input(
@@ -73,7 +67,6 @@ def convert_documents(
             cps_proj_key=proj_key,
             source_path=Path(source_path),
             progress_bar=progress_bar,
-            cli_use=cli_use,
         )
 
     raise ValueError("Please provide only one input: url or local file.")
