@@ -90,7 +90,7 @@ Here, we show a simple way to convert documents using [Deep Search](https://ds4s
 === "Python"       
     ```python
     import deepsearch as ds                                         
-    documents = ds.convert_documents(proj_key=PROJ_KEY, local_file=PATH_DOCS)
+    documents = ds.convert_documents(proj_key=PROJ_KEY, source_path=PATH_DOCS)
     ```
 
 --- 

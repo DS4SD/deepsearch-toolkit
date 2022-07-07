@@ -32,7 +32,10 @@ Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in yo
 === "Python"       
     ```python
     import deepsearch as ds                                         
-    documents = ds.convert_documents(proj_key=PROJ_KEY, local_file=PATH_DOCS)
+    documents = ds.convert_documents(proj_key=PROJ_KEY, source_path=PATH_DOCS)
+
+    # Let's download all the converted documents locally in RESULT_DIR
+    documents.download_all(result_dir = RESULT_DIR)
     ```
 
 --- 
@@ -56,28 +59,20 @@ Let `URL` be the web address for an online document.
 === "Python"       
     ```python
     import deepsearch as ds                                         
-    documents = ds.convert_documents(proj_key=PROJ_KEY, url=URL)
+    documents = ds.convert_documents(proj_key=PROJ_KEY, urls=URL)
     ```
 
 --- 
 
 ### Multiple URLs
 
-Create a text file containing the web addresses for online documents, separated by empty lines. For example, the contents of `ONLINE-DOCS.txt` could be:
-
-```text
-URL1
-URL2
-URL3
-```
-
-Let `PATH_ONLINE_DOCS` be the path to this text file.
+Multiple online documents can also be conveniently converted. Simply pass a python list object containing multiple urls. Let `URL` be a list containing several URLs. 
 
 === "CLI"
     <div class="termy">
 
     ```console
-    deepsearch documents convert -p PROJ_KEY -u PATH_ONLINE_DOCS
+    deepsearch documents convert -p PROJ_KEY -u URL
     ```
 
     </div>
@@ -86,9 +81,9 @@ Let `PATH_ONLINE_DOCS` be the path to this text file.
 === "Python"       
     ```python
     import deepsearch as ds
-    # load the urls from the file to a list
-    input_urls = open(PATH_ONLINE_DOCS).readlines()
-    # or, define a list directly
-    #input_urls = ["https:///URL1", "https://URL2", "https://URL3"]
-    documents = ds.convert_documents(proj_key=PROJ_KEY, url=input_urls)
+    URL = ["https:///URL1", "https://URL2", "https://URL3"]
+    documents = ds.convert_documents(proj_key=PROJ_KEY, url=URL)
+
+    # Let's download all the converted documents locally in RESULT_DIR
+    documents.download_all(result_dir = RESULT_DIR)
     ```
