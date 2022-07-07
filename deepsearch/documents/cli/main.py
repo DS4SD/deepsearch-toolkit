@@ -55,25 +55,11 @@ def convert(
     )
 
     result_dir = create_root_dir()
-    urls = get_download_url(
-        cps_proj_key=result.proj_key,
-        task_ids=result.task_ids,
-    )
-    download_converted_documents(
-        download_urls=urls, result_dir=result_dir, progress_bar=True
-    )
-    if source_path is not None:
-        report_docs(
-            result_dir=result_dir,
-            task_ids=result.task_ids,
-            statuses=result.statuses,
-            source_path=source_path,
-        )
-    elif url is not None:
-        report_urls(
-            result_dir=result_dir, task_ids=result.task_ids, statuses=result.statuses
-        )
-
+    result.download_all(progress_bar=True, result_dir=result_dir)
+    info = result.generate_report(result_dir=result_dir)
+    for key in info:
+        pad = 35
+        typer.echo(f"{key:<{pad}}{info[key]}")
     return
 
 

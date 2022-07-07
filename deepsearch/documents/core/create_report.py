@@ -16,19 +16,18 @@ def report_urls(
     Function to create report when DeepSearch is converting urls.
     """
     report_name = os.path.join(result_dir, "report.csv")
+    info = {
+        "Total online documents": len(urls),
+        "Successfully converted documents": statuses.count("SUCCESS"),
+    }
 
-    pad = 35
-    print(f"\n{'Total online documents:':<{pad}}{len(urls):04}")
-    print(
-        f"""{'Successfully converted documents:':<{pad}}{statuses.count('SUCCESS'):04}({int(100*statuses.count('SUCCESS')/len(urls))}%)"""
-    )
     with open(report_name, mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["s. no.", "task_id", "status", "url"])
         for index in range(len(task_ids)):
             writer.writerow([index + 1, task_ids[index], statuses[index], urls[index]])
 
-    return
+    return info
 
 
 def report_docs(
@@ -63,39 +62,17 @@ def report_docs(
         )
         files_zip = files_zip + files_tmpzip
 
-    pad = 35
-    print(f"\n{'Total files (pdf+zip):':<{pad}}{count_total_docs:04}")
-    print(f"{'Total batches:':<{pad}}{len(files_zip):04}")
-    print(
-        f"""{'Successfully converted batches:':<{pad}}{statuses.count('SUCCESS'):04}({int(100*statuses.count('SUCCESS')/len(files_zip))}%)"""
-    )
+    info = {
+        "Total files (pdf+zip)": count_total_docs,
+        "Total batches": len(files_zip),
+        "Successfully converted batches": statuses.count("SUCCESS"),
+    }
 
     batch_done = []
     with open(report_name, mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["s. no.", "task_id", "status", "document", "batch"])
-        # following part prints report batch by batch
-        # for index in range(len(files_zip)):
-        # if files_zip[index] in batch_name:
-        #     writer.writerow(
-        #         [
-        #             index + 1,
-        #             task_ids[index],
-        #             statuses[index],
-        #             doc_file[batch_name.index(files_zip[index])],
-        #             files_zip[index],
-        #         ]
-        #     )
-        # else:
-        #     writer.writerow(
-        #         [
-        #             index + 1,
-        #             task_ids[index],
-        #             statuses[index],
-        #             os.path.basename(files_zip),
-        #             files_zip[index],
-        #         ]
-        #     )
+
         # following part prints report pdf by pdf
         count = 1
         for file, batch in batched_files:
@@ -123,4 +100,4 @@ def report_docs(
                 )
             count += 1
             batch_done.append(batch)
-    return
+    return info
