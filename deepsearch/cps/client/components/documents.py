@@ -33,7 +33,7 @@ class DocumentConversionResult:
         self._source_path = source_path
         self._source_urls = source_urls
 
-    def download_json(self, result_dir: Path, progress_bar=False):
+    def download_all(self, result_dir: Path, progress_bar=False):
         """
         Download all converted documents.
 
@@ -55,10 +55,11 @@ class DocumentConversionResult:
         result_dir: Path,
     ):
         """
-        Generate csv report file for detailed information about the document conversion job.
+        Saves a csv report file for detailed information about the document conversion job.
+        Returns a dictionary object containing counts of files/urls converted.
         """
         if self._source_urls == None:
-            report_docs(
+            info = report_docs(
                 result_dir=result_dir,
                 task_ids=self.task_ids,
                 statuses=self.statuses,
@@ -66,14 +67,14 @@ class DocumentConversionResult:
             )
 
         if self._source_path == None:
-            report_urls(
+            info = report_urls(
                 result_dir=result_dir,
                 urls=self._source_urls,
                 statuses=self.statuses,
                 task_ids=self.task_ids,
             )
 
-        return
+        return info
 
     def __iter__(self):
         for index in range(len(self.task_ids)):
