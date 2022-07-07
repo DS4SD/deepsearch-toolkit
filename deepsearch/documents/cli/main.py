@@ -49,7 +49,7 @@ def convert(
     """
     result = convert_documents(
         proj_key=proj_key,
-        url=url,
+        urls=url,
         source_path=source_path,
         progress_bar=progress_bar,
     )

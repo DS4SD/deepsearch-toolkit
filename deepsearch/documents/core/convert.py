@@ -185,7 +185,7 @@ def get_download_url(
     api: Optional[CpsApi] = None,
 ) -> List[str]:
     """
-    Get the url of converted document.
+    Get the urls of converted documents.
     """
     if api is None:
         api = CpsApi.default_from_env()

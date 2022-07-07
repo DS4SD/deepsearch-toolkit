@@ -13,7 +13,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def convert_documents(
     proj_key: str,
-    url: Optional[Union[str, List[str]]] = None,
+    urls: Optional[Union[str, List[str]]] = None,
     source_path: Optional[Path] = None,
     api: Optional[CpsApi] = None,
     progress_bar=False,
@@ -27,7 +27,7 @@ def convert_documents(
     Your DeepSearch CPS Project Key. Contact DeepSearch Developers to request one.
 
     url : string [OPTIONAL]
-    For converting a document from the web, please provide its url.
+    For converting documents from the web, please provide a single url or list of urls.
 
     source_file : path [OPTIONAL]
     For converting local files, please provide absolute path to file or to directory
@@ -45,15 +45,15 @@ def convert_documents(
         api = CpsApi.default_from_env()
 
     # check required inputs are present
-    if url is None and source_path is None:
+    if urls is None and source_path is None:
         raise ValueError(
             "No input provided. Please provide either a url or a local file for conversion."
         )
-    elif url is not None and source_path is None:
-        if urllib.parse.urlparse(url).scheme in ("http", "https"):
-            urls = [url]
-        else:
-            urls = get_urls(Path(url))
+    elif urls is not None and source_path is None:
+        if isinstance(urls, str):
+            urls = [urls]
+        # else:
+        #     urls = get_urls(Path(url))
 
         return process_urls_input(
             api=api,
@@ -61,7 +61,7 @@ def convert_documents(
             urls=urls,
             progress_bar=progress_bar,
         )
-    elif url is None and source_path is not None:
+    elif urls is None and source_path is not None:
         return process_local_input(
             api=api,
             cps_proj_key=proj_key,
