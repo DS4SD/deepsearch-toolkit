@@ -9,15 +9,14 @@ import pathlib
 from typing import Any, List
 from .common_routines import progressbar_padding
 from deepsearch.cps.client.api import CpsApi
+import urllib
 
 
 class URLNavigator:
     def __init__(self, api: CpsApi) -> None:
         self.api = api
         self.url_host = self.api.client.swagger_client.configuration.host
-        self.url_linked_ccs = (
-            self.url_host.rstrip("/public/v1").rstrip("cps") + "linked-ccs"
-        )
+        self.url_linked_ccs = urllib.parse.urljoin(self.url_host, "/api/linked-ccs")
         self.url_user_management = "/user/v1"
         self.url_public_apis = "/public/v4"
 
