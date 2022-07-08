@@ -1,17 +1,14 @@
-from __future__ import annotations
 from pathlib import Path
 import os
 import urllib3
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import List, Optional
 from deepsearch.documents.core.convert import (
     get_download_url,
     download_converted_documents,
 )
 from deepsearch.documents.core.create_report import report_docs, report_urls
 
-if TYPE_CHECKING:
-    from deepsearch.cps.client import CpsApi
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
