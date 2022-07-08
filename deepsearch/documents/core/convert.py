@@ -151,7 +151,7 @@ def check_status_running_tasks(
     cps_proj_key: str, task_ids, api: Optional[CpsApi] = None, progress_bar=False
 ) -> List[str]:
     """
-    Check status of multiple running tasks and display progress with progress bar.
+    Check status of multiple running tasks and optionally display progress with progress bar.
     """
     if api is None:
         api = CpsApi.default_from_env()
