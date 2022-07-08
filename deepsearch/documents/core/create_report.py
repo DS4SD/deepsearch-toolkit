@@ -71,7 +71,7 @@ def report_docs(
     batch_done = []
     with open(report_name, mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["s. no.", "task_id", "status", "document", "batch"])
+        writer.writerow(["s. no.", "task_id", "status", "document"])
 
         # following part prints report pdf by pdf
         count = 1
@@ -82,7 +82,6 @@ def report_docs(
                     task_ids[files_zip.index(batch)],
                     statuses[files_zip.index(batch)],
                     file,
-                    batch,
                 ]
             )
             count += 1
@@ -94,7 +93,6 @@ def report_docs(
                         count,
                         task_ids[files_zip.index(batch)],
                         statuses[files_zip.index(batch)],
-                        batch,
                         batch,
                     ]
                 )
