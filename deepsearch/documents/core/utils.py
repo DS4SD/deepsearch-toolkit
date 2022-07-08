@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 import pathlib
 from typing import Any, List
-from .common_routines import progressbar_padding
+from .common_routines import progressbar
 from deepsearch.cps.client.api import CpsApi
 import urllib
 
@@ -67,8 +67,10 @@ def batch_single_files(
     if len(files_pdf) != 0:
         with tqdm(
             total=len(files_pdf),
-            desc=f'{"Processing input:":<{progressbar_padding}}',
+            desc=f"{'Processing input:': <{progressbar['padding']}}",
             disable=not (progress_bar),
+            colour=progressbar["colour"],
+            bar_format=progressbar["bar_format"],
         ) as progress:
             # loop over pdfs
             for single_doc in files_pdf:

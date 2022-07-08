@@ -14,7 +14,7 @@ from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import (
     ERROR_MSG,
     WELCOME,
-    progressbar_padding,
+    progressbar,
     success_message,
 )
 from deepsearch.documents.core.create_report import report_docs, report_urls
@@ -59,7 +59,10 @@ def upload_files(
 
 
 def process_url_input(
-    api: CpsApi, coords: ElasticProjectDataCollectionSource, urls: List[str]
+    api: CpsApi,
+    coords: ElasticProjectDataCollectionSource,
+    urls: List[str],
+    progress_bar=False,
 ):
     """
     Individual urls are uploaded for conversion and storage in data index.
@@ -73,7 +76,10 @@ def process_url_input(
     count_urls = len(urls)
     with tqdm(
         total=count_urls,
-        desc=f'{"Submitting input:":<{progressbar_padding}}',
+        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        disable=not (progress_bar),
+        colour=progressbar["colour"],
+        bar_format=progressbar["bar_format"],
     ) as progress:
         for url in urls:
             payload = {"file_url": url}
@@ -92,7 +98,10 @@ def process_url_input(
 
 
 def process_local_file(
-    api: CpsApi, coords: ElasticProjectDataCollectionSource, local_file: Path
+    api: CpsApi,
+    coords: ElasticProjectDataCollectionSource,
+    local_file: Path,
+    progress_bar=False,
 ):
     """
     Individual files are uploaded for conversion and storage in data index.
@@ -127,7 +136,10 @@ def process_local_file(
     # start loop
     with tqdm(
         total=count_total_files,
-        desc=f'{"Submitting input:":<{progressbar_padding}}',
+        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        disable=not (progress_bar),
+        colour=progressbar["colour"],
+        bar_format=progressbar["bar_format"],
     ) as progress:
         # loop over all files
         for single_zip in files_zip:
