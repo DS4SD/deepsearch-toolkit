@@ -1,5 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
+import os
 import urllib3
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
@@ -44,6 +45,9 @@ class DocumentConversionResult:
         progress_bar: boolean, optional (default = False)
             shows progress bar is True
         """
+        if not os.path.isdir(result_dir):
+            os.makedirs(result_dir)
+
         urls = get_download_url(cps_proj_key=self.proj_key, task_ids=self.task_ids)
         download_converted_documents(
             result_dir=result_dir, download_urls=urls, progress_bar=progress_bar
@@ -117,6 +121,9 @@ class DocumentResult:
         progress_bar: boolean, optional (default = False)
             shows progress bar is True
         """
+        if not os.path.isdir(result_dir):
+            os.makedirs(result_dir)
+
         urls = get_download_url(cps_proj_key=self.proj_key, task_ids=[self.task_id])
         download_converted_documents(
             result_dir=result_dir, download_urls=urls, progress_bar=progress_bar
