@@ -55,6 +55,7 @@ def process_local_input(
             task_ids=task_ids,
             statuses=statuses,
             source_path=source_path,
+            api=api,
         )
 
 
@@ -75,4 +76,5 @@ def process_urls_input(
         task_ids=task_ids,
         statuses=statuses,
         source_urls=urls,
+        api=api,
     )

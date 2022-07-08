@@ -12,9 +12,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def convert_documents(
     proj_key: str,
+    api: CpsApi = None,
     urls: Optional[Union[str, List[str]]] = None,
     source_path: Optional[Path] = None,
-    api: Optional[CpsApi] = None,
     progress_bar=False,
 ):
     """
@@ -38,11 +38,6 @@ def convert_documents(
 
     NOTE: Either url or source_path should be supplied.
     """
-
-    # initialize default Api if not specified
-    if api is None:
-        api = CpsApi.default_from_env()
-
     # check required inputs are present
     if urls is None and source_path is None:
         raise ValueError(

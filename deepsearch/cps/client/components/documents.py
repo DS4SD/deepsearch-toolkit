@@ -8,6 +8,7 @@ from deepsearch.documents.core.convert import (
     download_converted_documents,
 )
 from deepsearch.documents.core.create_report import report_docs, report_urls
+from deepsearch.cps.client.api import CpsApi
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -22,6 +23,7 @@ class DocumentConversionResult:
         proj_key: str,
         task_ids: list,
         statuses: List[str],
+        api: CpsApi,
         source_path: Optional[Path] = None,
         source_urls: Optional[List[str]] = None,
     ) -> None:
@@ -30,6 +32,7 @@ class DocumentConversionResult:
         self.statuses = statuses
         self._source_path = source_path
         self._source_urls = source_urls
+        self._api = api
 
     def download_all(self, result_dir: Path, progress_bar=False):
         """
@@ -45,7 +48,9 @@ class DocumentConversionResult:
         if not os.path.isdir(result_dir):
             os.makedirs(result_dir)
 
-        urls = get_download_url(cps_proj_key=self.proj_key, task_ids=self.task_ids)
+        urls = get_download_url(
+            cps_proj_key=self.proj_key, task_ids=self.task_ids, api=self._api
+        )
         download_converted_documents(
             result_dir=result_dir, download_urls=urls, progress_bar=progress_bar
         )
@@ -86,6 +91,7 @@ class DocumentConversionResult:
                 proj_key=self.proj_key,
                 task_id=self.task_ids[index],
                 status=self.statuses[index],
+                api=self._api,
             )
 
 
@@ -94,21 +100,19 @@ class DocumentResult:
     Instance of an individual DocumentConversionResult.
     """
 
-    def __init__(
-        self,
-        proj_key: str,
-        task_id: str,
-        status: str,
-    ):
+    def __init__(self, proj_key: str, task_id: str, status: str, api: CpsApi):
         self.proj_key = proj_key
         self.task_id = task_id
         self.status = status
+        self._api = api
 
     def url_json(self):
         """
         Returns the url of a converted json object.
         """
-        return get_download_url(cps_proj_key=self.proj_key, task_ids=[self.task_id])[0]
+        return get_download_url(
+            cps_proj_key=self.proj_key, task_ids=[self.task_id], api=self._api
+        )[0]
 
     def download(self, result_dir: Path, progress_bar=False):
         """
@@ -123,9 +127,12 @@ class DocumentResult:
         """
         if not os.path.isdir(result_dir):
             os.makedirs(result_dir)
-
-        urls = get_download_url(cps_proj_key=self.proj_key, task_ids=[self.task_id])
+        url = get_download_url(
+            cps_proj_key=self.proj_key, task_ids=[self.task_id], api=self._api
+        )
         download_converted_documents(
-            result_dir=result_dir, download_urls=urls, progress_bar=progress_bar
+            result_dir=result_dir,
+            download_urls=url,
+            progress_bar=progress_bar,
         )
         return
