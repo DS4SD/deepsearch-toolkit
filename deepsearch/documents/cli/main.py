@@ -8,6 +8,7 @@ import typer
 from deepsearch.cps.cli.cli_options import SOURCE_PATH, PROJ_KEY, URL, PROGRESS_BAR
 from deepsearch.documents.core.main import convert_documents
 from deepsearch.documents.core.utils import create_root_dir, get_urls
+from deepsearch.cps.client.api import CpsApi
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -40,6 +41,8 @@ def convert(
 
     NOTE: Either url or source_path should be supplied.
     """
+    api = CpsApi.default_from_env()
+
     if urls is not None:
         if urllib.parse.urlparse(urls).scheme in ("http", "https"):
             urls = [urls]
@@ -51,6 +54,7 @@ def convert(
         urls=urls,
         source_path=source_path,
         progress_bar=progress_bar,
+        api=api,
     )
 
     result_dir = create_root_dir()
