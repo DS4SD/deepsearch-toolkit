@@ -13,7 +13,6 @@ from deepsearch.cps.data_indices import utils
 from deepsearch.documents.core.common_routines import (
     ERROR_MSG,
     WELCOME,
-    progressbar_padding,
     success_message,
 )
 
