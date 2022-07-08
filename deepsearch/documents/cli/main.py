@@ -1,5 +1,4 @@
-from pathlib import Path, PosixPath
-from typing import List
+from pathlib import Path
 import urllib3, urllib
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -7,14 +6,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import typer
 
 from deepsearch.cps.cli.cli_options import SOURCE_PATH, PROJ_KEY, URL, PROGRESS_BAR
-from deepsearch.documents.core.common_routines import WELCOME
 from deepsearch.documents.core.main import convert_documents
 from deepsearch.documents.core.utils import create_root_dir, get_urls
-from deepsearch.documents.core.convert import (
-    download_converted_documents,
-    get_download_url,
-)
-from deepsearch.documents.core.create_report import report_docs, report_urls
 
 app = typer.Typer(no_args_is_help=True)
 
