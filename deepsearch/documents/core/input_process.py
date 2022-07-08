@@ -2,26 +2,22 @@ import logging
 import os
 import tempfile
 from pathlib import Path
-from typing import Any, List
+from typing import List
 
 import urllib3
-from tqdm import tqdm
+
 
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.documents import DocumentConversionResult
-from .utils import batch_single_files, create_root_dir
+from .utils import batch_single_files
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-from .common_routines import success_message
 from .convert import (
     check_status_running_tasks,
-    download_converted_documents,
-    get_download_url,
     send_files_for_conversion,
     send_urls_for_conversion,
 )
-from .create_report import report_docs, report_urls
 
 logger = logging.getLogger(__name__)
 
