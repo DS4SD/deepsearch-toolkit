@@ -26,7 +26,7 @@ app = typer.Typer(no_args_is_help=True)
 )
 def convert(
     proj_key: str = PROJ_KEY,
-    url: str = URL,
+    urls: str = URL,
     source_path: Path = SOURCE_PATH,
     progress_bar=PROGRESS_BAR,
 ):
@@ -47,10 +47,11 @@ def convert(
 
     NOTE: Either url or source_path should be supplied.
     """
-    if urllib.parse.urlparse(url).scheme in ("http", "https"):
-        urls = [url]
-    else:
-        urls = get_urls(Path(url))
+    if urls is not None:
+        if urllib.parse.urlparse(urls).scheme in ("http", "https"):
+            urls = [urls]
+        else:
+            urls = get_urls(Path(urls))
 
     result = convert_documents(
         proj_key=proj_key,
