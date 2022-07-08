@@ -48,10 +48,9 @@ def convert(
     NOTE: Either url or source_path should be supplied.
     """
     if urllib.parse.urlparse(url).scheme in ("http", "https"):
-            urls = [url]
-        else:
-            urls = get_urls(Path(url))
-
+        urls = [url]
+    else:
+        urls = get_urls(Path(url))
 
     result = convert_documents(
         proj_key=proj_key,
