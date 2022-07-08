@@ -41,7 +41,7 @@ class DocumentConversionResult:
         Input
         -----
         result_dir : path
-            local directory where converted documents are stored
+            local directory where converted documents will be saved
         progress_bar: boolean, optional (default = False)
             shows progress bar is True
         """
@@ -62,6 +62,9 @@ class DocumentConversionResult:
         Saves a csv report file for detailed information about the document conversion job.
         Returns a dictionary object containing counts of files/urls converted.
         """
+        if not os.path.isdir(result_dir):
+            os.makedirs(result_dir)
+
         if self._source_urls == None:
             info = report_docs(
                 result_dir=result_dir,
