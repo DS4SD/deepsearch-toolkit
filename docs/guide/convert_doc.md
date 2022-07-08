@@ -66,13 +66,26 @@ Let `URL` be the web address for an online document.
 
 ### Multiple URLs
 
-Multiple online documents can also be conveniently converted. Simply pass a python list object containing multiple urls. Let `URL` be a list containing several URLs. 
+Multiple online documents can also be conveniently converted. 
+
+- For CLI:
+Create a text file containing the web addresses for online documents, separated by empty lines. For example, the contents of `ONLINE-DOCS.txt` could be:
+
+```text
+URL1
+URL2
+URL3
+```
+Let `PATH_ONLINE_DOCS` be the path to this text file.
+
+- For python:
+Simply pass a python list object containing multiple urls. Let `URL` be a list containing several URLs. 
 
 === "CLI"
     <div class="termy">
 
     ```console
-    deepsearch documents convert -p PROJ_KEY -u URL
+    deepsearch documents convert -p PROJ_KEY -u PATH_ONLINE_DOCS
     ```
 
     </div>
