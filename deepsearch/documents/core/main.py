@@ -6,7 +6,6 @@ from deepsearch.documents.core.input_process import (
     process_local_input,
     process_urls_input,
 )
-from .utils import get_urls
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -52,8 +51,6 @@ def convert_documents(
     elif urls is not None and source_path is None:
         if isinstance(urls, str):
             urls = [urls]
-        # else:
-        #     urls = get_urls(Path(url))
 
         return process_urls_input(
             api=api,

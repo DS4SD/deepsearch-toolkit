@@ -1,6 +1,6 @@
 from pathlib import Path, PosixPath
 from typing import List
-import urllib3
+import urllib3, urllib
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -9,7 +9,7 @@ import typer
 from deepsearch.cps.cli.cli_options import SOURCE_PATH, PROJ_KEY, URL, PROGRESS_BAR
 from deepsearch.documents.core.common_routines import WELCOME
 from deepsearch.documents.core.main import convert_documents
-from deepsearch.documents.core.utils import create_root_dir
+from deepsearch.documents.core.utils import create_root_dir, get_urls
 from deepsearch.documents.core.convert import (
     download_converted_documents,
     get_download_url,
@@ -47,9 +47,15 @@ def convert(
 
     NOTE: Either url or source_path should be supplied.
     """
+    if urllib.parse.urlparse(url).scheme in ("http", "https"):
+            urls = [url]
+        else:
+            urls = get_urls(Path(url))
+
+
     result = convert_documents(
         proj_key=proj_key,
-        urls=url,
+        urls=urls,
         source_path=source_path,
         progress_bar=progress_bar,
     )
