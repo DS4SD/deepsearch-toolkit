@@ -1,15 +1,18 @@
 import datetime
-import requests
-from tqdm import tqdm
-import zipfile as z
 import glob
 import os
-from pathlib import Path
 import pathlib
-from typing import Any, List
-from .common_routines import progressbar
-from deepsearch.cps.client.api import CpsApi
 import urllib
+import zipfile as z
+from pathlib import Path
+from typing import Any, List
+
+import requests
+from tqdm import tqdm
+
+from deepsearch.cps.client.api import CpsApi
+
+from .common_routines import progressbar
 
 
 class URLNavigator:

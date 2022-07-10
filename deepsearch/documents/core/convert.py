@@ -1,9 +1,10 @@
 import glob
+import logging
 import os
 import pathlib
 from pathlib import Path
 from typing import Any, List, Optional
-import logging
+
 import requests
 import urllib3
 from tqdm import tqdm
@@ -15,7 +16,7 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar
-from .utils import download_url, URLNavigator
+from .utils import URLNavigator, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logger = logging.getLogger(__name__)

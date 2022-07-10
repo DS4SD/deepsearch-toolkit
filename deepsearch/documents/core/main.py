@@ -1,6 +1,9 @@
+import urllib
 from pathlib import Path
 from typing import List, Optional, Union
-import urllib, urllib3
+
+import urllib3
+
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.input_process import (
     process_local_input,
@@ -12,7 +15,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def convert_documents(
     proj_key: str,
-    api: CpsApi = None,
+    api: CpsApi,
     urls: Optional[Union[str, List[str]]] = None,
     source_path: Optional[Path] = None,
     progress_bar=False,

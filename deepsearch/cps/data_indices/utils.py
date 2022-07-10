@@ -3,6 +3,7 @@ import logging
 import os
 from pathlib import Path
 from typing import Any, List, Optional, Union
+
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -18,6 +19,7 @@ from deepsearch.documents.core.common_routines import (
     success_message,
 )
 from deepsearch.documents.core.create_report import report_docs, report_urls
+from deepsearch.documents.core.utils import cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +70,7 @@ def process_url_input(
     Individual urls are uploaded for conversion and storage in data index.
     """
 
-    root_dir = input_process.create_root_dir()
+    root_dir = create_root_dir()
 
     # container list for task_ids
     task_ids = []
@@ -92,7 +94,7 @@ def process_url_input(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
     print(success_message)
-    report_urls(root_dir=root_dir, urls=urls, task_ids=task_ids, statuses=statuses)
+    report_urls(result_dir=root_dir, urls=urls, task_ids=task_ids, statuses=statuses)
 
     return
 
@@ -108,7 +110,7 @@ def process_local_file(
     """
 
     # process multiple files from local directory
-    root_dir = input_process.create_root_dir()
+    root_dir = create_root_dir()
     # batch individual pdfs into zips and add them to root_dir
     batched_files = input_process.batch_single_files(
         source_path=local_file, root_dir=root_dir
@@ -158,11 +160,10 @@ def process_local_file(
     )
     print(success_message)
     report_docs(
-        root_dir=root_dir,
-        batched_files=batched_files,
+        result_dir=root_dir,
         task_ids=task_ids,
         statuses=statuses,
         source_path=local_file,
     )
-    input_process.cleanup(root_dir=root_dir)
+    cleanup(root_dir=root_dir)
     return

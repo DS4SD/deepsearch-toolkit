@@ -1,14 +1,16 @@
+import urllib
 from pathlib import Path
-import urllib3, urllib
+
+import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import typer
 
-from deepsearch.cps.cli.cli_options import SOURCE_PATH, PROJ_KEY, URL, PROGRESS_BAR
+from deepsearch.cps.cli.cli_options import PROGRESS_BAR, PROJ_KEY, SOURCE_PATH, URL
+from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.main import convert_documents
 from deepsearch.documents.core.utils import create_root_dir, get_urls
-from deepsearch.cps.client.api import CpsApi
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -43,15 +45,16 @@ def convert(
     """
     api = CpsApi.default_from_env()
 
+    input_urls = None
     if urls is not None:
         if urllib.parse.urlparse(urls).scheme in ("http", "https"):
-            urls = [urls]
+            input_urls = [urls]
         else:
-            urls = get_urls(Path(urls))
+            input_urls = get_urls(Path(urls))
 
     result = convert_documents(
         proj_key=proj_key,
-        urls=urls,
+        urls=input_urls,
         source_path=source_path,
         progress_bar=progress_bar,
         api=api,

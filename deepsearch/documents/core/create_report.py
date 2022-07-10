@@ -42,7 +42,9 @@ def report_docs(
     report_name = os.path.join(result_dir, "report.csv")
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        batched_files = batch_single_files(source_path=source_path, root_dir=tmpdir)
+        batched_files = batch_single_files(
+            source_path=source_path, root_dir=Path(tmpdir)
+        )
 
         # batched_files only contains information about single pdfs
         # user zips are collected again
