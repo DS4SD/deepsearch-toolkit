@@ -1,6 +1,6 @@
 This page shows how to convert documents and download the converted `.json` files. Instead of downloading the converted `.json` files, if you'd like to add the converted document to your project see [Adding documents in a project](../guide/data_indices.md#adding-documents-in-a-project).
 
-For the tasks on this page, you are required to identify your project within Deep Search via a `PROJ_KEY`. [Listing projects](projects.md#listing-projects-listprojects) shows the `PROJ_KEY` for all of your projects.
+For the tasks on this page, you are required to identify your project within Deep Search via a `PROJ_KEY`. [Listing projects](projects.md#listing-projects-listprojects) shows the `PROJ_KEY` for all of your projects. 
 
 
 ## Converting local documents
@@ -32,7 +32,10 @@ Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in yo
 === "Python"       
     ```python
     import deepsearch as ds                                         
-    documents = ds.convert_documents(proj_key=PROJ_KEY, local_file=PATH_DOCS)
+    documents = ds.convert_documents(api=api, proj_key=PROJ_KEY, source_path=PATH_DOCS)
+
+    # Let's download all the converted documents locally in RESULT_DIR
+    documents.download_all(result_dir = RESULT_DIR)
     ```
 
 --- 
@@ -56,13 +59,19 @@ Let `URL` be the web address for an online document.
 === "Python"       
     ```python
     import deepsearch as ds                                         
-    documents = ds.convert_documents(proj_key=PROJ_KEY, url=URL)
+    documents = ds.convert_documents(api=api,proj_key=PROJ_KEY, urls=URL)
+
+    # Let's download all the converted documents locally in RESULT_DIR
+    documents.download_all(result_dir = RESULT_DIR)
     ```
 
 --- 
 
 ### Multiple URLs
 
+Multiple online documents can also be conveniently converted. 
+
+- For CLI:
 Create a text file containing the web addresses for online documents, separated by empty lines. For example, the contents of `ONLINE-DOCS.txt` could be:
 
 ```text
@@ -70,8 +79,10 @@ URL1
 URL2
 URL3
 ```
-
 Let `PATH_ONLINE_DOCS` be the path to this text file.
+
+- For python:
+Simply pass a python list object containing multiple urls. Let `URL` be a list containing several URLs. 
 
 === "CLI"
     <div class="termy">
@@ -86,9 +97,9 @@ Let `PATH_ONLINE_DOCS` be the path to this text file.
 === "Python"       
     ```python
     import deepsearch as ds
-    # load the urls from the file to a list
-    input_urls = open(PATH_ONLINE_DOCS).readlines()
-    # or, define a list directly
-    #input_urls = ["https:///URL1", "https://URL2", "https://URL3"]
-    documents = ds.convert_documents(proj_key=PROJ_KEY, url=input_urls)
+    URL = ["https:///URL1", "https://URL2", "https://URL3"]
+    documents = ds.convert_documents(api=api,proj_key=PROJ_KEY, urls=URL)
+
+    # Let's download all the converted documents locally in RESULT_DIR
+    documents.download_all(result_dir = RESULT_DIR)
     ```

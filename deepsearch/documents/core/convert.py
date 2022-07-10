@@ -1,9 +1,10 @@
 import glob
+import logging
 import os
 import pathlib
 from pathlib import Path
 from typing import Any, List, Optional
-import logging
+
 import requests
 import urllib3
 from tqdm import tqdm
@@ -15,7 +16,7 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar
-from .utils import download_url, URLNavigator
+from .utils import URLNavigator, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logger = logging.getLogger(__name__)
@@ -128,10 +129,10 @@ def send_files_for_conversion(
     # start loop
     with tqdm(
         total=count_total_files,
-        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        desc=f"{'Submitting input:': <{progressbar.padding}}",
         disable=not (progress_bar),
-        colour=progressbar["colour"],
-        bar_format=progressbar["bar_format"],
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
     ) as progress:
         # loop over all files
         for single_zip in files_zip:
@@ -167,10 +168,10 @@ def check_status_running_tasks(
 
     with tqdm(
         total=count_total,
-        desc=f"{'Converting input:': <{progressbar['padding']}}",
+        desc=f"{'Converting input:': <{progressbar.padding}}",
         disable=not (progress_bar),
-        colour=progressbar["colour"],
-        bar_format=progressbar["bar_format"],
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
     ) as progress:
         for task_id in task_ids:
             request_status = check_single_task_status(
@@ -231,10 +232,10 @@ def download_converted_documents(
 
     with tqdm(
         total=len(download_urls),
-        desc=f"{'Downloading result:': <{progressbar['padding']}}",
+        desc=f"{'Downloading result:': <{progressbar.padding}}",
         disable=not (progress_bar),
-        colour=progressbar["colour"],
-        bar_format=progressbar["bar_format"],
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
     ) as progress:
         count = 1
         for url in download_urls:
@@ -279,10 +280,10 @@ def send_urls_for_conversion(
     task_ids = []
     with tqdm(
         total=count_urls,
-        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        desc=f"{'Submitting input:': <{progressbar.padding}}",
         disable=not (progress_bar),
-        colour=progressbar["colour"],
-        bar_format=progressbar["bar_format"],
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
     ) as progress:
         for url in urls:
             task_id = submit_url_for_conversion(

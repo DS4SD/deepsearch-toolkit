@@ -1,4 +1,3 @@
-import logging
 import os
 import tempfile
 from pathlib import Path
@@ -6,9 +5,9 @@ from typing import List
 
 import urllib3
 
-
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.documents import DocumentConversionResult
+
 from .utils import batch_single_files
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -19,8 +18,6 @@ from .convert import (
     send_urls_for_conversion,
 )
 
-logger = logging.getLogger(__name__)
-
 
 def process_local_input(
     api: CpsApi, cps_proj_key: str, source_path: Path, progress_bar=False
@@ -29,7 +26,7 @@ def process_local_input(
     Classify the user provided local input and take appropriate action.
     """
     if not os.path.exists(source_path):
-        logger.error("Error: File not found. Check input.")
+        raise ValueError("File not found. Check input.")
     else:
         with tempfile.TemporaryDirectory() as tmpdir:
             batched_files = batch_single_files(

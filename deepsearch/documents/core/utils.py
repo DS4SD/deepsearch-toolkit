@@ -1,15 +1,18 @@
 import datetime
-import requests
-from tqdm import tqdm
-import zipfile as z
 import glob
 import os
-from pathlib import Path
 import pathlib
-from typing import Any, List
-from .common_routines import progressbar
-from deepsearch.cps.client.api import CpsApi
 import urllib
+import zipfile as z
+from pathlib import Path
+from typing import Any, List
+
+import requests
+from tqdm import tqdm
+
+from deepsearch.cps.client.api import CpsApi
+
+from .common_routines import progressbar
 
 
 class URLNavigator:
@@ -67,10 +70,10 @@ def batch_single_files(
     if len(files_pdf) != 0:
         with tqdm(
             total=len(files_pdf),
-            desc=f"{'Processing input:': <{progressbar['padding']}}",
+            desc=f"{'Processing input:': <{progressbar.padding}}",
             disable=not (progress_bar),
-            colour=progressbar["colour"],
-            bar_format=progressbar["bar_format"],
+            colour=progressbar.colour,
+            bar_format=progressbar.bar_format,
         ) as progress:
             # loop over pdfs
             for single_doc in files_pdf:
@@ -106,9 +109,7 @@ def create_root_dir() -> Path:
     # get timestamp
     ts = datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
     root_dir = Path(f"./results_{ts}/")
-
-    if not os.path.isdir(root_dir):
-        os.makedirs(root_dir)
+    root_dir.mkdir(parents=True)
 
     return root_dir
 

@@ -1,14 +1,15 @@
-from pathlib import Path
 import os
+from pathlib import Path
+from typing import List, Optional
+
 import urllib3
 
-from typing import List, Optional
+from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.convert import (
-    get_download_url,
     download_converted_documents,
+    get_download_url,
 )
 from deepsearch.documents.core.create_report import report_docs, report_urls
-from deepsearch.cps.client.api import CpsApi
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -45,8 +46,9 @@ class DocumentConversionResult:
         progress_bar: boolean, optional (default = False)
             shows progress bar is True
         """
-        if not os.path.isdir(result_dir):
-            os.makedirs(result_dir)
+
+        result_dir = Path(result_dir)
+        result_dir.mkdir(parents=True, exist_ok=True)
 
         urls = get_download_url(
             cps_proj_key=self.proj_key, task_ids=self.task_ids, api=self._api
@@ -64,18 +66,18 @@ class DocumentConversionResult:
         Saves a csv report file for detailed information about the document conversion job.
         Returns a dictionary object containing counts of files/urls converted.
         """
-        if not os.path.isdir(result_dir):
-            os.makedirs(result_dir)
 
-        if self._source_urls == None:
+        result_dir = Path(result_dir)
+        result_dir.mkdir(parents=True, exist_ok=True)
+
+        if self._source_path is not None:
             info = report_docs(
                 result_dir=result_dir,
                 task_ids=self.task_ids,
                 statuses=self.statuses,
                 source_path=self._source_path,
             )
-
-        if self._source_path == None:
+        elif self._source_urls is not None:
             info = report_urls(
                 result_dir=result_dir,
                 urls=self._source_urls,

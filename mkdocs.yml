@@ -50,7 +50,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Getting started: getting_started/authentication.md
+  - Getting started: getting_started/index.md
   - User guide:
       - "guide/index.md"
       - Document Conversion: guide/convert_doc.md

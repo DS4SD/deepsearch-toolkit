@@ -6,7 +6,7 @@ import typer
 
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption, cli_output
 from deepsearch.cps.apis.public.rest import ApiException
-from deepsearch.cps.cli.cli_options import INDEX_KEY, SOURCE_PATH, PROJ_KEY, URL
+from deepsearch.cps.cli.cli_options import INDEX_KEY, PROJ_KEY, SOURCE_PATH, URL
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.cps.data_indices import utils

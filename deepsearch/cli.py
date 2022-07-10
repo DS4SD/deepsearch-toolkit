@@ -1,6 +1,5 @@
 import typer
 
-
 from deepsearch.core.cli.main import app
 from deepsearch.core.cli.plugins import get_cli_groups
 from deepsearch.cps.cli.main import app as cps_app

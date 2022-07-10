@@ -28,7 +28,7 @@ The example notebooks load the authentication credentials from a file called `cp
 }
 ```
 
-More details on how to retrieve the API credentials are available in the [documentation](https://ds4sd.github.io/deepsearch-toolkit/getting_started/authentication).
+More details on how to retrieve the API credentials are available in the [documentation](https://ds4sd.github.io/deepsearch-toolkit/getting_started/#authentication).
 
 
 ## Query notebooks
