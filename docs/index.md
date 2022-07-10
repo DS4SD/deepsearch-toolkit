@@ -56,13 +56,11 @@ $ deepsearch login
 // Convert a document
 // for more details, see <a href="https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc/">document conversion</a>.
 $ deepsearch documents convert -p 1234567890abcdefghijklmnopqrstvwyz123456 -u https://arxiv.org/pdf/2206.00785.pdf
-Submitting input:   100%|█████████████████████████████████████████████| 1/1 [00:01<00:00,  1.23s/it]
-Converting input:   100%|█████████████████████████████████████████████| 1/1 [00:25<00:00, 25.61s/it]
-Downloading result: 100%|█████████████████████████████████████████████| 1/1 [00:01<00:00,  1.50s/it]
-
-Total online documents:            0001
-Successfully converted documents:  0001(100%)
-Run time:                          29.51 seconds
+Submitting input:     : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.52s/it]
+Converting input:     : 100%|██████████████████████████████| 1/1 [00:33<00:00, 33.80s/it]
+Downloading result:   : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.11s/it]
+Total online documents             1
+Successfully converted documents   1
 ```
 
 </div>
