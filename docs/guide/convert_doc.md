@@ -98,7 +98,7 @@ Simply pass a python list object containing multiple urls. Let `URL` be a list c
     ```python
     import deepsearch as ds
     URL = ["https:///URL1", "https://URL2", "https://URL3"]
-    documents = ds.convert_documents(api=api,proj_key=PROJ_KEY, url=URL)
+    documents = ds.convert_documents(api=api,proj_key=PROJ_KEY, urls=URL)
 
     # Let's download all the converted documents locally in RESULT_DIR
     documents.download_all(result_dir = RESULT_DIR)
