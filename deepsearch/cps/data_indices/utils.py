@@ -3,7 +3,9 @@ import logging
 import os
 from pathlib import Path
 from typing import Any, List, Optional, Union
+import urllib3
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from tqdm import tqdm
 
 from deepsearch.cps.client.api import CpsApi
@@ -12,7 +14,7 @@ from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import (
     ERROR_MSG,
     WELCOME,
-    progressbar_padding,
+    progressbar,
     success_message,
 )
 from deepsearch.documents.core.create_report import report_docs, report_urls
@@ -57,7 +59,10 @@ def upload_files(
 
 
 def process_url_input(
-    api: CpsApi, coords: ElasticProjectDataCollectionSource, urls: List[str]
+    api: CpsApi,
+    coords: ElasticProjectDataCollectionSource,
+    urls: List[str],
+    progress_bar=False,
 ):
     """
     Individual urls are uploaded for conversion and storage in data index.
@@ -71,7 +76,10 @@ def process_url_input(
     count_urls = len(urls)
     with tqdm(
         total=count_urls,
-        desc=f'{"Submitting input:":<{progressbar_padding}}',
+        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        disable=not (progress_bar),
+        colour=progressbar["colour"],
+        bar_format=progressbar["bar_format"],
     ) as progress:
         for url in urls:
             payload = {"file_url": url}
@@ -90,7 +98,10 @@ def process_url_input(
 
 
 def process_local_file(
-    api: CpsApi, coords: ElasticProjectDataCollectionSource, local_file: Path
+    api: CpsApi,
+    coords: ElasticProjectDataCollectionSource,
+    local_file: Path,
+    progress_bar=False,
 ):
     """
     Individual files are uploaded for conversion and storage in data index.
@@ -100,7 +111,7 @@ def process_local_file(
     root_dir = input_process.create_root_dir()
     # batch individual pdfs into zips and add them to root_dir
     batched_files = input_process.batch_single_files(
-        local_file=local_file, root_dir=root_dir
+        source_path=local_file, root_dir=root_dir
     )
 
     # collect'em all
@@ -125,13 +136,16 @@ def process_local_file(
     # start loop
     with tqdm(
         total=count_total_files,
-        desc=f'{"Submitting input:":<{progressbar_padding}}',
+        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        disable=not (progress_bar),
+        colour=progressbar["colour"],
+        bar_format=progressbar["bar_format"],
     ) as progress:
         # loop over all files
         for single_zip in files_zip:
             # upload file
             private_download_url = convert.upload_single_file(
-                api=api, cps_proj_key=coords.proj_key, file=Path(single_zip)
+                api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
             )
             payload = {"file_url": private_download_url}
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
@@ -148,7 +162,7 @@ def process_local_file(
         batched_files=batched_files,
         task_ids=task_ids,
         statuses=statuses,
-        local_file=local_file,
+        source_path=local_file,
     )
     input_process.cleanup(root_dir=root_dir)
     return

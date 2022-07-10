@@ -24,7 +24,7 @@ URL = typer.Option(
             multiple urls separated by empty lines.""",
 )
 
-LOCAL_FILE = typer.Option(
+SOURCE_PATH = typer.Option(
     None,
     "--input-file",
     "-i",
@@ -33,3 +33,11 @@ LOCAL_FILE = typer.Option(
 )
 
 INDEX_KEY = typer.Option(..., "-x", "--index-key", help="index_key of data index")
+
+PROGRESS_BAR = typer.Option(
+    True,
+    "--progress-bar",
+    "-pbar",
+    is_flag=True,
+    help="Show progress bar (default is True)",
+)

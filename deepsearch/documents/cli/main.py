@@ -1,23 +1,16 @@
-from pathlib import Path, PosixPath
-from typing import List
+from pathlib import Path
+import urllib3, urllib
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import typer
 
-from deepsearch.cps.cli.cli_options import LOCAL_FILE, PROJ_KEY, URL
-from deepsearch.documents.core.common_routines import WELCOME
+from deepsearch.cps.cli.cli_options import SOURCE_PATH, PROJ_KEY, URL, PROGRESS_BAR
 from deepsearch.documents.core.main import convert_documents
+from deepsearch.documents.core.utils import create_root_dir, get_urls
+from deepsearch.cps.client.api import CpsApi
 
 app = typer.Typer(no_args_is_help=True)
-
-
-def get_urls(path: Path) -> List[str]:
-    """
-    Returns list of url from input file.
-    """
-
-    lines = path.read_text()
-    urls = [line.strip() for line in lines.split("\n") if line.strip() != ""]
-    return urls
 
 
 @app.command(
@@ -27,8 +20,9 @@ def get_urls(path: Path) -> List[str]:
 )
 def convert(
     proj_key: str = PROJ_KEY,
-    url: str = URL,
-    local_file: Path = LOCAL_FILE,
+    urls: str = URL,
+    source_path: Path = SOURCE_PATH,
+    progress_bar=PROGRESS_BAR,
 ):
     """
     Document conversion via Deep Search Technology.
@@ -41,20 +35,34 @@ def convert(
     url : string [OPTIONAL]
     For converting a document from the web, please provide its url.
 
-    local_file : string/path [OPTIONAL]
+    source_path : string/path [OPTIONAL]
     For converting local files, please provide absolute path to file or to directory
     containing multiple files.
 
-    NOTE: Either url or local_file should be supplied.
+    NOTE: Either url or source_path should be supplied.
     """
-    typer.echo(WELCOME)
+    api = CpsApi.default_from_env()
 
-    urls = None
-    if url is not None:
-        p = Path(url)
-        urls = get_urls(p) if p.exists() else [url]
+    if urls is not None:
+        if urllib.parse.urlparse(urls).scheme in ("http", "https"):
+            urls = [urls]
+        else:
+            urls = get_urls(Path(urls))
 
-    documents = convert_documents(proj_key=proj_key, url=urls, local_file=local_file)
+    result = convert_documents(
+        proj_key=proj_key,
+        urls=urls,
+        source_path=source_path,
+        progress_bar=progress_bar,
+        api=api,
+    )
+
+    result_dir = create_root_dir()
+    result.download_all(progress_bar=True, result_dir=result_dir)
+    info = result.generate_report(result_dir=result_dir)
+    for key in info:
+        pad = 35
+        typer.echo(f"{key:<{pad}}{info[key]}")
     return
 
 

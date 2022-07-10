@@ -6,14 +6,13 @@ import typer
 
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption, cli_output
 from deepsearch.cps.apis.public.rest import ApiException
-from deepsearch.cps.cli.cli_options import INDEX_KEY, LOCAL_FILE, PROJ_KEY, URL
+from deepsearch.cps.cli.cli_options import INDEX_KEY, SOURCE_PATH, PROJ_KEY, URL
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.cps.data_indices import utils
 from deepsearch.documents.core.common_routines import (
     ERROR_MSG,
     WELCOME,
-    progressbar_padding,
     success_message,
 )
 
@@ -121,7 +120,7 @@ def get_urls(path: Path) -> List[str]:
 def upload_files(
     proj_key: str = PROJ_KEY,
     url: str = URL,
-    local_file: Path = LOCAL_FILE,
+    local_file: Path = SOURCE_PATH,
     index_key: str = INDEX_KEY,
 ):
     """
