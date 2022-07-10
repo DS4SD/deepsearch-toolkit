@@ -7,7 +7,7 @@
 [![Docs](https://img.shields.io/badge/website-live-brightgreen)](https://ds4sd.github.io/deepsearch-toolkit/)
 
 
-*Interact with the DeepSearch platform for new knowledge explorations and discoveries*
+*Interact with the Deep Search platform for new knowledge explorations and discoveries*
 
 
 The Deep Search Toolkit is a Python SDK allowing a user to interact with the Deep Search platform. The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
@@ -54,13 +54,11 @@ $ deepsearch login
 // Convert a document
 // for more details, see https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc/
 $ deepsearch documents convert -p 1234567890abcdefghijklmnopqrstvwyz123456 -u https://arxiv.org/pdf/2206.00785.pdf
-Submitting input:   100%|█████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.23s/it]
-Converting input:   100%|█████████████████████████████████████████████████████████████| 1/1 [00:25<00:00, 25.61s/it]
-Downloading result: 100%|█████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.50s/it]
-
-Total online documents:            0001
-Successfully converted documents:  0001(100%)
-Run time:                          29.51 seconds
+Submitting input:     : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.52s/it]
+Converting input:     : 100%|██████████████████████████████| 1/1 [00:33<00:00, 33.80s/it]
+Downloading result:   : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.11s/it]
+Total online documents             1
+Successfully converted documents   1
 ```
 
 
@@ -71,18 +69,18 @@ Please feel free to connect with us using the [discussion section](https://githu
 
 ## Contributing
 
-Please read [Contributing to DeepSearch Toolkit](./CONTRIBUTING.md) for details.
+Please read [Contributing to Deep Search Toolkit](./CONTRIBUTING.md) for details.
 
 
 ## References
 
-If you use `DeepSearch` in your projects, please consider citing the following:
+If you use `Deep Search` in your projects, please consider citing the following:
 
 ```bib
-@software{DeepSearch Toolkit,
-author = {DeepSearch Team},
+@software{Deep Search Toolkit,
+author = {Deep Search Team},
 month = {6},
-title = {{DeepSearch Toolkit}},
+title = {{Deep Search Toolkit}},
 url = {https://github.com/DS4SD/deepsearch-toolkit},
 version = {main},
 year = {2022}
@@ -91,5 +89,5 @@ year = {2022}
 
 ## License
 
-The `DeepSearch Toolkit` codebase is under MIT license.
+The `Deep Search Toolkit` codebase is under MIT license.
 For individual model usage, please refer to the model licenses found in the original packages.
