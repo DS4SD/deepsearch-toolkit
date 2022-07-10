@@ -78,10 +78,10 @@ def process_url_input(
     count_urls = len(urls)
     with tqdm(
         total=count_urls,
-        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        desc=f"{'Submitting input:': <{progressbar.padding}}",
         disable=not (progress_bar),
-        colour=progressbar["colour"],
-        bar_format=progressbar["bar_format"],
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
     ) as progress:
         for url in urls:
             payload = {"file_url": url}
@@ -138,10 +138,10 @@ def process_local_file(
     # start loop
     with tqdm(
         total=count_total_files,
-        desc=f"{'Submitting input:': <{progressbar['padding']}}",
+        desc=f"{'Submitting input:': <{progressbar.padding}}",
         disable=not (progress_bar),
-        colour=progressbar["colour"],
-        bar_format=progressbar["bar_format"],
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
     ) as progress:
         # loop over all files
         for single_zip in files_zip:

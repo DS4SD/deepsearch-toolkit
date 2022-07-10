@@ -70,10 +70,10 @@ def batch_single_files(
     if len(files_pdf) != 0:
         with tqdm(
             total=len(files_pdf),
-            desc=f"{'Processing input:': <{progressbar['padding']}}",
+            desc=f"{'Processing input:': <{progressbar.padding}}",
             disable=not (progress_bar),
-            colour=progressbar["colour"],
-            bar_format=progressbar["bar_format"],
+            colour=progressbar.colour,
+            bar_format=progressbar.bar_format,
         ) as progress:
             # loop over pdfs
             for single_doc in files_pdf:
