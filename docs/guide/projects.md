@@ -19,7 +19,7 @@ Collaborators may be added to a project as `owners`, `editors` or `viewers`. Bel
 ## Listing projects
 
 !!! info
-    Please [configure your login](../getting_started/authentication.md) before trying these examples.
+    Please [configure your login](../getting_started/index.md#authentication) before trying these examples.
 
 === "CLI"
 
@@ -41,7 +41,7 @@ Collaborators may be added to a project as `owners`, `editors` or `viewers`. Bel
 
 === "Python"
 
-    After you have generated the api object (from [login configuration](../getting_started/authentication.md)), listing projects is very easy.
+    After you have generated the api object (from [login configuration](../getting_started/#authentication)), listing projects is very easy.
 
     ```python
     projects = api.projects.list()     # returns list of projects
