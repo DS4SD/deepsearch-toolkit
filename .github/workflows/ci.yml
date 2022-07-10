@@ -12,17 +12,37 @@ env:
   POETRY_VIRTUALENVS_CREATE: false
 
 jobs:
-  test-build-docs:
+  test-styles:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
+        python-version: ['3.8', '3.9', '3.10', '3.x']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pip install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: 'poetry.lock'
+      - name: Install dependencies
+        run: poetry install
+      - name: Run styling check
+        run: pre-commit run --all-files
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
         run: pip install poetry
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.x
           cache: 'pip'
           cache-dependency-path: 'poetry.lock'
       - name: Install dependencies
         run: poetry install
-      - run: mkdocs build --verbose --clean
+      - name: Build docs
+        run: mkdocs build --verbose --clean
