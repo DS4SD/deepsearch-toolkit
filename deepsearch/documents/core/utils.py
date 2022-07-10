@@ -109,9 +109,7 @@ def create_root_dir() -> Path:
     # get timestamp
     ts = datetime.datetime.now().strftime("%Y-%m-%d_%Hh%Mm%Ss")
     root_dir = Path(f"./results_{ts}/")
-
-    if not os.path.isdir(root_dir):
-        os.makedirs(root_dir)
+    root_dir.mkdir(parents=True)
 
     return root_dir
 

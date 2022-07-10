@@ -46,8 +46,9 @@ class DocumentConversionResult:
         progress_bar: boolean, optional (default = False)
             shows progress bar is True
         """
-        if not os.path.isdir(result_dir):
-            os.makedirs(result_dir)
+
+        result_dir = Path(result_dir)
+        result_dir.mkdir(parents=True, exist_ok=True)
 
         urls = get_download_url(
             cps_proj_key=self.proj_key, task_ids=self.task_ids, api=self._api
@@ -66,7 +67,8 @@ class DocumentConversionResult:
         Returns a dictionary object containing counts of files/urls converted.
         """
 
-        result_dir.mkdir(exist_ok=True)
+        result_dir = Path(result_dir)
+        result_dir.mkdir(parents=True, exist_ok=True)
 
         if self._source_path is not None:
             info = report_docs(
