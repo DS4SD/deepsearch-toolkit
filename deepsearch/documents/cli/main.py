@@ -44,7 +44,7 @@ def convert(
     NOTE: Either url or source_path should be supplied.
     """
     api = CpsApi.default_from_env()
-    source_path = Path(source_path).resolve()
+
     input_urls = None
     if urls is not None:
         if urllib.parse.urlparse(urls).scheme in ("http", "https"):
