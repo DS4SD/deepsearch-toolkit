@@ -59,7 +59,6 @@ def convert(
         progress_bar=progress_bar,
         api=api,
     )
-
     result_dir = create_root_dir()
     result.download_all(progress_bar=True, result_dir=result_dir)
     info = result.generate_report(result_dir=result_dir)
