@@ -44,7 +44,7 @@ def convert(
     NOTE: Either url or source_path should be supplied.
     """
     api = CpsApi.default_from_env()
-
+    source_path = Path(source_path).resolve()
     input_urls = None
     if urls is not None:
         if urllib.parse.urlparse(urls).scheme in ("http", "https"):
@@ -59,7 +59,6 @@ def convert(
         progress_bar=progress_bar,
         api=api,
     )
-
     result_dir = create_root_dir()
     result.download_all(progress_bar=True, result_dir=result_dir)
     info = result.generate_report(result_dir=result_dir)

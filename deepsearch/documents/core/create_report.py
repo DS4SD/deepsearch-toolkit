@@ -45,7 +45,6 @@ def report_docs(
         batched_files = batch_single_files(
             source_path=source_path, root_dir=Path(tmpdir)
         )
-
         # batched_files only contains information about single pdfs
         # user zips are collected again
         files_zip: List[Any] = []
@@ -63,6 +62,9 @@ def report_docs(
             os.path.join(tmpdir, "tmpzip/**/*.zip"), recursive=True
         )
         files_zip = files_zip + files_tmpzip
+        # if report generation is called after results are stored, they may appear as zip files.
+        # we remove them from out list.
+        files_zip = [item for item in files_zip if str(result_dir) not in item]
 
     info = {
         "Total files (pdf+zip)": count_total_docs,

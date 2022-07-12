@@ -60,7 +60,7 @@ def convert_documents(
         return process_local_input(
             api=api,
             cps_proj_key=proj_key,
-            source_path=Path(source_path),
+            source_path=Path(source_path).resolve(),
             progress_bar=progress_bar,
         )
 
