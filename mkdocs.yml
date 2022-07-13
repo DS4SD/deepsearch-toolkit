@@ -76,6 +76,10 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/DS4SD/deepsearch-toolkit
   generator: false
+  extra:
+  analytics:
+    provider: google
+    property: G-8WR82RYJQL
 
 # Plugins
 plugins:
