@@ -39,5 +39,13 @@ PROGRESS_BAR = typer.Option(
     "--progress-bar",
     "-pbar",
     is_flag=True,
-    help="Show progress bar (default is True)",
+    help="Show progress bar",
+)
+
+GET_REPORT = typer.Option(
+    False,
+    "--get_report",
+    "-report",
+    is_flag=True,
+    help="Generate report after document conversion",
 )
