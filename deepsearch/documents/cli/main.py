@@ -7,10 +7,16 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import typer
 
-from deepsearch.cps.cli.cli_options import PROGRESS_BAR, PROJ_KEY, SOURCE_PATH, URL
+from deepsearch.cps.cli.cli_options import (
+    GET_REPORT,
+    PROGRESS_BAR,
+    PROJ_KEY,
+    SOURCE_PATH,
+    URL,
+)
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.main import convert_documents
-from deepsearch.documents.core.utils import create_root_dir, get_urls
+from deepsearch.documents.core.utils import create_root_dir, read_lines, write_lines
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -24,7 +30,8 @@ def convert(
     proj_key: str = PROJ_KEY,
     urls: str = URL,
     source_path: Path = SOURCE_PATH,
-    progress_bar=PROGRESS_BAR,
+    progress_bar: bool = PROGRESS_BAR,
+    get_report: bool = GET_REPORT,
 ):
     """
     Document conversion via Deep Search Technology.
@@ -50,7 +57,7 @@ def convert(
         if urllib.parse.urlparse(urls).scheme in ("http", "https"):
             input_urls = [urls]
         else:
-            input_urls = get_urls(Path(urls))
+            input_urls = read_lines(Path(urls))
 
     result = convert_documents(
         proj_key=proj_key,
@@ -60,11 +67,23 @@ def convert(
         api=api,
     )
     result_dir = create_root_dir()
+    # save task ids
+    write_lines(result_dir=result_dir, list_to_write=result.task_ids)
     result.download_all(progress_bar=True, result_dir=result_dir)
-    info = result.generate_report(result_dir=result_dir)
-    for key in info:
-        pad = 35
-        typer.echo(f"{key:<{pad}}{info[key]}")
+
+    if get_report:
+        info = result.generate_report(result_dir=result_dir)
+        for key in info:
+            pad = 35
+            typer.echo(f"{key:<{pad}}{info[key]}")
+    else:
+        typer.echo(
+            """
+        To automatically generate report after document conversion add "-report" flag:
+        deepsearch documents convert -report -p PROJ_KEY -i INPUT_FILES 
+        """
+        )
+
     return
 
 
