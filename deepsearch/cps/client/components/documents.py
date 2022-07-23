@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional, Union
 
 import urllib3
 
@@ -9,7 +9,7 @@ from deepsearch.documents.core.convert import (
     download_converted_documents,
     get_download_url,
 )
-from deepsearch.documents.core.create_report import report_docs, report_urls
+from deepsearch.documents.core.create_report import get_multiple_reports
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -27,6 +27,7 @@ class DocumentConversionResult:
         api: CpsApi,
         source_path: Optional[Path] = None,
         source_urls: Optional[List[str]] = None,
+        batched_files=None,
     ) -> None:
         self.proj_key = proj_key
         self.task_ids = task_ids
@@ -34,6 +35,7 @@ class DocumentConversionResult:
         self._source_path = source_path
         self._source_urls = source_urls
         self._api = api
+        self._batched_files = batched_files
 
     def download_all(self, result_dir: Path, progress_bar=False):
         """
@@ -58,34 +60,38 @@ class DocumentConversionResult:
         )
         return
 
-    def generate_report(
-        self,
-        result_dir: Path,
-    ):
+    def generate_report(self, result_dir: Path, progress_bar=False):
         """
         Saves a csv report file for detailed information about the document conversion job.
         Returns a dictionary object containing counts of files/urls converted.
-        """
 
+        progress_bar: boolean, optional (default = False)
+            shows progress bar is True
+
+        """
         result_dir = Path(result_dir)
         result_dir.mkdir(parents=True, exist_ok=True)
 
         if self._source_path is not None:
-            info = report_docs(
-                result_dir=result_dir,
+            info = get_multiple_reports(
+                api=self._api,
+                cps_proj_key=self.proj_key,
                 task_ids=self.task_ids,
-                statuses=self.statuses,
-                source_path=self._source_path,
+                source_files=self._batched_files,
+                result_dir=result_dir,
+                progress_bar=progress_bar,
             )
+            return info
         elif self._source_urls is not None:
-            info = report_urls(
-                result_dir=result_dir,
-                urls=self._source_urls,
-                statuses=self.statuses,
+            info = get_multiple_reports(
+                api=self._api,
+                cps_proj_key=self.proj_key,
                 task_ids=self.task_ids,
+                source_files=self._source_urls,
+                result_dir=result_dir,
+                progress_bar=progress_bar,
             )
-
-        return info
+            return info
 
     def __iter__(self):
         for index in range(len(self.task_ids)):
