@@ -29,7 +29,7 @@ include = ["deepsearch/py.typed"]
 deepsearch = "deepsearch.cli:app"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 
 # Dependencies for "extras" extra
 ipython-blocking = {version = "^0.3.1", optional = true}
