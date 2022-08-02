@@ -1,4 +1,3 @@
-import urllib
 from pathlib import Path
 from typing import List, Optional, Union
 

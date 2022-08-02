@@ -1,105 +1,123 @@
 import csv
-import glob
+import logging
 import os
-import pathlib
-import tempfile
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Union
 
-from .utils import batch_single_files
+import requests
+from tqdm import tqdm
+
+from deepsearch.cps.client.api import CpsApi
+from deepsearch.documents.core.common_routines import ERROR_MSG, progressbar
+from deepsearch.documents.core.convert import get_ccs_project_key
+from deepsearch.documents.core.utils import URLNavigator
+
+logger = logging.getLogger(__name__)
 
 
-def report_urls(
-    result_dir: Path, urls: List[str], statuses: List[str], task_ids: List[str]
-):
+def get_single_report(api: CpsApi, cps_proj_key: str, task_id: str):
     """
-    Function to create report when DeepSearch is converting urls.
+    Get report of document conversion per individual task id
     """
-    report_name = os.path.join(result_dir, "report.csv")
-    info = {
-        "Total online documents": len(urls),
-        "Successfully converted documents": statuses.count("SUCCESS"),
-    }
-
-    with open(report_name, mode="a", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["s. no.", "task_id", "status", "url"])
-        for index in range(len(task_ids)):
-            writer.writerow([index + 1, task_ids[index], statuses[index], urls[index]])
-
-    return info
-
-
-def report_docs(
-    result_dir: Path,
-    statuses: List[str],
-    task_ids: List[str],
-    source_path: Path,
-):
-    """
-    Function to create report when DeepSearch is converting local documents.
-    """
-    report_name = os.path.join(result_dir, "report.csv")
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        batched_files = batch_single_files(
-            source_path=source_path, root_dir=Path(tmpdir)
-        )
-        # batched_files only contains information about single pdfs
-        # user zips are collected again
-        files_zip: List[Any] = []
-        if os.path.isdir(source_path):
-            files_zip = glob.glob(os.path.join(source_path, "**/*.zip"), recursive=True)
-        elif os.path.isfile(source_path):
-            file_extension = pathlib.Path(source_path).suffix
-            if file_extension == ".zip":
-                files_zip = [source_path]
-
-        count_total_docs = len(batched_files) + len(files_zip)
-
-        # count batched zips
-        files_tmpzip = glob.glob(
-            os.path.join(tmpdir, "tmpzip/**/*.zip"), recursive=True
-        )
-        files_zip = files_zip + files_tmpzip
-        # if report generation is called after results are stored, they may appear as zip files.
-        # we remove them from out list.
-        files_zip = [item for item in files_zip if str(result_dir) not in item]
-
-    info = {
-        "Total files (pdf+zip)": count_total_docs,
-        "Total batches": len(files_zip),
-        "Successfully converted batches": statuses.count("SUCCESS"),
-    }
-
-    batch_done = []
-    with open(report_name, mode="a", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["s. no.", "task_id", "status", "document"])
-
-        # following part prints report pdf by pdf
-        count = 1
-        for file, batch in batched_files:
-            writer.writerow(
-                [
-                    count,
-                    task_ids[files_zip.index(batch)],
-                    statuses[files_zip.index(batch)],
-                    file,
-                ]
+    # get ccs project key and collection name
+    ccs_proj_key, collection_name = get_ccs_project_key(
+        api=api, cps_proj_key=cps_proj_key
+    )
+    try:
+        request_report = api.client.session.get(
+            url=URLNavigator(api).url_report_metrics(
+                ccs_proj_key=ccs_proj_key, task_id=task_id
             )
-            count += 1
-            batch_done.append(batch)
-        for batch in files_zip:
-            if batch not in batch_done:
-                writer.writerow(
-                    [
-                        count,
-                        task_ids[files_zip.index(batch)],
-                        statuses[files_zip.index(batch)],
-                        batch,
-                    ]
+        )
+        request_report.raise_for_status()
+
+        # we do not expose the full report but filter it a bit:
+        keys = [
+            "document_count",
+            "failed_document_count",
+            "page_count",
+            "created",
+            "completed",
+        ]
+        report = {key: request_report.json()[key] for key in keys}
+        return report
+
+    except requests.exceptions.HTTPError as err:
+        # TODO Group all errors in the toolkit into proper classes
+        logger.error(f"HTTPError {err}.\n{ERROR_MSG}\nAborting!")
+        raise
+
+
+def get_multiple_reports(
+    api: CpsApi,
+    cps_proj_key: str,
+    task_ids: List[str],
+    source_files: Union[List[List[str]], List[str], Any],
+    result_dir: Path,
+    progress_bar=False,
+):
+    """
+    Generates reports for multiple tasks_ids and associated documents.
+    """
+    reports = []
+    count, count_doc, count_failed_doc, = (
+        0,
+        0,
+        0,
+    )
+    # start disk writing
+    report_name = os.path.join(result_dir, "report.csv")
+    with open(report_name, mode="a", newline="") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["batch_number", "task_id", "status", "document"])
+
+        # start loop
+        with tqdm(
+            total=len(task_ids),
+            desc=f"{'Generating report:': <{progressbar.padding}}",
+            disable=not (progress_bar),
+            colour=progressbar.colour,
+            bar_format=progressbar.bar_format,
+        ) as progress:
+            # loop over all files
+            for index in range(len(task_ids)):
+                count += 1
+                report = get_single_report(
+                    api=api, cps_proj_key=cps_proj_key, task_id=task_ids[index]
                 )
-            count += 1
-            batch_done.append(batch)
+                count_doc += report["document_count"]
+                count_failed_doc += report["failed_document_count"]
+
+                # batches which have partial failures are identified:
+                if report["failed_document_count"] == 0:
+                    status = "SUCCESS"
+                elif report["failed_document_count"] < report["document_count"]:
+                    status = "PARTIAL_SUCCESS"
+                elif report["failed_document_count"] == report["document_count"]:
+                    status = "FAILURE"
+                else:
+                    status = "ERROR"  # empty reports are marked as errors
+
+                # update disk report
+                if source_files == None:
+                    writer.writerow(
+                        [
+                            count,
+                            task_ids[index],
+                            status,
+                        ]
+                    )
+                else:
+                    writer.writerow(
+                        [count, task_ids[index], status, source_files[index]]
+                    )
+                reports.append(report)
+                progress.update(1)
+
+    # generate cumulative report
+    info = {
+        "Total documents": count_doc,
+        "Successfully converted documents": count_doc - count_failed_doc,
+    }
+
     return info

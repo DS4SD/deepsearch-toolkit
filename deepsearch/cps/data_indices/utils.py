@@ -12,14 +12,12 @@ from tqdm import tqdm
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
-from deepsearch.documents.core.common_routines import (
-    ERROR_MSG,
-    WELCOME,
-    progressbar,
-    success_message,
+from deepsearch.documents.core.common_routines import progressbar, success_message
+from deepsearch.documents.core.utils import (
+    cleanup,
+    collect_all_local_files,
+    create_root_dir,
 )
-from deepsearch.documents.core.create_report import report_docs, report_urls
-from deepsearch.documents.core.utils import cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +92,6 @@ def process_url_input(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
     print(success_message)
-    report_urls(result_dir=root_dir, urls=urls, task_ids=task_ids, statuses=statuses)
 
     return
 
@@ -159,11 +156,5 @@ def process_local_file(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
     print(success_message)
-    report_docs(
-        result_dir=root_dir,
-        task_ids=task_ids,
-        statuses=statuses,
-        source_path=local_file,
-    )
     cleanup(root_dir=root_dir)
     return

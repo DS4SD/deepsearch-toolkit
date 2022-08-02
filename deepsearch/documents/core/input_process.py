@@ -53,6 +53,7 @@ def process_local_input(
             statuses=statuses,
             source_path=source_path,
             api=api,
+            batched_files=batched_files,
         )
 
 
