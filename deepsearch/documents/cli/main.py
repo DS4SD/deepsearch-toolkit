@@ -12,9 +12,11 @@ from deepsearch.cps.cli.cli_options import (
     PROGRESS_BAR,
     PROJ_KEY,
     SOURCE_PATH,
+    TASK_IDS,
     URL,
 )
 from deepsearch.cps.client.api import CpsApi
+from deepsearch.documents.core.create_report import get_multiple_reports
 from deepsearch.documents.core.main import convert_documents
 from deepsearch.documents.core.utils import create_root_dir, read_lines, write_lines
 
@@ -79,12 +81,44 @@ def convert(
     else:
         typer.echo(
             """
-        To automatically generate report after document conversion add "-report" flag:
-        deepsearch documents convert -report -p PROJ_KEY -i INPUT_FILES 
+        To automatically generate report after document conversion use "-report" flag:
+        deepsearch documents convert -p PROJ_KEY -i INPUT_FILES -report 
+
+        Reports can also be generated after document conversion:
+        deepsearch documents report -p PROJ_KEY -t TASK_IDS
         """
         )
 
     return
+
+
+@app.command(
+    name="report",
+    help="Generate report of document conversion",
+    no_args_is_help=True,
+)
+def report(proj_key: str = PROJ_KEY, source_taskids: Path = TASK_IDS):
+    """
+    Generate report of document conversion.
+
+    Inputs
+    ------
+    source_taskids : path
+        path to text file containing text ids generated during document conversion
+    """
+    api = CpsApi.default_from_env()
+    task_ids = read_lines(source_taskids)
+    info = get_multiple_reports(
+        api=api,
+        cps_proj_key=proj_key,
+        task_ids=task_ids,
+        source_files=None,
+        result_dir=Path("./result2/").parent.expanduser().resolve(),
+        progress_bar=True,
+    )
+    for key in info:
+        pad = 35
+        typer.echo(f"{key:<{pad}}{info[key]}")
 
 
 if __name__ == "__main__":

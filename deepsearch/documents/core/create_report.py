@@ -52,7 +52,7 @@ def get_multiple_reports(
     api: CpsApi,
     cps_proj_key: str,
     task_ids: List[str],
-    source_files: Union[List[List[str]], List[str]],
+    source_files: Union[List[List[str]], List[str], Any],
     result_dir: Path,
     progress_bar=False,
 ):
@@ -99,7 +99,18 @@ def get_multiple_reports(
                     status = "Error"  # empty reports are marked as errors
 
                 # update disk report
-                writer.writerow([count, task_ids[index], status, source_files[index]])
+                if source_files == None:
+                    writer.writerow(
+                        [
+                            count,
+                            task_ids[index],
+                            status,
+                        ]
+                    )
+                else:
+                    writer.writerow(
+                        [count, task_ids[index], status, source_files[index]]
+                    )
                 reports.append(report)
                 progress.update(1)
 
