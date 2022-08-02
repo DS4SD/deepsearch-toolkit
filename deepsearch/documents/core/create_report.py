@@ -69,7 +69,7 @@ def get_multiple_reports(
     report_name = os.path.join(result_dir, "report.csv")
     with open(report_name, mode="a", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["S. no.", "task_id", "status", "document"])
+        writer.writerow(["batch_number", "task_id", "status", "document"])
 
         # start loop
         with tqdm(
@@ -90,13 +90,13 @@ def get_multiple_reports(
 
                 # batches which have partial failures are identified:
                 if report["failed_document_count"] == 0:
-                    status = "Success"
+                    status = "SUCCESS"
                 elif report["failed_document_count"] < report["document_count"]:
-                    status = "Partial Success"
+                    status = "PARTIAL_SUCCESS"
                 elif report["failed_document_count"] == report["document_count"]:
-                    status = "Failure"
+                    status = "FAILURE"
                 else:
-                    status = "Error"  # empty reports are marked as errors
+                    status = "ERROR"  # empty reports are marked as errors
 
                 # update disk report
                 if source_files == None:
