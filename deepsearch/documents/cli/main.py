@@ -1,9 +1,10 @@
 import urllib
-from pathlib import Path
 
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+from pathlib import Path
 
 import typer
 
@@ -18,7 +19,7 @@ from deepsearch.cps.cli.cli_options import (
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.create_report import get_multiple_reports
 from deepsearch.documents.core.main import convert_documents
-from deepsearch.documents.core.utils import create_root_dir, read_lines, write_lines
+from deepsearch.documents.core.utils import create_root_dir, read_lines, write_taskids
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -70,22 +71,28 @@ def convert(
     )
     result_dir = create_root_dir()
     # save task ids
-    write_lines(result_dir=result_dir, list_to_write=result.task_ids)
+    write_taskids(result_dir=result_dir, list_to_write=result.task_ids)
     result.download_all(progress_bar=True, result_dir=result_dir)
+    typer.echo(
+        f"""
+        Converted documents and additional metadata are saved here:
+        {result_dir.absolute()}
+        """
+    )
 
     if get_report:
-        info = result.generate_report(result_dir=result_dir)
+        info = result.generate_report(result_dir=result_dir, progress_bar=True)
         for key in info:
             pad = 35
             typer.echo(f"{key:<{pad}}{info[key]}")
     else:
         typer.echo(
-            """
-        To automatically generate report after document conversion use "-report" flag:
-        deepsearch documents convert -p PROJ_KEY -i INPUT_FILES -report 
+            f"""
+        Reports can be generated after document conversion:
+        deepsearch documents get-report -p {proj_key} -t {result_dir.joinpath("task_ids.txt").absolute()}
 
-        Reports can also be generated after document conversion:
-        deepsearch documents report -p PROJ_KEY -t TASK_IDS
+        To automatically generate report after document conversion use the "--report" flag:
+        deepsearch documents convert -p PROJ_KEY -i INPUT_FILES --report 
         """
         )
 
@@ -93,11 +100,11 @@ def convert(
 
 
 @app.command(
-    name="report",
+    name="get-report",
     help="Generate report of document conversion",
     no_args_is_help=True,
 )
-def report(proj_key: str = PROJ_KEY, source_taskids: Path = TASK_IDS):
+def get_report(proj_key: str = PROJ_KEY, source_taskids: Path = TASK_IDS):
     """
     Generate report of document conversion.
 
@@ -108,17 +115,25 @@ def report(proj_key: str = PROJ_KEY, source_taskids: Path = TASK_IDS):
     """
     api = CpsApi.default_from_env()
     task_ids = read_lines(source_taskids)
+    result_dir = Path(source_taskids).parent.expanduser().resolve()
     info = get_multiple_reports(
         api=api,
         cps_proj_key=proj_key,
         task_ids=task_ids,
         source_files=None,
-        result_dir=Path("./result2/").parent.expanduser().resolve(),
+        result_dir=result_dir,
         progress_bar=True,
     )
     for key in info:
         pad = 35
         typer.echo(f"{key:<{pad}}{info[key]}")
+    typer.echo(
+        f"""
+        Document conversion report is saved here:
+        {result_dir.absolute()}
+        """
+    )
+    return
 
 
 if __name__ == "__main__":

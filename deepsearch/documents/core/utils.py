@@ -227,7 +227,7 @@ def read_lines(file_path: Path) -> List[str]:
     return line
 
 
-def write_lines(result_dir: Path, list_to_write: List[str]) -> None:
+def write_taskids(result_dir: Path, list_to_write: List[str]) -> None:
     """
     Write lines in result_dir
     """
