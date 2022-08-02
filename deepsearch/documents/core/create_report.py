@@ -95,6 +95,8 @@ def get_multiple_reports(
                     status = "Partial Success"
                 elif report["failed_document_count"] == report["document_count"]:
                     status = "Failure"
+                else:
+                    status = "Error"  # empty reports are marked as errors
 
                 # update disk report
                 writer.writerow([count, task_ids[index], status, source_files[index]])

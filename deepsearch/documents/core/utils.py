@@ -128,12 +128,14 @@ def batch_single_files(
         bfiles.append(files)
 
     # add existing zip files to bfiles (for reporting purposes)
+    files_zip = []
     if os.path.isdir(source_path):
         files_zip = glob.glob(os.path.join(source_path, "**/*.zip"), recursive=True)
     elif os.path.isfile(source_path):
         file_extension = pathlib.Path(source_path).suffix
         if file_extension == ".zip":
             files_zip = [str(source_path)]
+
     if len(files_zip) > 0:
         files_zip = [os.path.basename(item) for item in files_zip]
         bfiles = bfiles + [[item] for item in files_zip]
