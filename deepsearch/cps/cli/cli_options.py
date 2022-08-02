@@ -44,8 +44,8 @@ PROGRESS_BAR = typer.Option(
 
 GET_REPORT = typer.Option(
     False,
-    "--get_report",
-    "-report",
+    "--report",
+    "-r",
     is_flag=True,
     help="Generate report after document conversion",
 )
