@@ -219,7 +219,7 @@ def download_url(url: str, save_path: Path, chunk_size=128):
 
 def read_lines(file_path: Path) -> List[str]:
     """
-    Returns list of url from input file.
+    Returns list of lines from input file.
     """
 
     lines = file_path.read_text()
