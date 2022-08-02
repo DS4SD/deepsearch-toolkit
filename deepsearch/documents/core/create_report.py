@@ -15,7 +15,7 @@ from deepsearch.documents.core.utils import URLNavigator
 logger = logging.getLogger(__name__)
 
 
-def _get_report(api: CpsApi, cps_proj_key: str, task_id: str):
+def get_single_report(api: CpsApi, cps_proj_key: str, task_id: str):
     """
     Get report of document conversion per individual task id
     """
@@ -82,7 +82,7 @@ def get_multiple_reports(
             # loop over all files
             for index in range(len(task_ids)):
                 count += 1
-                report = _get_report(
+                report = get_single_report(
                     api=api, cps_proj_key=cps_proj_key, task_id=task_ids[index]
                 )
                 count_doc += report["document_count"]
