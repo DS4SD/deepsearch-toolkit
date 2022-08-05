@@ -106,27 +106,6 @@ Simply pass a python list object containing multiple urls. Let `URL` be a list c
 
 ---
 
-## Downloading converted documents
-
-- For CLI:
-The converted documents are downloaded automatically.
-
-- For python:
-
-=== "Python"       
-    ```python
-    import deepsearch as ds
-    URL = ["https:///URL1", "https://URL2", "https://URL3"]
-    documents = ds.convert_documents(api=api,proj_key=PROJ_KEY, urls=URL)
-
-    # Let's download all the converted documents locally in RESULT_DIR
-    documents.download_all(result_dir = RESULT_DIR)
-
-    # We can also iterate over them individually.
-    for doc in documents:
-        doc.download(result_dir=result_dir, progress_bar=True)
-    ```
-
 ## Generating reports
 
 It is possible to create reports which inform the user about the document conversion tasks and their statuses. Such a report is useful in analysis and debugging large tasks.
