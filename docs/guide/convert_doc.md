@@ -18,7 +18,7 @@ Following inputs are supported:
         ZIP files containing additional ZIP files are not supported.
 
 
-Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in your local machine:
+Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in your local machine. 
 
 === "CLI"
     <div class="termy">
@@ -37,6 +37,12 @@ Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in yo
     # Let's download all the converted documents locally in RESULT_DIR
     documents.download_all(result_dir = RESULT_DIR)
     ```
+
+- For CLI: 
+The converted documents are automatically downloaded in a `result_TIMESTAMP` directory of the user's current working directory. The `TIMESTAMP` has the format `YYYY-MM-DD_HHhMMmSSs`. 
+
+- For python:
+The user specifies the location where converted documents are downloaded. 
 
 --- 
 
@@ -103,6 +109,8 @@ Simply pass a python list object containing multiple urls. Let `URL` be a list c
     # Let's download all the converted documents locally in RESULT_DIR
     documents.download_all(result_dir = RESULT_DIR)
     ```
+
+As we saw [before](#converting-local-documents), converted documents are automatically downloaded when using the CLI. Using python, the user specifies the directory where converted documents are downloaded. 
 
 ---
 
