@@ -52,7 +52,7 @@ GET_REPORT = typer.Option(
 
 TASK_IDS = typer.Option(
     None,
-    "--taskids",
+    "--task-ids",
     "-t",
     help="""Provide path to file containing task ids generated during document conversion.""",
 )
