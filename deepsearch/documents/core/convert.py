@@ -1,7 +1,5 @@
-import glob
 import logging
 import os
-import pathlib
 from pathlib import Path
 from typing import Any, List, Optional
 
@@ -16,7 +14,7 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar
-from .utils import URLNavigator, download_url
+from .utils import URLNavigator, collect_all_local_files, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logger = logging.getLogger(__name__)
@@ -107,28 +105,14 @@ def send_files_for_conversion(
     """
     Send multiple files for conversion.
     """
-    # collect'em all
-    files_zip: List[Any] = []
-    if os.path.isdir(source_path):
-        files_zip = glob.glob(os.path.join(source_path, "**/*.zip"), recursive=True)
-    elif os.path.isfile(source_path):
-        file_extension = pathlib.Path(source_path).suffix
-        if file_extension == ".zip":
-            files_zip = [source_path]
-
-    if root_dir is not None:
-        files_tmpzip = glob.glob(
-            os.path.join(root_dir, "tmpzip/**/*.zip"), recursive=True
-        )
-        files_zip = files_zip + files_tmpzip
-    count_total_files = len(files_zip)
+    files_zip = collect_all_local_files(source_path=source_path, root_dir=root_dir)
 
     # container for task_ids
     task_ids = []
 
     # start loop
     with tqdm(
-        total=count_total_files,
+        total=len(files_zip),
         desc=f"{'Submitting input:': <{progressbar.padding}}",
         disable=not (progress_bar),
         colour=progressbar.colour,
