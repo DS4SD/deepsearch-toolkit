@@ -8,7 +8,7 @@ from deepsearch.documents.core.input_process import (
     process_local_input,
     process_urls_input,
 )
-from deepsearch.documents.core.models import ExportTargets
+from deepsearch.documents.core.models import ExportTarget
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -18,7 +18,7 @@ def convert_documents(
     api: CpsApi,
     urls: Optional[Union[str, List[str]]] = None,
     source_path: Optional[Path] = None,
-    target: Optional[ExportTargets] = None,
+    target: Optional[ExportTarget] = None,
     progress_bar=False,
 ):
     """

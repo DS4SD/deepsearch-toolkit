@@ -110,7 +110,7 @@ class ElasticS3Target(BaseModel):
     )
 
 
-ExportTargets = Union[
+ExportTarget = Union[
     ZipTarget,
     MongoS3Target,
     ElasticS3Target,

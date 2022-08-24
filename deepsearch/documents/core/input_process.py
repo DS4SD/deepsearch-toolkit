@@ -8,7 +8,7 @@ import urllib3
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.documents import DocumentConversionResult
 
-from .models import ExportTargets
+from .models import ExportTarget
 from .utils import batch_single_files
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -24,7 +24,7 @@ def process_local_input(
     api: CpsApi,
     cps_proj_key: str,
     source_path: Path,
-    target: Optional[ExportTargets],
+    target: Optional[ExportTarget],
     progress_bar=False,
 ) -> DocumentConversionResult:
     """
@@ -67,7 +67,7 @@ def process_urls_input(
     api: CpsApi,
     cps_proj_key: str,
     urls: List[str],
-    target: Optional[ExportTargets],
+    target: Optional[ExportTarget],
     progress_bar=False,
 ):
     """

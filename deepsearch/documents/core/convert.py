@@ -18,7 +18,7 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar
-from .models import ExportTargets, ZipTarget
+from .models import ExportTarget, ZipTarget
 from .utils import URLNavigator, collect_all_local_files, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 def make_payload(
     url_document: str,
-    target: Optional[ExportTargets],
+    target: Optional[ExportTarget],
     collection_name: str = "_default",
 ):
     """
@@ -77,7 +77,7 @@ def get_ccs_project_key(api: CpsApi, cps_proj_key: str):
 
 
 def submit_url_for_conversion(
-    api: CpsApi, cps_proj_key: str, url: str, target: Optional[ExportTargets]
+    api: CpsApi, cps_proj_key: str, url: str, target: Optional[ExportTarget]
 ) -> str:
     """
     Convert an online pdf using DeepSearch Technology.
@@ -109,7 +109,7 @@ def send_files_for_conversion(
     api: CpsApi,
     cps_proj_key: str,
     source_path: Path,
-    target: Optional[ExportTargets],
+    target: Optional[ExportTarget],
     root_dir: Path,
     progress_bar=False,
 ) -> list:
@@ -272,7 +272,7 @@ def send_urls_for_conversion(
     api: CpsApi,
     cps_proj_key: str,
     urls: List[str],
-    target: Optional[ExportTargets],
+    target: Optional[ExportTarget],
     progress_bar=False,
 ) -> List[Any]:
     """
