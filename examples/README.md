@@ -38,10 +38,10 @@ Note: Managing and querying knowledge graphs is only enabled on dedicated Deep S
 |    | Name              | Description |
 | -- | ----------------- | ----------- |
 | 1. | [Convert_Documents.ipynb](notebooks/Convert_Documents.ipynb) | Full example on programmatic document conversion |
-| 1. | [Query_NodeData.ipynb](notebooks/Query_NodeData.ipynb) | Simple query search for terms and output the text containing them |
-| 2. | [Query_WF_Execute.ipynb](notebooks/Query_WF_Execute.ipynb) | Run query copied from the UI editor |
-| 3. | Query_FTS.ipynb | Using the FullTextSearch functionality |
-| 4. | [Query_Paginate.ipynb](notebooks/Query_Paginate.ipynb) | Examples of different output pagination |
-| 5. | [Query_ForEach.ipynb](notebooks/Query_ForEach.ipynb) | Using the ForEach functionality |
-| 6. | [Query_DataQuery.ipynb](notebooks/Query_DataQuery.ipynb) | Query the data collection |
+| 2. | [Query_NodeData.ipynb](notebooks/Query_NodeData.ipynb) | Simple query search for terms and output the text containing them |
+| 3. | [Query_WF_Execute.ipynb](notebooks/Query_WF_Execute.ipynb) | Run query copied from the UI editor |
+| 4. | Query_FTS.ipynb | Using the FullTextSearch functionality |
+| 5. | [Query_Paginate.ipynb](notebooks/Query_Paginate.ipynb) | Examples of different output pagination |
+| 6. | [Query_ForEach.ipynb](notebooks/Query_ForEach.ipynb) | Using the ForEach functionality |
+| 7. | [Query_DataQuery.ipynb](notebooks/Query_DataQuery.ipynb) | Query the data collection |
 

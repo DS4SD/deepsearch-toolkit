@@ -39,5 +39,20 @@ PROGRESS_BAR = typer.Option(
     "--progress-bar",
     "-pbar",
     is_flag=True,
-    help="Show progress bar (default is True)",
+    help="Show progress bar",
+)
+
+GET_REPORT = typer.Option(
+    False,
+    "--report",
+    "-r",
+    is_flag=True,
+    help="Generate report after document conversion",
+)
+
+TASK_IDS = typer.Option(
+    None,
+    "--task-ids",
+    "-t",
+    help="""Provide path to file containing task ids generated during document conversion.""",
 )

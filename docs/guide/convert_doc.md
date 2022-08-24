@@ -18,7 +18,7 @@ Following inputs are supported:
         ZIP files containing additional ZIP files are not supported.
 
 
-Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in your local machine:
+Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in your local machine. 
 
 === "CLI"
     <div class="termy">
@@ -37,6 +37,12 @@ Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in yo
     # Let's download all the converted documents locally in RESULT_DIR
     documents.download_all(result_dir = RESULT_DIR)
     ```
+
+- For CLI: 
+The converted documents are automatically downloaded in a `result_TIMESTAMP` directory of the user's current working directory. The `TIMESTAMP` has the format `YYYY-MM-DD_HHhMMmSSs`. 
+
+- For python:
+The user specifies the location where converted documents are downloaded. 
 
 --- 
 
@@ -102,4 +108,37 @@ Simply pass a python list object containing multiple urls. Let `URL` be a list c
 
     # Let's download all the converted documents locally in RESULT_DIR
     documents.download_all(result_dir = RESULT_DIR)
+    ```
+
+As we saw [before](#converting-local-documents), converted documents are automatically downloaded when using the CLI. Using python, the user specifies the directory where converted documents are downloaded. 
+
+---
+
+## Generating reports
+
+It is possible to create reports which inform the user about the document conversion tasks and their statuses. Such a report is useful in analysis and debugging large tasks.
+
+- For CLI:
+When a document conversion job is launched from the CLI, the task id for each submitted batch is saved to a result directory. Let `PATH_TASK_IDS` be the path to text file containing the `task ids`.
+
+- For python:
+The `DocumentConversionResult` object has a built-in method for generating reports.
+
+=== "CLI"
+    <div class="termy">
+
+    ```console
+    deepsearch documents get-report -p PROJ_KEY -t PATH_TASK_IDS
+    ```
+
+    </div>
+
+
+=== "Python"
+    ```python
+    import deepsearch as ds                                         
+    documents = ds.convert_documents(api=api, proj_key=PROJ_KEY, source_path=PATH_DOCS)
+
+    # Let's generate the report for this document conversion job
+    documents.generate_report(result_dir="./result/", progress_bar=True)
     ```

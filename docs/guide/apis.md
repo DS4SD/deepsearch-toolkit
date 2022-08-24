@@ -27,7 +27,7 @@ auth = DeepSearchKeyAuth(
     api_key="TOKEN",
 )
 
-config = DeepSeaerchConfig(
+config = DeepSearchConfig(
     host="https://deepsearch-experience.res.ibm.com",
     auth=auth,
     verify_ssl=False,
