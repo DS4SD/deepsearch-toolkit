@@ -45,7 +45,7 @@ def make_payload(
             "collection_name": collection_name,
             "keep_documents": "false",
         },
-        "target": target.json(),
+        "target": target.dict(),
     }
     return payload
 
