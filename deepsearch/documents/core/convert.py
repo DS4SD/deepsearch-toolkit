@@ -2,11 +2,13 @@ import glob
 import logging
 import os
 import pathlib
+from enum import Enum
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 import requests
 import urllib3
+from pydantic import BaseModel, Field
 from tqdm import tqdm
 
 from deepsearch.cps.apis import public as sw_client
@@ -16,16 +18,24 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar
+from .models import ExportTargets, ZipTarget
 from .utils import URLNavigator, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logger = logging.getLogger(__name__)
 
 
-def make_payload(url_document: str, collection_name: str = "_default"):
+def make_payload(
+    url_document: str,
+    target: Optional[ExportTargets],
+    collection_name: str = "_default",
+):
     """
     Create payload for requesting conversion
     """
+
+    target = target or ZipTarget()
+
     payload = {
         "source": {
             "type": "url",
@@ -35,7 +45,7 @@ def make_payload(url_document: str, collection_name: str = "_default"):
             "collection_name": collection_name,
             "keep_documents": "false",
         },
-        "target": {"type": "zip", "content_type": "json", "add_cells": "true"},
+        "target": target.json(),
     }
     return payload
 
@@ -67,9 +77,7 @@ def get_ccs_project_key(api: CpsApi, cps_proj_key: str):
 
 
 def submit_url_for_conversion(
-    api: CpsApi,
-    cps_proj_key: str,
-    url: str,
+    api: CpsApi, cps_proj_key: str, url: str, target: Optional[ExportTargets]
 ) -> str:
     """
     Convert an online pdf using DeepSearch Technology.
@@ -79,7 +87,7 @@ def submit_url_for_conversion(
         api=api, cps_proj_key=cps_proj_key
     )
     # submit conversion request
-    payload = make_payload(url, collection_name)
+    payload = make_payload(url, target, collection_name)
 
     try:
         request_conversion_task_id = api.client.session.post(
@@ -101,6 +109,7 @@ def send_files_for_conversion(
     api: CpsApi,
     cps_proj_key: str,
     source_path: Path,
+    target: Optional[ExportTargets],
     root_dir: Path,
     progress_bar=False,
 ) -> list:
@@ -142,7 +151,10 @@ def send_files_for_conversion(
             )
             # submit url for conversion
             task_id = submit_url_for_conversion(
-                api=api, cps_proj_key=cps_proj_key, url=private_download_url
+                api=api,
+                cps_proj_key=cps_proj_key,
+                url=private_download_url,
+                target=target,
             )
             task_ids.append(task_id)
             progress.update(1)
@@ -271,7 +283,11 @@ def upload_single_file(api: CpsApi, cps_proj_key: str, source_path: Path) -> str
 
 
 def send_urls_for_conversion(
-    api: CpsApi, cps_proj_key: str, urls: List[str], progress_bar=False
+    api: CpsApi,
+    cps_proj_key: str,
+    urls: List[str],
+    target: Optional[ExportTargets],
+    progress_bar=False,
 ) -> List[Any]:
     """
     Send multiple online documents for conversion.
@@ -287,7 +303,7 @@ def send_urls_for_conversion(
     ) as progress:
         for url in urls:
             task_id = submit_url_for_conversion(
-                api=api, cps_proj_key=cps_proj_key, url=url
+                api=api, cps_proj_key=cps_proj_key, url=url, target=target
             )
             task_ids.append(task_id)
             progress.update(1)

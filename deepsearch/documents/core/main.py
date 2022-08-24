@@ -9,6 +9,7 @@ from deepsearch.documents.core.input_process import (
     process_local_input,
     process_urls_input,
 )
+from deepsearch.documents.core.models import ExportTargets
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -18,6 +19,7 @@ def convert_documents(
     api: CpsApi,
     urls: Optional[Union[str, List[str]]] = None,
     source_path: Optional[Path] = None,
+    target: Optional[ExportTargets] = None,
     progress_bar=False,
 ):
     """
@@ -34,6 +36,10 @@ def convert_documents(
     source_file : path [OPTIONAL]
     For converting local files, please provide absolute path to file or to directory
     containing multiple files.
+
+    target : deepsearch.documents.core.models.ExportTargets [OPTIONAL]
+    Specify to which target the documents should be exported. Available options: ZIP file,
+    Elastic index, MongoDB collection
 
     progress_bar : Boolean (default is False in code, True in CLI)
     Show progress bar for processing, submitting, converting input and
@@ -54,6 +60,7 @@ def convert_documents(
             api=api,
             cps_proj_key=proj_key,
             urls=urls,
+            target=target,
             progress_bar=progress_bar,
         )
     elif urls is None and source_path is not None:
@@ -61,6 +68,7 @@ def convert_documents(
             api=api,
             cps_proj_key=proj_key,
             source_path=Path(source_path).expanduser().resolve(),
+            target=target,
             progress_bar=progress_bar,
         )
 
