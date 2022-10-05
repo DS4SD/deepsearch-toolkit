@@ -26,15 +26,17 @@ class CpsApiClient:
         self.config = config
 
         if isinstance(self.config.auth, DeepSearchKeyAuth):
-            self.config.auth = DeepSearchBearerTokenAuth(
+            self.bearer_token_auth = DeepSearchBearerTokenAuth(
                 bearer_token=self._authenticate_with_api_key(
                     self.config.host,
                     self.config.auth.username,
                     self.config.auth.api_key,
                 )
             )
+        else: # config.auth is of type DeepSearchAuth, which is either DeepSearchKeyAuth or DeepSearchBearerTokenAuth
+            self.bearer_token_auth = self.config.auth
 
-        auth = f"Bearer {self.config.auth.bearer_token}"
+        auth = f"Bearer {self.bearer_token_auth.bearer_token}"
 
         sw_config = sw_client.Configuration(
             host=f"{self.config.host}/api/cps/public/v1",
