@@ -6,8 +6,8 @@ on:
       - main
 
 env:
+  POETRY_PKG_SPEC: poetry<1.2  # FIXME: workaround for https://github.com/python-poetry/poetry/issues/6013
   POETRY_VIRTUALENVS_CREATE: false
-
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install poetry
+        run: pip install "${POETRY_PKG_SPEC}"
       - uses: actions/setup-python@v3
         with:
           python-version: 3.x
