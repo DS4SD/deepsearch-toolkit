@@ -9,8 +9,8 @@ on:
       - "!gh-pages"
 
 env:
-  POETRY_VIRTUALENVS_CREATE: false
   POETRY_PKG_SPEC: poetry<1.2  # FIXME: workaround for https://github.com/python-poetry/poetry/issues/6013
+  POETRY_VIRTUALENVS_CREATE: false
 
 jobs:
   test-styles:
