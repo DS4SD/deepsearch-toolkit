@@ -10,6 +10,7 @@ on:
 
 env:
   POETRY_VIRTUALENVS_CREATE: false
+  POETRY_PKG_SPEC: poetry<1.2  # FIXME: workaround for https://github.com/python-poetry/poetry/issues/6013
 
 jobs:
   test-styles:
@@ -21,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install poetry
+        run: pip install "${POETRY_PKG_SPEC}"
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -36,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install poetry
+        run: pip install "${POETRY_PKG_SPEC}"
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
