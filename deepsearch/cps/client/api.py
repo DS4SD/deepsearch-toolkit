@@ -33,7 +33,7 @@ class CpsApiClient:
                     self.config.auth.api_key,
                 )
             )
-        else: # config.auth is of type DeepSearchAuth, which is either DeepSearchKeyAuth or DeepSearchBearerTokenAuth
+        else:  # config.auth is of type DeepSearchAuth, which is either DeepSearchKeyAuth or DeepSearchBearerTokenAuth
             self.bearer_token_auth = self.config.auth
 
         auth = f"Bearer {self.bearer_token_auth.bearer_token}"
