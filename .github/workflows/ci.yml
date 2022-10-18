@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Run styling check
-        run: pre-commit run --all-files
+        run: poetry run pre-commit run --all-files
   build-docs:
     runs-on: ubuntu-latest
     steps:
@@ -46,4 +46,4 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Build docs
-        run: mkdocs build --verbose --clean
+        run: poetry run mkdocs build --verbose --clean
