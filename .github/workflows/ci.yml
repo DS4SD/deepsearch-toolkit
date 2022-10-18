@@ -9,7 +9,7 @@ on:
       - "!gh-pages"
 
 env:
-  POETRY_PKG_SPEC: poetry
+  # disable keyring (https://github.com/actions/runner-images/issues/6185):
   PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install "${POETRY_PKG_SPEC}"
+        run: pip install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install "${POETRY_PKG_SPEC}"
+        run: pip install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
