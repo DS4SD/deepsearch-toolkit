@@ -10,6 +10,7 @@ on:
 
 env:
   POETRY_PKG_SPEC: poetry
+  PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
 
 jobs:
   test-styles:
