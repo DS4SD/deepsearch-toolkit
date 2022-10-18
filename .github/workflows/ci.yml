@@ -9,8 +9,8 @@ on:
       - "!gh-pages"
 
 env:
-  POETRY_PKG_SPEC: poetry<1.2  # FIXME: workaround for https://github.com/python-poetry/poetry/issues/6013
-  POETRY_VIRTUALENVS_CREATE: false
+  # disable keyring (https://github.com/actions/runner-images/issues/6185):
+  PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
 
 jobs:
   test-styles:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install "${POETRY_PKG_SPEC}"
+        run: pip install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -31,13 +31,13 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Run styling check
-        run: pre-commit run --all-files
+        run: poetry run pre-commit run --all-files
   build-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install "${POETRY_PKG_SPEC}"
+        run: pip install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
@@ -46,4 +46,4 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Build docs
-        run: mkdocs build --verbose --clean
+        run: poetry run mkdocs build --verbose --clean
