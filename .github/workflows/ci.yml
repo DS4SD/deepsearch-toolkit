@@ -9,8 +9,7 @@ on:
       - "!gh-pages"
 
 env:
-  POETRY_PKG_SPEC: poetry  # FIXME: workaround for https://github.com/python-poetry/poetry/issues/6013
-  POETRY_VIRTUALENVS_CREATE: false
+  POETRY_PKG_SPEC: poetry
 
 jobs:
   test-styles:
