@@ -1,8 +1,7 @@
-name: Build and publish to PyPI
+name: "[Deprecated] Build and publish to PyPI"
 
-on:
-  release:
-    types: [published]
+# runnable manually
+on: workflow_dispatch
 
 permissions:
   contents: read
@@ -17,8 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install poetry
-      - uses: actions/setup-python@v3
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.x
           cache: 'pip'
