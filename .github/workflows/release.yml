@@ -3,7 +3,7 @@ name: "Bump version, build, and release"
 on:
   push:
     branches:
-      - main
+      - ci/automate-releasing  # FIXME revert to main
 
 env:
   # disable keyring (https://github.com/actions/runner-images/issues/6185):
