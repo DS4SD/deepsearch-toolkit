@@ -1,7 +1,8 @@
-name: "[Deprecated] Build and publish to PyPI"
+name: "Build and publish to PyPI"
 
-# runnable manually
-on: workflow_dispatch
+on:
+  release:
+    types: [published]
 
 permissions:
   contents: read

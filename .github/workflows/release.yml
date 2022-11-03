@@ -3,7 +3,7 @@ name: "Bump version, build, and release"
 on:
   push:
     branches:
-      - ci/automate-releasing  # FIXME revert to main
+      - main
 
 env:
   # disable keyring (https://github.com/actions/runner-images/issues/6185):
@@ -25,8 +25,8 @@ jobs:
           cache-dependency-path: 'poetry.lock'
       - name: Install dependencies
         run: poetry install
-      # - name: Build and push docs  # FIXME: revert
-      #   run: poetry run mkdocs gh-deploy --force  # FIXME: revert
+      - name: Build and push docs
+        run: poetry run mkdocs gh-deploy --force
   release:
     environment: auto-release
     runs-on: ubuntu-latest

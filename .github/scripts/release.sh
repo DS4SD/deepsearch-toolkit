@@ -33,8 +33,8 @@ if [ ! -z "${NEW_TAG_VERSION}" ]; then
     git add pyproject.toml "${CHGLOG_FILE}"
     COMMIT_MSG="chore: bump version to ${NEW_TAG_VERSION} [skip ci]"
     git commit -m "${COMMIT_MSG}"
-    git push origin ci/automate-releasing  # FIXME revert to main
+    git push origin main
 
     # create GitHub release (incl. Git tag)
-    # gh release create "${NEW_TAG_NAME}" -F "${REL_NOTES}"  # FIXME uncomment
+    gh release create "${NEW_TAG_NAME}" -F "${REL_NOTES}"
 fi
