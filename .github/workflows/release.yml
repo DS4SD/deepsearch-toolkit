@@ -28,7 +28,7 @@ jobs:
       # - name: Build and push docs  # FIXME: revert
       #   run: poetry run mkdocs gh-deploy --force  # FIXME: revert
   release:
-    environment: production
+    environment: auto-release
     runs-on: ubuntu-latest
     concurrency: release
     steps:

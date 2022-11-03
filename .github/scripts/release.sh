@@ -31,7 +31,7 @@ if [ ! -z "${NEW_TAG_VERSION}" ]; then
     git config --global user.name 'github-actions[bot]'
     git config --global user.email 'github-actions[bot]@users.noreply.github.com'
     git add pyproject.toml "${CHGLOG_FILE}"
-    COMMIT_MSG="[skip ci] bump version to ${NEW_TAG_VERSION}"
+    COMMIT_MSG="chore: bump version to ${NEW_TAG_VERSION} [skip ci]"
     git commit -m "${COMMIT_MSG}"
     git push origin ci/automate-releasing  # FIXME revert to main
 
