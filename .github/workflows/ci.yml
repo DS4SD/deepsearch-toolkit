@@ -65,4 +65,4 @@ jobs:
       - name: Print version of potential release
         run: poetry run semantic-release print-version
       - name: Print notes of potential release
-        run: poetry run semantic-release print-version
+        run: poetry run semantic-release changelog --unreleased
