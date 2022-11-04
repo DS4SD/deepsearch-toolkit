@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "deepsearch-toolkit"
-version = "0.3.4"
+version = "0.3.4"  # DO NOT EDIT, updated automatically
 description = "Interact with the Deep Search platform for new knowledge explorations and discoveries"
-authors = ["Michele Dolfi <dol@zurich.ibm.com>", "André Carvalho <andre.carvalho2@ibm.com>", "Lokesh Mishra <mis@zurich.ibm.com>", "Christoph Auer <cau@zurich.ibm.com>", "Kasper Dinkla <dkl@zurich.ibm.com>", "Cesar Berrospi Ramis <ceb@zurich.ibm.com>", "Peter Staar <taa@zurich.ibm.com>"]
+authors = ["Michele Dolfi <dol@zurich.ibm.com>", "André Carvalho <andre.carvalho2@ibm.com>", "Lokesh Mishra <mis@zurich.ibm.com>", "Christoph Auer <cau@zurich.ibm.com>", "Kasper Dinkla <dkl@zurich.ibm.com>", "Cesar Berrospi Ramis <ceb@zurich.ibm.com>", "Panos Vagenas <pva@zurich.ibm.com>", "Peter Staar <taa@zurich.ibm.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://ds4sd.github.io/deepsearch-toolkit/"
@@ -57,7 +57,7 @@ pandas = {version = "^1.4.2", optional = true}
 [tool.poetry.extras]
 examples = ["numpy", "jupyter", "pandas", "ipython-blocking", "ipywidgets"]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = {extras = ["jupyter"], version = "^22.1.0"}
 pylint = "^2.12.2"
 pytest = "^7.0.1"
@@ -69,6 +69,7 @@ Jinja2 = "<3.1.0" # See https://github.com/mkdocs/mkdocs/issues/2794
 mkdocs-material = "^8.2.6"
 mkdocstrings = {version = "^0.19.0", extras = ["python"]}
 mkdocs-typer = "^0.0.2"
+python-semantic-release = "^7.32.2"
 
 # Types for packages.
 types-requests = "^2.27.10"
@@ -150,3 +151,15 @@ ignore_missing_imports = true
 module = "pluggy.*"
 ignore_missing_imports = true
 
+[tool.semantic_release]
+# for default values check:
+# https://github.com/relekang/python-semantic-release/blob/master/semantic_release/defaults.cfg
+
+version_source = "tag_only"
+branch = "main"
+
+# configure types which should trigger minor and patch version bumps respectively
+# (note that they must be a subset of the configured allowed types):
+parser_angular_allowed_types = "build,chore,ci,docs,feat,fix,perf,style,refactor,test"
+parser_angular_minor_types = "feat"
+parser_angular_patch_types = "fix,perf"

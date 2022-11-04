@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install poetry
+        run: pipx install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
-        run: pip install poetry
+        run: pipx install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
@@ -47,3 +47,22 @@ jobs:
         run: poetry install
       - name: Build docs
         run: poetry run mkdocs build --verbose --clean
+  release-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+          cache: 'pip'
+          cache-dependency-path: 'poetry.lock'
+      - name: Install dependencies
+        run: poetry install
+      - name: Print version of potential release
+        run: poetry run semantic-release print-version
+      - name: Print notes of potential release
+        run: poetry run semantic-release changelog --unreleased
