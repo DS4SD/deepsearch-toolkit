@@ -26,15 +26,44 @@ jobs:
         run: poetry install
       - name: Build and push docs
         run: poetry run mkdocs gh-deploy --force
+  pre-release-check:
+    runs-on: ubuntu-latest
+    outputs:
+      TARGET_TAG_V: ${{ steps.version_check.outputs.TRGT_VERSION }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # for fetching tags, required for semantic-release
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+          cache: 'pip'
+          cache-dependency-path: 'poetry.lock'
+      - name: Install dependencies
+        run: poetry install
+      - name: Check version of potential release
+        id: version_check
+        run: |
+            TRGT_VERSION=$(poetry run semantic-release print-version)
+            echo "TRGT_VERSION=${TRGT_VERSION}" >> $GITHUB_OUTPUT
+            echo "${TRGT_VERSION}"
+      - name: Check notes of potential release
+        run: poetry run semantic-release changelog --unreleased
   release:
-    environment: auto-release
+    needs: pre-release-check
+    if: needs.pre-release-check.outputs.TARGET_TAG_V != ''
+    environment:
+      name: auto-release
+      url: https://github.com/vagenas/deepsearch-toolkit/releases/tag/v${{ needs.pre-release-check.outputs.TARGET_TAG_V }}
     runs-on: ubuntu-latest
     concurrency: release
     steps:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_PAT }}
-          fetch-depth: 0
+          fetch-depth: 0  # for fetching tags, required for semantic-release
       - name: Install poetry
         run: pipx install poetry
       - uses: actions/setup-python@v4
@@ -46,5 +75,7 @@ jobs:
       - name: Run release script
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
+          TARGET_VERSION: ${{ needs.pre-release-check.outputs.TARGET_TAG_V }}
+          CHGLOG_FILE: CHANGELOG.md
         run: ./.github/scripts/release.sh
         shell: bash
