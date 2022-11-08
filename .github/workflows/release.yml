@@ -15,34 +15,19 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-          cache: 'poetry'
-      - name: Install dependencies
-        run: poetry install
-      - name: Build and push docs
-        run: poetry run mkdocs gh-deploy --force
+      - uses: ./.github/actions/checkout_and_install
+      # - name: Build and push docs  # FIXME revert
+      #   run: poetry run mkdocs gh-deploy --force  # FIXME revert
+  test-styles:
+    uses: ./.github/workflows/check_styles.yml
   pre-release-check:
     runs-on: ubuntu-latest
     outputs:
       TARGET_TAG_V: ${{ steps.version_check.outputs.TRGT_VERSION }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: ./.github/actions/checkout_and_install
         with:
           fetch-depth: 0  # for fetching tags, required for semantic-release
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-          cache: 'pip'
-          cache-dependency-path: 'poetry.lock'
-      - name: Install dependencies
-        run: poetry install
       - name: Check version of potential release
         id: version_check
         run: |
@@ -52,7 +37,7 @@ jobs:
       - name: Check notes of potential release
         run: poetry run semantic-release changelog --unreleased
   release:
-    needs: pre-release-check
+    needs: [test-styles, pre-release-check]
     if: needs.pre-release-check.outputs.TARGET_TAG_V != ''
     environment:
       name: auto-release
@@ -60,22 +45,15 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: release
     steps:
-      - uses: actions/checkout@v3
+      - uses: ./.github/actions/checkout_and_install
         with:
           token: ${{ secrets.GH_PAT }}
           fetch-depth: 0  # for fetching tags, required for semantic-release
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-          cache: 'poetry'
-      - name: Install dependencies
-        run: poetry install
-      - name: Run release script
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-          TARGET_VERSION: ${{ needs.pre-release-check.outputs.TARGET_TAG_V }}
-          CHGLOG_FILE: CHANGELOG.md
-        run: ./.github/scripts/release.sh
-        shell: bash
+      # # FIXME: revert:
+      # - name: Run release script
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GH_PAT }}
+      #     TARGET_VERSION: ${{ needs.pre-release-check.outputs.TARGET_TAG_V }}
+      #     CHGLOG_FILE: CHANGELOG.md
+      #   run: ./.github/scripts/release.sh
+      #   shell: bash

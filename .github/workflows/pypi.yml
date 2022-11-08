@@ -15,17 +15,6 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-          cache: 'poetry'
-      - name: Install dependencies
-        run: poetry install
-      # - name: Config PyPI token
-      #   # According to this issue, the ENV variable is ignored https://github.com/python-poetry/poetry/issues/2210.
-      #   run: poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+      - uses: ./.github/actions/checkout_and_install
       - name: Build and publish
         run: poetry publish --build --no-interaction --username=__token__ --password=${{ secrets.PYPI_TOKEN }}

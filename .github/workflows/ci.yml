@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - "**"
+      - "!main"
       - "!gh-pages"
 
 env:
@@ -14,52 +15,10 @@ env:
 
 jobs:
   test-styles:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # in this example, there is a newer version already installed, 3.7.7, so the older version will be downloaded
-        python-version: ['3.8', '3.9', '3.10', '3.x']
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
-      - name: Install dependencies
-        run: poetry install
-      - name: Run styling check
-        run: poetry run pre-commit run --all-files
+    uses: ./.github/workflows/check_styles.yml
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-          cache: 'poetry'
-      - name: Install dependencies
-        run: poetry install
+      - uses: ./.github/actions/checkout_and_install
       - name: Build docs
         run: poetry run mkdocs build --verbose --clean
-  release-dry-run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-          cache: 'poetry'
-      - name: Install dependencies
-        run: poetry install
-      - name: Print version of potential release
-        run: poetry run semantic-release print-version
-      - name: Print notes of potential release
-        run: poetry run semantic-release changelog --unreleased
