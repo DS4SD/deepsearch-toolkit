@@ -2,11 +2,11 @@ name: 'Checkout and install'
 description: 'Checkout a repository and install with Poetry'
 inputs:
   python-version:
-    description: "Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset."
+    description: "Version range or exact version of Python or PyPy to use, using SemVer's version range syntax."
     default: '3.x'
   poetry-spec:
-    description: 'Spec for installation of Poetry'
-    default: '1.2.*'
+    description: 'Spec for installation of poetry package'
+    default: '1.2.2'
 runs:
   using: 'composite'
   steps:

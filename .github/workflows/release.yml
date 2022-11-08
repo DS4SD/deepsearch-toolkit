@@ -1,4 +1,4 @@
-name: "Bump version, log changes, and release"
+name: "Create release"
 
 on:
   push:
@@ -41,9 +41,7 @@ jobs:
   release:
     needs: [test-styles, pre-release-check]
     if: needs.pre-release-check.outputs.TARGET_TAG_V != ''
-    environment:
-      name: auto-release
-      url: https://github.com/vagenas/deepsearch-toolkit/releases/tag/v${{ needs.pre-release-check.outputs.TARGET_TAG_V }}
+    environment: auto-release
     runs-on: ubuntu-latest
     concurrency: release
     steps:

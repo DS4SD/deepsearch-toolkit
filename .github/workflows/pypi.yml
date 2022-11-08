@@ -1,4 +1,4 @@
-name: "Build package and publish to PyPI"
+name: "Build and publish package"
 
 on:
   release:
