@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - ci/refactor-ci-cd  # FIXME: revert test setup
 
 env:
   # disable keyring (https://github.com/actions/runner-images/issues/6185):
@@ -18,8 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/install
-      # - name: Build and push docs  # FIXME revert
-      #   run: poetry run mkdocs gh-deploy --force  # FIXME revert
+      - name: Build and push docs
+        run: poetry run mkdocs gh-deploy --force
   test-styles:
     uses: ./.github/workflows/check_styles.yml
   pre-release-check:
@@ -53,11 +52,10 @@ jobs:
           token: ${{ secrets.GH_PAT }}
           fetch-depth: 0  # for fetching tags, required for semantic-release
       - uses: ./.github/actions/install
-      # # FIXME: revert:
-      # - name: Run release script
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GH_PAT }}
-      #     TARGET_VERSION: ${{ needs.pre-release-check.outputs.TARGET_TAG_V }}
-      #     CHGLOG_FILE: CHANGELOG.md
-      #   run: ./.github/scripts/release.sh
-      #   shell: bash
+      - name: Run release script
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          TARGET_VERSION: ${{ needs.pre-release-check.outputs.TARGET_TAG_V }}
+          CHGLOG_FILE: CHANGELOG.md
+        run: ./.github/scripts/release.sh
+        shell: bash

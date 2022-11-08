@@ -8,7 +8,6 @@ on:
       - "**"
       - "!main"
       - "!gh-pages"
-      - "!ci/refactor-ci-cd"  # FIXME: revert test setup
 
 env:
   # disable keyring (https://github.com/actions/runner-images/issues/6185):
