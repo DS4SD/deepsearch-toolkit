@@ -1,5 +1,5 @@
-name: 'Checkout and install'
-description: 'Checkout a repository and install with Poetry'
+name: 'Set up Poetry and install'
+description: 'Set up a specific version of Poetry and install dependencies using caching.'
 inputs:
   python-version:
     description: "Version range or exact version of Python or PyPy to use, using SemVer's version range syntax."
