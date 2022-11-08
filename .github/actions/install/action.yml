@@ -17,7 +17,6 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
         cache: 'poetry'
-      shell: bash
     - name: Install dependencies
       run: poetry install
       shell: bash
