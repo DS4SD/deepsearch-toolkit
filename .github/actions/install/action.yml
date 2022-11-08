@@ -1,12 +1,6 @@
 name: 'Checkout and install'
 description: 'Checkout a repository and install with Poetry'
 inputs:
-  fetch-depth:
-    description: 'Number of commits to fetch. 0 indicates all history for all branches and tags.'
-    default: '1'
-  token:
-    description: 'Personal access token (PAT) used to fetch the repository.'
-    default: ${{ github.token }}
   python-version:
     description: "Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset."
     default: '3.x'
@@ -16,10 +10,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: ${{ inputs.fetch-depth }}
-        token: ${{ inputs.token }}
     - name: Install poetry
       run: pipx install 'poetry==${{ inputs.poetry-spec }}'
       shell: bash

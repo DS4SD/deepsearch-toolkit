@@ -19,6 +19,7 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/checkout_and_install
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/install
       - name: Build docs
         run: poetry run mkdocs build --verbose --clean
