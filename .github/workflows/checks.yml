@@ -2,7 +2,7 @@ on:
   workflow_call:
 
 jobs:
-  run-style-tests:
+  run-checks:
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -1,4 +1,4 @@
-name: "Create release"
+name: "Run CD"
 
 on:
   push:
@@ -19,8 +19,8 @@ jobs:
       - uses: ./.github/actions/setup-poetry
       - name: Build and push docs
         run: poetry run mkdocs gh-deploy --force
-  test-styles:
-    uses: ./.github/workflows/check_styles.yml
+  code-checks:
+    uses: ./.github/workflows/checks.yml
   pre-release-check:
     runs-on: ubuntu-latest
     outputs:
@@ -39,7 +39,7 @@ jobs:
       - name: Check notes of potential release
         run: poetry run semantic-release changelog --unreleased
   release:
-    needs: [test-styles, pre-release-check]
+    needs: [code-checks, pre-release-check]
     if: needs.pre-release-check.outputs.TARGET_TAG_V != ''
     environment: auto-release
     runs-on: ubuntu-latest

@@ -14,8 +14,8 @@ env:
   PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
 
 jobs:
-  test-styles:
-    uses: ./.github/workflows/check_styles.yml
+  code-checks:
+    uses: ./.github/workflows/checks.yml
   build-docs:
     runs-on: ubuntu-latest
     steps:
