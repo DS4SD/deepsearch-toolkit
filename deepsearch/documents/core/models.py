@@ -167,11 +167,11 @@ class ConversionPipelineSettings(BaseModel):
     tables: Optional[ConversionModel]
 
     @classmethod
-    def from_defaults(cls, api: CpsApi):
+    def from_defaults(cls, api: CpsApi) -> ConversionPipelineSettings:
         return cls()  # FIXME: Dummy
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str):
+    def from_project(cls, api: CpsApi, proj_key: str) -> ConversionPipelineSettings:
         return cls()  # FIXME: Dummy
 
 
@@ -189,21 +189,23 @@ class OCRSettings(BaseModel):
     merge_mode: OCRModeEnum = OCRModeEnum.prioritize_ocr
 
     @classmethod
-    def from_defaults(cls, api: CpsApi):
+    def from_defaults(cls, api: CpsApi) -> OCRSettings:
         return cls()  # FIXME: Dummy
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str):
+    def from_project(cls, api: CpsApi, proj_key: str) -> OCRSettings:
         return cls()  # FIXME: Dummy
 
     @classmethod
-    def get_backends(cls, api: CpsApi):  # get list of available OCR backends
+    def get_backends(
+        cls, api: CpsApi
+    ) -> List[str]:  # get list of available OCR backends
         return []  # FIXME: Dummy
 
     @classmethod
     def get_backend_config(
         cls, api: CpsApi, backend: str
-    ):  # get available config options for given backend
+    ) -> dict:  # get available config options for given backend
         return {}  # FIXME: Dummy
 
 
@@ -215,11 +217,11 @@ class ConversionMetadata(BaseModel):
     version: str = ""
 
     @classmethod
-    def from_defaults(cls):
+    def from_defaults(cls) -> ConversionMetadata:
         return cls()
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str):
+    def from_project(cls, api: CpsApi, proj_key: str) -> ConversionMetadata:
         return cls()  # FIXME: Dummy
 
 
@@ -229,7 +231,7 @@ class ConversionSettings(BaseModel):
     metadata: Optional[ConversionMetadata]
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str):
+    def from_project(cls, api: CpsApi, proj_key: str) -> ConversionSettings:
         conv_settings = cls()
 
         conv_settings.pipeline = ConversionPipelineSettings.from_project(api, proj_key)
@@ -239,7 +241,7 @@ class ConversionSettings(BaseModel):
         return conv_settings
 
     @classmethod
-    def from_defaults(cls, api: CpsApi):
+    def from_defaults(cls, api: CpsApi) -> ConversionSettings:
         conv_settings = cls()
 
         conv_settings.pipeline = ConversionPipelineSettings.from_defaults(api)
