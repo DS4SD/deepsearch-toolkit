@@ -115,3 +115,68 @@ ExportTarget = Union[
     MongoS3Target,
     ElasticS3Target,
 ]
+
+
+class ConversionModel(BaseModel):
+    name: Optional[
+        str
+    ]  # named model (config), or model "type". validate with available options on CCS API and project.
+    config: Union[dict, str]  # config dict, or model_config_key
+
+    """
+    # In CCS-API:
+        { # project model config
+            "model_config_key": "c0e64f4db662d96a222f38174bd22312",
+            "name": "yolo-test-1",
+            "proj_key": "93907db9fb895f868f9310512e273b8e1a3991bd"
+        },
+        { # default system model
+            "config": {},
+            "type": "LayoutSegmentationModel"    
+        }
+    """
+
+
+class ConversionPipelineSettings(BaseModel):
+    clusters: ConversionModel
+    tables: Optional[ConversionModel]
+
+
+class OCRSettings(BaseModel):
+    enabled: bool = False
+    backend: str = "tesseract-ocr"  # validate with available options on CCS API
+    config: dict = {}
+    merge_mode: str = "prioritize-ocr"  # turn into enum with default
+
+    """
+    {
+      "backend": "tesseract-ocr",
+      "backend_settings": {},
+      "enabled": false,
+      "merge_mode": "prioritize-ocr"
+    }
+    """
+
+
+class ConversionMetadata(BaseModel):
+    description: str = ""
+    display_name: str = ""
+    license: str = ""
+    source: str = ""
+    version: str = ""
+
+    """
+    {
+      "description": "",
+      "display_name": "",
+      "license": "",
+      "source": "",
+      "version": ""
+    }
+    """
+
+
+class ConversionSettings(BaseModel):
+    pipeline: Optional[ConversionPipelineSettings]
+    ocr: Optional[OCRSettings]
+    metadata: Optional[ConversionMetadata]
