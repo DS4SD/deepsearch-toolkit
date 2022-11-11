@@ -3,6 +3,8 @@ from typing import List, Literal, Optional, Set, Union
 
 from pydantic import BaseModel, Field
 
+from deepsearch import CpsApi
+
 
 class S3Coordinates(BaseModel):
     host: str
@@ -117,45 +119,70 @@ ExportTarget = Union[
 ]
 
 
-class ConversionModel(BaseModel):
-    name: Optional[
-        str
-    ]  # named model (config), or model "type". validate with available options on CCS API and project.
-    config: Union[dict, str]  # config dict, or model_config_key
+class ProjectConversionModel(BaseModel):
+    name: Optional[str]  # named model (config)
+    config_id: str  # the model config key. Validate with available models CCS project.
+    proj_key: str
 
     """
-    # In CCS-API:
-        { # project model config
-            "model_config_key": "c0e64f4db662d96a222f38174bd22312",
-            "name": "yolo-test-1",
-            "proj_key": "93907db9fb895f868f9310512e273b8e1a3991bd"
-        },
-        { # default system model
-            "config": {},
-            "type": "LayoutSegmentationModel"    
-        }
+    # project model config
+    { 
+        "config_id": "c0e64f4db662d96a222f38174bd22312",
+        "name": "table-test-1",
+        "proj_key": "93907db9fb895f868f9310512e273b8e1a3991bd"
+    },
     """
+
+
+class DefaultConversionModel(BaseModel):
+    type: str  # system model "type". Validate with available options on CCS API.
+    config: dict  # model configuration dict
+
+    """
+    # default system model config
+    { 
+        "config": {},
+        "type": "LayoutSegmentationModel"    
+    }
+    """
+
+
+ConversionModel = Union[DefaultConversionModel, ProjectConversionModel]
 
 
 class ConversionPipelineSettings(BaseModel):
     clusters: ConversionModel
     tables: Optional[ConversionModel]
 
+    @classmethod
+    def from_defaults(cls, api: CpsApi):
+        return cls()  # FIXME: Dummy
+
+    @classmethod
+    def from_project(cls, api: CpsApi, proj_key: str):
+        return cls()  # FIXME: Dummy
+
+
+class OCRModeEnum(str, Enum):
+    auto = "auto"
+    keep_only_ocr = "keep-only-ocr"
+    prioritize_programmatic = "prioritize-programmatic"
+    prioritize_ocr = "prioritize-ocr"
+
 
 class OCRSettings(BaseModel):
     enabled: bool = False
     backend: str = "tesseract-ocr"  # validate with available options on CCS API
-    config: dict = {}
-    merge_mode: str = "prioritize-ocr"  # turn into enum with default
+    config: dict = {}  # implementation specific to OCR backend
+    merge_mode: OCRModeEnum = OCRModeEnum.prioritize_ocr
 
-    """
-    {
-      "backend": "tesseract-ocr",
-      "backend_settings": {},
-      "enabled": false,
-      "merge_mode": "prioritize-ocr"
-    }
-    """
+    @classmethod
+    def from_defaults(cls, api: CpsApi):
+        return cls()  # FIXME: Dummy
+
+    @classmethod
+    def from_project(cls, api: CpsApi, proj_key: str):
+        return cls()  # FIXME: Dummy
 
 
 class ConversionMetadata(BaseModel):
@@ -165,18 +192,36 @@ class ConversionMetadata(BaseModel):
     source: str = ""
     version: str = ""
 
-    """
-    {
-      "description": "",
-      "display_name": "",
-      "license": "",
-      "source": "",
-      "version": ""
-    }
-    """
+    @classmethod
+    def from_defaults(cls):
+        return cls()
+
+    @classmethod
+    def from_project(cls, api: CpsApi, proj_key: str):
+        return cls()  # FIXME: Dummy
 
 
 class ConversionSettings(BaseModel):
     pipeline: Optional[ConversionPipelineSettings]
     ocr: Optional[OCRSettings]
     metadata: Optional[ConversionMetadata]
+
+    @classmethod
+    def from_project(cls, api: CpsApi, proj_key: str):
+        conv_settings = cls()
+
+        conv_settings.pipeline = ConversionPipelineSettings.from_project(api, proj_key)
+        conv_settings.ocr = OCRSettings.from_project(api, proj_key)
+        conv_settings.metadata = ConversionMetadata.from_project(api, proj_key)
+
+        return conv_settings
+
+    @classmethod
+    def from_defaults(cls, api: CpsApi):
+        conv_settings = cls()
+
+        conv_settings.pipeline = ConversionPipelineSettings.from_defaults(api)
+        conv_settings.ocr = OCRSettings.from_defaults(api)
+        conv_settings.metadata = ConversionMetadata.from_defaults()
+
+        return conv_settings
