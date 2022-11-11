@@ -124,6 +124,12 @@ class ProjectConversionModel(BaseModel):
     config_id: str  # the model config key. Validate with available models CCS project.
     proj_key: str
 
+    @classmethod
+    def get_models(
+        cls, api: CpsApi, proj_key: str
+    ) -> List[ProjectConversionModel]:  # get list of available project models
+        return []  # FIXME: Dummy
+
     """
     # project model config
     { 
@@ -137,6 +143,12 @@ class ProjectConversionModel(BaseModel):
 class DefaultConversionModel(BaseModel):
     type: str  # system model "type". Validate with available options on CCS API.
     config: dict  # model configuration dict
+
+    @classmethod
+    def get_models(
+        cls, api: CpsApi
+    ) -> List[DefaultConversionModel]:  # get list of available default models
+        return []  # FIXME: Dummy
 
     """
     # default system model config
@@ -183,6 +195,16 @@ class OCRSettings(BaseModel):
     @classmethod
     def from_project(cls, api: CpsApi, proj_key: str):
         return cls()  # FIXME: Dummy
+
+    @classmethod
+    def get_backends(cls, api: CpsApi):  # get list of available OCR backends
+        return []  # FIXME: Dummy
+
+    @classmethod
+    def get_backend_config(
+        cls, api: CpsApi, backend: str
+    ):  # get available config options for given backend
+        return {}  # FIXME: Dummy
 
 
 class ConversionMetadata(BaseModel):
