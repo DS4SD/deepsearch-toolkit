@@ -127,8 +127,18 @@ class ProjectConversionModel(BaseModel):
     @classmethod
     def get_models(
         cls, api: CpsApi, proj_key: str
-    ) -> List[ProjectConversionModel]:  # get list of available project models
+    ) -> List["ProjectConversionModel"]:  # get list of available project models
         return []  # FIXME: Dummy
+
+    def to_ccs_spec(self):
+        obj = {
+            "name": self.name,
+            "description": "",
+            "proj_key": self.proj_key,
+            "model_config_key": self.config_id,
+        }
+
+        return obj
 
     """
     # project model config
@@ -147,8 +157,11 @@ class DefaultConversionModel(BaseModel):
     @classmethod
     def get_models(
         cls, api: CpsApi
-    ) -> List[DefaultConversionModel]:  # get list of available default models
+    ) -> List["DefaultConversionModel"]:  # get list of available default models
         return []  # FIXME: Dummy
+
+    def to_ccs_spec(self):
+        return self.dict()
 
     """
     # default system model config
@@ -167,12 +180,22 @@ class ConversionPipelineSettings(BaseModel):
     tables: Optional[ConversionModel]
 
     @classmethod
-    def from_defaults(cls, api: CpsApi) -> ConversionPipelineSettings:
+    def from_defaults(cls, api: CpsApi) -> "ConversionPipelineSettings":
         return cls()  # FIXME: Dummy
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str) -> ConversionPipelineSettings:
+    def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionPipelineSettings":
         return cls()  # FIXME: Dummy
+
+    def to_ccs_spec(self):
+        obj = {
+            "clusters": [self.clusters.to_ccs_spec()],
+            "page": [],
+            "tables": [self.tables.to_ccs_spec()] if self.tables else [],
+            "normalization": [],
+        }
+
+        return obj
 
 
 class OCRModeEnum(str, Enum):
@@ -189,11 +212,11 @@ class OCRSettings(BaseModel):
     merge_mode: OCRModeEnum = OCRModeEnum.prioritize_ocr
 
     @classmethod
-    def from_defaults(cls, api: CpsApi) -> OCRSettings:
+    def from_defaults(cls, api: CpsApi) -> "OCRSettings":
         return cls()  # FIXME: Dummy
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str) -> OCRSettings:
+    def from_project(cls, api: CpsApi, proj_key: str) -> "OCRSettings":
         return cls()  # FIXME: Dummy
 
     @classmethod
@@ -208,6 +231,9 @@ class OCRSettings(BaseModel):
     ) -> dict:  # get available config options for given backend
         return {}  # FIXME: Dummy
 
+    def to_ccs_spec(self):
+        return self.dict()
+
 
 class ConversionMetadata(BaseModel):
     description: str = ""
@@ -217,12 +243,15 @@ class ConversionMetadata(BaseModel):
     version: str = ""
 
     @classmethod
-    def from_defaults(cls) -> ConversionMetadata:
+    def from_defaults(cls) -> "ConversionMetadata":
         return cls()
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str) -> ConversionMetadata:
+    def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionMetadata":
         return cls()  # FIXME: Dummy
+
+    def to_ccs_spec(self):
+        return self.dict()
 
 
 class ConversionSettings(BaseModel):
@@ -231,7 +260,7 @@ class ConversionSettings(BaseModel):
     metadata: Optional[ConversionMetadata]
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str) -> ConversionSettings:
+    def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
         conv_settings = cls()
 
         conv_settings.pipeline = ConversionPipelineSettings.from_project(api, proj_key)
@@ -241,7 +270,7 @@ class ConversionSettings(BaseModel):
         return conv_settings
 
     @classmethod
-    def from_defaults(cls, api: CpsApi) -> ConversionSettings:
+    def from_defaults(cls, api: CpsApi) -> "ConversionSettings":
         conv_settings = cls()
 
         conv_settings.pipeline = ConversionPipelineSettings.from_defaults(api)
@@ -249,3 +278,15 @@ class ConversionSettings(BaseModel):
         conv_settings.metadata = ConversionMetadata.from_defaults()
 
         return conv_settings
+
+    def to_ccs_spec(self):
+        obj = {}
+
+        if self.pipeline:
+            obj["model_pipeline"] = self.pipeline.to_ccs_spec()
+        if self.ocr:
+            obj["ocr"] = self.ocr.to_ccs_spec()
+        if self.metadata:
+            obj["metadata"] = self.metadata.to_ccs_spec()
+
+        return obj

@@ -8,7 +8,7 @@ from deepsearch.documents.core.input_process import (
     process_local_input,
     process_urls_input,
 )
-from deepsearch.documents.core.models import ExportTarget
+from deepsearch.documents.core.models import ConversionSettings, ExportTarget
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -19,6 +19,7 @@ def convert_documents(
     urls: Optional[Union[str, List[str]]] = None,
     source_path: Optional[Path] = None,
     target: Optional[ExportTarget] = None,
+    conversion_settings: Optional[ConversionSettings] = None,
     progress_bar=False,
 ):
     """
@@ -60,6 +61,7 @@ def convert_documents(
             cps_proj_key=proj_key,
             urls=urls,
             target=target,
+            conversion_settings=conversion_settings,
             progress_bar=progress_bar,
         )
     elif urls is None and source_path is not None:
@@ -68,6 +70,7 @@ def convert_documents(
             cps_proj_key=proj_key,
             source_path=Path(source_path).expanduser().resolve(),
             target=target,
+            conversion_settings=conversion_settings,
             progress_bar=progress_bar,
         )
 

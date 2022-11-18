@@ -18,7 +18,7 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import ERROR_MSG, progressbar
-from .models import ExportTarget, ZipTarget
+from .models import ConversionSettings, ExportTarget, ZipTarget
 from .utils import URLNavigator, collect_all_local_files, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 def make_payload(
     url_document: str,
     target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
     collection_name: str = "_default",
 ):
     """
@@ -43,6 +44,9 @@ def make_payload(
         },
         "context": {
             "collection_name": collection_name,
+            "conversion_settings": conversion_settings.to_ccs_spec()
+            if conversion_settings
+            else None,
             "keep_documents": "false",
         },
         "target": target.dict(),
@@ -77,7 +81,11 @@ def get_ccs_project_key(api: CpsApi, cps_proj_key: str):
 
 
 def submit_url_for_conversion(
-    api: CpsApi, cps_proj_key: str, url: str, target: Optional[ExportTarget]
+    api: CpsApi,
+    cps_proj_key: str,
+    url: str,
+    target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
 ) -> str:
     """
     Convert an online pdf using DeepSearch Technology.
@@ -87,7 +95,7 @@ def submit_url_for_conversion(
         api=api, cps_proj_key=cps_proj_key
     )
     # submit conversion request
-    payload = make_payload(url, target, collection_name)
+    payload = make_payload(url, target, conversion_settings, collection_name)
 
     try:
         request_conversion_task_id = api.client.session.post(
@@ -110,6 +118,7 @@ def send_files_for_conversion(
     cps_proj_key: str,
     source_path: Path,
     target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
     root_dir: Path,
     progress_bar=False,
 ) -> list:
@@ -141,6 +150,7 @@ def send_files_for_conversion(
                 cps_proj_key=cps_proj_key,
                 url=private_download_url,
                 target=target,
+                conversion_settings=conversion_settings,
             )
             task_ids.append(task_id)
             progress.update(1)
@@ -273,6 +283,7 @@ def send_urls_for_conversion(
     cps_proj_key: str,
     urls: List[str],
     target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
     progress_bar=False,
 ) -> List[Any]:
     """
@@ -289,7 +300,11 @@ def send_urls_for_conversion(
     ) as progress:
         for url in urls:
             task_id = submit_url_for_conversion(
-                api=api, cps_proj_key=cps_proj_key, url=url, target=target
+                api=api,
+                cps_proj_key=cps_proj_key,
+                url=url,
+                target=target,
+                conversion_settings=conversion_settings,
             )
             task_ids.append(task_id)
             progress.update(1)
