@@ -41,6 +41,14 @@ class URLNavigator:
         report_name = "metrics"
         return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/reports/{report_name}"
 
+    def url_conversion_defaults(self):
+        return (
+            f"{self.url_linked_ccs}{self.url_public_apis}/settings/conversion_defaults"
+        )
+
+    def url_collection_settings(self, ccs_proj_key: str, collection_name: str):
+        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/collections/{collection_name}/settings"
+
 
 def batch_single_files(
     source_path: Path, root_dir: Path, progress_bar=False

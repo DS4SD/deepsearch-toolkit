@@ -1,9 +1,10 @@
 from enum import Enum
 from typing import List, Literal, Optional, Set, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, parse_obj_as
 
 from deepsearch import CpsApi
+from deepsearch.documents.core.utils import URLNavigator
 
 
 class S3Coordinates(BaseModel):
@@ -140,6 +141,14 @@ class ProjectConversionModel(BaseModel):
 
         return obj
 
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        return cls(
+            name=obj.get("name"),
+            config_id=obj.get("model_config_key"),
+            proj_key=obj.get("proj_key"),
+        )
+
     """
     # project model config
     { 
@@ -163,6 +172,10 @@ class DefaultConversionModel(BaseModel):
     def to_ccs_spec(self):
         return self.dict()
 
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        return cls.parse_obj(obj)
+
     """
     # default system model config
     { 
@@ -179,13 +192,28 @@ class ConversionPipelineSettings(BaseModel):
     clusters: ConversionModel
     tables: Optional[ConversionModel]
 
-    @classmethod
-    def from_defaults(cls, api: CpsApi) -> "ConversionPipelineSettings":
-        return cls()  # FIXME: Dummy
+    # @classmethod
+    # def from_defaults(cls, api: CpsApi) -> "ConversionPipelineSettings":
+    #     return cls()  # FIXME: Dummy
+    #
+    # @classmethod
+    # def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionPipelineSettings":
+    #     return cls()  # FIXME: Dummy
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionPipelineSettings":
-        return cls()  # FIXME: Dummy
+    def from_ccs_spec(cls, obj):
+        if obj is None:
+            raise ValueError("CCS spec can not be None")
+        if obj.get("clusters") and len(obj.get("clusters")):
+            model_dict = obj.get("clusters")[0]
+            clusters = parse_obj_as(ConversionModel, model_dict)
+
+            instance = cls(clusters=clusters)
+            if obj.get("tables") and len(obj.get("tables")):
+                model_dict = obj.get("tables")[0]
+                instance.tables = ConversionModel.parse_obj(model_dict)
+        else:
+            raise ValueError("CCS spec must have non-empty clusters")
 
     def to_ccs_spec(self):
         obj = {
@@ -211,13 +239,13 @@ class OCRSettings(BaseModel):
     config: dict = {}  # implementation specific to OCR backend
     merge_mode: OCRModeEnum = OCRModeEnum.prioritize_ocr
 
-    @classmethod
-    def from_defaults(cls, api: CpsApi) -> "OCRSettings":
-        return cls()  # FIXME: Dummy
-
-    @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str) -> "OCRSettings":
-        return cls()  # FIXME: Dummy
+    # @classmethod
+    # def from_defaults(cls, api: CpsApi) -> "OCRSettings":
+    #     return cls()  # FIXME: Dummy
+    #
+    # @classmethod
+    # def from_project(cls, api: CpsApi, proj_key: str) -> "OCRSettings":
+    #     return cls()  # FIXME: Dummy
 
     @classmethod
     def get_backends(
@@ -234,6 +262,10 @@ class OCRSettings(BaseModel):
     def to_ccs_spec(self):
         return self.dict()
 
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        return cls.parse_obj(obj or {})
+
 
 class ConversionMetadata(BaseModel):
     description: str = ""
@@ -242,13 +274,17 @@ class ConversionMetadata(BaseModel):
     source: str = ""
     version: str = ""
 
-    @classmethod
-    def from_defaults(cls) -> "ConversionMetadata":
-        return cls()
+    # @classmethod
+    # def from_defaults(cls) -> "ConversionMetadata":
+    #    return cls()
+
+    # @classmethod
+    # def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionMetadata":
+    #    return cls()  # FIXME: Dummy
 
     @classmethod
-    def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionMetadata":
-        return cls()  # FIXME: Dummy
+    def from_ccs_spec(cls, obj):
+        return cls.parse_obj(obj or {})
 
     def to_ccs_spec(self):
         return self.dict()
@@ -263,19 +299,38 @@ class ConversionSettings(BaseModel):
     def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
         conv_settings = cls()
 
-        conv_settings.pipeline = ConversionPipelineSettings.from_project(api, proj_key)
-        conv_settings.ocr = OCRSettings.from_project(api, proj_key)
-        conv_settings.metadata = ConversionMetadata.from_project(api, proj_key)
+        request_conv_settings = api.client.session.get(
+            url=URLNavigator(api).url_collection_settings(proj_key, "_default")
+        )
+        request_conv_settings.raise_for_status()
+        settings_dict = request_conv_settings.json()
 
+        conv_settings.pipeline = ConversionPipelineSettings.from_ccs_spec(
+            settings_dict.get("model_pipeline")
+        )
+        conv_settings.ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
+        conv_settings.metadata = ConversionMetadata.from_ccs_spec(
+            settings_dict.get("metadata")
+        )
         return conv_settings
 
     @classmethod
     def from_defaults(cls, api: CpsApi) -> "ConversionSettings":
         conv_settings = cls()
 
-        conv_settings.pipeline = ConversionPipelineSettings.from_defaults(api)
-        conv_settings.ocr = OCRSettings.from_defaults(api)
-        conv_settings.metadata = ConversionMetadata.from_defaults()
+        request_conv_settings = api.client.session.get(
+            url=URLNavigator(api).url_conversion_defaults()
+        )
+        request_conv_settings.raise_for_status()
+        settings_dict = request_conv_settings.json()
+
+        conv_settings.pipeline = ConversionPipelineSettings.from_ccs_spec(
+            settings_dict.get("model_pipeline")
+        )
+        conv_settings.ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
+        conv_settings.metadata = ConversionMetadata.from_ccs_spec(
+            settings_dict.get("metadata")
+        )
 
         return conv_settings
 
