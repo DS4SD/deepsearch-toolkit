@@ -1,14 +1,10 @@
-import glob
 import logging
 import os
-import pathlib
-from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, List, Optional
 
 import requests
 import urllib3
-from pydantic import BaseModel, Field
 from tqdm import tqdm
 
 from deepsearch.cps.apis import public as sw_client
@@ -17,6 +13,7 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 )
 from deepsearch.cps.client.api import CpsApi
 
+from ...core.util.ccs_utils import get_ccs_project_key
 from .common_routines import ERROR_MSG, progressbar
 from .models import ConversionSettings, ExportTarget, ZipTarget
 from .utils import URLNavigator, collect_all_local_files, download_url
@@ -67,17 +64,6 @@ def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
         )
         current_state = request_status.json()["done"]
     return request_status
-
-
-def get_ccs_project_key(api: CpsApi, cps_proj_key: str):
-    """
-    Given a cps project key, returns ccs project key and collection name.
-    """
-    sw_api = sw_client.ProjectApi(api.client.swagger_client)
-    request_ccs_project_key = sw_api.get_project_default_values(proj_key=cps_proj_key)
-    ccs_proj_key = request_ccs_project_key.ccs_project.proj_key
-    collection_name = request_ccs_project_key.ccs_project.collection_name
-    return (ccs_proj_key, collection_name)
 
 
 def submit_url_for_conversion(

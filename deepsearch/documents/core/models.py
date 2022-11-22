@@ -4,6 +4,8 @@ from typing import List, Literal, Optional, Set, Union
 from pydantic import BaseModel, Field, ValidationError, parse_obj_as
 
 from deepsearch import CpsApi
+from deepsearch.core.util.ccs_utils import get_ccs_project_key
+from deepsearch.cps.apis import public as sw_client
 from deepsearch.documents.core.utils import URLNavigator
 
 
@@ -149,15 +151,6 @@ class ProjectConversionModel(BaseModel):
             proj_key=obj.get("proj_key"),
         )
 
-    """
-    # project model config
-    { 
-        "config_id": "c0e64f4db662d96a222f38174bd22312",
-        "name": "table-test-1",
-        "proj_key": "93907db9fb895f868f9310512e273b8e1a3991bd"
-    },
-    """
-
 
 class DefaultConversionModel(BaseModel):
     type: str  # system model "type". Validate with available options on CCS API.
@@ -176,14 +169,6 @@ class DefaultConversionModel(BaseModel):
     def from_ccs_spec(cls, obj):
         return cls.parse_obj(obj)
 
-    """
-    # default system model config
-    { 
-        "config": {},
-        "type": "LayoutSegmentationModel"    
-    }
-    """
-
 
 ConversionModel = Union[DefaultConversionModel, ProjectConversionModel]
 
@@ -191,14 +176,6 @@ ConversionModel = Union[DefaultConversionModel, ProjectConversionModel]
 class ConversionPipelineSettings(BaseModel):
     clusters: ConversionModel
     tables: Optional[ConversionModel]
-
-    # @classmethod
-    # def from_defaults(cls, api: CpsApi) -> "ConversionPipelineSettings":
-    #     return cls()  # FIXME: Dummy
-    #
-    # @classmethod
-    # def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionPipelineSettings":
-    #     return cls()  # FIXME: Dummy
 
     @classmethod
     def from_ccs_spec(cls, obj):
@@ -211,7 +188,7 @@ class ConversionPipelineSettings(BaseModel):
             instance = cls(clusters=clusters)
             if obj.get("tables") and len(obj.get("tables")):
                 model_dict = obj.get("tables")[0]
-                instance.tables = ConversionModel.parse_obj(model_dict)
+                instance.tables = parse_obj_as(ConversionModel, model_dict)
         else:
             raise ValueError("CCS spec must have non-empty clusters")
 
@@ -237,27 +214,19 @@ class OCRSettings(BaseModel):
     enabled: bool = False
     backend: str = "tesseract-ocr"  # validate with available options on CCS API
     config: dict = {}  # implementation specific to OCR backend
-    merge_mode: OCRModeEnum = OCRModeEnum.prioritize_ocr
-
-    # @classmethod
-    # def from_defaults(cls, api: CpsApi) -> "OCRSettings":
-    #     return cls()  # FIXME: Dummy
-    #
-    # @classmethod
-    # def from_project(cls, api: CpsApi, proj_key: str) -> "OCRSettings":
-    #     return cls()  # FIXME: Dummy
+    merge_mode: Optional[OCRModeEnum] = OCRModeEnum.prioritize_ocr
 
     @classmethod
     def get_backends(
         cls, api: CpsApi
     ) -> List[str]:  # get list of available OCR backends
-        return []  # FIXME: Dummy
+        return []  # FIXME: Stub
 
     @classmethod
     def get_backend_config(
         cls, api: CpsApi, backend: str
     ) -> dict:  # get available config options for given backend
-        return {}  # FIXME: Dummy
+        return {}  # FIXME: Stub
 
     def to_ccs_spec(self):
         return self.dict()
@@ -273,14 +242,6 @@ class ConversionMetadata(BaseModel):
     license: str = ""
     source: str = ""
     version: str = ""
-
-    # @classmethod
-    # def from_defaults(cls) -> "ConversionMetadata":
-    #    return cls()
-
-    # @classmethod
-    # def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionMetadata":
-    #    return cls()  # FIXME: Dummy
 
     @classmethod
     def from_ccs_spec(cls, obj):
@@ -298,6 +259,8 @@ class ConversionSettings(BaseModel):
     @classmethod
     def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
         conv_settings = cls()
+
+        proj_key, _ = get_ccs_project_key(api, proj_key)
 
         request_conv_settings = api.client.session.get(
             url=URLNavigator(api).url_collection_settings(proj_key, "_default")
@@ -319,7 +282,7 @@ class ConversionSettings(BaseModel):
         conv_settings = cls()
 
         request_conv_settings = api.client.session.get(
-            url=URLNavigator(api).url_conversion_defaults()
+            url=URLNavigator(api).url_conversion_defaults(), verify=False
         )
         request_conv_settings.raise_for_status()
         settings_dict = request_conv_settings.json()
