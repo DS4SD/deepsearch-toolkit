@@ -3,14 +3,14 @@
 
 # Data indices
 
-A data index stores a collection of documents in a project. This page shows how to create and delete a data index, and to list all data indices in a project. 
+A data index stores a collection of documents in a project. This page shows how to create and delete a data index, and to list all data indices in a project.
 
 Since a data index "lives" inside a project, we need to specify which project we are referring to. This is accomplished by a project key `PROJ_KEY`. We can obtain the project keys for our projects by [listing them](../guide/projects.md).
 
 
-## Create data index in a project
+## Creating a data index in a project
 
-Suppose you want to create an index called `NAME`. Optionally, a description,`DESC`, for the data index can be provided. 
+Suppose you want to create an index called `NAME`. Optionally, a description,`DESC`, for the data index can be provided.
 
 === "CLI"
     <div class="termy">
@@ -64,7 +64,7 @@ In addition, it is possible to specify non-default `type` of data index. For mor
     ```
 ---
 
-## Deleting data index in a project
+## Deleting a data index from a project
 
 To delete a data index, you need to specify an index via its `INDEX_KEY`. [Listing data indices](#listing-data-indices-in-a-project) will show the `INDEX_KEY` for all the indices in a project.
 
@@ -88,7 +88,7 @@ To delete a data index, you need to specify an index via its `INDEX_KEY`. [Listi
 
 ---
 
-## Adding documents in a project
+## Adding documents to a project
 
 Documents can be converted and added, directly, to a data index in a project. Briefly, documents can be on a local machine or on the remote files. Local documents can be in PDF format, ZIP archives, or directory containing both (`PATH_DOCS`). The web address of a remote document is input directly or multiple web addresses can be stored in a text file (`PATH_URL`). The specification of documents is same as in [Document Conversion](../guide/convert-doc.md).
 
@@ -99,7 +99,7 @@ Documents can be converted and added, directly, to a data index in a project. Br
     ```console
     // for local documents
     $ deepsearch cps data-indices upload -p PROJ_KEY -x INDEX_KEY -i PATH_DOCS
-    
+
     // for online documents
     $ deepsearch cps data-indices upload -p PROJ_KEY -x INDEX_KEY -u PATH_URL
     ```

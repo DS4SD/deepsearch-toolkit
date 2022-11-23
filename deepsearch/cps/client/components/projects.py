@@ -25,6 +25,11 @@ class CpsApiProjects:
         projects = self.list()
         return next((proj for proj in projects if proj.key == key), None)
 
+    def create(self, name: str) -> Project:
+        create_data = {"name": name}
+        proj: deepsearch.cps.apis.user.Project = self.sw_api.create(data=create_data)
+        return self._load(proj)
+
     def _load(self, project: deepsearch.cps.apis.user.Project) -> Project:
         return Project(
             # api=self.api,
