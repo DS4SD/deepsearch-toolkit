@@ -1,5 +1,6 @@
+import collections
 from enum import Enum
-from typing import List, Literal, Optional, Set, Union
+from typing import Dict, List, Literal, Optional, Set, Union
 
 from pydantic import BaseModel, Field, ValidationError, parse_obj_as
 
@@ -130,8 +131,27 @@ class ProjectConversionModel(BaseModel):
     @classmethod
     def get_models(
         cls, api: CpsApi, proj_key: str
-    ) -> List["ProjectConversionModel"]:  # get list of available project models
-        return []  # FIXME: Dummy
+    ) -> Dict[
+        str, List["ProjectConversionModel"]
+    ]:  # get list of available project models
+
+        stages_to_models = collections.defaultdict(list)
+
+        proj_key, _ = get_ccs_project_key(api, proj_key)
+
+        request_project_models = api.client.session.get(
+            url=URLNavigator(api).url_project_models(proj_key)
+        )
+        request_project_models.raise_for_status()
+        models_dict = request_project_models.json()
+
+        for elem in models_dict:
+            for stage in elem["supported_stages"]:
+                stages_to_models[stage].append(
+                    ProjectConversionModel.from_ccs_spec(elem)
+                )
+
+        return stages_to_models  # FIXME: Dummy
 
     def to_ccs_spec(self):
         obj = {
@@ -154,13 +174,30 @@ class ProjectConversionModel(BaseModel):
 
 class DefaultConversionModel(BaseModel):
     type: str  # system model "type". Validate with available options on CCS API.
-    config: dict  # model configuration dict
+    config: dict = {}  # model configuration dict
 
     @classmethod
     def get_models(
         cls, api: CpsApi
-    ) -> List["DefaultConversionModel"]:  # get list of available default models
-        return []  # FIXME: Dummy
+    ) -> Dict[
+        str, List["DefaultConversionModel"]
+    ]:  # get list of available default models
+
+        stages_to_models = collections.defaultdict(list)
+
+        request_system_models = api.client.session.get(
+            url=URLNavigator(api).url_system_models()
+        )
+        request_system_models.raise_for_status()
+        models_dict = request_system_models.json()
+
+        for elem in models_dict:
+            for stage in elem["supported_stages"]:
+                stages_to_models[stage].append(
+                    DefaultConversionModel.from_ccs_spec(elem)
+                )
+
+        return stages_to_models  # FIXME: Dummy
 
     def to_ccs_spec(self):
         return self.dict()
@@ -189,6 +226,8 @@ class ConversionPipelineSettings(BaseModel):
             if obj.get("tables") and len(obj.get("tables")):
                 model_dict = obj.get("tables")[0]
                 instance.tables = parse_obj_as(ConversionModel, model_dict)
+
+            return instance
         else:
             raise ValueError("CCS spec must have non-empty clusters")
 
@@ -219,14 +258,19 @@ class OCRSettings(BaseModel):
     @classmethod
     def get_backends(
         cls, api: CpsApi
-    ) -> List[str]:  # get list of available OCR backends
-        return []  # FIXME: Stub
+    ) -> List[Dict]:  # get list of available OCR backends
+        request_backends = api.client.session.get(
+            url=URLNavigator(api).url_conversion_defaults()
+        )
+        request_backends.raise_for_status()
+        return request_backends.json()
 
-    @classmethod
-    def get_backend_config(
-        cls, api: CpsApi, backend: str
-    ) -> dict:  # get available config options for given backend
-        return {}  # FIXME: Stub
+    # TODO implement later:
+    # @classmethod
+    # def get_backend_config(
+    #    cls, api: CpsApi, backend_id: str
+    # ) -> dict:  # get available config options for given backend
+    #    return {}  # FIXME: Stub
 
     def to_ccs_spec(self):
         return self.dict()
@@ -282,7 +326,7 @@ class ConversionSettings(BaseModel):
         conv_settings = cls()
 
         request_conv_settings = api.client.session.get(
-            url=URLNavigator(api).url_conversion_defaults(), verify=False
+            url=URLNavigator(api).url_conversion_defaults()
         )
         request_conv_settings.raise_for_status()
         settings_dict = request_conv_settings.json()

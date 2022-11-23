@@ -49,6 +49,15 @@ class URLNavigator:
     def url_collection_settings(self, ccs_proj_key: str, collection_name: str):
         return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/collections/{collection_name}/settings"
 
+    def url_system_models(self):
+        return f"{self.url_linked_ccs}{self.url_public_apis}/settings/system_models"
+
+    def url_project_models(self, ccs_proj_key: str):
+        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/models"
+
+    def url_system_ocr_backends(self):
+        return f"{self.url_linked_ccs}{self.url_public_apis}/settings/ocr_backends"
+
 
 def batch_single_files(
     source_path: Path, root_dir: Path, progress_bar=False
