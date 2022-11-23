@@ -17,5 +17,17 @@ def list(
     cli_output(results, output, headers="keys")
 
 
+@app.command(name="create", help="Create a project")
+def create(
+    proj_name: str,
+    output: OutputEnum = OutputOption,
+):
+    api = CpsApi.default_from_env()
+    proj = api.projects.create(name=proj_name)
+    results = [{"key": proj.key, "name": proj.name}]
+
+    cli_output(results, output, headers="keys")
+
+
 if __name__ == "__main__":
     app()
