@@ -107,6 +107,32 @@ class CpsApi:
         self.elastic = CpsApiElastic(self)
         self.data_indices = CpsApiDataIndices(self)
 
+    def refresh_token(self, admin: bool = False):
+        auth_header_val = f"Bearer {self.client.bearer_token_auth.bearer_token}"
+        user_api_conf = deepsearch.cps.apis.user.Configuration(
+            host=f"{self.client.config.host}/api/cps/user/v1",
+            api_key={"Authorization": auth_header_val},
+        )
+        user_api_conf.verify_ssl = self.client.config.verify_ssl
+        user_api_conf.client_side_validation = False
+
+        api = deepsearch.cps.apis.user.UsersApi(
+            api_client=deepsearch.cps.apis.user.ApiClient(configuration=user_api_conf)
+        )
+
+        try:
+            access_token = api.get_access_token(options={"admin": admin}).access_token
+        except deepsearch.cps.apis.user.exceptions.ApiException as e:
+            raise RuntimeError("The API Key or User is invalid.") from e
+
+        bearer_token_auth = DeepSearchBearerTokenAuth(bearer_token=access_token)
+        ds_config = DeepSearchConfig(
+            host=self.client.config.host,
+            auth=bearer_token_auth,
+            verify_ssl=self.client.config.verify_ssl,
+        )
+        self.client = CpsApiClient(ds_config)
+
     @classmethod
     def default_from_env(cls) -> "CpsApi":
         """
