@@ -108,6 +108,14 @@ class CpsApi:
         self.data_indices = CpsApiDataIndices(self)
 
     def refresh_token(self, admin: bool = False):
+        """Refresh access token
+
+        Args:
+            admin (bool, optional): controls whether an admin token should be requested. Defaults to False.
+
+        Raises:
+            RuntimeError: raised in case API Key or User is invalid
+        """
         auth_header_val = f"Bearer {self.client.bearer_token_auth.bearer_token}"
         user_api_conf = deepsearch.cps.apis.user.Configuration(
             host=f"{self.client.config.host}/api/cps/user/v1",
