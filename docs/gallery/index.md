@@ -1,23 +1,71 @@
 # Gallery
 
-*Examples of complete analysis and usages*
+*Showcase some common usage of Deep Search for **Document conversion** as well as **Data and Knowledge exploration**.*
+
 
 Examples are usually demonstrated as Jupyter notebooks which are listed in the [examples](https://github.com/DS4SD/deepsearch-toolkit/tree/main/examples) folder.
 
-[To the examples :octicons-link-external-16:](https://github.com/DS4SD/deepsearch-toolkit/tree/main/examples){ .md-button .md-button--primary }
+[To the examples :octicons-link-external-16:](https://github.com/DS4SD/deepsearch-examples){ .md-button .md-button--primary }
 
 
-!!! tip "Dependencies"
+## Examples
 
-    Running the examples requires additional dependencies such as [jupyter/notebook](https://github.com/jupyter/notebook) and [pandas](https://pandas.pydata.org/).
-    These are easily installed with the `examples` extra dependency.
+<div class="grid cards" markdown>
 
-    <div class="termy">
+-   __Convert documents quick start__
 
-    ```console
-    $ pip install deepsearch-toolkit[examples]
+    ---
 
-    ---> 100%
-    ```
+    <img src="https://github.com/DS4SD/deepsearch-examples/raw/main/.readme_resources/doc_conversion_quick_start.png" width="300px" />
+    <br />
 
-    </div>
+    Full example on programmatic document conversion
+
+    [:octicons-arrow-right-24: Try it out](https://github.com/DS4SD/deepsearch-examples/tree/main/examples/document_conversion_quick_start)
+
+-   __Visualize bounding boxes__
+
+    ---
+
+    <img src="https://github.com/DS4SD/deepsearch-examples/raw/main/.readme_resources/visualize_bbox.png" width="300px" />
+    <br />
+
+    Visualize the bbox of the text elements
+
+    [:octicons-arrow-right-24: Try it out](https://github.com/DS4SD/deepsearch-examples/tree/main/examples/document_conversion_visualize_bbox)
+
+-   __Extract figures from documents__
+
+    ---
+
+    <img src="https://github.com/DS4SD/deepsearch-examples/raw/main/.readme_resources/extract_figures.png" width="300px" />
+    <br />
+
+    Given a PDF file, extract the figures
+
+    [:octicons-arrow-right-24: Try it out](https://github.com/DS4SD/deepsearch-examples/tree/main/examples/document_conversion_extract_figures)
+
+-   __Extract tables__
+
+    ---
+
+    <img src="https://github.com/DS4SD/deepsearch-examples/raw/main/.readme_resources/extract_tables.png" width="300px" />
+    <br />
+
+    Given a PDF file, extract the tables
+
+    [:octicons-arrow-right-24: Try it out](https://github.com/DS4SD/deepsearch-examples/tree/main/examples/document_conversion_extract_tables)
+
+-   __Data query quick start__
+
+    ---
+
+    <img src="https://github.com/DS4SD/deepsearch-examples/raw/main/.readme_resources/data_query_quick_start.png" width="300px" />
+    <br />
+
+    Example listing data collections, making search in one and more document collections, using source for projection
+
+    [:octicons-arrow-right-24: Try it out](https://github.com/DS4SD/deepsearch-examples/tree/main/examples/data_query_quick_start)
+
+</div>
+
