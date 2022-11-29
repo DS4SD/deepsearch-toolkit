@@ -142,3 +142,112 @@ The `DocumentConversionResult` object has a built-in method for generating repor
     # Let's generate the report for this document conversion job
     documents.generate_report(result_dir="./result/", progress_bar=True)
     ```
+    
+---
+
+## Customize conversion settings
+
+You can exercise control over the conversion settings used in document conversion through the python SDK as follows.
+
+To do so, initialise a `ConversionSettings` object, either using the system defaults, or the settings of a particular project.
+
+```python
+from deepsearch.documents.core.models import ConversionSettings
+...
+
+conv_settings = ConversionSettings.from_defaults(api)
+# or
+conv_settings = ConversionSettings.from_project(api, proj_key=your_proj) # using the project key
+
+... # Modify conv_settings, see sections below
+
+documents = ds.convert_documents(
+    api=api,
+    proj_key=proj,
+    source_path="./samples/2206.01062.pdf",
+    conversion_settings=conv_settings # pass conv_settings as argument
+)           
+
+
+```
+
+### Modify the conversion pipeline models
+
+You can modify the behaviour of the conversion pipeline by setting custom models for a task, or disabling them altogether. Currently, you may modify which models to use for layout segmentation (`clusters`), and for table structure prediction (`tables`).
+
+#### Example 1: Disable the table structure predictions
+
+You can simply disable a model by setting it to `None`
+
+```
+conv_settings.pipeline.tables = None
+
+```
+
+#### Example 2: Pick an alternative system model for table structure
+
+Deep Search may offer multiple alternative models for the same task, e.g. for table structure prediction. You can list all available models, and set a different model.
+
+
+```python
+
+from deepsearch.documents.core.models import DefaultConversionModel
+
+# find out which system models are available
+available_models = DefaultConversionModel.get_models(api) 
+
+for m in available_models:
+  print(f"Got model type={m.type}, name={m.name}"
+
+
+# Modify the settings to use another model (assuming it is available)
+conv_settings.pipeline.tables = DefaultConversionModel(type="WalnutTableStructureModel")
+```
+
+
+#### Example 3: Pick a custom project model for table structure
+
+If you previously set up a custom model in your project, you can choose it the same way as above.
+
+```
+from deepsearch.documents.core.models import ProjectConversionModel
+
+project_models = ProjectConversionModel.get_models(api, proj_key)
+
+for pm in project_models:
+   if pm.name == "my-ts-model-test-1": # basic example: match by name
+     conv_settings.pipeline.tables = pm
+
+```
+
+
+### Modify OCR settings
+
+If you want to use OCR, you can enable it and choose an OCR backend.
+
+### Example 1: Enable default OCR
+
+```python
+from deepsearch.documents.core.models import ConversionSettings, OCRSettings
+
+conv_settings = ConversionSettings.from_defaults(api)
+conv_settings.ocr.enabled = True
+```
+
+### Example 2: Choose alternative OCR backend
+
+```python
+from deepsearch.documents.core.models import ConversionSettings, OCRSettings
+
+conv_settings = ConversionSettings.from_defaults(api)
+conv_settings.ocr.enabled = True
+
+ocr_backends = OCRSettings.get_backends(api) # find out which OCR backends are available
+for b in ocr_backends:
+  print(f"Got OCR backend id={b.id}, name={b.name}"
+
+...
+conv_settings.ocr.backend = "alpine-ocr" # set a different backend
+
+
+```
