@@ -153,21 +153,19 @@ To do so, initialise a `ConversionSettings` object, either using the system defa
 
 ```python
 from deepsearch.documents.core.models import ConversionSettings
-...
 
 conv_settings = ConversionSettings.from_defaults(api)
 # or
 conv_settings = ConversionSettings.from_project(api, proj_key=your_proj) # using the project key
 
-... # Modify conv_settings, see sections below
+# ... Modify conv_settings, see sections below
 
 documents = ds.convert_documents(
-    api=api,
-    proj_key=proj,
-    source_path="./samples/2206.01062.pdf",
-    conversion_settings=conv_settings # pass conv_settings as argument
+  api=api,
+  proj_key=proj,
+  source_path="./samples/2206.01062.pdf",
+  conversion_settings=conv_settings # pass conv_settings as argument
 )           
-
 
 ```
 
@@ -190,20 +188,18 @@ Deep Search may offer multiple alternative models for the same task, e.g. for ta
 
 
 ```python
-
 from deepsearch.documents.core.models import DefaultConversionModel
 
 # find out which system models are available
 available_models = DefaultConversionModel.get_models(api) 
 
 for m in available_models:
-  print(f"Got model type={m.type}, name={m.name}"
+  print(f"Got model type={m.type}, name={m.name}")
 
 
 # Modify the settings to use another model (assuming it is available)
 conv_settings.pipeline.tables = DefaultConversionModel(type="WalnutTableStructureModel")
 ```
-
 
 #### Example 3: Pick a custom project model for table structure
 
@@ -215,11 +211,10 @@ from deepsearch.documents.core.models import ProjectConversionModel
 project_models = ProjectConversionModel.get_models(api, proj_key)
 
 for pm in project_models:
-   if pm.name == "my-ts-model-test-1": # basic example: match by name
-     conv_settings.pipeline.tables = pm
+  if pm.name == "my-ts-model-test-1": # basic example: match by name
+    conv_settings.pipeline.tables = pm
 
 ```
-
 
 ### Modify OCR settings
 
@@ -243,11 +238,10 @@ conv_settings = ConversionSettings.from_defaults(api)
 conv_settings.ocr.enabled = True
 
 ocr_backends = OCRSettings.get_backends(api) # find out which OCR backends are available
+
 for b in ocr_backends:
-  print(f"Got OCR backend id={b.id}, name={b.name}"
+  print(f"Got OCR backend id={b.id}, name={b.name}")
 
-...
 conv_settings.ocr.backend = "alpine-ocr" # set a different backend
-
 
 ```
