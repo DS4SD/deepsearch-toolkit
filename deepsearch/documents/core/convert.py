@@ -33,7 +33,7 @@ def make_payload(
     """
 
     target = target or ZipTarget()
-    
+
     if conversion_settings:
         conversion_settings = conversion_settings.to_ccs_spec()
 
