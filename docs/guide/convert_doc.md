@@ -179,7 +179,7 @@ You can modify the behaviour of the conversion pipeline by setting custom models
 
 You can simply disable a model by setting it to `None`
 
-```
+```python
 conv_settings.pipeline.tables = None
 
 ```
@@ -209,7 +209,7 @@ conv_settings.pipeline.tables = DefaultConversionModel(type="WalnutTableStructur
 
 If you previously set up a custom model in your project, you can choose it the same way as above.
 
-```
+```python
 from deepsearch.documents.core.models import ProjectConversionModel
 
 project_models = ProjectConversionModel.get_models(api, proj_key)
