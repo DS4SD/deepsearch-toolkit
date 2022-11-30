@@ -15,7 +15,7 @@ After registering with [Deep Search](https://ds4sd.github.io/), you can obtain y
     ```console
     $ deepsearch login
 
-    Host [https://deepsearch-experience.res.ibm.com]:       #(1)
+    Host [https://deepsearch-ext-v2-535206b87b82b5365d9d6671fbc19165-0000.us-south.containers.appdomain.cloud]:       #(1)
     Email:                                                  #(2)
     Api key:                                                #(3)
     ```
@@ -40,7 +40,7 @@ After registering with [Deep Search](https://ds4sd.github.io/), you can obtain y
     # auth = DeepSearchAuth(bearer_token="TOKEN")
 
     config = ds.DeepSearchConfig(
-        host="https://deepsearch-experience.res.ibm.com",
+        host="https://deepsearch-ext-v2-535206b87b82b5365d9d6671fbc19165-0000.us-south.containers.appdomain.cloud",
         auth=auth,
     )
 

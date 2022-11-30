@@ -28,7 +28,7 @@ auth = DeepSearchKeyAuth(
 )
 
 config = DeepSearchConfig(
-    host="https://deepsearch-experience.res.ibm.com",
+    host="https://deepsearch-ext-v2-535206b87b82b5365d9d6671fbc19165-0000.us-south.containers.appdomain.cloud",
     auth=auth,
     verify_ssl=False,
 )
@@ -49,8 +49,8 @@ Another option is interacting with the CPS API directly using the endpoints. CPS
 - Public API: `https://{HOST}/api/cps/public/v1/ui/`
 
 For example:
-- User API: https://deepsearch-experience.res.ibm.com/api/cps/user/v1/ui/
-- Public API: https://deepsearch-experience.res.ibm.com/api/cps/public/v1/ui/
+- User API: https://deepsearch-ext-v2-535206b87b82b5365d9d6671fbc19165-0000.us-south.containers.appdomain.cloud/api/cps/user/v1/ui/
+- Public API: https://deepsearch-ext-v2-535206b87b82b5365d9d6671fbc19165-0000.us-south.containers.appdomain.cloud/api/cps/public/v1/ui/
 
 
 Once find the endpoint for your request, you can use it with this example code.
@@ -65,7 +65,7 @@ auth = DeepSearchKeyAuth(
 )
 
 config = DeepSearchConfig(
-    host="https://deepsearch-experience.res.ibm.com",
+    host="https://deepsearch-ext-v2-535206b87b82b5365d9d6671fbc19165-0000.us-south.containers.appdomain.cloud",
     auth=auth,
     verify_ssl=False,
 )
