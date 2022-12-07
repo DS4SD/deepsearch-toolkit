@@ -98,7 +98,9 @@ class CpsApi:
 
     def __init__(self, client: CpsApiClient) -> None:
         self.client = client
+        self._create_members()
 
+    def _create_members(self):
         self.projects = CpsApiProjects(self)
         self.knowledge_graphs = CpsApiKnowledgeGraphs(self)
         self.queries = CpsApiQueries(self)
@@ -140,6 +142,7 @@ class CpsApi:
             verify_ssl=self.client.config.verify_ssl,
         )
         self.client = CpsApiClient(ds_config)
+        self._create_members()  # propagate updated token
 
     @classmethod
     def default_from_env(cls) -> "CpsApi":
