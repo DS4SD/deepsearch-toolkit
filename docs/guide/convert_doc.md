@@ -220,7 +220,7 @@ for pm in project_models:
 
 If you want to use OCR, you can enable it and choose an OCR backend.
 
-### Example 1: Enable default OCR
+#### Example 1: Enable default OCR
 
 ```python
 from deepsearch.documents.core.models import ConversionSettings, OCRSettings
@@ -229,7 +229,7 @@ conv_settings = ConversionSettings.from_defaults(api)
 conv_settings.ocr.enabled = True
 ```
 
-### Example 2: Choose alternative OCR backend
+#### Example 2: Choose alternative OCR backend
 
 ```python
 from deepsearch.documents.core.models import ConversionSettings, OCRSettings
