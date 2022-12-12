@@ -34,8 +34,9 @@ def make_payload(
 
     target = target or ZipTarget()
 
-    if conversion_settings:
-        conversion_settings = conversion_settings.to_ccs_spec()
+    ccs_conv_settings: Optional[dict] = None
+    if conversion_settings is not None:
+        ccs_conv_settings = conversion_settings.to_ccs_spec()
 
     payload = {
         "source": {
@@ -44,7 +45,7 @@ def make_payload(
         },
         "context": {
             "collection_name": collection_name,
-            "conversion_settings": conversion_settings,
+            "conversion_settings": ccs_conv_settings,
             "keep_documents": "false",
         },
         "target": target.dict(),
