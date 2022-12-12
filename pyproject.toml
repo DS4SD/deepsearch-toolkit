@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "deepsearch-toolkit"
-version = "0.5.0"  # DO NOT EDIT, updated automatically
+version = "0.5.1"  # DO NOT EDIT, updated automatically
 description = "Interact with the Deep Search platform for new knowledge explorations and discoveries"
 authors = ["Michele Dolfi <dol@zurich.ibm.com>", "André Carvalho <andre.carvalho2@ibm.com>", "Lokesh Mishra <mis@zurich.ibm.com>", "Christoph Auer <cau@zurich.ibm.com>", "Kasper Dinkla <dkl@zurich.ibm.com>", "Cesar Berrospi Ramis <ceb@zurich.ibm.com>", "Panos Vagenas <pva@zurich.ibm.com>", "Peter Staar <taa@zurich.ibm.com>"]
 license = "MIT"
@@ -50,12 +50,6 @@ appdirs = "^1.4.4"
 tabulate = "^0.8.9"
 pluggy = "^1.0.0"
 tqdm = "^4.64.0"
-numpy = {version = "^1.22.4", optional = true}
-jupyter = {version = "^1.0.0", optional = true}
-pandas = {version = "^1.4.2", optional = true}
-
-[tool.poetry.extras]
-examples = ["numpy", "jupyter", "pandas", "ipython-blocking", "ipywidgets"]
 
 [tool.poetry.group.dev.dependencies]
 black = {extras = ["jupyter"], version = "^22.1.0"}

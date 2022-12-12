@@ -78,7 +78,7 @@ extra:
   generator: false
   analytics:
     provider: google
-    property: G-8WR82RYJQL
+    property: G-KK2LZGCGFM
 
 # Plugins
 plugins:

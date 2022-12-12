@@ -1,5 +1,15 @@
 # Deep Search examples
 
+Examples are now available in a dedicated gallery.
+
+:point_right: [https://github.com/DS4SD/deepsearch-examples](https://github.com/DS4SD/deepsearch-examples)
+
+
+---
+
+> This section is deprecated
+
+
 ## Install
 
 The examples notebooks contained in this folder require additional dependencies for being executed.
