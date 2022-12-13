@@ -265,13 +265,6 @@ class OCRSettings(BaseModel):
         request_backends.raise_for_status()
         return request_backends.json()
 
-    # TODO implement later:
-    # @classmethod
-    # def get_backend_config(
-    #    cls, api: CpsApi, backend_id: str
-    # ) -> dict:  # get available config options for given backend
-    #    return {}  # FIXME: Stub
-
     def to_ccs_spec(self):
         return self.dict()
 
