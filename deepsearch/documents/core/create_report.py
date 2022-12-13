@@ -7,9 +7,9 @@ from typing import Any, List, Union
 import requests
 from tqdm import tqdm
 
+from deepsearch.core.util.ccs_utils import get_ccs_project_key
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.common_routines import ERROR_MSG, progressbar
-from deepsearch.documents.core.convert import get_ccs_project_key
 from deepsearch.documents.core.utils import URLNavigator
 
 logger = logging.getLogger(__name__)

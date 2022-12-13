@@ -1,7 +1,13 @@
+import collections
 from enum import Enum
-from typing import List, Literal, Optional, Set, Union
+from typing import Dict, List, Literal, Optional, Set, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, parse_obj_as
+
+from deepsearch import CpsApi
+from deepsearch.core.util.ccs_utils import get_ccs_project_key
+from deepsearch.cps.apis import public as sw_client
+from deepsearch.documents.core.utils import URLNavigator
 
 
 class S3Coordinates(BaseModel):
@@ -115,3 +121,227 @@ ExportTarget = Union[
     MongoS3Target,
     ElasticS3Target,
 ]
+
+
+class ProjectConversionModel(BaseModel):
+    name: Optional[str]  # named model (config)
+    config_id: str  # the model config key. Validate with available models CCS project.
+    proj_key: str
+
+    @classmethod
+    def get_models(
+        cls, api: CpsApi, proj_key: str
+    ) -> Dict[
+        str, List["ProjectConversionModel"]
+    ]:  # get list of available project models
+
+        stages_to_models = collections.defaultdict(list)
+
+        proj_key, _ = get_ccs_project_key(api, proj_key)
+
+        request_project_models = api.client.session.get(
+            url=URLNavigator(api).url_project_models(proj_key)
+        )
+        request_project_models.raise_for_status()
+        models_dict = request_project_models.json()
+
+        for elem in models_dict:
+            for stage in elem["supported_stages"]:
+                stages_to_models[stage].append(
+                    ProjectConversionModel.from_ccs_spec(elem)
+                )
+
+        return stages_to_models  # FIXME: Dummy
+
+    def to_ccs_spec(self):
+        obj = {
+            "name": self.name,
+            "description": "",
+            "proj_key": self.proj_key,
+            "model_config_key": self.config_id,
+        }
+
+        return obj
+
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        return cls(
+            name=obj.get("name"),
+            config_id=obj.get("model_config_key"),
+            proj_key=obj.get("proj_key"),
+        )
+
+
+class DefaultConversionModel(BaseModel):
+    type: str  # system model "type". Validate with available options on CCS API.
+    config: dict = {}  # model configuration dict
+
+    @classmethod
+    def get_models(
+        cls, api: CpsApi
+    ) -> Dict[
+        str, List["DefaultConversionModel"]
+    ]:  # get list of available default models
+
+        stages_to_models = collections.defaultdict(list)
+
+        request_system_models = api.client.session.get(
+            url=URLNavigator(api).url_system_models()
+        )
+        request_system_models.raise_for_status()
+        models_dict = request_system_models.json()
+
+        for elem in models_dict:
+            for stage in elem["supported_stages"]:
+                stages_to_models[stage].append(
+                    DefaultConversionModel.from_ccs_spec(elem)
+                )
+
+        return stages_to_models  # FIXME: Dummy
+
+    def to_ccs_spec(self):
+        return self.dict()
+
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        return cls.parse_obj(obj)
+
+
+ConversionModel = Union[DefaultConversionModel, ProjectConversionModel]
+
+
+class ConversionPipelineSettings(BaseModel):
+    clusters: ConversionModel
+    tables: Optional[ConversionModel]
+
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        if obj is None:
+            raise ValueError("CCS spec can not be None")
+        if obj.get("clusters") and len(obj.get("clusters")):
+            model_dict = obj.get("clusters")[0]
+            clusters = parse_obj_as(ConversionModel, model_dict)
+
+            instance = cls(clusters=clusters)
+            if obj.get("tables") and len(obj.get("tables")):
+                model_dict = obj.get("tables")[0]
+                instance.tables = parse_obj_as(ConversionModel, model_dict)
+
+            return instance
+        else:
+            raise ValueError("CCS spec must have non-empty clusters")
+
+    def to_ccs_spec(self):
+        obj = {
+            "clusters": [self.clusters.to_ccs_spec()],
+            "page": [],
+            "tables": [self.tables.to_ccs_spec()] if self.tables else [],
+            "normalization": [],
+        }
+
+        return obj
+
+
+class OCRModeEnum(str, Enum):
+    auto = "auto"
+    keep_only_ocr = "keep-only-ocr"
+    prioritize_programmatic = "prioritize-programmatic"
+    prioritize_ocr = "prioritize-ocr"
+
+
+class OCRSettings(BaseModel):
+    enabled: bool = False
+    backend: str = "tesseract-ocr"  # validate with available options on CCS API
+    config: dict = {}  # implementation specific to OCR backend
+    merge_mode: Optional[OCRModeEnum] = OCRModeEnum.prioritize_ocr
+
+    @classmethod
+    def get_backends(
+        cls, api: CpsApi
+    ) -> List[Dict]:  # get list of available OCR backends
+        request_backends = api.client.session.get(
+            url=URLNavigator(api).url_conversion_defaults()
+        )
+        request_backends.raise_for_status()
+        return request_backends.json()
+
+    def to_ccs_spec(self):
+        return self.dict()
+
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        return cls.parse_obj(obj or {})
+
+
+class ConversionMetadata(BaseModel):
+    description: str = ""
+    display_name: str = ""
+    license: str = ""
+    source: str = ""
+    version: str = ""
+
+    @classmethod
+    def from_ccs_spec(cls, obj):
+        return cls.parse_obj(obj or {})
+
+    def to_ccs_spec(self):
+        return self.dict()
+
+
+class ConversionSettings(BaseModel):
+    pipeline: Optional[ConversionPipelineSettings]
+    ocr: Optional[OCRSettings]
+    metadata: Optional[ConversionMetadata]
+
+    @classmethod
+    def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
+        conv_settings = cls()
+
+        proj_key, _ = get_ccs_project_key(api, proj_key)
+
+        request_conv_settings = api.client.session.get(
+            url=URLNavigator(api).url_collection_settings(proj_key, "_default")
+        )
+        request_conv_settings.raise_for_status()
+        settings_dict = request_conv_settings.json()
+
+        conv_settings.pipeline = ConversionPipelineSettings.from_ccs_spec(
+            settings_dict.get("model_pipeline")
+        )
+        conv_settings.ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
+        conv_settings.metadata = ConversionMetadata.from_ccs_spec(
+            settings_dict.get("metadata")
+        )
+        return conv_settings
+
+    @classmethod
+    def from_defaults(cls, api: CpsApi) -> "ConversionSettings":
+        conv_settings = cls()
+
+        request_conv_settings = api.client.session.get(
+            url=URLNavigator(api).url_conversion_defaults()
+        )
+        request_conv_settings.raise_for_status()
+        settings_dict = request_conv_settings.json()
+
+        conv_settings.pipeline = ConversionPipelineSettings.from_ccs_spec(
+            settings_dict.get("model_pipeline")
+        )
+        conv_settings.ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
+        conv_settings.metadata = ConversionMetadata.from_ccs_spec(
+            settings_dict.get("metadata")
+        )
+
+        return conv_settings
+
+    def to_ccs_spec(self):
+        obj = {}
+
+        if self.pipeline:
+            obj["model_pipeline"] = self.pipeline.to_ccs_spec()
+        if self.ocr:
+            obj["ocr"] = self.ocr.to_ccs_spec()
+        if self.metadata:
+            obj["metadata"] = self.metadata.to_ccs_spec()
+
+        return obj

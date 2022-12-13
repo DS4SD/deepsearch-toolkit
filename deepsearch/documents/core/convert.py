@@ -1,14 +1,10 @@
-import glob
 import logging
 import os
-import pathlib
-from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, List, Optional
 
 import requests
 import urllib3
-from pydantic import BaseModel, Field
 from tqdm import tqdm
 
 from deepsearch.cps.apis import public as sw_client
@@ -17,8 +13,9 @@ from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
 )
 from deepsearch.cps.client.api import CpsApi
 
+from ...core.util.ccs_utils import get_ccs_project_key
 from .common_routines import ERROR_MSG, progressbar
-from .models import ExportTarget, ZipTarget
+from .models import ConversionSettings, ExportTarget, ZipTarget
 from .utils import URLNavigator, collect_all_local_files, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -28,6 +25,7 @@ logger = logging.getLogger(__name__)
 def make_payload(
     url_document: str,
     target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
     collection_name: str = "_default",
 ):
     """
@@ -36,6 +34,10 @@ def make_payload(
 
     target = target or ZipTarget()
 
+    ccs_conv_settings: Optional[dict] = None
+    if conversion_settings is not None:
+        ccs_conv_settings = conversion_settings.to_ccs_spec()
+
     payload = {
         "source": {
             "type": "url",
@@ -43,6 +45,7 @@ def make_payload(
         },
         "context": {
             "collection_name": collection_name,
+            "conversion_settings": ccs_conv_settings,
             "keep_documents": "false",
         },
         "target": target.dict(),
@@ -65,19 +68,12 @@ def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
     return request_status
 
 
-def get_ccs_project_key(api: CpsApi, cps_proj_key: str):
-    """
-    Given a cps project key, returns ccs project key and collection name.
-    """
-    sw_api = sw_client.ProjectApi(api.client.swagger_client)
-    request_ccs_project_key = sw_api.get_project_default_values(proj_key=cps_proj_key)
-    ccs_proj_key = request_ccs_project_key.ccs_project.proj_key
-    collection_name = request_ccs_project_key.ccs_project.collection_name
-    return (ccs_proj_key, collection_name)
-
-
 def submit_url_for_conversion(
-    api: CpsApi, cps_proj_key: str, url: str, target: Optional[ExportTarget]
+    api: CpsApi,
+    cps_proj_key: str,
+    url: str,
+    target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
 ) -> str:
     """
     Convert an online pdf using DeepSearch Technology.
@@ -87,7 +83,7 @@ def submit_url_for_conversion(
         api=api, cps_proj_key=cps_proj_key
     )
     # submit conversion request
-    payload = make_payload(url, target, collection_name)
+    payload = make_payload(url, target, conversion_settings, collection_name)
 
     try:
         request_conversion_task_id = api.client.session.post(
@@ -110,6 +106,7 @@ def send_files_for_conversion(
     cps_proj_key: str,
     source_path: Path,
     target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
     root_dir: Path,
     progress_bar=False,
 ) -> list:
@@ -141,6 +138,7 @@ def send_files_for_conversion(
                 cps_proj_key=cps_proj_key,
                 url=private_download_url,
                 target=target,
+                conversion_settings=conversion_settings,
             )
             task_ids.append(task_id)
             progress.update(1)
@@ -273,6 +271,7 @@ def send_urls_for_conversion(
     cps_proj_key: str,
     urls: List[str],
     target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
     progress_bar=False,
 ) -> List[Any]:
     """
@@ -289,7 +288,11 @@ def send_urls_for_conversion(
     ) as progress:
         for url in urls:
             task_id = submit_url_for_conversion(
-                api=api, cps_proj_key=cps_proj_key, url=url, target=target
+                api=api,
+                cps_proj_key=cps_proj_key,
+                url=url,
+                target=target,
+                conversion_settings=conversion_settings,
             )
             task_ids.append(task_id)
             progress.update(1)
