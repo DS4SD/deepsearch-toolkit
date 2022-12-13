@@ -1,3 +1,8 @@
+## [v0.6.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.6.0) - 2022-12-13
+
+### Feature
+* Add support for document conversion settings ([#48](https://github.com/DS4SD/deepsearch-toolkit/issues/48)) ([`ee59123`](https://github.com/DS4SD/deepsearch-toolkit/commit/ee59123c0f3120507396d4b1cc664fbd34c2ac47))
+
 ## [v0.5.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.5.1) - 2022-12-07
 
 ### Fix
