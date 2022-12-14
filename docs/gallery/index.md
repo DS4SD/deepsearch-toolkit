@@ -67,5 +67,16 @@ Examples are usually demonstrated as Jupyter notebooks which are listed in the [
 
     [:octicons-arrow-right-24: Try it out](https://github.com/DS4SD/deepsearch-examples/tree/main/examples/data_query_quick_start)
 
+-   __Data query chemistry__
+
+    ---
+
+    <img src="https://github.com/DS4SD/deepsearch-examples/raw/main/.readme_resources/data_query_chemistry.png" width="300px" />
+    <br />
+
+    Search the chemistry databases for known molecules
+
+    [:octicons-arrow-right-24: Try it out](https://github.com/DS4SD/deepsearch-examples/tree/main/examples/data_query_chemistry)
+
 </div>
 
