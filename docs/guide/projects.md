@@ -83,3 +83,28 @@ A collaborator may be added to a project as `owner`, `editor`, or `viewer`. Belo
     df = pd.DataFrame(projects)
     print(df)
     ```
+
+### Removing a project
+
+=== "CLI"
+
+    Using the [`deepsearch cps`](../cli-reference.md#cps) component:
+    <div class="termy">
+
+    ```console
+    $ deepsearch cps projects remove d1d526e14cdac562b5174c2df9dd1b04c29a8c33
+    ```
+
+    </div>
+
+=== "Python"
+
+    After you have generated the `api` object (from [login configuration](../getting_started/#authentication)),
+    you can remove a project given its key:
+
+    ```python
+    # example project key to delete:
+    # proj_key = "7be8d8e763b55996710007cf97f31244e8ea237c"
+
+    api.projects.remove(proj_key=proj_key)
+    ```
