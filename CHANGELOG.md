@@ -1,3 +1,11 @@
+## [v0.7.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.7.0) - 2022-12-15
+
+### Feature
+* Add project removal ([#57](https://github.com/DS4SD/deepsearch-toolkit/issues/57)) ([`3333fbb`](https://github.com/DS4SD/deepsearch-toolkit/commit/3333fbb537be35dee2c3407f2e00ce42abea66f0))
+
+### Documentation
+* Add chemistry example to gallery ([#56](https://github.com/DS4SD/deepsearch-toolkit/issues/56)) ([`155e5d7`](https://github.com/DS4SD/deepsearch-toolkit/commit/155e5d7211285691738d1dcde8b761c9babb5c5d))
+
 ## [v0.6.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.6.0) - 2022-12-13
 
 ### Feature
