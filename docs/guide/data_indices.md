@@ -108,12 +108,13 @@ Documents can be converted and added, directly, to a data index in a project. Br
 === "Python"
     ```python
     from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
+    from deepsearch.cps.data_indices import utils as data_indices_utils
 
     # Specify index
     coords = ElasticProjectDataCollectionSource(proj_key=PROJ_KEY, index_key=INDEX_KEY)
 
     # For local documents
-    ds.data_indices_utilities.upload_files(coords=coords, local_file=PATH_DOCS)
+    data_indices_utils.upload_files(api=api, coords=coords, local_file=PATH_DOCS)
 
     # For online documents
 
@@ -122,7 +123,7 @@ Documents can be converted and added, directly, to a data index in a project. Br
     # or, define a list directly
     #input_urls = ["https:///URL1", "https://URL2", "https://URL3"]
 
-    ds.data_indices_utilities.upload_files(coords=coords, url=input_urls)
+    data_indices_utils.upload_files(api=api, coords=coords, url=input_urls)
     ```
 
 ---
