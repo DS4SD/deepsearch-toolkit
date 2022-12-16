@@ -82,7 +82,8 @@ def process_url_input(
         bar_format=progressbar.bar_format,
     ) as progress:
         for url in urls:
-            payload = {"file_url": url}
+            file_url_array = [url]
+            payload = {"file_url": file_url_array}
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
             progress.update(1)
@@ -146,7 +147,8 @@ def process_local_file(
             private_download_url = convert.upload_single_file(
                 api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
             )
-            payload = {"file_url": private_download_url}
+            file_url_array = [private_download_url]
+            payload = {"file_url": file_url_array}
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
             progress.update(1)
