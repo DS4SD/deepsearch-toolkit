@@ -1,3 +1,8 @@
+## [v0.7.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.7.1) - 2022-12-16
+
+### Fix
+* Fix document upload ([#58](https://github.com/DS4SD/deepsearch-toolkit/issues/58)) ([`13216af`](https://github.com/DS4SD/deepsearch-toolkit/commit/13216afe84472c048f8664d15884ecea00603b42))
+
 ## [v0.7.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.7.0) - 2022-12-15
 
 ### Feature
