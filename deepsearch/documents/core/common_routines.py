@@ -15,4 +15,4 @@ class ProgressBarParameters:
 
 
 progressbar = ProgressBarParameters()
-success_message = "Whoa... it is done. Until next time, Ciao!"
+success_message = "Completed successfully"
