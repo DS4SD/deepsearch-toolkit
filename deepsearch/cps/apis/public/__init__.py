@@ -166,6 +166,7 @@ from deepsearch.cps.apis.public.models.inline_response200 import InlineResponse2
 from deepsearch.cps.apis.public.models.inline_response2001 import InlineResponse2001
 from deepsearch.cps.apis.public.models.inline_response2002 import InlineResponse2002
 from deepsearch.cps.apis.public.models.inline_response2003 import InlineResponse2003
+from deepsearch.cps.apis.public.models.inspection_report import InspectionReport
 from deepsearch.cps.apis.public.models.kg_snapshot import KgSnapshot
 from deepsearch.cps.apis.public.models.kgc_data_input import KgcDataInput
 from deepsearch.cps.apis.public.models.kibana_saved_queries_result import KibanaSavedQueriesResult

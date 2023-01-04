@@ -33,7 +33,7 @@ class DataIndexUploadFileSource(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'file_url': 'str',
+        'file_url': 'list[str]',
         'scratch_files_id': 'list[str]'
     }
 
@@ -61,10 +61,10 @@ class DataIndexUploadFileSource(object):
     def file_url(self):
         """Gets the file_url of this DataIndexUploadFileSource.  # noqa: E501
 
-        File URL to be converted and uploaded to the data index  # noqa: E501
+        List of File's URL to be converted and uploaded to the data index  # noqa: E501
 
         :return: The file_url of this DataIndexUploadFileSource.  # noqa: E501
-        :rtype: str
+        :rtype: list[str]
         """
         return self._file_url
 
@@ -72,10 +72,10 @@ class DataIndexUploadFileSource(object):
     def file_url(self, file_url):
         """Sets the file_url of this DataIndexUploadFileSource.
 
-        File URL to be converted and uploaded to the data index  # noqa: E501
+        List of File's URL to be converted and uploaded to the data index  # noqa: E501
 
         :param file_url: The file_url of this DataIndexUploadFileSource.  # noqa: E501
-        :type: str
+        :type: list[str]
         """
 
         self._file_url = file_url

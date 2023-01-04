@@ -38,6 +38,7 @@ class ProjectDataIndexWithStatus(object):
         'documents': 'float',
         'health': 'str',
         'name': 'str',
+        'record_properties': 'object',
         'schema_key': 'str',
         'source': 'ProjectDataIndexSource',
         'status': 'str',
@@ -51,6 +52,7 @@ class ProjectDataIndexWithStatus(object):
         'documents': 'documents',
         'health': 'health',
         'name': 'name',
+        'record_properties': 'record_properties',
         'schema_key': 'schema_key',
         'source': 'source',
         'status': 'status',
@@ -58,7 +60,7 @@ class ProjectDataIndexWithStatus(object):
         'view_of': 'view_of'
     }
 
-    def __init__(self, creation_date=None, description=None, documents=None, health=None, name=None, schema_key=None, source=None, status=None, type=None, view_of=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, creation_date=None, description=None, documents=None, health=None, name=None, record_properties=None, schema_key=None, source=None, status=None, type=None, view_of=None, local_vars_configuration=None):  # noqa: E501
         """ProjectDataIndexWithStatus - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -69,6 +71,7 @@ class ProjectDataIndexWithStatus(object):
         self._documents = None
         self._health = None
         self._name = None
+        self._record_properties = None
         self._schema_key = None
         self._source = None
         self._status = None
@@ -81,6 +84,8 @@ class ProjectDataIndexWithStatus(object):
         self.documents = documents
         self.health = health
         self.name = name
+        if record_properties is not None:
+            self.record_properties = record_properties
         if schema_key is not None:
             self.schema_key = schema_key
         self.source = source
@@ -203,6 +208,27 @@ class ProjectDataIndexWithStatus(object):
             raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
 
         self._name = name
+
+    @property
+    def record_properties(self):
+        """Gets the record_properties of this ProjectDataIndexWithStatus.  # noqa: E501
+
+
+        :return: The record_properties of this ProjectDataIndexWithStatus.  # noqa: E501
+        :rtype: object
+        """
+        return self._record_properties
+
+    @record_properties.setter
+    def record_properties(self, record_properties):
+        """Sets the record_properties of this ProjectDataIndexWithStatus.
+
+
+        :param record_properties: The record_properties of this ProjectDataIndexWithStatus.  # noqa: E501
+        :type: object
+        """
+
+        self._record_properties = record_properties
 
     @property
     def schema_key(self):
