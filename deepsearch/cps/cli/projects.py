@@ -1,10 +1,8 @@
-import json
-
 import typer
 
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption, cli_output
-from deepsearch.cps.apis.user.exceptions import ApiException
 from deepsearch.cps.client.api import CpsApi
+from deepsearch.cps.client.components.projects import RoleEnum
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -32,19 +30,36 @@ def create(
     cli_output(results, output, headers="keys")
 
 
+@app.command(name="assign", help="Assign a user to a project")
+def assign_user(
+    proj_key: str,
+    username: str,
+    role: RoleEnum = typer.Argument(RoleEnum.viewer),
+):
+    api = CpsApi.default_from_env()
+    project = api.projects.get(key=proj_key)
+    if project is not None:
+        api.projects.assign_user(
+            project=project,
+            username=username,
+            role=role,
+        )
+    else:
+        print("Project not found")
+        raise typer.Exit(code=1)
+
+
 @app.command(name="remove", help="Remove a project")
 def remove(
     proj_key: str,
 ):
     api = CpsApi.default_from_env()
-    try:
-        api.projects.remove(proj_key=proj_key)
-    except ApiException as e:
-        data = json.loads(e.body)
-        if data.get("status") == 404:
-            print("Project not found")
-        else:
-            raise
+    project = api.projects.get(key=proj_key)
+    if project is not None:
+        api.projects.remove(project=project)
+    else:
+        print("Project not found")
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
