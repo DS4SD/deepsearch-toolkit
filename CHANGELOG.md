@@ -1,3 +1,8 @@
+## [v0.8.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.8.0) - 2023-01-06
+
+### Feature
+* Add project-user assignment support ([#60](https://github.com/DS4SD/deepsearch-toolkit/issues/60)) ([`a377bef`](https://github.com/DS4SD/deepsearch-toolkit/commit/a377bef0f7ebb6779e066bccb2491844569a8ced))
+
 ## [v0.7.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.7.1) - 2022-12-16
 
 ### Fix
