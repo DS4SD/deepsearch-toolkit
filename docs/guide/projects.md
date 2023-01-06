@@ -84,6 +84,38 @@ A collaborator may be added to a project as `owner`, `editor`, or `viewer`. Belo
     print(df)
     ```
 
+### Assigning a user to a project
+
+=== "CLI"
+
+    Using the [`deepsearch cps`](../cli-reference.md#cps) component:
+    <div class="termy">
+
+    ```console
+    $ deepsearch cps projects assign d1d526e... user@example.com viewer
+
+    ```
+
+    </div>
+
+
+=== "Python"
+
+    ```python
+
+    # example project to assign
+    proj = "7be8d8e763b55996710007cf97f31244e8ea237c"
+
+    # or using a Project instance, e.g.:
+    # proj = api.projects.create(name="new-project")
+
+    api.projects.assign_user(
+        project=proj,
+        username="user@example.com",
+        role="viewer",
+    )
+    ```
+
 ### Removing a project
 
 === "CLI"
@@ -92,19 +124,19 @@ A collaborator may be added to a project as `owner`, `editor`, or `viewer`. Belo
     <div class="termy">
 
     ```console
-    $ deepsearch cps projects remove d1d526e14cdac562b5174c2df9dd1b04c29a8c33
+    $ deepsearch cps projects remove d1d526e...
     ```
 
     </div>
 
 === "Python"
 
-    After you have generated the `api` object (from [login configuration](../getting_started/#authentication)),
-    you can remove a project given its key:
-
     ```python
-    # example project key to delete:
-    # proj_key = "7be8d8e763b55996710007cf97f31244e8ea237c"
+    # example project to remove
+    proj = "7be8d8e763b55996710007cf97f31244e8ea237c"
 
-    api.projects.remove(proj_key=proj_key)
+    # or using a Project instance, e.g.:
+    # proj = api.projects.create(name="new-project")
+
+    api.projects.remove(project=proj)
     ```
