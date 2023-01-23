@@ -21,6 +21,9 @@ from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.apis.public.models.elastic_index_search_results import (
     ElasticIndexSearchResults,
 )
+from deepsearch.cps.client.components.data_indices import (
+    ElasticProjectDataCollectionSource,
+)
 
 if TYPE_CHECKING:
     from deepsearch.cps.client import CpsApi
@@ -163,14 +166,6 @@ class ElasticDataCollectionSource(BaseModel):
             "elastic_id": self.elastic_id,
             "index": self.index_key,
         }
-
-
-class ElasticProjectDataCollectionSource(BaseModel):
-    proj_key: str
-    index_key: str
-
-    def to_resource(self) -> Dict[str, Any]:
-        return {"type": "elastic", "proj_key": self.proj_key, "index": self.index_key}
 
 
 class ElasticDataCollectionMetadata(BaseModel):

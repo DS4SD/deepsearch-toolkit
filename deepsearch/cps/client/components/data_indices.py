@@ -3,10 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
+from pydantic import BaseModel
+
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.apis.public.models.token_response import TokenResponse
 from deepsearch.cps.client.components.api_object import ApiConnectedObject
-from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 
 if TYPE_CHECKING:
     from deepsearch.cps.client import CpsApi
@@ -19,12 +20,11 @@ class CpsApiDataIndices:
 
     # define methods:
     def list(self, proj_key: str):
-        try:
-            projects = self.sw_api.get_project_data_indices(proj_key=proj_key)
-            return projects
-        except ValueError as e:
-            print(f"Uh oh! {e}\nAborting!")
-            raise
+        response: list[
+            sw_client.ProjectDataIndexWithStatus
+        ] = self.sw_api.get_project_data_indices(proj_key=proj_key)
+
+        return [DataIndex.parse_obj(item.to_dict()) for item in response]
 
     # def create(self, proj_key: str, data: Dict[str, str]):
     #     return self.sw_api.create_project_data_index(proj_key=proj_key, data=data)
@@ -73,7 +73,11 @@ class CpsApiDataIndices:
             "schema_key": schema_key,
             "type": type,
         }
-        return self.sw_api.create_project_data_index(proj_key=proj_key, data=data)
+        response: sw_client.ProjectDataIndexWithStatus = (
+            self.sw_api.create_project_data_index(proj_key=proj_key, data=data)
+        )
+
+        return DataIndex.parse_obj(response.to_dict())
 
     def delete(
         self,
@@ -103,6 +107,26 @@ class CpsApiDataIndices:
             proj_key=coords.proj_key, index_key=coords.index_key, body=body
         ).task_id
         return task_id
+
+
+class ElasticProjectDataCollectionSource(BaseModel):
+    proj_key: str
+    index_key: str
+
+    def to_resource(self) -> Dict[str, Any]:
+        return {"type": "elastic", "proj_key": self.proj_key, "index": self.index_key}
+
+
+class DataIndex(BaseModel):
+
+    source: ElasticProjectDataCollectionSource
+    name: str
+    description: str
+    documents: int
+    health: str
+    status: str
+    schema_key: str
+    type: str
 
 
 @dataclass
