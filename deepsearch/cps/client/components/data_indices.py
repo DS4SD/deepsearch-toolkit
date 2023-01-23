@@ -19,7 +19,7 @@ class CpsApiDataIndices:
         self.sw_api = sw_client.DataIndicesApi(self.api.client.swagger_client)
 
     # define methods:
-    def list(self, proj_key: str):
+    def list(self, proj_key: str) -> List[DataIndex]:
         response: list[
             sw_client.ProjectDataIndexWithStatus
         ] = self.sw_api.get_project_data_indices(proj_key=proj_key)
@@ -35,7 +35,7 @@ class CpsApiDataIndices:
         desc: str = "",
         type: Optional[str] = None,
         schema_key: Optional[str] = None,
-    ):
+    ) -> DataIndex:
         """
         Method to create a new index.
 
@@ -82,7 +82,7 @@ class CpsApiDataIndices:
     def delete(
         self,
         coords: ElasticProjectDataCollectionSource,
-    ):
+    ) -> None:
         request_confirmation_token: TokenResponse = (
             self.sw_api.create_project_data_index_delete_token(
                 proj_key=coords.proj_key, index_key=coords.index_key
