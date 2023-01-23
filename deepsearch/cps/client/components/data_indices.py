@@ -18,7 +18,6 @@ class CpsApiDataIndices:
         self.api = api
         self.sw_api = sw_client.DataIndicesApi(self.api.client.swagger_client)
 
-    # define methods:
     def list(self, proj_key: str) -> List[DataIndex]:
         response: list[
             sw_client.ProjectDataIndexWithStatus
@@ -26,8 +25,6 @@ class CpsApiDataIndices:
 
         return [DataIndex.parse_obj(item.to_dict()) for item in response]
 
-    # def create(self, proj_key: str, data: Dict[str, str]):
-    #     return self.sw_api.create_project_data_index(proj_key=proj_key, data=data)
     def create(
         self,
         proj_key: str,
