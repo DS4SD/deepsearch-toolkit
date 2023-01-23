@@ -1,3 +1,8 @@
+## [v0.9.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.9.0) - 2023-01-23
+
+### Feature
+* Use sdk models in data_indices methods ([#61](https://github.com/DS4SD/deepsearch-toolkit/issues/61)) ([`398cd15`](https://github.com/DS4SD/deepsearch-toolkit/commit/398cd154f4ce9f934810a1120c4bd51d3538a660))
+
 ## [v0.8.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.8.0) - 2023-01-06
 
 ### Feature
