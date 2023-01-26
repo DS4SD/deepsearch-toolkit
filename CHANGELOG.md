@@ -1,3 +1,8 @@
+## [v0.10.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.10.0) - 2023-01-26
+
+### Feature
+* Allow supported image file formats in conversion ([#62](https://github.com/DS4SD/deepsearch-toolkit/issues/62)) ([`455d673`](https://github.com/DS4SD/deepsearch-toolkit/commit/455d6738098f90acf9384fd79f45571624825cfa))
+
 ## [v0.9.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.9.0) - 2023-01-23
 
 ### Feature
