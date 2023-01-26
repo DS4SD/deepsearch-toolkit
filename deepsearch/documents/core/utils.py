@@ -65,7 +65,7 @@ def batch_single_files(
     source_path: Path, root_dir: Path, progress_bar=False
 ) -> List[List[str]]:
     """
-    Batch individual pdfs into zip files.
+    Batch individual input files into zip files.
 
     Output
         bfiles: List[List[str]]
@@ -88,33 +88,31 @@ def batch_single_files(
     zipfilename = f"{0:04}{zipfilenumber}.zip"
     current_zipbatch = zipdir + zipfilename
 
-    # get input pdf files
-    files_pdf: List[Any] = []
+    # get input files
+    files_to_upload: List[Any] = []
     if os.path.isdir(source_path):
-        files_pdf = []
-
         for ext in ALLOWED_FILE_EXTENSIONS:
-            files_pdf.extend(
+            files_to_upload.extend(
                 glob.glob(os.path.join(source_path, f"**/*{ext}"), recursive=True)
             )
     elif os.path.isfile(source_path):
         file_extension = pathlib.Path(source_path).suffix
         if file_extension in ALLOWED_FILE_EXTENSIONS:
-            files_pdf = [source_path]
+            files_to_upload = [source_path]
 
     # catch all filenames and batch names
     batched_files = []
 
-    if len(files_pdf) != 0:
+    if len(files_to_upload) != 0:
         with tqdm(
-            total=len(files_pdf),
+            total=len(files_to_upload),
             desc=f"{'Processing input:': <{progressbar.padding}}",
             disable=not (progress_bar),
             colour=progressbar.colour,
             bar_format=progressbar.bar_format,
         ) as progress:
-            # loop over pdfs
-            for single_doc in files_pdf:
+            # loop over input files
+            for single_doc in files_to_upload:
                 # check size of current zip file
                 try:
                     if os.path.getsize(current_zipbatch) > MAX_BATCH_SIZE:
@@ -124,9 +122,9 @@ def batch_single_files(
                 except FileNotFoundError:
                     pass
                 # build name to avoid duplicate names inside batch
-                if len(files_pdf) > 1:
+                if len(files_to_upload) > 1:
                     arcname = str(single_doc)[
-                        len(os.path.commonpath(files_pdf)) + 1 :
+                        len(os.path.commonpath(files_to_upload)) + 1 :
                     ].replace("/", "__")
                 else:
                     arcname = os.path.basename(single_doc)
