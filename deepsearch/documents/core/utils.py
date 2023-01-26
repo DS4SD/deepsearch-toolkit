@@ -14,6 +14,8 @@ from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import progressbar
 
+ALLOWED_FILE_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".tiff", ".tif", ".png", ".gif"]
+
 
 class URLNavigator:
     def __init__(self, api: CpsApi) -> None:
@@ -89,10 +91,15 @@ def batch_single_files(
     # get input pdf files
     files_pdf: List[Any] = []
     if os.path.isdir(source_path):
-        files_pdf = glob.glob(os.path.join(source_path, "**/*.pdf"), recursive=True)
+        files_pdf = []
+
+        for ext in ALLOWED_FILE_EXTENSIONS:
+            files_pdf.extend(
+                glob.glob(os.path.join(source_path, f"**/*{ext}"), recursive=True)
+            )
     elif os.path.isfile(source_path):
         file_extension = pathlib.Path(source_path).suffix
-        if file_extension == ".pdf":
+        if file_extension in ALLOWED_FILE_EXTENSIONS:
             files_pdf = [source_path]
 
     # catch all filenames and batch names
