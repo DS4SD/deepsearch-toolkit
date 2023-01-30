@@ -220,16 +220,25 @@ class ConversionPipelineSettings(BaseModel):
             raise ValueError("CCS spec can not be None")
         if obj.get("clusters") and len(obj.get("clusters")):
             model_dict = obj.get("clusters")[0]
-            clusters = parse_obj_as(ConversionModel, model_dict)
+
+            clusters = cls._make_conversion_model(model_dict)
 
             instance = cls(clusters=clusters)
             if obj.get("tables") and len(obj.get("tables")):
                 model_dict = obj.get("tables")[0]
-                instance.tables = parse_obj_as(ConversionModel, model_dict)
+
+                instance.tables = cls._make_conversion_model(model_dict)
 
             return instance
         else:
             raise ValueError("CCS spec must have non-empty clusters")
+
+    @classmethod
+    def _make_conversion_model(cls, model_dict):
+        if "model_config_key" in model_dict.keys():
+            return ProjectConversionModel.from_ccs_spec(model_dict)
+        else:
+            return DefaultConversionModel.from_ccs_spec(model_dict)
 
     def to_ccs_spec(self):
         obj = {
