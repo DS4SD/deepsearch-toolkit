@@ -254,6 +254,7 @@ class OCRSettings(BaseModel):
     backend: str = "tesseract-ocr"  # validate with available options on CCS API
     config: dict = {}  # implementation specific to OCR backend
     merge_mode: Optional[OCRModeEnum] = OCRModeEnum.prioritize_ocr
+    use_individual_bitmaps: bool = True
 
     @classmethod
     def get_backends(
