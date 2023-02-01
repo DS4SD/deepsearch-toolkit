@@ -1,3 +1,8 @@
+## [v0.10.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.10.1) - 2023-02-01
+
+### Fix
+* Project model mapping causes error in retrieving project conversion settings ([#63](https://github.com/DS4SD/deepsearch-toolkit/issues/63)) ([`798f2af`](https://github.com/DS4SD/deepsearch-toolkit/commit/798f2afa0e66d93a275d57f040665f7c2b7a1a22))
+
 ## [v0.10.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.10.0) - 2023-01-26
 
 ### Feature
