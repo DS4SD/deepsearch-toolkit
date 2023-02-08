@@ -59,7 +59,7 @@ def convert_documents(
     # check required inputs are present
     if urls is None and source_path is None and source_cos is None:
         raise ValueError(
-            "No input provided. Please provide either a url or a local file for conversion."
+            "No input provided. Please provide either a url, a local file or references to an object store for conversion."
         )
     elif urls is not None and source_path is None and source_cos is None:
         if isinstance(urls, str):
