@@ -1,5 +1,6 @@
 import collections
 from enum import Enum
+from textwrap import dedent
 from typing import Dict, List, Literal, Optional, Set, Union
 
 from pydantic import BaseModel, Field, ValidationError, parse_obj_as
@@ -25,6 +26,39 @@ class S3Coordinates(BaseModel):
     key_prefix: str = ""
 
     external_endpoint: Optional[str] = None
+
+    key_infix_format: str = Field(
+        "",
+        description=dedent(
+            """
+            Control the infix of the object keys that are saved on the document's `_s3_data`, after `key_prefix`, 
+            and before `PDFDocuments/{document_hash}.pdf` or `PDFPages/{page_hash}.pdf`.
+
+            By default, the infix is empty.
+            For using the name of the index in the coordinates, you can use `key_infix_format = "{index_name}"`.
+
+            For example, if: 
+
+            ```
+            key_prefix = "my_prefix/"
+            key_infix_format = "{index_name}"
+            index_name = "my_elastic_index"
+
+            document_hash = "123"
+            ```
+
+            Then, the document above would be uploaded to: `my_prefix/my_elastic_index/PDFDocuments/123.pdf`.
+
+            If one were to set `key_infix_format = ""`, it would be uploaded to `my_prefix/PDFDocuments/123.pdf`.
+
+            If one were to set `key_infix_format = "foo"`, it would be uploaded to `my_prefix/foo/PDFDocuments/123.pdf`
+
+            Finally, one can combine `{index_name}` with constants and even path separators.
+
+            So, `{index_name}/test` would produce `my_prefix/my_elastic_index/test/PDFDocuments/123.pdf`
+            """
+        ),
+    )
 
 
 class DocumentExistsInTargetAction(str, Enum):
