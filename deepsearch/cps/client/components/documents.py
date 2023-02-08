@@ -93,6 +93,16 @@ class DocumentConversionResult:
                 progress_bar=progress_bar,
             )
             return info
+        else:
+            info = get_multiple_reports(
+                api=self._api,
+                cps_proj_key=self.proj_key,
+                task_ids=self.task_ids,
+                source_files=None,
+                result_dir=result_dir,
+                progress_bar=progress_bar,
+            )
+            return info
 
     def __iter__(self):
         for index in range(len(self.task_ids)):
