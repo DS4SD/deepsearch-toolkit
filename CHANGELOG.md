@@ -1,3 +1,8 @@
+## [v0.11.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.11.0) - 2023-02-10
+
+### Feature
+* Add option to provide COS credentials as document conversion source ([#67](https://github.com/DS4SD/deepsearch-toolkit/issues/67)) ([`6713abf`](https://github.com/DS4SD/deepsearch-toolkit/commit/6713abf7a3bd4616307e338943a23e483ef2c495))
+
 ## [v0.10.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.10.1) - 2023-02-01
 
 ### Fix
