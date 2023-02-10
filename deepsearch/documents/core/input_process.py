@@ -8,7 +8,7 @@ import urllib3
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.documents import DocumentConversionResult
 
-from .models import ConversionSettings, ExportTarget
+from .models import ConversionSettings, ExportTarget, S3Coordinates
 from .utils import batch_single_files
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -17,6 +17,7 @@ from .convert import (
     check_status_running_tasks,
     send_files_for_conversion,
     send_urls_for_conversion,
+    submit_conversion_payload,
 )
 
 
@@ -92,5 +93,40 @@ def process_urls_input(
         task_ids=task_ids,
         statuses=statuses,
         source_urls=urls,
+        api=api,
+    )
+
+
+def process_cos_input(
+    api: CpsApi,
+    cps_proj_key: str,
+    source_cos: S3Coordinates,
+    target: Optional[ExportTarget],
+    conversion_settings: Optional[ConversionSettings],
+    progress_bar=False,
+):
+    """
+    Classify user provided url(s) and take appropriate action.
+    """
+
+    task_id = submit_conversion_payload(
+        api=api,
+        cps_proj_key=cps_proj_key,
+        source={
+            "type": "s3",
+            "coordinates": source_cos.dict(),
+        },
+        target=target,
+        conversion_settings=conversion_settings,
+    )
+
+    task_ids = [task_id]
+    statuses = check_status_running_tasks(
+        api=api, cps_proj_key=cps_proj_key, task_ids=task_ids, progress_bar=progress_bar
+    )
+    return DocumentConversionResult(
+        proj_key=cps_proj_key,
+        task_ids=task_ids,
+        statuses=statuses,
         api=api,
     )

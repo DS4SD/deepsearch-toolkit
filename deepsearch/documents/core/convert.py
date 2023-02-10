@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 def make_payload(
-    url_document: str,
+    source: dict,
     target: Optional[ExportTarget],
     conversion_settings: Optional[ConversionSettings],
     collection_name: str = "_default",
@@ -39,10 +39,7 @@ def make_payload(
         ccs_conv_settings = conversion_settings.to_ccs_spec()
 
     payload = {
-        "source": {
-            "type": "url",
-            "download_url": url_document,
-        },
+        "source": {**source},
         "context": {
             "collection_name": collection_name,
             "conversion_settings": ccs_conv_settings,
@@ -68,10 +65,10 @@ def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
     return request_status
 
 
-def submit_url_for_conversion(
+def submit_conversion_payload(
     api: CpsApi,
     cps_proj_key: str,
-    url: str,
+    source: dict,
     target: Optional[ExportTarget],
     conversion_settings: Optional[ConversionSettings],
 ) -> str:
@@ -82,8 +79,9 @@ def submit_url_for_conversion(
     ccs_proj_key, collection_name = get_ccs_project_key(
         api=api, cps_proj_key=cps_proj_key
     )
+
     # submit conversion request
-    payload = make_payload(url, target, conversion_settings, collection_name)
+    payload = make_payload(source, target, conversion_settings, collection_name)
 
     try:
         request_conversion_task_id = api.client.session.post(
@@ -133,10 +131,13 @@ def send_files_for_conversion(
                 api=api, cps_proj_key=cps_proj_key, source_path=Path(single_zip)
             )
             # submit url for conversion
-            task_id = submit_url_for_conversion(
+            task_id = submit_conversion_payload(
                 api=api,
                 cps_proj_key=cps_proj_key,
-                url=private_download_url,
+                source={
+                    "type": "url",
+                    "download_url": private_download_url,
+                },
                 target=target,
                 conversion_settings=conversion_settings,
             )
@@ -287,10 +288,13 @@ def send_urls_for_conversion(
         bar_format=progressbar.bar_format,
     ) as progress:
         for url in urls:
-            task_id = submit_url_for_conversion(
+            task_id = submit_conversion_payload(
                 api=api,
                 cps_proj_key=cps_proj_key,
-                url=url,
+                source={
+                    "type": "url",
+                    "download_url": url,
+                },
                 target=target,
                 conversion_settings=conversion_settings,
             )

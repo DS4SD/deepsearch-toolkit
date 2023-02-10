@@ -10,6 +10,7 @@ from deepsearch.documents.core.convert import (
     get_download_url,
 )
 from deepsearch.documents.core.create_report import get_multiple_reports
+from deepsearch.documents.core.models import S3Coordinates
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -88,6 +89,16 @@ class DocumentConversionResult:
                 cps_proj_key=self.proj_key,
                 task_ids=self.task_ids,
                 source_files=self._source_urls,
+                result_dir=result_dir,
+                progress_bar=progress_bar,
+            )
+            return info
+        else:
+            info = get_multiple_reports(
+                api=self._api,
+                cps_proj_key=self.proj_key,
+                task_ids=self.task_ids,
+                source_files=None,
                 result_dir=result_dir,
                 progress_bar=progress_bar,
             )
