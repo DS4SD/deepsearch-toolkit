@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from pathlib import Path
+import os
+import requests
 
 from pydantic import BaseModel
 
@@ -125,6 +128,47 @@ class DataIndex(BaseModel):
     schema_key: str
     type: str
 
+
+    def add_item_attachment(
+        self,
+        api: CpsApi,
+        item_id: str,
+        attachment_path: Union[str, Path],
+        attachment_key: str,
+    ) -> None:
+
+        sw_api = sw_client.DataIndicesApi(api.client.swagger_client)
+
+        filename = os.path.basename(attachment_path)
+        
+        upload_data: dict = sw_api.get_attachment_upload_data(
+            proj_key=self.source.proj_key, 
+            index_key=self.source.index_key, 
+            item_id=item_id,
+            filename=filename,
+        )
+
+        with open(attachment_path, "rb") as f:
+            files = {"file": (os.path.basename(attachment_path), f)}
+            request_upload = requests.post(
+                url=upload_data["upload_url"]["url"], 
+                data=upload_data["upload_url"]["fields"], 
+                files=files, 
+                verify=False
+            )
+            request_upload.raise_for_status()
+
+        params = {
+            "attachment_path": upload_data["attachment_path"],
+            "attachment_key": attachment_key,
+        }
+
+        sw_api.register_attachment(
+            proj_key=self.source.proj_key, 
+            index_key=self.source.index_key, 
+            item_id=item_id, 
+            params=params,
+        )
 
 @dataclass
 class CpsApiDataIndex(ApiConnectedObject):

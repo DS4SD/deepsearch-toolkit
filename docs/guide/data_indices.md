@@ -127,3 +127,41 @@ Documents can be converted and added, directly, to a data index in a project. Br
     ```
 
 ---
+
+## Adding attachments to a data index
+
+Attachments can be added to a data index in a project. Briefly, documents have to be on local machine and can be (almost) any format. The full list of supported formats are listed [here](https://www.ibm.com/docs/en/aspera-on-cloud?topic=SS5W4X/dita/content/aws_s3_content_types.html).
+
+
+=== "CLI"
+    <div class="termy">
+
+    ```console
+    $ deepsearch cps data-indices add-attachment -p PROJ_KEY -x INDEX_KEY -d ITEM_ID -i ATTACHMENT_PATH -k ATTACHMENT_KEY
+    ```
+
+    </div>
+=== "Python"
+    ```python
+    from deepsearch.cps.client.components.data_indices import DataIndex
+
+    # get indices of the project
+    indices = api.data_indices.list(PROJ_KEY)
+
+    # get specific index to add attachment
+    index: DataIndex = filter(lambda x: x["source"]["index_key"] == INDEX_KEY, indices)
+
+    # specify parameters
+    item_id = "INDEX_DOCUMENT_ID"
+    attachment_path = "path/to/local/file"
+    attachment_key = "ATTACHMENT_KEY_PUT_ELASTIC" # need to be snake_case and start with 'usr_'
+
+    index.add_item_attachment(
+        api=api, 
+        item_id=item_id, 
+        attachment_path=attachment_path, 
+        attachment_key=attachment_key,
+    )
+    ```
+
+---

@@ -9,6 +9,7 @@ from deepsearch.cps.apis.public.rest import ApiException
 from deepsearch.cps.cli.cli_options import INDEX_KEY, PROJ_KEY, SOURCE_PATH, URL
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
+from deepsearch.cps.client.components.data_indices import DataIndex
 from deepsearch.cps.data_indices import utils
 from deepsearch.documents.core.common_routines import (
     ERROR_MSG,
@@ -134,6 +135,40 @@ def upload_files(
 
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
     utils.upload_files(coords=coords, url=url, local_file=local_file)
+    return
+
+
+@app.command(name="add-attachment", help="Add attachments to index", no_args_is_help=True)
+def upload_files(
+    proj_key: str = PROJ_KEY,
+    item_id: str = typer.Option(..., "-d", "--item_id", help="Doc ID in elastic"),
+    attachment_path: Path = SOURCE_PATH,
+    attachment_key: str = typer.Option(..., "-k", "--attachment_key", help="Attachment key to put in elastic"),
+    index_key: str = INDEX_KEY,
+):
+    """
+    Add attachment to a data index in a project
+    """
+    api = CpsApi.default_from_env()
+
+    # get indices of the project
+    indices = api.data_indices.list(proj_key)
+
+    # get specific index to add attachment
+    index: DataIndex = filter(lambda x: x["source"]["index_key"] == index_key, indices)
+
+    try:
+        index.add_item_attachment(
+            api=api, 
+            item_id=item_id, 
+            attachment_path=attachment_path, 
+            attachment_key=attachment_key,
+        )
+        typer.echo("Index Attachment Added.")
+    except ValueError as e:
+        typer.echo(f"Uh Oh! {e}")
+        typer.echo(ERROR_MSG)
+        raise typer.Abort()
     return
 
 
