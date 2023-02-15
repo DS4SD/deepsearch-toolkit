@@ -156,13 +156,13 @@ Attachments can be added to a data index in a project. Briefly, documents have t
         # specify parameters
         item_id = "INDEX_DOCUMENT_ID"
         attachment_path = "path/to/local/file"
-        attachment_key = "ATTACHMENT_KEY_PUT_ELASTIC" # need to be snake_case and start with 'usr_'
+        attachment_key = "ATTACHMENT_KEY_PUT_ELASTIC" # optional. if set need start with 'usr_' and be snake_case
 
         index.add_item_attachment(
             api=api, 
             item_id=item_id, 
             attachment_path=attachment_path, 
-            attachment_key=attachment_key,
+            attachment_key=attachment_key, # optional
         )
     ```
 

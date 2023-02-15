@@ -146,7 +146,10 @@ def add_attachment(
     item_id: str = typer.Option(..., "-d", "--item_id", help="Doc ID in elastic"),
     attachment_path: Path = SOURCE_PATH,
     attachment_key: str = typer.Option(
-        ..., "-k", "--attachment_key", help="Attachment key to put in elastic"
+        "usr_attachments",
+        "-k",
+        "--attachment_key",
+        help="Attachment key to put in elastic",
     ),
     index_key: str = INDEX_KEY,
 ):
