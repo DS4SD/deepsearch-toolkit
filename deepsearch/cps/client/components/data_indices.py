@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
-from pathlib import Path
 import os
-import requests
+from dataclasses import dataclass
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
+import requests
 from pydantic import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
@@ -128,7 +128,6 @@ class DataIndex(BaseModel):
     schema_key: str
     type: str
 
-
     def add_item_attachment(
         self,
         api: CpsApi,
@@ -136,14 +135,30 @@ class DataIndex(BaseModel):
         attachment_path: Union[str, Path],
         attachment_key: str,
     ) -> None:
+        """
+        Method to upload attachments to an index.
+
+        Input
+        -----
+        api : CpsApi
+            CpsApi Class
+        item_id : string
+            id of the document on elastic
+        attachment_path : string | Path
+            path to file on local folder
+        attachment_key : string
+            key to put on elastic document where attachment info will be saved.
+            string must me snake_case and start with 'usr_'.
+            example: 'usr_your_attachment_key'
+        """
 
         sw_api = sw_client.DataIndicesApi(api.client.swagger_client)
 
         filename = os.path.basename(attachment_path)
-        
-        upload_data: dict = sw_api.get_attachment_upload_data(
-            proj_key=self.source.proj_key, 
-            index_key=self.source.index_key, 
+
+        upload_data: dict = sw_api.get_attachment_upload_data(  # type: ignore
+            proj_key=self.source.proj_key,
+            index_key=self.source.index_key,
             item_id=item_id,
             filename=filename,
         )
@@ -151,10 +166,10 @@ class DataIndex(BaseModel):
         with open(attachment_path, "rb") as f:
             files = {"file": (os.path.basename(attachment_path), f)}
             request_upload = requests.post(
-                url=upload_data["upload_url"]["url"], 
-                data=upload_data["upload_url"]["fields"], 
-                files=files, 
-                verify=False
+                url=upload_data["upload_url"]["url"],
+                data=upload_data["upload_url"]["fields"],
+                files=files,
+                verify=False,
             )
             request_upload.raise_for_status()
 
@@ -163,12 +178,13 @@ class DataIndex(BaseModel):
             "attachment_key": attachment_key,
         }
 
-        sw_api.register_attachment(
-            proj_key=self.source.proj_key, 
-            index_key=self.source.index_key, 
-            item_id=item_id, 
+        sw_api.register_attachment(  # type: ignore
+            proj_key=self.source.proj_key,
+            index_key=self.source.index_key,
+            item_id=item_id,
             params=params,
         )
+
 
 @dataclass
 class CpsApiDataIndex(ApiConnectedObject):
