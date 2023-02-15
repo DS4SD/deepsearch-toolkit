@@ -133,7 +133,7 @@ class DataIndex(BaseModel):
         api: CpsApi,
         item_id: str,
         attachment_path: Union[str, Path],
-        attachment_key: str,
+        attachment_key: Optional[str],
     ) -> None:
         """
         Method to upload attachments to an index.
@@ -146,7 +146,7 @@ class DataIndex(BaseModel):
             id of the document on elastic
         attachment_path : string | Path
             path to file on local folder
-        attachment_key : string
+        attachment_key : string, OPTIONAL
             key to put on elastic document where attachment info will be saved.
             string must me snake_case and start with 'usr_'.
             example: 'usr_your_attachment_key'
@@ -175,8 +175,10 @@ class DataIndex(BaseModel):
 
         params = {
             "attachment_path": upload_data["attachment_path"],
-            "attachment_key": attachment_key,
         }
+
+        if attachment_key:
+            params["attachment_key"] = attachment_key
 
         sw_api.register_attachment(  # type: ignore
             proj_key=self.source.proj_key,
