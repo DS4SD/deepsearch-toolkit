@@ -340,7 +340,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_attachment_upload_data**
-> AttachmentPathUrl get_attachment_upload_data(proj_key, index_key, index_item_id, filename)
+> AttachmentUploadData get_attachment_upload_data(proj_key, index_key, index_item_id, filename)
 
 
 
@@ -403,7 +403,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**AttachmentPathUrl**](AttachmentPathUrl.md)
+[**AttachmentUploadData**](AttachmentUploadData.md)
 
 ### Authorization
 
