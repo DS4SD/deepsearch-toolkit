@@ -554,6 +554,147 @@ class DataIndicesApi(object):
             _request_timeout=local_var_params.get('_request_timeout'),
             collection_formats=collection_formats)
 
+    def get_attachment_upload_data(self, proj_key, index_key, index_item_id, filename, **kwargs):  # noqa: E501
+        """get_attachment_upload_data  # noqa: E501
+
+        Get url and path to upload an attachment to a project data index  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_attachment_upload_data(proj_key, index_key, index_item_id, filename, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str proj_key: (required)
+        :param str index_key: (required)
+        :param str index_item_id: (required)
+        :param str filename: (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: AttachmentPathUrl
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        return self.get_attachment_upload_data_with_http_info(proj_key, index_key, index_item_id, filename, **kwargs)  # noqa: E501
+
+    def get_attachment_upload_data_with_http_info(self, proj_key, index_key, index_item_id, filename, **kwargs):  # noqa: E501
+        """get_attachment_upload_data  # noqa: E501
+
+        Get url and path to upload an attachment to a project data index  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_attachment_upload_data_with_http_info(proj_key, index_key, index_item_id, filename, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str proj_key: (required)
+        :param str index_key: (required)
+        :param str index_item_id: (required)
+        :param str filename: (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(AttachmentPathUrl, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = [
+            'proj_key',
+            'index_key',
+            'index_item_id',
+            'filename'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params['kwargs']):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_attachment_upload_data" % key
+                )
+            local_var_params[key] = val
+        del local_var_params['kwargs']
+        # verify the required parameter 'proj_key' is set
+        if self.api_client.client_side_validation and ('proj_key' not in local_var_params or  # noqa: E501
+                                                        local_var_params['proj_key'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `proj_key` when calling `get_attachment_upload_data`")  # noqa: E501
+        # verify the required parameter 'index_key' is set
+        if self.api_client.client_side_validation and ('index_key' not in local_var_params or  # noqa: E501
+                                                        local_var_params['index_key'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `index_key` when calling `get_attachment_upload_data`")  # noqa: E501
+        # verify the required parameter 'index_item_id' is set
+        if self.api_client.client_side_validation and ('index_item_id' not in local_var_params or  # noqa: E501
+                                                        local_var_params['index_item_id'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `index_item_id` when calling `get_attachment_upload_data`")  # noqa: E501
+        # verify the required parameter 'filename' is set
+        if self.api_client.client_side_validation and ('filename' not in local_var_params or  # noqa: E501
+                                                        local_var_params['filename'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `filename` when calling `get_attachment_upload_data`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'proj_key' in local_var_params:
+            path_params['proj_key'] = local_var_params['proj_key']  # noqa: E501
+        if 'index_key' in local_var_params:
+            path_params['index_key'] = local_var_params['index_key']  # noqa: E501
+        if 'index_item_id' in local_var_params:
+            path_params['index_item_id'] = local_var_params['index_item_id']  # noqa: E501
+        if 'filename' in local_var_params:
+            path_params['filename'] = local_var_params['filename']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['Bearer']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/project/{proj_key}/data_indices/{index_key}/documents/{index_item_id}/attachment_url/{filename}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='AttachmentPathUrl',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
     def get_project_data_index(self, proj_key, index_key, **kwargs):  # noqa: E501
         """get_project_data_index  # noqa: E501
 
@@ -791,19 +932,20 @@ class DataIndicesApi(object):
             _request_timeout=local_var_params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def search_project_data_index(self, proj_key, index_key, parameters, **kwargs):  # noqa: E501
-        """search_project_data_index  # noqa: E501
+    def register_attachment(self, proj_key, index_key, index_item_id, params, **kwargs):  # noqa: E501
+        """register_attachment  # noqa: E501
 
-        Search a project data index  # noqa: E501
+        Notify upload completion of an attachment to a project data index  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.search_project_data_index(proj_key, index_key, parameters, async_req=True)
+        >>> thread = api.register_attachment(proj_key, index_key, index_item_id, params, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str proj_key: (required)
         :param str index_key: (required)
-        :param dict(str, object) parameters: (required)
+        :param str index_item_id: (required)
+        :param InlineObject4 params: (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -811,26 +953,27 @@ class DataIndicesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: ElasticIndexSearchResults
+        :return: None
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
-        return self.search_project_data_index_with_http_info(proj_key, index_key, parameters, **kwargs)  # noqa: E501
+        return self.register_attachment_with_http_info(proj_key, index_key, index_item_id, params, **kwargs)  # noqa: E501
 
-    def search_project_data_index_with_http_info(self, proj_key, index_key, parameters, **kwargs):  # noqa: E501
-        """search_project_data_index  # noqa: E501
+    def register_attachment_with_http_info(self, proj_key, index_key, index_item_id, params, **kwargs):  # noqa: E501
+        """register_attachment  # noqa: E501
 
-        Search a project data index  # noqa: E501
+        Notify upload completion of an attachment to a project data index  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.search_project_data_index_with_http_info(proj_key, index_key, parameters, async_req=True)
+        >>> thread = api.register_attachment_with_http_info(proj_key, index_key, index_item_id, params, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str proj_key: (required)
         :param str index_key: (required)
-        :param dict(str, object) parameters: (required)
+        :param str index_item_id: (required)
+        :param InlineObject4 params: (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -840,7 +983,7 @@ class DataIndicesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(ElasticIndexSearchResults, status_code(int), headers(HTTPHeaderDict))
+        :return: None
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -850,7 +993,8 @@ class DataIndicesApi(object):
         all_params = [
             'proj_key',
             'index_key',
-            'parameters'
+            'index_item_id',
+            'params'
         ]
         all_params.extend(
             [
@@ -865,22 +1009,26 @@ class DataIndicesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method search_project_data_index" % key
+                    " to method register_attachment" % key
                 )
             local_var_params[key] = val
         del local_var_params['kwargs']
         # verify the required parameter 'proj_key' is set
         if self.api_client.client_side_validation and ('proj_key' not in local_var_params or  # noqa: E501
                                                         local_var_params['proj_key'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `proj_key` when calling `search_project_data_index`")  # noqa: E501
+            raise ApiValueError("Missing the required parameter `proj_key` when calling `register_attachment`")  # noqa: E501
         # verify the required parameter 'index_key' is set
         if self.api_client.client_side_validation and ('index_key' not in local_var_params or  # noqa: E501
                                                         local_var_params['index_key'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `index_key` when calling `search_project_data_index`")  # noqa: E501
-        # verify the required parameter 'parameters' is set
-        if self.api_client.client_side_validation and ('parameters' not in local_var_params or  # noqa: E501
-                                                        local_var_params['parameters'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `parameters` when calling `search_project_data_index`")  # noqa: E501
+            raise ApiValueError("Missing the required parameter `index_key` when calling `register_attachment`")  # noqa: E501
+        # verify the required parameter 'index_item_id' is set
+        if self.api_client.client_side_validation and ('index_item_id' not in local_var_params or  # noqa: E501
+                                                        local_var_params['index_item_id'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `index_item_id` when calling `register_attachment`")  # noqa: E501
+        # verify the required parameter 'params' is set
+        if self.api_client.client_side_validation and ('params' not in local_var_params or  # noqa: E501
+                                                        local_var_params['params'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `params` when calling `register_attachment`")  # noqa: E501
 
         collection_formats = {}
 
@@ -889,6 +1037,8 @@ class DataIndicesApi(object):
             path_params['proj_key'] = local_var_params['proj_key']  # noqa: E501
         if 'index_key' in local_var_params:
             path_params['index_key'] = local_var_params['index_key']  # noqa: E501
+        if 'index_item_id' in local_var_params:
+            path_params['index_item_id'] = local_var_params['index_item_id']  # noqa: E501
 
         query_params = []
 
@@ -898,8 +1048,8 @@ class DataIndicesApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'parameters' in local_var_params:
-            body_params = local_var_params['parameters']
+        if 'params' in local_var_params:
+            body_params = local_var_params['params']
         # HTTP header `Accept`
         header_params['Accept'] = self.api_client.select_header_accept(
             ['application/json'])  # noqa: E501
@@ -912,14 +1062,14 @@ class DataIndicesApi(object):
         auth_settings = ['Bearer']  # noqa: E501
 
         return self.api_client.call_api(
-            '/project/{proj_key}/data_indices/{index_key}/search', 'POST',
+            '/project/{proj_key}/data_indices/{index_key}/documents/{index_item_id}/attachment', 'POST',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ElasticIndexSearchResults',  # noqa: E501
+            response_type=None,  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get('async_req'),
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501

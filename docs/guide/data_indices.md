@@ -137,7 +137,7 @@ Attachments can be added to a data index in a project. Briefly, documents have t
     <div class="termy">
 
     ```console
-    $ deepsearch cps data-indices add-attachment -p PROJ_KEY -x INDEX_KEY -d ITEM_ID -i ATTACHMENT_PATH -k ATTACHMENT_KEY
+    $ deepsearch cps data-indices add-attachment -p PROJ_KEY -x INDEX_KEY -d INDEX_ITEM_ID -i ATTACHMENT_PATH -k ATTACHMENT_KEY
     ```
 
     </div>
@@ -154,13 +154,13 @@ Attachments can be added to a data index in a project. Briefly, documents have t
     # if the index exists, add attachment
     if index:
         # specify parameters
-        item_id = "INDEX_DOCUMENT_ID"
+        index_item_id = "INDEX_DOCUMENT_ID"
         attachment_path = "path/to/local/file"
         attachment_key = "ATTACHMENT_KEY_PUT_ELASTIC" # optional. if set need start with 'usr_' and be snake_case
 
         index.add_item_attachment(
             api=api, 
-            item_id=item_id, 
+            index_item_id=index_item_id, 
             attachment_path=attachment_path, 
             attachment_key=attachment_key, # optional
         )

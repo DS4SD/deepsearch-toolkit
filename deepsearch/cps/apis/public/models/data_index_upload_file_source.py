@@ -33,29 +33,55 @@ class DataIndexUploadFileSource(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        'conversion_settings': 'ProjectDataIndexConversionSettings',
         'file_url': 'list[str]',
         'scratch_files_id': 'list[str]'
     }
 
     attribute_map = {
+        'conversion_settings': 'conversion_settings',
         'file_url': 'file_url',
         'scratch_files_id': 'scratch_files_id'
     }
 
-    def __init__(self, file_url=None, scratch_files_id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, conversion_settings=None, file_url=None, scratch_files_id=None, local_vars_configuration=None):  # noqa: E501
         """DataIndexUploadFileSource - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._conversion_settings = None
         self._file_url = None
         self._scratch_files_id = None
         self.discriminator = None
 
+        if conversion_settings is not None:
+            self.conversion_settings = conversion_settings
         if file_url is not None:
             self.file_url = file_url
         if scratch_files_id is not None:
             self.scratch_files_id = scratch_files_id
+
+    @property
+    def conversion_settings(self):
+        """Gets the conversion_settings of this DataIndexUploadFileSource.  # noqa: E501
+
+
+        :return: The conversion_settings of this DataIndexUploadFileSource.  # noqa: E501
+        :rtype: ProjectDataIndexConversionSettings
+        """
+        return self._conversion_settings
+
+    @conversion_settings.setter
+    def conversion_settings(self, conversion_settings):
+        """Sets the conversion_settings of this DataIndexUploadFileSource.
+
+
+        :param conversion_settings: The conversion_settings of this DataIndexUploadFileSource.  # noqa: E501
+        :type: ProjectDataIndexConversionSettings
+        """
+
+        self._conversion_settings = conversion_settings
 
     @property
     def file_url(self):

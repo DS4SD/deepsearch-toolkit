@@ -58,6 +58,9 @@ from deepsearch.cps.apis.public.models.annotator_parameters_or_ref import Annota
 from deepsearch.cps.apis.public.models.annotator_supported_annotations_parameters import AnnotatorSupportedAnnotationsParameters
 from deepsearch.cps.apis.public.models.assemble_data_flow_into_knowledge_graph_options import AssembleDataFlowIntoKnowledgeGraphOptions
 from deepsearch.cps.apis.public.models.assemble_data_flow_into_knowledge_graph_options1 import AssembleDataFlowIntoKnowledgeGraphOptions1
+from deepsearch.cps.apis.public.models.assemble_settings import AssembleSettings
+from deepsearch.cps.apis.public.models.assemble_settings_mode import AssembleSettingsMode
+from deepsearch.cps.apis.public.models.attachment_path_url import AttachmentPathUrl
 from deepsearch.cps.apis.public.models.backend_flavour import BackendFlavour
 from deepsearch.cps.apis.public.models.backend_project_proj_key_bags_bag_key_tasks_assemble_dataflow_data_flow import BackendProjectProjKeyBagsBagKeyTasksAssembleDataflowDataFlow
 from deepsearch.cps.apis.public.models.backend_project_proj_key_bags_bag_key_tasks_assemble_dataflow_data_flow_raw_data_flow import BackendProjectProjKeyBagsBagKeyTasksAssembleDataflowDataFlowRawDataFlow
@@ -90,6 +93,7 @@ from deepsearch.cps.apis.public.models.clone_dictionary_options import CloneDict
 from deepsearch.cps.apis.public.models.clone_public_data_catalog_options import ClonePublicDataCatalogOptions
 from deepsearch.cps.apis.public.models.clone_public_dictionary_options import ClonePublicDictionaryOptions
 from deepsearch.cps.apis.public.models.collection_list_coordinates import CollectionListCoordinates
+from deepsearch.cps.apis.public.models.collection_metadata_settings import CollectionMetadataSettings
 from deepsearch.cps.apis.public.models.cps_model_reference import CpsModelReference
 from deepsearch.cps.apis.public.models.cps_package import CpsPackage
 from deepsearch.cps.apis.public.models.create_collection_in_dictionary_options import CreateCollectionInDictionaryOptions
@@ -141,7 +145,6 @@ from deepsearch.cps.apis.public.models.dictionary_import_options import Dictiona
 from deepsearch.cps.apis.public.models.dictionary_import_result import DictionaryImportResult
 from deepsearch.cps.apis.public.models.elastic_coordinates import ElasticCoordinates
 from deepsearch.cps.apis.public.models.elastic_index_search_query_options import ElasticIndexSearchQueryOptions
-from deepsearch.cps.apis.public.models.elastic_index_search_results import ElasticIndexSearchResults
 from deepsearch.cps.apis.public.models.entity_annotation import EntityAnnotation
 from deepsearch.cps.apis.public.models.entity_annotation_descriptor import EntityAnnotationDescriptor
 from deepsearch.cps.apis.public.models.error_response import ErrorResponse
@@ -162,6 +165,7 @@ from deepsearch.cps.apis.public.models.inline_object import InlineObject
 from deepsearch.cps.apis.public.models.inline_object1 import InlineObject1
 from deepsearch.cps.apis.public.models.inline_object2 import InlineObject2
 from deepsearch.cps.apis.public.models.inline_object3 import InlineObject3
+from deepsearch.cps.apis.public.models.inline_object4 import InlineObject4
 from deepsearch.cps.apis.public.models.inline_response200 import InlineResponse200
 from deepsearch.cps.apis.public.models.inline_response2001 import InlineResponse2001
 from deepsearch.cps.apis.public.models.inline_response2002 import InlineResponse2002
@@ -182,10 +186,12 @@ from deepsearch.cps.apis.public.models.load_kgc_data_input import LoadKgcDataInp
 from deepsearch.cps.apis.public.models.load_kgc_data_input_dataflow import LoadKgcDataInputDataflow
 from deepsearch.cps.apis.public.models.load_kgc_data_input_target import LoadKgcDataInputTarget
 from deepsearch.cps.apis.public.models.model_configuration import ModelConfiguration
+from deepsearch.cps.apis.public.models.model_pipeline_settings import ModelPipelineSettings
 from deepsearch.cps.apis.public.models.model_supported_annotations_parameters import ModelSupportedAnnotationsParameters
 from deepsearch.cps.apis.public.models.mongo_coordinates import MongoCoordinates
 from deepsearch.cps.apis.public.models.mongo_s3_coordinates import MongoS3Coordinates
 from deepsearch.cps.apis.public.models.mongo_s3_coordinates_with_collection_list import MongoS3CoordinatesWithCollectionList
+from deepsearch.cps.apis.public.models.ocr_settings import OCRSettings
 from deepsearch.cps.apis.public.models.patch_data_catalog_options import PatchDataCatalogOptions
 from deepsearch.cps.apis.public.models.patch_dictionary_options import PatchDictionaryOptions
 from deepsearch.cps.apis.public.models.patch_knowledge_graph_options import PatchKnowledgeGraphOptions
@@ -194,6 +200,7 @@ from deepsearch.cps.apis.public.models.problem import Problem
 from deepsearch.cps.apis.public.models.processing_model import ProcessingModel
 from deepsearch.cps.apis.public.models.processing_model_data_flow import ProcessingModelDataFlow
 from deepsearch.cps.apis.public.models.processing_model_description import ProcessingModelDescription
+from deepsearch.cps.apis.public.models.project_data_index_conversion_settings import ProjectDataIndexConversionSettings
 from deepsearch.cps.apis.public.models.project_data_index_non_view import ProjectDataIndexNonView
 from deepsearch.cps.apis.public.models.project_data_index_source import ProjectDataIndexSource
 from deepsearch.cps.apis.public.models.project_data_index_view import ProjectDataIndexView

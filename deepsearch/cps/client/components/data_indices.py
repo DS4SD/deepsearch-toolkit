@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,6 +10,7 @@ import requests
 from pydantic import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
+from deepsearch.cps.apis.public.models.attachment_path_url import AttachmentPathUrl
 from deepsearch.cps.apis.public.models.token_response import TokenResponse
 from deepsearch.cps.client.components.api_object import ApiConnectedObject
 
@@ -131,7 +133,7 @@ class DataIndex(BaseModel):
     def add_item_attachment(
         self,
         api: CpsApi,
-        item_id: str,
+        index_item_id: str,
         attachment_path: Union[str, Path],
         attachment_key: Optional[str],
     ) -> None:
@@ -142,7 +144,7 @@ class DataIndex(BaseModel):
         -----
         api : CpsApi
             CpsApi Class
-        item_id : string
+        index_item_id : string
             id of the document on elastic
         attachment_path : string | Path
             path to file on local folder
@@ -156,34 +158,41 @@ class DataIndex(BaseModel):
 
         filename = os.path.basename(attachment_path)
 
-        upload_data: dict = sw_api.get_attachment_upload_data(  # type: ignore
+        upload_data: AttachmentPathUrl = sw_api.get_attachment_upload_data(
             proj_key=self.source.proj_key,
             index_key=self.source.index_key,
-            item_id=item_id,
+            index_item_id=index_item_id,
             filename=filename,
         )
+
+        upload_url: dict = {}
+
+        if not isinstance(upload_data.upload_url, dict):
+            upload_url = ast.literal_eval(upload_data.upload_url)
+        else:
+            upload_url = upload_data.upload_url
 
         with open(attachment_path, "rb") as f:
             files = {"file": (os.path.basename(attachment_path), f)}
             request_upload = requests.post(
-                url=upload_data["upload_url"]["url"],
-                data=upload_data["upload_url"]["fields"],
+                url=upload_url["url"],
+                data=upload_url["fields"],
                 files=files,
                 verify=False,
             )
             request_upload.raise_for_status()
 
         params = {
-            "attachment_path": upload_data["attachment_path"],
+            "attachment_path": upload_data.attachment_path,
         }
 
         if attachment_key:
             params["attachment_key"] = attachment_key
 
-        sw_api.register_attachment(  # type: ignore
+        sw_api.register_attachment(
             proj_key=self.source.proj_key,
             index_key=self.source.index_key,
-            item_id=item_id,
+            index_item_id=index_item_id,
             params=params,
         )
 

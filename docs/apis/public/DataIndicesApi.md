@@ -8,9 +8,10 @@ Method | HTTP request | Description
 [**create_project_data_index**](DataIndicesApi.md#create_project_data_index) | **POST** /project/{proj_key}/data_indices | 
 [**create_project_data_index_delete_token**](DataIndicesApi.md#create_project_data_index_delete_token) | **POST** /project/{proj_key}/data_indices/{index_key}/delete_token | 
 [**delete_project_data_index**](DataIndicesApi.md#delete_project_data_index) | **DELETE** /project/{proj_key}/data_indices/{index_key} | 
+[**get_attachment_upload_data**](DataIndicesApi.md#get_attachment_upload_data) | **GET** /project/{proj_key}/data_indices/{index_key}/documents/{index_item_id}/attachment_url/{filename} | 
 [**get_project_data_index**](DataIndicesApi.md#get_project_data_index) | **GET** /project/{proj_key}/data_indices/{index_key} | 
 [**get_project_data_indices**](DataIndicesApi.md#get_project_data_indices) | **GET** /project/{proj_key}/data_indices | 
-[**search_project_data_index**](DataIndicesApi.md#search_project_data_index) | **POST** /project/{proj_key}/data_indices/{index_key}/search | 
+[**register_attachment**](DataIndicesApi.md#register_attachment) | **POST** /project/{proj_key}/data_indices/{index_key}/documents/{index_item_id}/attachment | 
 [**update_project_data_index**](DataIndicesApi.md#update_project_data_index) | **PATCH** /project/{proj_key}/data_indices/{index_key} | 
 [**upload_project_data_index_file**](DataIndicesApi.md#upload_project_data_index_file) | **POST** /project/{proj_key}/data_indices/{index_key}/actions/upload | 
 
@@ -338,6 +339,91 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **get_attachment_upload_data**
+> AttachmentPathUrl get_attachment_upload_data(proj_key, index_key, index_item_id, filename)
+
+
+
+Get url and path to upload an attachment to a project data index
+
+### Example
+
+* Api Key Authentication (Bearer):
+```python
+from __future__ import print_function
+import time
+import deepsearch.cps.apis.public
+from deepsearch.cps.apis.public.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/api/cps/public/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1",
+    api_key = {
+        'Authorization': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public.DataIndicesApi(api_client)
+    proj_key = 'proj_key_example' # str | 
+index_key = 'index_key_example' # str | 
+index_item_id = 'index_item_id_example' # str | 
+filename = 'filename_example' # str | 
+
+    try:
+        api_response = api_instance.get_attachment_upload_data(proj_key, index_key, index_item_id, filename)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling DataIndicesApi->get_attachment_upload_data: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **proj_key** | **str**|  | 
+ **index_key** | **str**|  | 
+ **index_item_id** | **str**|  | 
+ **filename** | **str**|  | 
+
+### Return type
+
+[**AttachmentPathUrl**](AttachmentPathUrl.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Attachment upload url and path |  -  |
+**404** | Project data index or document ID not found. |  -  |
+**500** | Error occured on the server |  -  |
+**0** | Unexpected error. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **get_project_data_index**
 > ProjectDataIndexWithStatus get_project_data_index(proj_key, index_key)
 
@@ -496,12 +582,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **search_project_data_index**
-> ElasticIndexSearchResults search_project_data_index(proj_key, index_key, parameters)
+# **register_attachment**
+> register_attachment(proj_key, index_key, index_item_id, params)
 
 
 
-Search a project data index
+Notify upload completion of an attachment to a project data index
 
 ### Example
 
@@ -539,13 +625,13 @@ with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
     api_instance = deepsearch.cps.apis.public.DataIndicesApi(api_client)
     proj_key = 'proj_key_example' # str | 
 index_key = 'index_key_example' # str | 
-parameters = None # dict(str, object) | 
+index_item_id = 'index_item_id_example' # str | 
+params = deepsearch.cps.apis.public.InlineObject4() # InlineObject4 | 
 
     try:
-        api_response = api_instance.search_project_data_index(proj_key, index_key, parameters)
-        pprint(api_response)
+        api_instance.register_attachment(proj_key, index_key, index_item_id, params)
     except ApiException as e:
-        print("Exception when calling DataIndicesApi->search_project_data_index: %s\n" % e)
+        print("Exception when calling DataIndicesApi->register_attachment: %s\n" % e)
 ```
 
 ### Parameters
@@ -554,11 +640,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **proj_key** | **str**|  | 
  **index_key** | **str**|  | 
- **parameters** | [**dict(str, object)**](object.md)|  | 
+ **index_item_id** | **str**|  | 
+ **params** | [**InlineObject4**](InlineObject4.md)|  | 
 
 ### Return type
 
-[**ElasticIndexSearchResults**](ElasticIndexSearchResults.md)
+void (empty response body)
 
 ### Authorization
 
@@ -572,9 +659,10 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | List project data index search results |  -  |
-**404** | Project data indices search not found. |  -  |
+**204** | Attachment notify successfull |  -  |
+**404** | Project data index or document ID not found. |  -  |
 **500** | Error occured on the server |  -  |
+**0** | Unexpected error. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
