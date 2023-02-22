@@ -165,18 +165,11 @@ class DataIndex(BaseModel):
             filename=filename,
         )
 
-        upload_url: dict = {}
-
-        if not isinstance(upload_data.upload_url, dict):
-            upload_url = ast.literal_eval(upload_data.upload_url)
-        else:
-            upload_url = upload_data.upload_url
-
         with open(attachment_path, "rb") as f:
             files = {"file": (os.path.basename(attachment_path), f)}
             request_upload = requests.post(
-                url=upload_url["url"],
-                data=upload_url["fields"],
+                url=upload_data.upload_url["url"],
+                data=upload_data.upload_url["fields"],
                 files=files,
                 verify=False,
             )
