@@ -34,7 +34,7 @@ class AttachmentPathUrl(object):
     """
     openapi_types = {
         'attachment_path': 'str',
-        'upload_url': 'str'
+        'upload_url': 'object'
     }
 
     attribute_map = {
@@ -87,7 +87,7 @@ class AttachmentPathUrl(object):
         Signed URL to upload blob content to.  # noqa: E501
 
         :return: The upload_url of this AttachmentPathUrl.  # noqa: E501
-        :rtype: str
+        :rtype: object
         """
         return self._upload_url
 
@@ -98,7 +98,7 @@ class AttachmentPathUrl(object):
         Signed URL to upload blob content to.  # noqa: E501
 
         :param upload_url: The upload_url of this AttachmentPathUrl.  # noqa: E501
-        :type: str
+        :type: object
         """
         if self.local_vars_configuration.client_side_validation and upload_url is None:  # noqa: E501
             raise ValueError("Invalid value for `upload_url`, must not be `None`")  # noqa: E501
