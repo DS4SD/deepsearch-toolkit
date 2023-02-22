@@ -143,7 +143,9 @@ def upload_files(
 )
 def add_attachment(
     proj_key: str = PROJ_KEY,
-    item_id: str = typer.Option(..., "-d", "--item_id", help="Doc ID in elastic"),
+    index_item_id: str = typer.Option(
+        ..., "-d", "--index_item_id", help="Doc ID in elastic"
+    ),
     attachment_path: Path = SOURCE_PATH,
     attachment_key: str = typer.Option(
         "usr_attachments",
@@ -170,7 +172,7 @@ def add_attachment(
         try:
             index.add_item_attachment(
                 api=api,
-                item_id=item_id,
+                index_item_id=index_item_id,
                 attachment_path=attachment_path,
                 attachment_key=attachment_key,
             )

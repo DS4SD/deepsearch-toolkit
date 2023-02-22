@@ -18,7 +18,7 @@ from typing import (
 from pydantic import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
-from deepsearch.cps.apis.public.models.elastic_index_search_results import (
+from deepsearch.cps.apis.public.models.elastic_index_search_results import (  # type: ignore
     ElasticIndexSearchResults,
 )
 from deepsearch.cps.client.components.data_indices import (
