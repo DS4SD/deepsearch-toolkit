@@ -10,7 +10,9 @@ import requests
 from pydantic import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
-from deepsearch.cps.apis.public.models.attachment_path_url import AttachmentPathUrl
+from deepsearch.cps.apis.public.models.attachment_upload_data import (
+    AttachmentUploadData,
+)
 from deepsearch.cps.apis.public.models.token_response import TokenResponse
 from deepsearch.cps.client.components.api_object import ApiConnectedObject
 
@@ -158,7 +160,7 @@ class DataIndex(BaseModel):
 
         filename = os.path.basename(attachment_path)
 
-        upload_data: AttachmentPathUrl = sw_api.get_attachment_upload_data(
+        atachment_upload_data: AttachmentUploadData = sw_api.get_attachment_upload_data(
             proj_key=self.source.proj_key,
             index_key=self.source.index_key,
             index_item_id=index_item_id,
@@ -168,15 +170,15 @@ class DataIndex(BaseModel):
         with open(attachment_path, "rb") as f:
             files = {"file": (os.path.basename(attachment_path), f)}
             request_upload = requests.post(
-                url=upload_data.upload_url["url"],
-                data=upload_data.upload_url["fields"],
+                url=atachment_upload_data.upload_data["url"],
+                data=atachment_upload_data.upload_data["fields"],
                 files=files,
                 verify=False,
             )
             request_upload.raise_for_status()
 
         params = {
-            "attachment_path": upload_data.attachment_path,
+            "attachment_path": atachment_upload_data.attachment_path,
         }
 
         if attachment_key:
