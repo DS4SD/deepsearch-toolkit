@@ -10,7 +10,6 @@ Method | HTTP request | Description
 [**delete_project_data_index**](DataIndicesApi.md#delete_project_data_index) | **DELETE** /project/{proj_key}/data_indices/{index_key} | 
 [**get_project_data_index**](DataIndicesApi.md#get_project_data_index) | **GET** /project/{proj_key}/data_indices/{index_key} | 
 [**get_project_data_indices**](DataIndicesApi.md#get_project_data_indices) | **GET** /project/{proj_key}/data_indices | 
-[**search_project_data_index**](DataIndicesApi.md#search_project_data_index) | **POST** /project/{proj_key}/data_indices/{index_key}/search | 
 [**update_project_data_index**](DataIndicesApi.md#update_project_data_index) | **PATCH** /project/{proj_key}/data_indices/{index_key} | 
 [**upload_project_data_index_file**](DataIndicesApi.md#upload_project_data_index_file) | **POST** /project/{proj_key}/data_indices/{index_key}/actions/upload | 
 
@@ -492,88 +491,6 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | Project data indices. |  -  |
 **404** | Project data index not found. |  -  |
-**500** | Error occured on the server |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **search_project_data_index**
-> ElasticIndexSearchResults search_project_data_index(proj_key, index_key, parameters)
-
-
-
-Search a project data index
-
-### Example
-
-* Api Key Authentication (Bearer):
-```python
-from __future__ import print_function
-import time
-import deepsearch.cps.apis.public
-from deepsearch.cps.apis.public.rest import ApiException
-from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/api/cps/public/v1
-# See configuration.py for a list of all supported configuration parameters.
-configuration = deepsearch.cps.apis.public.Configuration(
-    host = "http://localhost/api/cps/public/v1"
-)
-
-# The client must configure the authentication and authorization parameters
-# in accordance with the API server security policy.
-# Examples for each auth method are provided below, use the example that
-# satisfies your auth use case.
-
-# Configure API key authorization: Bearer
-configuration = deepsearch.cps.apis.public.Configuration(
-    host = "http://localhost/api/cps/public/v1",
-    api_key = {
-        'Authorization': 'YOUR_API_KEY'
-    }
-)
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['Authorization'] = 'Bearer'
-
-# Enter a context with an instance of the API client
-with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = deepsearch.cps.apis.public.DataIndicesApi(api_client)
-    proj_key = 'proj_key_example' # str | 
-index_key = 'index_key_example' # str | 
-parameters = None # dict(str, object) | 
-
-    try:
-        api_response = api_instance.search_project_data_index(proj_key, index_key, parameters)
-        pprint(api_response)
-    except ApiException as e:
-        print("Exception when calling DataIndicesApi->search_project_data_index: %s\n" % e)
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **proj_key** | **str**|  | 
- **index_key** | **str**|  | 
- **parameters** | [**dict(str, object)**](object.md)|  | 
-
-### Return type
-
-[**ElasticIndexSearchResults**](ElasticIndexSearchResults.md)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | List project data index search results |  -  |
-**404** | Project data indices search not found. |  -  |
 **500** | Error occured on the server |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

@@ -2,6 +2,7 @@
 
 cps-auth.json
 cps_client.json
+ds-auth*.json
 
 results_*/
 

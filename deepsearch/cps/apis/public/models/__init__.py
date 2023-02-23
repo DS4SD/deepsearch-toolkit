@@ -114,7 +114,6 @@ from deepsearch.cps.apis.public.models.dictionary_import_options import Dictiona
 from deepsearch.cps.apis.public.models.dictionary_import_result import DictionaryImportResult
 from deepsearch.cps.apis.public.models.elastic_coordinates import ElasticCoordinates
 from deepsearch.cps.apis.public.models.elastic_index_search_query_options import ElasticIndexSearchQueryOptions
-from deepsearch.cps.apis.public.models.elastic_index_search_results import ElasticIndexSearchResults
 from deepsearch.cps.apis.public.models.entity_annotation import EntityAnnotation
 from deepsearch.cps.apis.public.models.entity_annotation_descriptor import EntityAnnotationDescriptor
 from deepsearch.cps.apis.public.models.error_response import ErrorResponse
