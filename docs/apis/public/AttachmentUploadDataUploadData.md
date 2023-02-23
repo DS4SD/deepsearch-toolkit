@@ -1,10 +1,11 @@
-# AttachmentUploadData
+# AttachmentUploadDataUploadData
 
+Data to upload the temporary file.
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**attachment_path** | **str** | Attachment path. | 
-**upload_data** | [**AttachmentUploadDataUploadData**](AttachmentUploadDataUploadData.md) |  | 
+**fields** | [**object**](.md) |  | [optional] 
+**url** | **str** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

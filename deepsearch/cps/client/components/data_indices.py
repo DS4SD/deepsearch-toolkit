@@ -170,8 +170,8 @@ class DataIndex(BaseModel):
         with open(attachment_path, "rb") as f:
             files = {"file": (os.path.basename(attachment_path), f)}
             request_upload = requests.post(
-                url=atachment_upload_data.upload_data["url"],
-                data=atachment_upload_data.upload_data["fields"],
+                url=atachment_upload_data.upload_data.url,
+                data=atachment_upload_data.upload_data.fields,
                 files=files,
                 verify=False,
             )
