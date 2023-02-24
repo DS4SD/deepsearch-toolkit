@@ -137,10 +137,10 @@ class DataIndex(BaseModel):
         api: CpsApi,
         index_item_id: str,
         attachment_path: Union[str, Path],
-        attachment_key: Optional[str],
+        attachment_key: Optional[str] = None,
     ) -> None:
         """
-        Method to upload attachments to an index.
+        Method to upload attachments to an index item.
 
         Input
         -----
@@ -151,7 +151,7 @@ class DataIndex(BaseModel):
         attachment_path : string | Path
             path to file on local folder
         attachment_key : string, OPTIONAL
-            key to put on elastic document where attachment info will be saved.
+            key to put on index document where attachment info will be saved.
             string must me snake_case and start with 'usr_'.
             example: 'usr_your_attachment_key'
         """
@@ -160,28 +160,29 @@ class DataIndex(BaseModel):
 
         filename = os.path.basename(attachment_path)
 
-        atachment_upload_data: AttachmentUploadData = sw_api.get_attachment_upload_data(
-            proj_key=self.source.proj_key,
-            index_key=self.source.index_key,
-            index_item_id=index_item_id,
-            filename=filename,
+        attachment_upload_data: AttachmentUploadData = (
+            sw_api.get_attachment_upload_data(
+                proj_key=self.source.proj_key,
+                index_key=self.source.index_key,
+                index_item_id=index_item_id,
+                filename=filename,
+            )
         )
 
-        with open(attachment_path, "rb") as f:
-            files = {"file": (os.path.basename(attachment_path), f)}
-            request_upload = requests.post(
-                url=atachment_upload_data.upload_data.url,
-                data=atachment_upload_data.upload_data.fields,
-                files=files,
-                verify=False,
-            )
-            request_upload.raise_for_status()
+        files = {"file": open(attachment_path, "rb")}
+        request_upload = requests.post(
+            url=attachment_upload_data.upload_data.url,
+            data=attachment_upload_data.upload_data.fields,
+            files=files,
+            verify=False,
+        )
+        request_upload.raise_for_status()
 
         params = {
-            "attachment_path": atachment_upload_data.attachment_path,
+            "attachment_path": attachment_upload_data.attachment_path,
         }
 
-        if attachment_key:
+        if attachment_key is not None:
             params["attachment_key"] = attachment_key
 
         sw_api.register_attachment(
