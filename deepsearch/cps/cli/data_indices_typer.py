@@ -6,7 +6,15 @@ import typer
 
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption, cli_output
 from deepsearch.cps.apis.public.rest import ApiException
-from deepsearch.cps.cli.cli_options import INDEX_KEY, PROJ_KEY, SOURCE_PATH, URL
+from deepsearch.cps.cli.cli_options import (
+    ATTACHMENT_KEY,
+    ATTACHMENT_PATH,
+    INDEX_ITEM_ID,
+    INDEX_KEY,
+    PROJ_KEY,
+    SOURCE_PATH,
+    URL,
+)
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.data_indices import DataIndex
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
@@ -144,16 +152,9 @@ def upload_files(
 def add_attachment(
     proj_key: str = PROJ_KEY,
     index_key: str = INDEX_KEY,
-    index_item_id: str = typer.Option(
-        ..., "-d", "--index_item_id", help="Doc ID in elastic"
-    ),
-    attachment_path: Path = SOURCE_PATH,
-    attachment_key: str = typer.Option(
-        "usr_attachments",
-        "-k",
-        "--attachment_key",
-        help="Attachment key to put in index item",
-    ),
+    index_item_id: str = INDEX_ITEM_ID,
+    attachment_path: Path = ATTACHMENT_PATH,
+    attachment_key: str = ATTACHMENT_KEY,
 ):
     """
     Add attachment to a index item
@@ -164,11 +165,9 @@ def add_attachment(
     indices = api.data_indices.list(proj_key)
 
     # get specific index to add attachment
-    index: Union[DataIndex, None] = next(
-        (x for x in indices if x.source.index_key == index_key), None
-    )
+    index = next((x for x in indices if x.source.index_key == index_key), None)
 
-    if index:
+    if index is not None:
         try:
             index.add_item_attachment(
                 api=api,

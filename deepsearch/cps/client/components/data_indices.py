@@ -147,7 +147,7 @@ class DataIndex(BaseModel):
         api : CpsApi
             CpsApi Class
         index_item_id : string
-            id of the document on elastic
+            id of the index item
         attachment_path : string | Path
             path to file on local folder
         attachment_key : string, OPTIONAL
@@ -169,7 +169,8 @@ class DataIndex(BaseModel):
             )
         )
 
-        files = {"file": open(attachment_path, "rb")}
+        with open(attachment_path, "rb") as f:
+            files = {"file": (os.path.basename(attachment_path), f.read())}
         request_upload = requests.post(
             url=attachment_upload_data.upload_data.url,
             data=attachment_upload_data.upload_data.fields,

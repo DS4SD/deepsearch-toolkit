@@ -149,14 +149,14 @@ Attachments can be added to a data index in a project. Briefly, documents have t
     indices = api.data_indices.list(PROJ_KEY)
 
     # get specific index to add attachment
-    index: DataIndex | None = next((x for x in indices if x.source.index_key == index_key), None)
+    index = next((x for x in indices if x.source.index_key == index_key), None)
 
     # if the index exists, add attachment
-    if index:
+    if index is not None:
         # specify parameters
         index_item_id = "INDEX_DOCUMENT_ID"
         attachment_path = "path/to/local/file"
-        attachment_key = "ATTACHMENT_KEY_PUT_ELASTIC" # optional. if set need start with 'usr_' and be snake_case
+        attachment_key = "usr_my_attachment" # optional. if set need start with 'usr_' and be snake_case
 
         index.add_item_attachment(
             api=api, 
