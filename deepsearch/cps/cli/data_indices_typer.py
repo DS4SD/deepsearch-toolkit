@@ -76,7 +76,7 @@ def create(
         )
         typer.echo("Data Index Created.")
     except ValueError as e:
-        typer.echo(f"Uh Oh! {e}")
+        typer.echo(f"Error occurred: {e}")
         typer.echo(ERROR_MSG)
         raise typer.Abort()
     return
@@ -101,7 +101,7 @@ def delete_data_index(
             api.data_indices.delete(coords)
             typer.echo("Deleted!")
         except ApiException as e:
-            typer.echo(f"Uh Oh! {e}")
+            typer.echo(f"Error occurred: {e}")
             typer.echo(ERROR_MSG)
             raise typer.Abort()
     return
@@ -139,10 +139,11 @@ def upload_files(
 
 
 @app.command(
-    name="add-attachment", help="Add attachments to index", no_args_is_help=True
+    name="add-attachment", help="Add attachment to a index item", no_args_is_help=True
 )
 def add_attachment(
     proj_key: str = PROJ_KEY,
+    index_key: str = INDEX_KEY,
     index_item_id: str = typer.Option(
         ..., "-d", "--index_item_id", help="Doc ID in elastic"
     ),
@@ -153,10 +154,9 @@ def add_attachment(
         "--attachment_key",
         help="Attachment key to put in elastic",
     ),
-    index_key: str = INDEX_KEY,
 ):
     """
-    Add attachment to a data index in a project
+    Add attachment to a index item
     """
     api = CpsApi.default_from_env()
 
@@ -176,14 +176,13 @@ def add_attachment(
                 attachment_path=attachment_path,
                 attachment_key=attachment_key,
             )
-            typer.echo("Index Attachment Added.")
+            typer.echo("Attachment added successfully.")
         except ValueError as e:
-            typer.echo(f"Uh Oh! {e}")
+            typer.echo(f"Error occurred: {e}")
             typer.echo(ERROR_MSG)
             raise typer.Abort()
         return
     else:
-        typer.echo("Uh Oh!")
         typer.echo("Index key not found")
         raise typer.Abort()
 
