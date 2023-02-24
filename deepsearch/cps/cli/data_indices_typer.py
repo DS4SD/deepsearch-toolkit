@@ -1,6 +1,6 @@
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 import typer
 
@@ -152,7 +152,7 @@ def add_attachment(
         "usr_attachments",
         "-k",
         "--attachment_key",
-        help="Attachment key to put in elastic",
+        help="Attachment key to put in index item",
     ),
 ):
     """
@@ -164,7 +164,7 @@ def add_attachment(
     indices = api.data_indices.list(proj_key)
 
     # get specific index to add attachment
-    index: DataIndex | None = next(
+    index: Union[DataIndex, None] = next(
         (x for x in indices if x.source.index_key == index_key), None
     )
 
