@@ -145,7 +145,7 @@ def add_attachment(
     proj_key: str = PROJ_KEY,
     index_key: str = INDEX_KEY,
     index_item_id: str = typer.Option(
-        ..., "-d", "--index_item_id", help="index item id"
+        ..., "-d", "--index_item_id", help="Doc ID in elastic"
     ),
     attachment_path: Path = SOURCE_PATH,
     attachment_key: str = typer.Option(
