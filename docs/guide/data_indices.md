@@ -128,9 +128,9 @@ Documents can be converted and added, directly, to a data index in a project. Br
 
 ---
 
-## Adding attachments to a data index
+## Adding attachments to an index item
 
-Attachments can be added to a data index in a project. Briefly, documents have to be on local machine and can be (almost) any format. The full list of supported formats are listed [here](https://www.ibm.com/docs/en/aspera-on-cloud?topic=SS5W4X/dita/content/aws_s3_content_types.html).
+Attachments can be added to an index item in a project. Briefly, attachments have to be on local machine and can be (almost) any format. The full list of supported formats are listed [here](https://www.ibm.com/docs/en/aspera-on-cloud?topic=SS5W4X/dita/content/aws_s3_content_types.html).
 
 
 === "CLI"
@@ -154,15 +154,15 @@ Attachments can be added to a data index in a project. Briefly, documents have t
     # if the index exists, add attachment
     if index is not None:
         # specify parameters
-        index_item_id = "INDEX_DOCUMENT_ID"
+        index_item_id = "example_item_id"
         attachment_path = "path/to/local/file"
-        attachment_key = "usr_my_attachment" # optional. if set need start with 'usr_' and be snake_case
+        attachment_key = "usr_my_attachment"  # optional. if set need start with 'usr_' and be snake_case
 
         index.add_item_attachment(
             api=api, 
             index_item_id=index_item_id, 
             attachment_path=attachment_path, 
-            attachment_key=attachment_key, # optional
+            attachment_key=attachment_key,  # optional
         )
     ```
 
