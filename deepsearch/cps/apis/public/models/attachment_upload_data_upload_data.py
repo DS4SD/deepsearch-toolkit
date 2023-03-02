@@ -61,6 +61,7 @@ class AttachmentUploadDataUploadData(object):
     def fields(self):
         """Gets the fields of this AttachmentUploadDataUploadData.  # noqa: E501
 
+        fields to use in request body.  # noqa: E501
 
         :return: The fields of this AttachmentUploadDataUploadData.  # noqa: E501
         :rtype: object
@@ -71,6 +72,7 @@ class AttachmentUploadDataUploadData(object):
     def fields(self, fields):
         """Sets the fields of this AttachmentUploadDataUploadData.
 
+        fields to use in request body.  # noqa: E501
 
         :param fields: The fields of this AttachmentUploadDataUploadData.  # noqa: E501
         :type: object
@@ -82,6 +84,7 @@ class AttachmentUploadDataUploadData(object):
     def url(self):
         """Gets the url of this AttachmentUploadDataUploadData.  # noqa: E501
 
+        url of the host.  # noqa: E501
 
         :return: The url of this AttachmentUploadDataUploadData.  # noqa: E501
         :rtype: str
@@ -92,6 +95,7 @@ class AttachmentUploadDataUploadData(object):
     def url(self, url):
         """Sets the url of this AttachmentUploadDataUploadData.
 
+        url of the host.  # noqa: E501
 
         :param url: The url of this AttachmentUploadDataUploadData.  # noqa: E501
         :type: str
