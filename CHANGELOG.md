@@ -1,3 +1,8 @@
+## [v0.12.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.12.0) - 2023-03-03
+
+### Feature
+* Add attachment upload ([#68](https://github.com/DS4SD/deepsearch-toolkit/issues/68)) ([`f783c90`](https://github.com/DS4SD/deepsearch-toolkit/commit/f783c90e2e991d29e20c09da5f302c9e882ce69e))
+
 ## [v0.11.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.11.0) - 2023-02-10
 
 ### Feature
