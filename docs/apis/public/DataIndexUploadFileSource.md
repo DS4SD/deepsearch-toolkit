@@ -3,6 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**conversion_settings** | [**ProjectDataIndexConversionSettings**](ProjectDataIndexConversionSettings.md) |  | [optional] 
 **file_url** | **list[str]** | List of File&#39;s URL to be converted and uploaded to the data index | [optional] 
 **scratch_files_id** | **list[str]** | List of CCS&#39;s scratch files id to be converted and uploaded to the data index | [optional] 
 

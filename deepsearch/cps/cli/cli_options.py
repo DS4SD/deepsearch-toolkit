@@ -32,7 +32,23 @@ SOURCE_PATH = typer.Option(
     containing pdf documents, zip files, or both.""",
 )
 
+ATTACHMENT_PATH = typer.Option(
+    ...,
+    "--attachment-file",
+    "-i",
+    help="Provide absolute path to local file.",
+)
+
+ATTACHMENT_KEY = typer.Option(
+    "usr_attachments",
+    "-k",
+    "--attachment_key",
+    help="Attachment key to put in index item",
+)
+
 INDEX_KEY = typer.Option(..., "-x", "--index-key", help="index_key of data index")
+
+INDEX_ITEM_ID = typer.Option(..., "-d", "--index_item_id", help="Index item ID")
 
 PROGRESS_BAR = typer.Option(
     True,
