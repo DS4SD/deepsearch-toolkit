@@ -109,5 +109,20 @@ def save_snapshot_of_data_flow(
         typer.echo(f"A snapshot is being taken, see task {task.task_id!r}")
 
 
+@app.command(name="download", help="Download KG")
+def download_knowledge_graph(
+    proj_key: str = PROJ_KEY,
+    kg_key: str = KG_KEY,
+    output: OutputEnum = OutputOption,
+):
+    api = CpsApi.default_from_env()
+    kg = api.knowledge_graphs.get(project=proj_key, key=kg_key)
+    url = kg.download()
+
+    results = [{"presigned download url": url}]
+    # TODO: augment with topology details
+    cli_output(results, output, headers="keys")
+
+
 if __name__ == "__main__":
     app()
