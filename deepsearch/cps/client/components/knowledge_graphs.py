@@ -136,3 +136,12 @@ class CpsApiKg(ApiConnectedObject):
         )
 
         return task
+
+    def download(self):
+        task: ProjectTask = (
+            self.api.knowledge_graphs.sw_api.download_project_knowledge_graph(
+                self.project, self.key
+            )
+        )
+
+        return self.api.tasks.wait_for(self.project, task.task_id)

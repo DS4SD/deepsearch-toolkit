@@ -19,6 +19,7 @@ Method | HTTP request | Description
 [**create_project_knowledge_graph_snapshot_from_data_flow_assembly**](KnowledgeGraphsApi.md#create_project_knowledge_graph_snapshot_from_data_flow_assembly) | **POST** /project/{proj_key}/bags/{bag_key}/tasks/assemble_dataflow/latest/snapshots | 
 [**delete_project_knowledge_graph**](KnowledgeGraphsApi.md#delete_project_knowledge_graph) | **DELETE** /project/{proj_key}/bags/{bag_key} | 
 [**delete_project_knowledge_graph_snapshot**](KnowledgeGraphsApi.md#delete_project_knowledge_graph_snapshot) | **DELETE** /project/{proj_key}/bags/{bag_key}/snapshots/{execution_id} | 
+[**download_project_knowledge_graph**](KnowledgeGraphsApi.md#download_project_knowledge_graph) | **POST** /project/{proj_key}/bags/{bag_key}/tasks/export | 
 [**get_project_knowledge_graph_authentication_callback**](KnowledgeGraphsApi.md#get_project_knowledge_graph_authentication_callback) | **GET** /project/{proj_key}/bags/{bag_key}/auth_callback | 
 [**get_project_knowledge_graph_status**](KnowledgeGraphsApi.md#get_project_knowledge_graph_status) | **GET** /project/{proj_key}/bags/{bag_key}/status | 
 [**get_project_knowledge_graph_usage_stats**](KnowledgeGraphsApi.md#get_project_knowledge_graph_usage_stats) | **GET** /project/{proj_key}/bags/{bag_key}/usage_stats | 
@@ -1257,6 +1258,87 @@ void (empty response body)
 **204** | OK |  -  |
 **400** | Invalid parameters. |  -  |
 **404** | KG/BAG/Snapshot not found. |  -  |
+**0** | Unexpected error. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **download_project_knowledge_graph**
+> Task download_project_knowledge_graph(proj_key, bag_key)
+
+
+
+Download a Knowledge Graph
+
+### Example
+
+* Api Key Authentication (Bearer):
+```python
+from __future__ import print_function
+import time
+import deepsearch.cps.apis.public
+from deepsearch.cps.apis.public.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/api/cps/public/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1",
+    api_key = {
+        'Authorization': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public.KnowledgeGraphsApi(api_client)
+    proj_key = 'proj_key_example' # str | 
+bag_key = 'bag_key_example' # str | 
+
+    try:
+        api_response = api_instance.download_project_knowledge_graph(proj_key, bag_key)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling KnowledgeGraphsApi->download_project_knowledge_graph: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **proj_key** | **str**|  | 
+ **bag_key** | **str**|  | 
+
+### Return type
+
+[**Task**](Task.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**201** | OK |  -  |
+**400** | Invalid parameters. |  -  |
+**404** | KG/BAG not found. |  -  |
 **0** | Unexpected error. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

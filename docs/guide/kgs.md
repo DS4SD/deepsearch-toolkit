@@ -51,4 +51,22 @@ wf = query.add(Workflow(id="", builder=builder, coordinates=kg, inputs={}))
 result = api.queries.run(query)
 ```
 
+### Download a KG
+
+Using the SDK:
+
+```python
+proj_key = "abc123" # get your proj_key from the UI details
+kg_key = "xyz987" # get kg_key (also called bag_key) from the UI details
+kg = api.knowledge_graphs.get(proj_key, kg_key)
+
+download_url = kg.download()
+```
+
+Using the CLI:
+
+```bash
+$ deepsearch cps kgs download -p 'abc123' -k 'zxc987'
+```
+
 More example queries are available in the [examples gallery](../gallery/index.md).
