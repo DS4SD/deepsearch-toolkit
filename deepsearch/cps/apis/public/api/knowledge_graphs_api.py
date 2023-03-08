@@ -1341,18 +1341,17 @@ class KnowledgeGraphsApi(object):
             collection_formats=collection_formats)
 
     def download_project_knowledge_graph(self, proj_key, bag_key, **kwargs):  # noqa: E501
-        """create_project_knowledge_graph_backup  # noqa: E501
+        """download_project_knowledge_graph # noqa: E501
 
-        Back up a Knowledge Graph  # noqa: E501
+        Download a Knowledge Graph  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.create_project_knowledge_graph_backup(proj_key, bag_key, options, async_req=True)
+        >>> thread = api.knowledge_graphs.sw_api.download_project_knowledge_graph(proj_key, bag_key, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str proj_key: (required)
         :param str bag_key: (required)
-        :param BackupKnowledgeGraphOptions options: (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1368,18 +1367,17 @@ class KnowledgeGraphsApi(object):
         return self.download_project_knowledge_graph_with_http_info(proj_key, bag_key, **kwargs)  # noqa: E501
 
     def download_project_knowledge_graph_with_http_info(self, proj_key, bag_key, **kwargs):  # noqa: E501
-        """create_project_knowledge_graph_backup  # noqa: E501
+        """download_project_knowledge_graph # noqa: E501
 
-        Back up a Knowledge Graph  # noqa: E501
+        Download a Knowledge Graph  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.create_project_knowledge_graph_backup_with_http_info(proj_key, bag_key, options, async_req=True)
+        >>> thread = api.knowledge_graphs.sw_api.download_project_knowledge_graph_with_http_info(proj_key, bag_key, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str proj_key: (required)
         :param str bag_key: (required)
-        :param BackupKnowledgeGraphOptions options: (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
