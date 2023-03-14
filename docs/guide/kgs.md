@@ -51,22 +51,33 @@ wf = query.add(Workflow(id="", builder=builder, coordinates=kg, inputs={}))
 result = api.queries.run(query)
 ```
 
+More example queries are available in the [examples gallery](../gallery/index.md).
+
 ### Download a KG
 
-Using the SDK:
+=== "CLI"
 
-```python
-proj_key = "abc123" # get your proj_key from the UI details
-kg_key = "xyz987" # get kg_key (also called bag_key) from the UI details
-kg = api.knowledge_graphs.get(proj_key, kg_key)
+    Using the [`deepsearch cps`](../cli-reference.md#cps) component:
+    <div class="termy">
 
-download_url = kg.download()
-```
+    ```console
+    $ deepsearch cps kgs download -p 'abc123' -k 'zxc987'
 
-Using the CLI:
+    url
+    -------------------------------- 
+    https://host.domain/download-url
+    ```
 
-```bash
-$ deepsearch cps kgs download -p 'abc123' -k 'zxc987'
-```
+    </div>
 
-More example queries are available in the [examples gallery](../gallery/index.md).
+=== "Python"
+
+    After you have generated the `api` object (from [login configuration](../getting_started/#authentication))
+
+    ```python
+    proj_key = "abc123" # get your proj_key from the UI details
+    kg_key = "xyz987" # get kg_key (also called bag_key) from the UI details
+    kg = api.knowledge_graphs.get(proj_key, kg_key)
+
+    download_url = kg.download()
+    ```
