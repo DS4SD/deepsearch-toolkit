@@ -1,3 +1,8 @@
+## [v0.13.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.13.0) - 2023-03-14
+
+### Feature
+* Add KG downloading ([#71](https://github.com/DS4SD/deepsearch-toolkit/issues/71)) ([`77cccc0`](https://github.com/DS4SD/deepsearch-toolkit/commit/77cccc038a48a920fdc9df7eda7a8a934a0491d3))
+
 ## [v0.12.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.12.0) - 2023-03-03
 
 ### Feature
