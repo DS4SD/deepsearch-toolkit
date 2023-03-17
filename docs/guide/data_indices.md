@@ -165,5 +165,3 @@ Attachments can be added to an index item in a project. Briefly, attachments hav
             attachment_key=attachment_key,  # optional
         )
     ```
-
----
