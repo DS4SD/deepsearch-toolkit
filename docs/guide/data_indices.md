@@ -55,7 +55,7 @@ In addition, it is possible to specify non-default `type` of data index. For mor
     indices = api.data_indices.list(PROJ_KEY)
 
     for item in indices:
-        print(item.key, item.name)
+        print(item.source.index_key, item.name)
 
     # If your project uses Pandas, you can easily convert the list of projects to a Dataframe
     import pandas as pd
@@ -165,5 +165,3 @@ Attachments can be added to an index item in a project. Briefly, attachments hav
             attachment_key=attachment_key,  # optional
         )
     ```
-
----
