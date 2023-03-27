@@ -15,6 +15,7 @@ from deepsearch.cps.client.api import CpsApi
 from .common_routines import progressbar
 
 ALLOWED_FILE_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".tiff", ".tif", ".png", ".gif"]
+ALLOWED_JSON_TYPE_FILE_EXTENSION = [".json", ".jsonl"]
 
 
 class URLNavigator:

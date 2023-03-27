@@ -141,9 +141,28 @@ def upload_files(
         p = Path(url)
         urls = get_urls(p) if p.exists() else [url]
 
-    coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
-    utils.upload_files(coords=coords, url=url, local_file=local_file)
-    return
+    api = CpsApi.default_from_env()
+
+    # get indices of the project
+    indices = api.data_indices.list(proj_key)
+
+    # get specific index to add attachment
+    index = next((x for x in indices if x.source.index_key == index_key), None)
+
+    if index is not None:
+        try:
+            index.upload_files(
+                url=urls,
+                local_file=local_file,
+            )
+        except ValueError as e:
+            typer.echo(f"Error occurred: {e}")
+            typer.echo(ERROR_MSG)
+            raise typer.Abort()
+        return
+    else:
+        typer.echo("Index key not found")
+        raise typer.Abort()
 
 
 @app.command(

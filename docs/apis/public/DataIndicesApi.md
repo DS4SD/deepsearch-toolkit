@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **ccs_convert_upload_file_project_data_index**
-> CcsTask ccs_convert_upload_file_project_data_index(proj_key, index_key, body)
+> CpsTask ccs_convert_upload_file_project_data_index(proj_key, index_key, body)
 
 
 
@@ -78,7 +78,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**CcsTask**](CcsTask.md)
+[**CpsTask**](CpsTask.md)
 
 ### Authorization
 
@@ -92,7 +92,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | CCS task info |  -  |
+**200** | CPS task info |  -  |
 **404** | Project data index not found. |  -  |
 **500** | Error occured on the server |  -  |
 
@@ -749,7 +749,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **upload_project_data_index_file**
-> upload_project_data_index_file(proj_key, index_key, file)
+> CpsTask upload_project_data_index_file(proj_key, index_key, file)
 
 
 
@@ -794,7 +794,8 @@ index_key = 'index_key_example' # str |
 file = '/path/to/file' # file | 
 
     try:
-        api_instance.upload_project_data_index_file(proj_key, index_key, file)
+        api_response = api_instance.upload_project_data_index_file(proj_key, index_key, file)
+        pprint(api_response)
     except ApiException as e:
         print("Exception when calling DataIndicesApi->upload_project_data_index_file: %s\n" % e)
 ```
@@ -809,7 +810,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**CpsTask**](CpsTask.md)
 
 ### Authorization
 
@@ -823,7 +824,7 @@ void (empty response body)
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | File uploaded successfully |  -  |
+**200** | CpS task info |  -  |
 **404** | Project data index not found. |  -  |
 **500** | Error occured on the server |  -  |
 

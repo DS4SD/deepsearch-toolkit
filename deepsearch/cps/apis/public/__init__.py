@@ -97,6 +97,7 @@ from deepsearch.cps.apis.public.models.collection_list_coordinates import Collec
 from deepsearch.cps.apis.public.models.collection_metadata_settings import CollectionMetadataSettings
 from deepsearch.cps.apis.public.models.cps_model_reference import CpsModelReference
 from deepsearch.cps.apis.public.models.cps_package import CpsPackage
+from deepsearch.cps.apis.public.models.cps_task import CpsTask
 from deepsearch.cps.apis.public.models.create_collection_in_dictionary_options import CreateCollectionInDictionaryOptions
 from deepsearch.cps.apis.public.models.create_data_catalog_collection_options import CreateDataCatalogCollectionOptions
 from deepsearch.cps.apis.public.models.create_data_catalog_options import CreateDataCatalogOptions

@@ -1,7 +1,8 @@
 import logging
 import os
+import time
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, List, Literal, Optional
 
 import requests
 import urllib3
@@ -20,6 +21,8 @@ from .utils import URLNavigator, collect_all_local_files, download_url
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logger = logging.getLogger(__name__)
+
+TASK_STOP_STATUS = ["SUCCESS", "FAILURE"]
 
 
 def make_payload(
@@ -63,6 +66,25 @@ def check_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
         )
         current_state = request_status.json()["done"]
     return request_status
+
+
+def check_cps_single_task_status(
+    sw_api: sw_client.TasksApi, cps_proj_key: str, task_id: str, wait=2
+):
+    """
+    Check cps status of individual tasks.
+    """
+    current_state = False
+    while current_state is False:
+        r: sw_client.CpsTask = sw_api.get_project_celery_task(
+            proj_key=cps_proj_key, task_id=task_id
+        )
+        request_status = r.to_dict()
+        if request_status["task_status"] in TASK_STOP_STATUS:
+            return request_status
+        else:
+            current_state = request_status["task_status"] in TASK_STOP_STATUS
+            time.sleep(wait)
 
 
 def submit_conversion_payload(
@@ -151,7 +173,7 @@ def check_status_running_tasks(
     cps_proj_key: str, task_ids, api: Optional[CpsApi] = None, progress_bar=False
 ) -> List[str]:
     """
-    Check status of multiple running tasks and optionally display progress with progress bar.
+    Check status of multiple ccs running tasks and optionally display progress with progress bar.
     """
     if api is None:
         api = CpsApi.default_from_env()
@@ -177,6 +199,38 @@ def check_status_running_tasks(
             if request_status.json()["done"]:
                 progress.update(1)
                 statuses.append(str(request_status.json()["state"]))
+
+    return statuses
+
+
+def check_cps_status_running_tasks(
+    cps_proj_key: str, task_ids, api: Optional[CpsApi] = None, progress_bar=False
+) -> List[str]:
+    """
+    Check status of multiple running cps tasks and optionally display progress with progress bar.
+    """
+    if api is None:
+        api = CpsApi.default_from_env()
+
+    sw_api = sw_client.TasksApi(api.client.swagger_client)
+    count_total = len(task_ids)
+
+    statuses = []
+
+    with tqdm(
+        total=count_total,
+        desc=f"{'Converting input:': <{progressbar.padding}}",
+        disable=not (progress_bar),
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
+    ) as progress:
+        for task_id in task_ids:
+            request_status = check_cps_single_task_status(
+                sw_api=sw_api, cps_proj_key=cps_proj_key, task_id=task_id
+            )
+            if request_status["task_status"] in TASK_STOP_STATUS:
+                progress.update(1)
+                statuses.append(str(request_status["task_status"]))
 
     return statuses
 
