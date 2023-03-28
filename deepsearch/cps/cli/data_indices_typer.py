@@ -152,6 +152,7 @@ def upload_files(
     if index is not None:
         try:
             index.upload_files(
+                api=api,
                 url=urls,
                 local_file=local_file,
             )

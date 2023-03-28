@@ -220,6 +220,7 @@ class DataIndex(BaseModel):
 
     def upload_files(
         self,
+        api: Optional[CpsApi] = None,
         url: Optional[Union[str, List[str]]] = None,
         local_file: Optional[Union[str, Path]] = None,
     ) -> None:
@@ -228,7 +229,7 @@ class DataIndex(BaseModel):
 
         Input
         -----
-        api : CpsApi
+        api : CpsApi, OPTIONAL
             CpsApi Class
         url : string | list[string], OPTIONAL
             single url string or list of urls string
@@ -245,6 +246,7 @@ class DataIndex(BaseModel):
             or self.type == "DB Record"
         ):
             upload_files(
+                api=api,
                 coords=self.source,
                 index_type=self.type,
                 url=url,
