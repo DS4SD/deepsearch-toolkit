@@ -110,7 +110,7 @@ class CpsApiDataIndices:
         self,
         coords: ElasticProjectDataCollectionSource,
         index_type: DATA_INDEX_TYPE,
-        body: Optional[Dict[str, List[str]]] = None,
+        body: Optional[Union[Dict[str, List[str]], Dict[str, S3Coordinates]]] = None,
         file: Optional[List[Any]] = None,
     ) -> str:
         """
@@ -223,6 +223,7 @@ class DataIndex(BaseModel):
         api: Optional[CpsApi] = None,
         url: Optional[Union[str, List[str]]] = None,
         local_file: Optional[Union[str, Path]] = None,
+        s3_coordinates: Optional[S3Coordinates] = None,
     ) -> None:
         """
         Method to upload files to an index.
@@ -235,6 +236,9 @@ class DataIndex(BaseModel):
             single url string or list of urls string
         local_file : string | Path, OPTIONAL
             path to file on local folder
+        s3_coordinates : S3Coordinates, OPTIONAL
+            coordinates of COS to use files on the bucket to convert and upload. Params:
+
         """
 
         # Avoid circular imports
@@ -251,6 +255,7 @@ class DataIndex(BaseModel):
                 index_type=self.type,
                 url=url,
                 local_file=local_file,
+                s3_coordinates=s3_coordinates,
             )
         else:
             raise NotImplementedError
@@ -259,3 +264,16 @@ class DataIndex(BaseModel):
 @dataclass
 class CpsApiDataIndex(ApiConnectedObject):
     project: str
+
+
+@dataclass
+class S3Coordinates(BaseModel):
+    host: str
+    port: int
+    ssl: bool
+    verify_ssl: bool
+    access_key: str
+    secret_key: str
+    bucket: str
+    location: str
+    key_prefix: str = ""

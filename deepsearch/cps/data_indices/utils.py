@@ -10,7 +10,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from tqdm import tqdm
 
 from deepsearch.cps.client.api import CpsApi
-from deepsearch.cps.client.components.data_indices import DATA_INDEX_TYPE
+from deepsearch.cps.client.components.data_indices import DATA_INDEX_TYPE, S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import progressbar, success_message
@@ -29,6 +29,7 @@ def upload_files(
     index_type: DATA_INDEX_TYPE,
     url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
+    s3_coordinates: Optional[S3Coordinates] = None,
     api: Optional[CpsApi] = None,
 ):
     """
@@ -40,11 +41,11 @@ def upload_files(
         api = CpsApi.default_from_env()
 
     # check required inputs are present
-    if url is None and local_file is None:
+    if url is None and local_file is None and s3_coordinates is None:
         raise ValueError(
-            "No input provided. Please provide either a url or a local file for conversion."
+            "No input provided. Please provide either a url, a local file, or coordinates to COS."
         )
-    elif url is not None and local_file is None:
+    elif url is not None and local_file is None and s3_coordinates is None:
         if isinstance(url, str):
             urls = [url]
         else:
@@ -56,12 +57,18 @@ def upload_files(
             )
         else:
             raise ValueError("Url is only allowed on index with type Document.")
-    elif url is None and local_file is not None:
+    elif url is None and local_file is not None and s3_coordinates is None:
         return process_local_file(
             api=api, coords=coords, local_file=Path(local_file), index_type=index_type
         )
+    elif url is None and local_file is None and s3_coordinates is not None:
+        return process_external_cos(
+            api=api, coords=coords, s3_coordinates=s3_coordinates, index_type=index_type
+        )
 
-    raise ValueError("Please provide only one input: url or local file.")
+    raise ValueError(
+        "Please provide only one input: url, local file, or s3_coordinates"
+    )
 
 
 def process_url_input(
@@ -218,6 +225,45 @@ def process_local_file(
         raise ValueError(
             "At the moment only index with type Document or Generic are supported"
         )
+
+
+def process_external_cos(
+    api: CpsApi,
+    coords: ElasticProjectDataCollectionSource,
+    s3_coordinates: S3Coordinates,
+    index_type: DATA_INDEX_TYPE,
+    progress_bar=False,
+):
+    """
+    Individual files are processed before upload.
+    """
+    if index_type == "Document":
+        # container for task_ids
+        task_ids = []
+
+        with tqdm(
+            total=1,
+            desc=f"{'Submitting input:': <{progressbar.padding}}",
+            disable=not (progress_bar),
+            colour=progressbar.colour,
+            bar_format=progressbar.bar_format,
+        ) as progress:
+            # upload using coordinates
+            payload = {"cos_coordinates": s3_coordinates}
+            task_id = api.data_indices.upload_file(
+                coords=coords, body=payload, index_type=index_type
+            )
+            task_ids.append(task_id)
+            progress.update(1)
+
+        # NOTE: it throws error, will run ok after cps-api pr merge
+        # return after status of running tasks are done
+        return convert.check_cps_status_running_tasks(
+            api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
+        )
+
+    else:
+        raise ValueError("COS coordinates is only allowed on index type Document.")
 
 
 def without_convert_file_upload(
