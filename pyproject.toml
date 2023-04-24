@@ -50,6 +50,8 @@ appdirs = "^1.4.4"
 tabulate = "^0.8.9"
 pluggy = "^1.0.0"
 tqdm = "^4.64.0"
+fastapi = "^0.95.1"
+uvicorn = "^0.21.1"
 
 [tool.poetry.group.dev.dependencies]
 black = {extras = ["jupyter"], version = "^22.1.0"}
