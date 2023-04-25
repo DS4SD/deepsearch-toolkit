@@ -4,7 +4,6 @@ from deepsearch.core.cli.main import app
 from deepsearch.core.cli.plugins import get_cli_groups
 from deepsearch.cps.cli.main import app as cps_app
 from deepsearch.documents.cli.main import app as documents_app
-from deepsearch.model.cli.main import app as model_app
 from deepsearch.query.cli.main import app as query_app
 
 app.add_typer(cps_app, name="cps", help="Interact with DeepSearch CPS component")
@@ -13,9 +12,6 @@ app.add_typer(
     documents_app,
     name="documents",
     help="Interact with DeepSearch Document Conversion component",
-)
-app.add_typer(
-    model_app, name="model", help="Interact with the DeepSearch model component"
 )
 
 for group in get_cli_groups():
