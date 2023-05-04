@@ -110,7 +110,9 @@ class CpsApiDataIndices:
         self,
         coords: ElasticProjectDataCollectionSource,
         index_type: DATA_INDEX_TYPE,
-        body: Optional[Union[Dict[str, List[str]], Dict[str, S3Coordinates]]] = None,
+        body: Optional[
+            Union[Dict[str, List[str]], Dict[str, Dict[str, S3Coordinates]]]
+        ] = None,
         file: Optional[List[Any]] = None,
     ) -> str:
         """

@@ -249,7 +249,7 @@ def process_external_cos(
             bar_format=progressbar.bar_format,
         ) as progress:
             # upload using coordinates
-            payload = {"cos_coordinates": s3_coordinates}
+            payload = {"s3_source": {"coordinates": s3_coordinates}}
             task_id = api.data_indices.upload_file(
                 coords=coords, body=payload, index_type=index_type
             )
