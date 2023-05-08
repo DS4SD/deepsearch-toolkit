@@ -168,6 +168,7 @@ from deepsearch.cps.apis.public.models.inline_object1 import InlineObject1
 from deepsearch.cps.apis.public.models.inline_object2 import InlineObject2
 from deepsearch.cps.apis.public.models.inline_object3 import InlineObject3
 from deepsearch.cps.apis.public.models.inline_object4 import InlineObject4
+from deepsearch.cps.apis.public.models.inline_object5 import InlineObject5
 from deepsearch.cps.apis.public.models.inline_response200 import InlineResponse200
 from deepsearch.cps.apis.public.models.inline_response2001 import InlineResponse2001
 from deepsearch.cps.apis.public.models.inline_response2002 import InlineResponse2002

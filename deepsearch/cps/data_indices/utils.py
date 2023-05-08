@@ -143,12 +143,32 @@ def process_local_file(
             os.path.isfile(local_file)
             and Path(local_file).suffix in ALLOWED_JSON_TYPE_FILE_EXTENSION
         ):
-            statuses = without_convert_file_upload(
-                api=api,
-                coords=coords,
-                files=[local_file],
-                index_type=index_type,
+            # container for task_ids
+            task_ids = []
+
+            with tqdm(
+                total=1,
+                desc=f"{'Submitting input:': <{progressbar.padding}}",
+                disable=not (progress_bar),
+                colour=progressbar.colour,
+                bar_format=progressbar.bar_format,
+            ) as progress:
+                # upload file
+                private_download_url = convert.upload_single_file(
+                    api=api, cps_proj_key=coords.proj_key, source_path=Path(local_file)
+                )
+                payload_generic = {"file_url": private_download_url}
+                task_id = api.data_indices.upload_file(
+                    coords=coords, body=payload_generic, index_type=index_type
+                )
+                task_ids.append(task_id)
+                progress.update(1)
+
+            # send files to upload and check status of running tasks
+            statuses = convert.check_cps_status_running_tasks(
+                api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
             )
+
             print(success_message)
             return
         else:
@@ -206,9 +226,9 @@ def process_local_file(
                     api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
                 )
                 file_url_array = [private_download_url]
-                payload = {"file_url": file_url_array}
+                payload_document = {"file_url": file_url_array}
                 task_id = api.data_indices.upload_file(
-                    coords=coords, body=payload, index_type=index_type
+                    coords=coords, body=payload_document, index_type=index_type
                 )
                 task_ids.append(task_id)
                 progress.update(1)
@@ -264,41 +284,3 @@ def process_external_cos(
 
     else:
         raise ValueError("COS coordinates is only allowed on index type Document.")
-
-
-def without_convert_file_upload(
-    api: CpsApi,
-    coords: ElasticProjectDataCollectionSource,
-    files: List[Any],
-    index_type: DATA_INDEX_TYPE,
-    progress_bar=False,
-):
-    """
-    Individual files without conversion are uploaded and storage in data index.
-    """
-
-    count_total_files = len(files)
-
-    # container for task_ids
-    task_ids = []
-
-    with tqdm(
-        total=count_total_files,
-        desc=f"{'Submitting input:': <{progressbar.padding}}",
-        disable=not (progress_bar),
-        colour=progressbar.colour,
-        bar_format=progressbar.bar_format,
-    ) as progress:
-        # loop over all files
-        for file in files:
-            # upload file
-            task_id = api.data_indices.upload_file(
-                coords=coords, file=file, index_type=index_type
-            )
-            task_ids.append(task_id)
-            progress.update(1)
-
-    # return after status of running tasks are done
-    return convert.check_cps_status_running_tasks(
-        api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
-    )

@@ -110,32 +110,23 @@ class CpsApiDataIndices:
         self,
         coords: ElasticProjectDataCollectionSource,
         index_type: DATA_INDEX_TYPE,
-        body: Optional[
-            Union[Dict[str, List[str]], Dict[str, Dict[str, S3Coordinates]]]
-        ] = None,
-        file: Optional[List[Any]] = None,
+        body: Union[
+            Dict[str, List[str]], Dict[str, str], Dict[str, Dict[str, S3Coordinates]]
+        ],
     ) -> str:
         """
         Call api for converting and uploading file to a project's data index.
         """
         if index_type == "Document":
-            if body:
-                task_id = self.sw_api.ccs_convert_upload_file_project_data_index(
-                    proj_key=coords.proj_key, index_key=coords.index_key, body=body
-                ).task_id
-                return task_id
-            else:
-                raise ValueError("Convert and upload file requires body parameter.")
+            task_id = self.sw_api.ccs_convert_upload_file_project_data_index(
+                proj_key=coords.proj_key, index_key=coords.index_key, body=body
+            ).task_id
+            return task_id
         elif index_type == "Generic" or index_type == "DB Record":
-            if file:
-                task_id = self.sw_api.upload_project_data_index_file(
-                    proj_key=coords.proj_key, index_key=coords.index_key, file=file
-                ).task_id
-                return task_id
-            else:
-                raise ValueError(
-                    "Upload file without conversion requires file parameter."
-                )
+            task_id = self.sw_api.upload_project_data_index_file(
+                proj_key=coords.proj_key, index_key=coords.index_key, params=body
+            ).task_id
+            return task_id
         else:
             raise NotImplementedError
 
