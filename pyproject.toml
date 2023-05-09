@@ -31,10 +31,6 @@ deepsearch = "deepsearch.cli:app"
 [tool.poetry.dependencies]
 python = "^3.8"
 
-# Dependencies for "extras" extra
-ipython-blocking = {version = "^0.3.1", optional = true}
-ipywidgets = {version = "^7.6.5", optional = true}
-
 # Dependencies from generated packages
 urllib3 = "^1.26.8"
 six = "^1.16.0"
@@ -44,7 +40,6 @@ python-dateutil = "^2.8.2"
 # Actual dependencies
 pydantic = "^1.9.0"
 requests = "^2.27.1"
-python-jose = "^3.3.0"
 typer = "^0.4.0"
 appdirs = "^1.4.4"
 tabulate = "^0.8.9"
@@ -52,6 +47,8 @@ pluggy = "^1.0.0"
 tqdm = "^4.64.0"
 fastapi = "^0.95.1"
 uvicorn = "^0.21.1"
+anyio = "^3.6.2"
+starlette = "^0.26.1"
 
 [tool.poetry.group.dev.dependencies]
 black = {extras = ["jupyter"], version = "^22.1.0"}
@@ -107,22 +104,6 @@ implicit_reexport = true
 
 # Silence errors for third-party packages that don't have
 # typings available.
-[[tool.mypy.overrides]]
-module = "jose.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "IPython.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "ipywidgets.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "ipython_blocking.*"
-ignore_missing_imports = true
-
 [[tool.mypy.overrides]]
 module = "rdkit.*"
 ignore_missing_imports = true
