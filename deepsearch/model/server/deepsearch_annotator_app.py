@@ -4,12 +4,11 @@ import asyncio
 import inspect
 import logging
 import os
-import sys
 import time
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import Coroutine, Dict, List, Optional, Union
+from typing import Coroutine, Dict, Union
 
+import uvicorn
 from anyio import CapacityLimiter
 from anyio.lowlevel import RunVar
 from fastapi import FastAPI, HTTPException, Request
@@ -69,6 +68,13 @@ class DeepSearchAnnotatorApp:
         @self.app.get("/annotator")
         async def health_check() -> dict:
             return {key: f"annotator/{key}" for key in self.annotators_list}
+
+        @self.app.get("/")
+        async def get_definitions() -> dict:
+            return {
+                key: self.annotate_controller.get_annotator_info(key)
+                for key in self.annotators_list
+            }
 
         # Will Require an API key
         @self.app.get("/annotator/{annotator_name}")
@@ -196,6 +202,9 @@ class DeepSearchAnnotatorApp:
                 f" Raised {e.__class__.__name__}, for {e} object of register_annotator must be an object instance"
             )
             exit(-1)
+
+    def run(self, host: str = "127.0.0.1", port: int = 8000, **kwargs) -> None:
+        uvicorn.run(self.app, host=host, port=port, **kwargs)
 
     class AnnotateController:
         def __init__(self, app_annotators):

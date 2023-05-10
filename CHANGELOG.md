@@ -1,3 +1,12 @@
+## [v0.14.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.14.0) - 2023-04-25
+
+### Feature
+* Add definitions endpoint, minor refactoring ([`43b60d6`](https://github.com/DS4SD/deepsearch-toolkit/commit/43b60d65674e273ab53feea7a77705691594cc60))
+* Set up FastAPI-based model API ([#76](https://github.com/DS4SD/deepsearch-toolkit/issues/76)) ([`383b3f4`](https://github.com/DS4SD/deepsearch-toolkit/commit/383b3f4bf2e84985ec7cc9ba918a868c40cb7c2e))
+
+### Documentation
+* Update data index docs ([#72](https://github.com/DS4SD/deepsearch-toolkit/issues/72)) ([`4c1691a`](https://github.com/DS4SD/deepsearch-toolkit/commit/4c1691a0421a5898fc23a8fe330a6411e41e555e))
+
 ## [v0.13.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.13.0) - 2023-03-14
 
 ### Feature
