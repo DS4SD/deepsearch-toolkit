@@ -43,7 +43,12 @@ def get_artifacts_in_store(artifact_store: str) -> List:
         if entry.is_dir():
             full_path = os.path.join(artifact_store, entry.name)
             folder_name = entry.name
-            directories.append((full_path, folder_name))
+            directories.append(
+                {
+                    "full_path": full_path,
+                    "folder_name": folder_name,
+                }
+            )
 
     return directories
 
@@ -89,7 +94,7 @@ def download_file(model_info: Dict, directory: str) -> str:
     return file_path
 
 
-def process_downloaded_file(downloaded_file: str, target_folder: str, basename: str):
+def process_downloaded_file(downloaded_file: str, target_folder: str, basename: str, origin_store: str):
     # Extract the filename and the extension
     filename = os.path.basename(downloaded_file)
     _, extension = os.path.splitext(filename)
@@ -109,6 +114,12 @@ def process_downloaded_file(downloaded_file: str, target_folder: str, basename: 
         # Move the file to the target folder
         destination = os.path.join(folder_name, filename)
         shutil.move(downloaded_file, destination)
+        information = {
+            "from_store": origin_store
+        }
+
+        with open(folder_name + "/origin.info", "w") as fp:
+            json.dump(information, fp)
 
     print("File processed successfully.")
 
@@ -120,7 +131,14 @@ def get_artifacts_in_cache(cache_dir: str) -> List:
         if entry.is_dir():
             full_path = os.path.join(cache_dir, entry.name)
             folder_name = entry.name
-            directories.append((full_path, folder_name))
+            with open(full_path + "/origin.info", "r") as fp:
+                model_origin = json.load(fp)
+            directories.append(
+                {"full_path": full_path,
+                 "folder_name": folder_name,
+                 "origin_info": model_origin
+                }
+            )
 
     return directories
 
@@ -130,31 +148,3 @@ def infer_cache_directory() -> str:
     return default_cache_location
     env = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
     return os.getcwd() if env is None else env
-
-
-
-def main():
-    artifact_store = infer_target_directory()
-    check_artifact_index(artifact_store)
-
-    artifacts = get_artifacts_in_store(artifact_store)
-    for artifact in artifacts:
-        print(artifact[1])
-
-    model = "balanced_4cat_dedup"
-    model_info = get_model_meta(artifact_store, model)
-    print(json.dumps(model_info, indent=4, separators=(",", ": ")))
-
-    downloaded_model_path = download_file(
-        model_info,
-        default_download_directory,
-    )
-    process_downloaded_file(
-        downloaded_model_path,
-        default_cache_location,
-        model_info["model_filename"].split(".")[0],
-    )
-
-
-if __name__ == "__main__":
-    main()
