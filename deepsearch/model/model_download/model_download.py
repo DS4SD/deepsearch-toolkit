@@ -148,3 +148,16 @@ def infer_cache_directory() -> str:
     return default_cache_location
     env = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
     return os.getcwd() if env is None else env
+
+def get_artifact_location_in_cache(artifact_name: str=None) -> str:
+    cache_directory = infer_cache_directory()
+    artifacts_in_cache = get_artifacts_in_cache(cache_directory)
+    for artifact in artifacts_in_cache:
+        if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
+            print(artifact_name)
+
+
+get_artifact_location_in_cache("plotemy_v1.0.5")
+
+
+
