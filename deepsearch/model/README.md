@@ -23,19 +23,11 @@ app.register_annotator(annotator)
 app.run()  # host and port can be passed here
 ```
 
-The OpenAPI UI is then served under `/docs`, e.g. http://127.0.0.1:8000/docs.
+### OpenAPI
 
-## Developing a new model
-To develop a new model class, inherit from a [base model class](base/) and implement the
-methods and attributes that are declared as abstract.
+The OpenAPI UI is served under `/docs`, e.g. http://127.0.0.1:8000/docs.
 
-### Examples
-- Minimal dummy example:
-[examples/minimal_annotator/](examples/minimal_annotator/).
-- Simple geography annotator:
-[examples/simple_text_geography_annotator/](examples/simple_text_geography_annotator/).
-
-#### Example inference payloads
+#### Inference
 
 An example input payload for the `/predict` endpoint would look as follows
 (note that `deepsearch.res.ibm.com/x-deadline` should be a future timestamp):
@@ -63,3 +55,13 @@ An example input payload for the `/predict` endpoint would look as follows
     }
 }
 ```
+
+## Developing a new model
+To develop a new model class, inherit from a [base model class](base/) and implement the
+methods and attributes that are declared as abstract.
+
+### Examples
+- Minimal dummy annotator:
+[examples/minimal_annotator/](examples/minimal_annotator)
+- Simple geography annotator:
+[examples/simple_text_geography_annotator/](examples/simple_text_geography_annotator/)
