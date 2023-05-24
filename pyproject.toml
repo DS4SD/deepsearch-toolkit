@@ -45,10 +45,19 @@ appdirs = "^1.4.4"
 tabulate = "^0.8.9"
 pluggy = "^1.0.0"
 tqdm = "^4.64.0"
-fastapi = "^0.95.1"
-uvicorn = "^0.21.1"
-anyio = "^3.6.2"
-starlette = "^0.26.1"
+
+fastapi = { version = "^0.95.1", optional = true }
+uvicorn = { version = "^0.21.1", optional = true }
+anyio = { version = "^3.6.2", optional = true }
+starlette = { version = "^0.26.1", optional = true }
+
+[tool.poetry.extras]
+api = [
+    "fastapi",
+    "uvicorn",
+    "anyio",
+    "starlette",
+]
 
 [tool.poetry.group.dev.dependencies]
 black = {extras = ["jupyter"], version = "^22.1.0"}

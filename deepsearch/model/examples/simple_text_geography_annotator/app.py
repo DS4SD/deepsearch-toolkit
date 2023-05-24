@@ -7,7 +7,6 @@ from deepsearch.model.server.deepsearch_annotator_app import DeepSearchAnnotator
 def run():
     app = DeepSearchAnnotatorApp()
     app.register_annotator(SimpleTextGeographyAnnotator())
-    app.register_annotator(SimpleTextGeographyAnnotator(), name="foo")
     app.run()
 
 
