@@ -48,7 +48,9 @@ class MinimalAnnotator(BaseNLPAnnotator):
         relationship_names: Optional[List[str]],
     ) -> List[dict]:
         # raise HTTP 501 to indicate method not supported
-        raise HTTPException(status_code=501, detail="Operation not supported")
+        raise HTTPException(
+            status_code=501, detail="Relationship annotation not supported"
+        )
 
     def annotate_batched_properties(
         self,
@@ -58,4 +60,4 @@ class MinimalAnnotator(BaseNLPAnnotator):
         property_names: Optional[List[str]],
     ) -> List[dict]:
         # raise HTTP 501 to indicate method not supported
-        raise HTTPException(status_code=501, detail="Operation not supported")
+        raise HTTPException(status_code=501, detail="Property annotation not supported")

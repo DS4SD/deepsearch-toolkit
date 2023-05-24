@@ -20,7 +20,7 @@ from deepsearch.model.server.deepsearch_annotator_app import DeepSearchAnnotator
 annotator = ...  # e.g. SimpleTextGeographyAnnotator()
 app = DeepSearchAnnotatorApp()
 app.register_annotator(annotator)
-app.run()  # host and port can be passed here
+app.run(host="127.0.0.1", port=8000)
 ```
 
 ### OpenAPI

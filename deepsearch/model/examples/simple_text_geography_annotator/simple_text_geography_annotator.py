@@ -199,4 +199,5 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
         entities: List[dict],
         property_names: Optional[List[str]],
     ) -> List[dict]:
+        # raise HTTP 501 to indicate method not supported
         raise HTTPException(status_code=501, detail="Property annotation not supported")
