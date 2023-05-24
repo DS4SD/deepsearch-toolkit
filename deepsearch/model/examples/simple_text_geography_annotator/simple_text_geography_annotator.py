@@ -118,7 +118,7 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
         for item in items:
             entity_map = {}
             try:
-                cps_entities = self.annotate_entities(
+                cps_entities = self.annotate_entities_in_item(
                     object_type, item, desired_entities
                 )
             except Exception as exc:
@@ -140,7 +140,7 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
 
         return results
 
-    def annotate_entities(
+    def annotate_entities_in_item(
         self, object_type: str, item: str, entity_names: Optional[List[str]]
     ) -> List[dict]:
         # In this case entity_names is never None, however since BaseAnnotator defines the signature of this method as
@@ -199,4 +199,4 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
         entities: List[dict],
         property_names: Optional[List[str]],
     ) -> List[dict]:
-        raise HTTPException(status_code=501, detail="Property annotation not suported")
+        raise HTTPException(status_code=501, detail="Property annotation not supported")

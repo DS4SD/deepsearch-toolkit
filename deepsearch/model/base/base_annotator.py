@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from fastapi import HTTPException
-
 
 class BaseAnnotator(ABC):
 
