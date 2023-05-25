@@ -1,15 +1,19 @@
 import json
 import os
 import shutil
+import subprocess
+import sys
 import tarfile
+import tempfile
 import zipfile
+from getpass import getpass
 from typing import Dict, List
 
 import requests
 from tqdm import tqdm
 
-default_cache_location = "/".join(__file__.split("/")[:-1]) + "/model_cache"
-default_download_directory = "/".join(__file__.split("/")[:-1]) + "/temp_downloads"
+#default_cache_location = "/".join(__file__.split("/")[:-1]) + "/model_cache"
+default_cache_location = "/var/lib/deepsearch-artifacts"
 
 def infer_target_directory() -> str:
     env = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
@@ -67,14 +71,12 @@ def get_model_meta(artifact_store: str, model_name: str) -> Dict:
 
     return meta_info
 
-
-def download_file(model_info: Dict, directory: str) -> str:
-    # Create the directory if it doesn't exist
-    os.makedirs(directory, exist_ok=True)
-
+#TODO Unsure how to type hint this temporary directory
+def download_file(model_info: Dict, directory: any) -> str:
+    cache_permissions()
     # Get the filename from the URL
     filename = model_info["model_filename"]
-    file_path = os.path.join(directory, filename)
+    file_path = directory.name + f"/{filename}"
 
     # Download the file
     response = requests.get(model_info["static_url"], stream=True)
@@ -93,6 +95,16 @@ def download_file(model_info: Dict, directory: str) -> str:
     print(f"File downloaded successfully to: {file_path}")
     return file_path
 
+def cache_permissions():
+    cache_dir = infer_cache_directory()
+    try:
+        print(cache_dir)
+        os.makedirs(cache_dir, exist_ok=True)
+    except PermissionError:
+        print(f"Permission error on infered cache directory {cache_dir} please allow for folder creation with a priveleged user")
+        #password = getpass("Please enter your password: ")
+        os.system(f'sudo {"/".join(__file__.split("/")[:-1])}/setup_procedure.sh {cache_dir} {os.getlogin()}')
+        #proc.communicate(password.encode())
 
 def process_downloaded_file(downloaded_file: str, target_folder: str, basename: str, origin_store: str):
     # Extract the filename and the extension
@@ -114,12 +126,12 @@ def process_downloaded_file(downloaded_file: str, target_folder: str, basename: 
         # Move the file to the target folder
         destination = os.path.join(folder_name, filename)
         shutil.move(downloaded_file, destination)
-        information = {
-            "from_store": origin_store
-        }
+        # information = {
+        #     "from_store": origin_store
+        # }
 
-        with open(folder_name + "/origin.info", "w") as fp:
-            json.dump(information, fp)
+        # with open(folder_name + "/origin.info", "w") as fp:
+        #     json.dump(information, fp)
 
     print("File processed successfully.")
 
@@ -131,12 +143,9 @@ def get_artifacts_in_cache(cache_dir: str) -> List:
         if entry.is_dir():
             full_path = os.path.join(cache_dir, entry.name)
             folder_name = entry.name
-            with open(full_path + "/origin.info", "r") as fp:
-                model_origin = json.load(fp)
             directories.append(
                 {"full_path": full_path,
                  "folder_name": folder_name,
-                 "origin_info": model_origin
                 }
             )
 
@@ -154,10 +163,10 @@ def get_artifact_location_in_cache(artifact_name: str=None) -> str:
     artifacts_in_cache = get_artifacts_in_cache(cache_directory)
     for artifact in artifacts_in_cache:
         if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
-            print(artifact_name)
+            print(artifact)
 
 
-get_artifact_location_in_cache("plotemy_v1.0.5")
+# get_artifact_location_in_cache("plotemy_v1.0.5")
 
 
 
