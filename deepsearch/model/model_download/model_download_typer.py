@@ -4,16 +4,16 @@ import tempfile
 
 import typer
 
-from .model_download import (
+from deepsearch.model.model_download.model_download import (
     check_artifact_index,
+    default_cache_location,
     download_file,
+    get_artifacts_in_cache,
     get_artifacts_in_store,
     get_model_meta,
+    infer_cache_directory,
     infer_target_directory,
     process_downloaded_file,
-    infer_cache_directory,
-    get_artifacts_in_cache,
-    default_cache_location
 )
 
 model_download_app = typer.Typer(no_args_is_help=True, add_completion=False)
@@ -35,17 +35,17 @@ def download(
         typer.echo(json.dumps(model_meta, indent=4, separators=(",", ": ")))
         typer.echo(f"Downloading {model}")
         temp_file = tempfile.TemporaryDirectory()
-        downloaded_file_path = download_file(
-            model_meta, temp_file
-        )
+        downloaded_file_path = download_file(model_meta, temp_file)
         typer.echo(f"Extracting {model} to {default_cache_location}")
-        process_downloaded_file(downloaded_file_path, default_cache_location, model, artifact_store)
+        process_downloaded_file(
+            downloaded_file_path, default_cache_location, model, artifact_store
+        )
 
 
 @model_download_app.command()
 def manage(
     list_models: bool = typer.Option(False, "--list", "-l"),
-    del_model: str = typer.Option(None, "--delete", "-d")
+    del_model: str = typer.Option(None, "--delete", "-d"),
 ):
     cache_dir = infer_cache_directory()
     artifact_list = get_artifacts_in_cache(cache_dir)
