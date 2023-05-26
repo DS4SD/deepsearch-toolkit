@@ -1,6 +1,6 @@
 import typer
 
-from ..model_download.model_download_typer import model_download_app
+from deepsearch.model.model_download.model_download_typer import model_download_app
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 app.add_typer(

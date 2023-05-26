@@ -7,13 +7,14 @@ import tarfile
 import tempfile
 import zipfile
 from getpass import getpass
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 
 import requests
 from tqdm import tqdm
 
-#default_cache_location = "/".join(__file__.split("/")[:-1]) + "/model_cache"
+# default_cache_location = "/".join(__file__.split("/")[:-1]) + "/model_cache"
 default_cache_location = "/var/lib/deepsearch-artifacts"
+
 
 def infer_target_directory() -> str:
     env = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
@@ -71,8 +72,9 @@ def get_model_meta(artifact_store: str, model_name: str) -> Dict:
 
     return meta_info
 
-#TODO Unsure how to type hint this temporary directory
-def download_file(model_info: Dict, directory: any) -> str:
+
+# TODO Unsure how to type hint this temporary directory
+def download_file(model_info: Dict, directory: Any) -> str:
     cache_permissions()
     # Get the filename from the URL
     filename = model_info["model_filename"]
@@ -95,18 +97,26 @@ def download_file(model_info: Dict, directory: any) -> str:
     print(f"File downloaded successfully to: {file_path}")
     return file_path
 
+
 def cache_permissions():
     cache_dir = infer_cache_directory()
     try:
         print(cache_dir)
         os.makedirs(cache_dir, exist_ok=True)
     except PermissionError:
-        print(f"Permission error on infered cache directory {cache_dir} please allow for folder creation with a priveleged user")
-        #password = getpass("Please enter your password: ")
-        os.system(f'sudo {"/".join(__file__.split("/")[:-1])}/setup_procedure.sh {cache_dir} {os.getlogin()}')
-        #proc.communicate(password.encode())
+        print(
+            f"Permission error on infered cache directory {cache_dir} please allow for folder creation with a priveleged user"
+        )
+        # password = getpass("Please enter your password: ")
+        os.system(
+            f'sudo {"/".join(__file__.split("/")[:-1])}/setup_procedure.sh {cache_dir} {os.getlogin()}'
+        )
+        # proc.communicate(password.encode())
 
-def process_downloaded_file(downloaded_file: str, target_folder: str, basename: str, origin_store: str):
+
+def process_downloaded_file(
+    downloaded_file: str, target_folder: str, basename: str, origin_store: str
+):
     # Extract the filename and the extension
     filename = os.path.basename(downloaded_file)
     _, extension = os.path.splitext(filename)
@@ -144,12 +154,14 @@ def get_artifacts_in_cache(cache_dir: str) -> List:
             full_path = os.path.join(cache_dir, entry.name)
             folder_name = entry.name
             directories.append(
-                {"full_path": full_path,
-                 "folder_name": folder_name,
+                {
+                    "full_path": full_path,
+                    "folder_name": folder_name,
                 }
             )
 
     return directories
+
 
 def infer_cache_directory() -> str:
     # TODO
@@ -158,7 +170,8 @@ def infer_cache_directory() -> str:
     env = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
     return os.getcwd() if env is None else env
 
-def get_artifact_location_in_cache(artifact_name: str=None) -> str:
+
+def get_artifact_location_in_cache(artifact_name: Optional[str] = None):
     cache_directory = infer_cache_directory()
     artifacts_in_cache = get_artifacts_in_cache(cache_directory)
     for artifact in artifacts_in_cache:
@@ -167,6 +180,3 @@ def get_artifact_location_in_cache(artifact_name: str=None) -> str:
 
 
 # get_artifact_location_in_cache("plotemy_v1.0.5")
-
-
-
