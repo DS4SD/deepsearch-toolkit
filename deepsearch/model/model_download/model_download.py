@@ -164,11 +164,8 @@ def get_artifacts_in_cache(cache_dir: str) -> List:
 
 
 def infer_cache_directory() -> str:
-    # TODO
-
-    return default_cache_location
     env = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
-    return os.getcwd() if env is None else env
+    return default_cache_location if env is None else env
 
 
 def get_artifact_location_in_cache(artifact_name: Optional[str] = None):
