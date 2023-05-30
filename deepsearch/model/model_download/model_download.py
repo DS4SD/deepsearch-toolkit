@@ -21,6 +21,7 @@ def infer_target_directory() -> str:
     return os.getcwd() if env is None else env
 
 
+#Probably not needed
 def check_artifact_index(target_directory: str) -> str:
     file_path = os.path.join(target_directory, "index.info")
 

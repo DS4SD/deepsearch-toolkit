@@ -5,7 +5,6 @@ import tempfile
 import typer
 
 from deepsearch.model.model_download.model_download import (
-    check_artifact_index,
     default_cache_location,
     download_file,
     get_artifacts_in_cache,
