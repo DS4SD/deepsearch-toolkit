@@ -6,13 +6,11 @@ import tempfile
 import zipfile
 from typing import Any, Dict, List, Optional
 from pathlib import Path
-import appdirs
+import platformdirs
 import requests
 from appdirs import *
+from tqdm import tqdm
 
-
-class InvalidArtifactStore(Exception):
-    pass
 
 class ArtifactManager:
 
@@ -24,9 +22,15 @@ class ArtifactManager:
         if os.getenv("DEEPSEARCH_ARTIFACT_CACHE"):
             self.infered_cache_directory = os.getenv("DEEPSEARCH_ARTIFACT_CACHE")
         else:
-            self.infered_cache_directory = appdirs.user_cache_dir("DeepSearch", "IBM")
+            self.infered_cache_directory = platformdirs.user_cache_dir("DeepSearch", "IBM")
             if not Path(self.infered_cache_directory).is_dir():
                 Path(self.infered_cache_directory).mkdir(parents=True)
+
+    def get_artifact_location_in_cache(self, artifact_name: str):
+        artifacts_in_cache = self.get_artifact_cache_list()
+        for artifact in artifacts_in_cache:
+            if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
+                return artifact
 
     def delete_artifact_from_cache(self, model: str):
         target_artifacts = []
@@ -37,11 +41,12 @@ class ArtifactManager:
         for artifact in target_artifacts:
             shutil.rmtree(artifact["full_path"])
 
-    def download_artifact_to_cache(self, model: str):
+    def download_artifact_to_cache(self, model: str, with_progess_bar: bool = False):
         model_meta = self._get_model_meta(self.infered_store_directory, model)
         temp_file = tempfile.TemporaryDirectory()
-        downloaded_file_path = self._download_file(model_meta, temp_file)
+        downloaded_file_path = self._download_file(model_meta, temp_file, with_progess_bar)
         self._process_downloaded_file(downloaded_file_path, model)
+        temp_file.cleanup()
 
     def get_artifact_cache_list(self) -> List:
         directories = []
@@ -72,8 +77,9 @@ class ArtifactManager:
                         "contents": [entry.name for entry in os.scandir(full_path)]
                     }
                 if not "meta.info" in scanned_folder["contents"]:
-                    raise InvalidArtifactStore("The contents of a folder in the target directory do not contain a meta.info file")
-                directories.append(scanned_folder)
+                    continue
+
+                directories.append({k:v for k, v in scanned_folder.items() if k in ["full_path", "folder_name"]})
 
         return directories
 
@@ -109,7 +115,7 @@ class ArtifactManager:
         print("File processed successfully.")
 
     # TODO Type hinting a tempfile object?
-    def _download_file(self, model_info: Dict, directory: Any) -> str:
+    def _download_file(self, model_info: Dict, directory: Any, with_progress_bar: bool = False) -> str:
         # Get the filename from the URL
         filename = model_info["model_filename"]
         file_path = directory.name + f"/{filename}"
@@ -120,14 +126,17 @@ class ArtifactManager:
 
         total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # 1 KB
-        #progress_bar = tqdm(total=total_size, unit="B", unit_scale=True)
+        if with_progress_bar:
+            progress_bar = tqdm(total=total_size, unit="B", unit_scale=True)
 
         with open(file_path, "wb") as file:
             for data in response.iter_content(block_size):
                 file.write(data)
-                #progress_bar.update(len(data))
+                if with_progress_bar:
+                    progress_bar.update(len(data))
 
-        #progress_bar.close()
+        if with_progress_bar:
+            progress_bar.close()
         return file_path
 
     def _get_model_meta(self, artifact_store: str, model_name: str) -> Dict:
@@ -136,7 +145,7 @@ class ArtifactManager:
 
         if not os.path.exists(file_path):
             raise FileNotFoundError(
-                f"The meta.info file does not exist in the folder {model_name}."
+                f"The meta.info file does not exist in the folder {folder_path}."
             )
 
         with open(file_path, "r") as file:
@@ -155,7 +164,7 @@ def main():
     for value in artifacts:
         print(value)
 
-    test.download_artifact_to_cache("")
+    test.download_artifact_to_cache(os.getenv("DEEPSEARCH_ARTIFACT_MODEL_NAME"), with_progess_bar=True)
     print("downloaded artifact")
 
     artifacts = test.get_artifact_cache_list()
@@ -164,7 +173,9 @@ def main():
         print(value)
     print()
 
-    test.delete_artifact_from_cache("")
+    print(f"Artifact location is: {test.get_artifact_location_in_cache(os.getenv('DEEPSEARCH_ARTIFACT_MODEL_NAME'))}")
+
+    test.delete_artifact_from_cache(os.getenv("DEEPSEARCH_ARTIFACT_MODEL_NAME"))
     print("deleted artifact")
 
 
