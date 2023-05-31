@@ -16,9 +16,9 @@ from tqdm import tqdm
 class ArtifactManager:
     def __init__(self):
         if os.getenv("DEEPSEARCH_ARTIFACT_INDEX"):
-            self.infered_store_directory = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
+            self.infered_index_directory = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
         else:
-            self.infered_store_directory = os.getcwd()
+            self.infered_index_directory = os.getcwd()
         if os.getenv("DEEPSEARCH_ARTIFACT_CACHE"):
             self.infered_cache_directory = os.getenv("DEEPSEARCH_ARTIFACT_CACHE")
         else:
@@ -34,22 +34,22 @@ class ArtifactManager:
             if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
                 return artifact
 
-    def delete_artifact_from_cache(self, model: str):
+    def delete_artifact_from_cache(self, artifact: str):
         target_artifacts = []
         for artifact in self.get_artifact_cache_list():
-            if "folder_name" in artifact and artifact["folder_name"] == model:
+            if "folder_name" in artifact and artifact["folder_name"] == artifact:
                 target_artifacts.append(artifact)
 
         for artifact in target_artifacts:
             shutil.rmtree(artifact["full_path"])
 
-    def download_artifact_to_cache(self, model: str, with_progess_bar: bool = False):
-        model_meta = self._get_model_meta(self.infered_store_directory, model)
+    def download_artifact_to_cache(self, artifact: str, with_progess_bar: bool = False):
+        artifact_meta = self._get_artifact_meta(self.infered_index_directory, artifact)
         temp_file = tempfile.TemporaryDirectory()
         downloaded_file_path = self._download_file(
-            model_meta, temp_file, with_progess_bar
+            artifact_meta, temp_file, with_progess_bar
         )
-        self._process_downloaded_file(downloaded_file_path, model)
+        self._process_downloaded_file(downloaded_file_path, artifact)
         temp_file.cleanup()
 
     def get_artifact_cache_list(self) -> List:
@@ -68,12 +68,12 @@ class ArtifactManager:
 
         return directories
 
-    def get_artifact_store_list(self):
+    def get_index_artifact_list(self):
         directories = []
 
-        for entry in os.scandir(self.infered_store_directory):
+        for entry in os.scandir(self.infered_index_directory):
             if entry.is_dir():
-                full_path = os.path.join(self.infered_store_directory, entry.name)
+                full_path = os.path.join(self.infered_index_directory, entry.name)
                 folder_name = entry.name
                 scanned_folder = {
                     "full_path": full_path,
@@ -113,25 +113,17 @@ class ArtifactManager:
             # Move the file to the target folder
             destination = os.path.join(folder_name, filename)
             shutil.move(downloaded_file, destination)
-            # information = {
-            #     "from_store": origin_store
-            # }
-
-            # with open(folder_name + "/origin.info", "w") as fp:
-            #     json.dump(information, fp)
-
-        print("File processed successfully.")
 
     # TODO Type hinting a tempfile object?
     def _download_file(
-        self, model_info: Dict, directory: Any, with_progress_bar: bool = False
+        self, artifact_info: Dict, directory: Any, with_progress_bar: bool = False
     ) -> str:
         # Get the filename from the URL
-        filename = model_info["model_filename"]
+        filename = artifact_info["artifact_filename"]
         file_path = directory.name + f"/{filename}"
 
         # Download the file
-        response = requests.get(model_info["static_url"], stream=True)
+        response = requests.get(artifact_info["static_url"], stream=True)
         response.raise_for_status()  # Check if the request was successful
 
         total_size = int(response.headers.get("content-length", 0))
@@ -149,8 +141,8 @@ class ArtifactManager:
             progress_bar.close()
         return file_path
 
-    def _get_model_meta(self, artifact_store: str, model_name: str) -> Dict:
-        folder_path = os.path.join(artifact_store, model_name)
+    def _get_artifact_meta(self, artifact_index: str, artifact_name: str) -> Dict:
+        folder_path = os.path.join(artifact_index, artifact_name)
         file_path = os.path.join(folder_path, "meta.info")
 
         if not os.path.exists(file_path):
@@ -166,19 +158,19 @@ class ArtifactManager:
 
 def main():
     test = ArtifactManager()
-    test.infered_store_directory = (
+    test.infered_index_directory = (
         "/".join(__file__.split("/")[:-1]) + "/artifact_index_b"
     )
     print(f"infered cache dir: {test.infered_cache_directory}")
-    print(f"infered store dir: {test.infered_store_directory}")
+    print(f"infered index dir: {test.infered_index_directory}")
 
-    artifacts = test.get_artifact_store_list()
-    print("Artifacts in store dir: ")
+    artifacts = test.get_index_artifact_list()
+    print("Artifacts in index dir: ")
     for value in artifacts:
         print(value)
 
     test.download_artifact_to_cache(
-        os.getenv("DEEPSEARCH_ARTIFACT_MODEL_NAME"), with_progess_bar=True
+        os.getenv("DEEPSEARCH_ARTIFACT_NAME"), with_progess_bar=True
     )
     print("downloaded artifact")
 
@@ -189,10 +181,10 @@ def main():
     print()
 
     print(
-        f"Artifact location is: {test.get_artifact_location_in_cache(os.getenv('DEEPSEARCH_ARTIFACT_MODEL_NAME'))}"
+        f"Artifact location is: {test.get_artifact_location_in_cache(os.getenv('DEEPSEARCH_ARTIFACT_NAME'))}"
     )
 
-    test.delete_artifact_from_cache(os.getenv("DEEPSEARCH_ARTIFACT_MODEL_NAME"))
+    test.delete_artifact_from_cache(os.getenv("DEEPSEARCH_ARTIFACT_NAME"))
     print("deleted artifact")
 
 
