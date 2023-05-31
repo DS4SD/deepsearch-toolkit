@@ -12,7 +12,7 @@ artifact_manager = ArtifactManager()
 
 @artifact_download_app.command()
 def download(
-    artifact: str = typer.Option(None, "--artifact", "-a"),
+    artifact_name: str = typer.Option(None, "--artifact", "-a"),
     list_artifacts: bool = typer.Option(False, "--list", "-l"),
 ):
 
@@ -20,8 +20,10 @@ def download(
         artifacts = artifact_manager.get_index_artifact_list()
         for artifact in artifacts:
             typer.echo(artifact["folder_name"])
-    elif artifact is not None:
-        artifact_manager.download_artifact_to_cache(artifact, with_progess_bar=True)
+    elif artifact_name is not None:
+        artifact_manager.download_artifact_to_cache(
+            artifact_name, with_progess_bar=True
+        )
 
 
 @artifact_download_app.command()
