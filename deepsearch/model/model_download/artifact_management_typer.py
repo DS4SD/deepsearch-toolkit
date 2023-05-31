@@ -9,6 +9,7 @@ from deepsearch.model.model_download.artifact_manager import ArtifactManager
 model_download_app = typer.Typer(no_args_is_help=True, add_completion=False)
 artifact_manager = ArtifactManager()
 
+
 @model_download_app.command()
 def download(
     model: str = typer.Option(None, "--model", "-m"),

@@ -1,11 +1,12 @@
-import os
 import json
+import os
 import shutil
 import tarfile
 import tempfile
 import zipfile
-from typing import Any, Dict, List, Optional
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import platformdirs
 import requests
 from appdirs import *
@@ -13,7 +14,6 @@ from tqdm import tqdm
 
 
 class ArtifactManager:
-
     def __init__(self):
         if os.getenv("DEEPSEARCH_ARTIFACT_INDEX"):
             self.infered_store_directory = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
@@ -22,7 +22,9 @@ class ArtifactManager:
         if os.getenv("DEEPSEARCH_ARTIFACT_CACHE"):
             self.infered_cache_directory = os.getenv("DEEPSEARCH_ARTIFACT_CACHE")
         else:
-            self.infered_cache_directory = platformdirs.user_cache_dir("DeepSearch", "IBM")
+            self.infered_cache_directory = platformdirs.user_cache_dir(
+                "DeepSearch", "IBM"
+            )
             if not Path(self.infered_cache_directory).is_dir():
                 Path(self.infered_cache_directory).mkdir(parents=True)
 
@@ -44,7 +46,9 @@ class ArtifactManager:
     def download_artifact_to_cache(self, model: str, with_progess_bar: bool = False):
         model_meta = self._get_model_meta(self.infered_store_directory, model)
         temp_file = tempfile.TemporaryDirectory()
-        downloaded_file_path = self._download_file(model_meta, temp_file, with_progess_bar)
+        downloaded_file_path = self._download_file(
+            model_meta, temp_file, with_progess_bar
+        )
         self._process_downloaded_file(downloaded_file_path, model)
         temp_file.cleanup()
 
@@ -72,20 +76,24 @@ class ArtifactManager:
                 full_path = os.path.join(self.infered_store_directory, entry.name)
                 folder_name = entry.name
                 scanned_folder = {
-                        "full_path": full_path,
-                        "folder_name": folder_name,
-                        "contents": [entry.name for entry in os.scandir(full_path)]
-                    }
+                    "full_path": full_path,
+                    "folder_name": folder_name,
+                    "contents": [entry.name for entry in os.scandir(full_path)],
+                }
                 if not "meta.info" in scanned_folder["contents"]:
                     continue
 
-                directories.append({k:v for k, v in scanned_folder.items() if k in ["full_path", "folder_name"]})
+                directories.append(
+                    {
+                        k: v
+                        for k, v in scanned_folder.items()
+                        if k in ["full_path", "folder_name"]
+                    }
+                )
 
         return directories
 
-    def _process_downloaded_file(
-            self, downloaded_file: str, basename: str
-    ):
+    def _process_downloaded_file(self, downloaded_file: str, basename: str):
         # Extract the filename and the extension
         filename = os.path.basename(downloaded_file)
         _, extension = os.path.splitext(filename)
@@ -115,7 +123,9 @@ class ArtifactManager:
         print("File processed successfully.")
 
     # TODO Type hinting a tempfile object?
-    def _download_file(self, model_info: Dict, directory: Any, with_progress_bar: bool = False) -> str:
+    def _download_file(
+        self, model_info: Dict, directory: Any, with_progress_bar: bool = False
+    ) -> str:
         # Get the filename from the URL
         filename = model_info["model_filename"]
         file_path = directory.name + f"/{filename}"
@@ -153,9 +163,12 @@ class ArtifactManager:
 
         return meta_info
 
+
 def main():
     test = ArtifactManager()
-    test.infered_store_directory = "/".join(__file__.split("/")[:-1]) + "/artifact_index_b"
+    test.infered_store_directory = (
+        "/".join(__file__.split("/")[:-1]) + "/artifact_index_b"
+    )
     print(f"infered cache dir: {test.infered_cache_directory}")
     print(f"infered store dir: {test.infered_store_directory}")
 
@@ -164,7 +177,9 @@ def main():
     for value in artifacts:
         print(value)
 
-    test.download_artifact_to_cache(os.getenv("DEEPSEARCH_ARTIFACT_MODEL_NAME"), with_progess_bar=True)
+    test.download_artifact_to_cache(
+        os.getenv("DEEPSEARCH_ARTIFACT_MODEL_NAME"), with_progess_bar=True
+    )
     print("downloaded artifact")
 
     artifacts = test.get_artifact_cache_list()
@@ -173,11 +188,12 @@ def main():
         print(value)
     print()
 
-    print(f"Artifact location is: {test.get_artifact_location_in_cache(os.getenv('DEEPSEARCH_ARTIFACT_MODEL_NAME'))}")
+    print(
+        f"Artifact location is: {test.get_artifact_location_in_cache(os.getenv('DEEPSEARCH_ARTIFACT_MODEL_NAME'))}"
+    )
 
     test.delete_artifact_from_cache(os.getenv("DEEPSEARCH_ARTIFACT_MODEL_NAME"))
     print("deleted artifact")
-
 
 
 if __name__ == "__main__":
