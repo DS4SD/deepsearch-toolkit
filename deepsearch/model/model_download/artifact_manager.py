@@ -34,10 +34,10 @@ class ArtifactManager:
             if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
                 return artifact
 
-    def delete_artifact_from_cache(self, artifact: str):
+    def delete_artifact_from_cache(self, artifact_name: str):
         target_artifacts = []
         for artifact in self.get_artifact_cache_list():
-            if "folder_name" in artifact and artifact["folder_name"] == artifact:
+            if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
                 target_artifacts.append(artifact)
 
         for artifact in target_artifacts:
@@ -119,7 +119,7 @@ class ArtifactManager:
         self, artifact_info: Dict, directory: Any, with_progress_bar: bool = False
     ) -> str:
         # Get the filename from the URL
-        filename = artifact_info["artifact_filename"]
+        filename = artifact_info["model_filename"]
         file_path = directory.name + f"/{filename}"
 
         # Download the file
