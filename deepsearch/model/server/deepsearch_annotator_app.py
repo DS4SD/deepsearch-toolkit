@@ -8,6 +8,7 @@ import time
 from datetime import datetime
 from typing import Coroutine, Dict, Union
 
+import packaging.version
 import uvicorn
 from anyio import CapacityLimiter
 from anyio.lowlevel import RunVar
@@ -17,6 +18,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette import status
 
+from deepsearch.model import __version__ as MODEL_API_VERSION
 from deepsearch.model.base.base_annotator import BaseAnnotator
 from deepsearch.model.server.request_schemas import AnnotateRequestModel
 
@@ -29,7 +31,7 @@ class DeepSearchAnnotatorApp:
         # Start the fast API app
         self.app = FastAPI()
         self.annotate_controller = self.AnnotateController(self.annotators_list)
-        _log = logging.getLogger(__name__)
+        print(f"Model API version: {MODEL_API_VERSION}")
 
         @self.app.on_event("startup")
         async def startup_event():
@@ -83,6 +85,8 @@ class DeepSearchAnnotatorApp:
         ) -> Union[JSONResponse, Coroutine]:
             # TODO pydantic models for return
             request_body = request.dict()
+
+            validate_version(req_api_version=request_body.get("apiVersion", ""))
 
             request_arrival_time = time.time()
             failure_headers = {
@@ -184,6 +188,16 @@ class DeepSearchAnnotatorApp:
             if "id" in request.keys():
                 headers["X-request-id"] = str(request["id"])
             return JSONResponse(content=result, headers=headers)
+
+        def validate_version(req_api_version: str) -> None:
+            supported_versions = [
+                f"api/v{packaging.version.parse(MODEL_API_VERSION).major}",
+            ]
+            if req_api_version not in supported_versions:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Unsupported API version '{req_api_version}'",
+                )
 
     def register_annotator(
         self, cls: BaseAnnotator, name: Union[str, None] = None
