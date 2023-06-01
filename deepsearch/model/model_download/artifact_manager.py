@@ -5,11 +5,10 @@ import tarfile
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import platformdirs
 import requests
-from appdirs import *
 from tqdm import tqdm
 
 

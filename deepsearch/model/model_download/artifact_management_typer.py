@@ -1,7 +1,3 @@
-import json
-import shutil
-import tempfile
-
 import typer
 
 from deepsearch.model.model_download.artifact_manager import ArtifactManager
