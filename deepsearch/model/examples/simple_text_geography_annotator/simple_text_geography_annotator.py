@@ -8,7 +8,9 @@
 
 import logging
 
-from deepsearch.model.base.base_annotator import BaseAnnotator
+from fastapi import HTTPException
+
+from deepsearch.model.base.base_nlp_annotator import BaseNLPAnnotator
 
 logger = logging.getLogger("cps-nlp")
 from typing import List, Optional
@@ -29,10 +31,10 @@ from .relationships.provincies_to_countries_annotator import (  # type: ignore
 # import pprint ## For debugging only.
 
 
-class SimpleTextGeographyAnnotator(BaseAnnotator):
-    ## This is the class name that you need to use in the controller.
+class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
 
-    supports = ("text",)
+    name = "SimpleTextGeographyAnnotator"
+    supports = ["text"]
 
     _ent_annotator_classes = [
         CitiesAnnotator,
@@ -47,31 +49,14 @@ class SimpleTextGeographyAnnotator(BaseAnnotator):
     ]
 
     def __init__(self):
-        self.name = "SimpleTextGeographyAnnotator"
-        self.kind = "NLPModelDefinition"
-
         self._ent_annots = {}
         self._rel_annots = {}
         self._initialize_annotators()
 
         self.entity_names = list(self._ent_annots.keys())
         self.relationship_names = list(self._rel_annots.keys())
-        self.property_names = (
-            []
-        )  # This example annotator does not have any property annotator
+        self.property_names = []  # this annotator does not annotate properties
         self.labels = self._generate_annotator_labels()
-
-    def get_entity_names(self):
-        return self.entity_names
-
-    def get_relationship_names(self):
-        return self.relationship_names
-
-    def get_property_names(self):
-        return self.property_names
-
-    def get_labels(self):
-        return self.labels
 
     def _generate_annotator_labels(self):
         # Derive entity labels from classes
@@ -80,10 +65,9 @@ class SimpleTextGeographyAnnotator(BaseAnnotator):
             for annot in self._ent_annots.values()
         ]
         # Dummy implementation of property labels
-        property_names = self.get_property_names()
         properties_with_desc = [
             {"key": property, "description": f"Property of type {property!r}"}
-            for property in property_names
+            for property in self.property_names
         ]
 
         # Derive relationships labels from classes
@@ -114,7 +98,7 @@ class SimpleTextGeographyAnnotator(BaseAnnotator):
             self._rel_annots[annot.key()] = annot
 
     def annotate_batched_entities(
-        self, object_type, items: List, entity_names: Optional[List[str]]
+        self, object_type, items: List[str], entity_names: Optional[List[str]]
     ) -> List[dict]:
         ## An item is a string if object_type == "text", and List[List[dict]] if object_type == "table"
         if entity_names is None:
@@ -134,7 +118,7 @@ class SimpleTextGeographyAnnotator(BaseAnnotator):
         for item in items:
             entity_map = {}
             try:
-                cps_entities = self.annotate_entities(
+                cps_entities = self.annotate_entities_in_item(
                     object_type, item, desired_entities
                 )
             except Exception as exc:
@@ -156,8 +140,8 @@ class SimpleTextGeographyAnnotator(BaseAnnotator):
 
         return results
 
-    def annotate_entities(
-        self, object_type: str, item: List, entity_names: Optional[List[str]]
+    def annotate_entities_in_item(
+        self, object_type: str, item: str, entity_names: Optional[List[str]]
     ) -> List[dict]:
         # In this case entity_names is never None, however since BaseAnnotator defines the signature of this method as
         # Optionally having entity names we must ensure that they are defined.
@@ -182,7 +166,7 @@ class SimpleTextGeographyAnnotator(BaseAnnotator):
     def annotate_batched_relationships(
         self,
         object_type: str,
-        items: List[dict],
+        items: List[str],
         entities: List[dict],
         relationship_names: Optional[List[str]],
     ) -> List[dict]:
@@ -207,3 +191,13 @@ class SimpleTextGeographyAnnotator(BaseAnnotator):
                 results.append(result)
 
         return results
+
+    def annotate_batched_properties(
+        self,
+        object_type: str,
+        items: List,
+        entities: List[dict],
+        property_names: Optional[List[str]],
+    ) -> List[dict]:
+        # raise HTTP 501 to indicate method not supported
+        raise HTTPException(status_code=501, detail="Property annotation not supported")

@@ -1,3 +1,13 @@
+## [v0.16.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.16.0) - 2023-06-01
+
+### Feature
+* Expose ES highlight option ([#91](https://github.com/DS4SD/deepsearch-toolkit/issues/91)) ([`8e65cbf`](https://github.com/DS4SD/deepsearch-toolkit/commit/8e65cbf6438a781272a6fcce995657292c7e7c9e))
+
+## [v0.15.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.15.0) - 2023-05-24
+
+### Feature
+* Make Model API interface more explicit ([#86](https://github.com/DS4SD/deepsearch-toolkit/issues/86)) ([`5f83d6a`](https://github.com/DS4SD/deepsearch-toolkit/commit/5f83d6ab92acb9be790b79557ee41db798dcaf6e))
+
 ## [v0.14.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.14.0) - 2023-04-25
 
 ### Feature
