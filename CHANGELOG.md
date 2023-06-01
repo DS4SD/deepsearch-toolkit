@@ -1,3 +1,8 @@
+## [v0.16.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.16.0) - 2023-06-01
+
+### Feature
+* Expose ES highlight option ([#91](https://github.com/DS4SD/deepsearch-toolkit/issues/91)) ([`8e65cbf`](https://github.com/DS4SD/deepsearch-toolkit/commit/8e65cbf6438a781272a6fcce995657292c7e7c9e))
+
 ## [v0.15.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.15.0) - 2023-05-24
 
 ### Feature
