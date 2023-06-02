@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import sys
 import tarfile
 import tempfile
 import zipfile
@@ -15,15 +16,15 @@ from tqdm import tqdm
 class ArtifactManager:
     def __init__(self):
         if os.getenv("DEEPSEARCH_ARTIFACT_INDEX"):
-            self.infered_index_directory = os.getenv("DEEPSEARCH_ARTIFACT_INDEX")
+            self.infered_index_directory = Path(os.getenv("DEEPSEARCH_ARTIFACT_INDEX"))
         else:
-            self.infered_index_directory = os.getcwd()
+            self.infered_index_directory = Path(os.getcwd())
         if os.getenv("DEEPSEARCH_ARTIFACT_CACHE"):
-            self.infered_cache_directory = os.getenv("DEEPSEARCH_ARTIFACT_CACHE")
+            self.infered_cache_directory = Path(os.getenv("DEEPSEARCH_ARTIFACT_CACHE"))
         else:
-            self.infered_cache_directory = platformdirs.user_cache_dir(
+            self.infered_cache_directory = Path(platformdirs.user_cache_dir(
                 "DeepSearch", "IBM"
-            )
+            ))
             if not Path(self.infered_cache_directory).is_dir():
                 Path(self.infered_cache_directory).mkdir(parents=True)
 
@@ -56,7 +57,7 @@ class ArtifactManager:
 
         for entry in os.scandir(self.infered_cache_directory):
             if entry.is_dir():
-                full_path = os.path.join(self.infered_cache_directory, entry.name)
+                full_path = Path(self.infered_cache_directory, entry.name)
                 folder_name = entry.name
                 directories.append(
                     {
@@ -72,7 +73,7 @@ class ArtifactManager:
 
         for entry in os.scandir(self.infered_index_directory):
             if entry.is_dir():
-                full_path = os.path.join(self.infered_index_directory, entry.name)
+                full_path = Path(self.infered_index_directory, entry.name)
                 folder_name = entry.name
                 scanned_folder = {
                     "full_path": full_path,
@@ -92,13 +93,13 @@ class ArtifactManager:
 
         return directories
 
-    def _process_downloaded_file(self, downloaded_file: str, basename: str):
+    def _process_downloaded_file(self, downloaded_file: Path, basename: str):
         # Extract the filename and the extension
-        filename = os.path.basename(downloaded_file)
-        _, extension = os.path.splitext(filename)
+        filename = downloaded_file.name
+        _, extension = filename.split(".")
 
         # Create the target folder with the same name as the file (without extension)
-        folder_name = os.path.join(self.infered_cache_directory, basename)
+        folder_name = Path(self.infered_cache_directory, basename)
         os.makedirs(folder_name, exist_ok=True)
 
         # Check if the file is compressed
@@ -110,16 +111,16 @@ class ArtifactManager:
                 tar_ref.extractall(folder_name)
         else:
             # Move the file to the target folder
-            destination = os.path.join(folder_name, filename)
+            destination = Path(folder_name, filename)
             shutil.move(downloaded_file, destination)
 
     # TODO Type hinting a tempfile object?
     def _download_file(
         self, artifact_info: Dict, directory: Any, with_progress_bar: bool = False
-    ) -> str:
+    ) -> Path:
         # Get the filename from the URL
         filename = artifact_info["model_filename"]
-        file_path = directory.name + f"/{filename}"
+        file_path = Path(directory.name, filename)
 
         # Download the file
         response = requests.get(artifact_info["static_url"], stream=True)
@@ -140,11 +141,11 @@ class ArtifactManager:
             progress_bar.close()
         return file_path
 
-    def _get_artifact_meta(self, artifact_index: str, artifact_name: str) -> Dict:
-        folder_path = os.path.join(artifact_index, artifact_name)
-        file_path = os.path.join(folder_path, "meta.info")
+    def _get_artifact_meta(self, artifact_index: Path, artifact_name: str) -> Dict:
+        folder_path = Path(artifact_index, artifact_name)
+        file_path = Path(folder_path, "meta.info")
 
-        if not os.path.exists(file_path):
+        if not file_path.exists():
             raise FileNotFoundError(
                 f"The meta.info file does not exist in the folder {folder_path}."
             )
