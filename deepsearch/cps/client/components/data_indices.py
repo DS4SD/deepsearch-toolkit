@@ -1,11 +1,18 @@
 from __future__ import annotations
 
+import ast
+import os
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
+import requests
 from pydantic import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
+from deepsearch.cps.apis.public.models.attachment_upload_data import (
+    AttachmentUploadData,
+)
 from deepsearch.cps.apis.public.models.token_response import TokenResponse
 from deepsearch.cps.client.components.api_object import ApiConnectedObject
 
@@ -124,6 +131,67 @@ class DataIndex(BaseModel):
     status: str
     schema_key: str
     type: str
+
+    def add_item_attachment(
+        self,
+        api: CpsApi,
+        index_item_id: str,
+        attachment_path: Union[str, Path],
+        attachment_key: Optional[str] = None,
+    ) -> None:
+        """
+        Method to upload attachments to an index item.
+
+        Input
+        -----
+        api : CpsApi
+            CpsApi Class
+        index_item_id : string
+            id of the index item
+        attachment_path : string | Path
+            path to file on local folder
+        attachment_key : string, OPTIONAL
+            key to put on index document where attachment info will be saved.
+            string must me snake_case and start with 'usr_'.
+            example: 'usr_your_attachment_key'
+        """
+
+        sw_api = sw_client.DataIndicesApi(api.client.swagger_client)
+
+        filename = os.path.basename(attachment_path)
+
+        attachment_upload_data: AttachmentUploadData = (
+            sw_api.get_attachment_upload_data(
+                proj_key=self.source.proj_key,
+                index_key=self.source.index_key,
+                index_item_id=index_item_id,
+                filename=filename,
+            )
+        )
+
+        with open(attachment_path, "rb") as f:
+            files = {"file": (os.path.basename(attachment_path), f.read())}
+        request_upload = requests.post(
+            url=attachment_upload_data.upload_data.url,
+            data=attachment_upload_data.upload_data.fields,
+            files=files,
+            verify=False,
+        )
+        request_upload.raise_for_status()
+
+        params = {
+            "attachment_path": attachment_upload_data.attachment_path,
+        }
+
+        if attachment_key is not None:
+            params["attachment_key"] = attachment_key
+
+        sw_api.register_attachment(
+            proj_key=self.source.proj_key,
+            index_key=self.source.index_key,
+            index_item_id=index_item_id,
+            params=params,
+        )
 
 
 @dataclass

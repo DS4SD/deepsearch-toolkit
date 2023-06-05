@@ -55,7 +55,7 @@ In addition, it is possible to specify non-default `type` of data index. For mor
     indices = api.data_indices.list(PROJ_KEY)
 
     for item in indices:
-        print(item.key, item.name)
+        print(item.source.index_key, item.name)
 
     # If your project uses Pandas, you can easily convert the list of projects to a Dataframe
     import pandas as pd
@@ -127,3 +127,41 @@ Documents can be converted and added, directly, to a data index in a project. Br
     ```
 
 ---
+
+## Adding attachments to an index item
+
+Attachments can be added to an index item in a project. Briefly, attachments have to be on local machine and can be (almost) any format. The full list of supported formats are listed [here](https://www.ibm.com/docs/en/aspera-on-cloud?topic=SS5W4X/dita/content/aws_s3_content_types.html).
+
+
+=== "CLI"
+    <div class="termy">
+
+    ```console
+    $ deepsearch cps data-indices add-attachment -p PROJ_KEY -x INDEX_KEY -d INDEX_ITEM_ID -i ATTACHMENT_PATH -k ATTACHMENT_KEY
+    ```
+
+    </div>
+=== "Python"
+    ```python
+    from deepsearch.cps.client.components.data_indices import DataIndex
+
+    # get indices of the project
+    indices = api.data_indices.list(PROJ_KEY)
+
+    # get specific index to add attachment
+    index = next((x for x in indices if x.source.index_key == index_key), None)
+
+    # if the index exists, add attachment
+    if index is not None:
+        # specify parameters
+        index_item_id = "example_item_id"
+        attachment_path = "path/to/local/file"
+        attachment_key = "usr_my_attachment"  # optional. if set need start with 'usr_' and be snake_case
+
+        index.add_item_attachment(
+            api=api, 
+            index_item_id=index_item_id, 
+            attachment_path=attachment_path, 
+            attachment_key=attachment_key,  # optional
+        )
+    ```

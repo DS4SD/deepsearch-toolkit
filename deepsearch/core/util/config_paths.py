@@ -2,7 +2,7 @@ import logging
 import os
 from pathlib import Path
 
-import appdirs
+import platformdirs
 
 _log = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ ENV_VAR_NAME = "DEEPSEARCH_TOOLKIT_CONFIG_FILE"
 def config_dir() -> Path:
     """Get the path to the configuration directory"""
 
-    p = Path(appdirs.user_config_dir("DeepSearch", "IBM"))
+    p = Path(platformdirs.user_config_dir("DeepSearch", "IBM"))
 
     if not p.is_dir():
         p.mkdir(parents=True)

@@ -1,5 +1,4 @@
-import typer
-
+from deepsearch.artifacts.cli.main import app as artifacts_app
 from deepsearch.core.cli.main import app
 from deepsearch.core.cli.plugins import get_cli_groups
 from deepsearch.cps.cli.main import app as cps_app
@@ -13,6 +12,7 @@ app.add_typer(
     name="documents",
     help="Interact with DeepSearch Document Conversion component",
 )
+app.add_typer(artifacts_app, name="artifacts", help="Manage artifacts")
 
 for group in get_cli_groups():
     app.add_typer(group)

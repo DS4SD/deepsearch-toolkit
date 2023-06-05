@@ -1,4 +1,4 @@
-# DeepSearch Toolkit
+# Deep Search Toolkit
 
 [![PyPI version](https://img.shields.io/pypi/v/deepsearch-toolkit)](https://pypi.org/project/deepsearch-toolkit/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deepsearch-toolkit)](https://pypi.org/project/deepsearch-toolkit/)
@@ -23,37 +23,42 @@ The Deep Search Toolkit is a Python SDK allowing a user to interact with the Dee
 
 
 ## Install
+To set up, just install `deepsearch-toolkit` with your packaging tool.
 
-Using `poetry` in your project? Add the toolkit with:
+With [`poetry`](https://python-poetry.org):
 ```console
-$ poetry add deepsearch-toolkit
+poetry add deepsearch-toolkit
 ```
 
-New to `poetry`? Visit https://python-poetry.org/ or our [CONTRIBUTING.md](CONTRIBUTING.md) section.
-
-
-Using `pip`:
+With `pip`:
 ```console
-$ pip install deepsearch-toolkit
+pip install deepsearch-toolkit
 ```
+
+### Extras
+Optional functionality can be installed as package "extras". To install all extras, use
+`deepsearch-toolkit[all]` with your packaging tool.
 
 ### Requirements
 
 Python 3.8+
 
-
 ## Start using the toolkit
 
- ```console
-// Login to Deep Search,
-// see https://ds4sd.github.io/deepsearch-toolkit/getting_started/#authentication
-$ deepsearch login
-...
+### Login to Deep Search
+For details, check the [authentication docs](https://ds4sd.github.io/deepsearch-toolkit/getting_started/#authentication).
+```console
+deepsearch login
+```
 
+### Convert a document
+For details, check the [document conversion docs](https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc).
+```console
+deepsearch documents convert -p 1234567890abcdefghijklmnopqrstvwyz123456 -u https://arxiv.org/pdf/2206.00785.pdf
+```
 
-// Convert a document
-// for more details, see https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc/
-$ deepsearch documents convert -p 1234567890abcdefghijklmnopqrstvwyz123456 -u https://arxiv.org/pdf/2206.00785.pdf
+The output should look like:
+```
 Submitting input:     : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.52s/it]
 Converting input:     : 100%|██████████████████████████████| 1/1 [00:33<00:00, 33.80s/it]
 Downloading result:   : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.11s/it]

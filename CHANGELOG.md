@@ -1,3 +1,42 @@
+## [v0.17.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.17.0) - 2023-06-05
+
+### Feature
+* Add artifact management ([#93](https://github.com/DS4SD/deepsearch-toolkit/issues/93)) ([`77379c2`](https://github.com/DS4SD/deepsearch-toolkit/commit/77379c2361603abb52d4fe5931b928964a60a6f0))
+
+## [v0.16.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.16.0) - 2023-06-01
+
+### Feature
+* Expose ES highlight option ([#91](https://github.com/DS4SD/deepsearch-toolkit/issues/91)) ([`8e65cbf`](https://github.com/DS4SD/deepsearch-toolkit/commit/8e65cbf6438a781272a6fcce995657292c7e7c9e))
+
+## [v0.15.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.15.0) - 2023-05-24
+
+### Feature
+* Make Model API interface more explicit ([#86](https://github.com/DS4SD/deepsearch-toolkit/issues/86)) ([`5f83d6a`](https://github.com/DS4SD/deepsearch-toolkit/commit/5f83d6ab92acb9be790b79557ee41db798dcaf6e))
+
+## [v0.14.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.14.0) - 2023-04-25
+
+### Feature
+* Add definitions endpoint, minor refactoring ([`43b60d6`](https://github.com/DS4SD/deepsearch-toolkit/commit/43b60d65674e273ab53feea7a77705691594cc60))
+* Set up FastAPI-based model API ([#76](https://github.com/DS4SD/deepsearch-toolkit/issues/76)) ([`383b3f4`](https://github.com/DS4SD/deepsearch-toolkit/commit/383b3f4bf2e84985ec7cc9ba918a868c40cb7c2e))
+
+### Documentation
+* Update data index docs ([#72](https://github.com/DS4SD/deepsearch-toolkit/issues/72)) ([`4c1691a`](https://github.com/DS4SD/deepsearch-toolkit/commit/4c1691a0421a5898fc23a8fe330a6411e41e555e))
+
+## [v0.13.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.13.0) - 2023-03-14
+
+### Feature
+* Add KG downloading ([#71](https://github.com/DS4SD/deepsearch-toolkit/issues/71)) ([`77cccc0`](https://github.com/DS4SD/deepsearch-toolkit/commit/77cccc038a48a920fdc9df7eda7a8a934a0491d3))
+
+## [v0.12.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.12.0) - 2023-03-03
+
+### Feature
+* Add attachment upload ([#68](https://github.com/DS4SD/deepsearch-toolkit/issues/68)) ([`f783c90`](https://github.com/DS4SD/deepsearch-toolkit/commit/f783c90e2e991d29e20c09da5f302c9e882ce69e))
+
+## [v0.11.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.11.0) - 2023-02-10
+
+### Feature
+* Add option to provide COS credentials as document conversion source ([#67](https://github.com/DS4SD/deepsearch-toolkit/issues/67)) ([`6713abf`](https://github.com/DS4SD/deepsearch-toolkit/commit/6713abf7a3bd4616307e338943a23e483ef2c495))
+
 ## [v0.10.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.10.1) - 2023-02-01
 
 ### Fix
