@@ -1,3 +1,8 @@
+## [v0.17.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.17.0) - 2023-06-05
+
+### Feature
+* Add artifact management ([#93](https://github.com/DS4SD/deepsearch-toolkit/issues/93)) ([`77379c2`](https://github.com/DS4SD/deepsearch-toolkit/commit/77379c2361603abb52d4fe5931b928964a60a6f0))
+
 ## [v0.16.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.16.0) - 2023-06-01
 
 ### Feature
