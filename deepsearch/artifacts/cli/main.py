@@ -1,6 +1,6 @@
 import typer
 
-from deepsearch.model.model_download.artifact_manager import (
+from deepsearch.artifacts.artifact_manager import (
     DFLT_ARTFCT_CACHE_DIR,
     DFLT_ARTFCT_INDEX_DIR,
     ArtifactManager,
@@ -12,14 +12,14 @@ INDEX_OPTION = typer.Option(
     None,
     "--index",
     "-i",
-    help=f"Artifact index path (default set via env var DEEPSEARCH_ARTIFACT_INDEX, else current working dir).",
+    help="Artifact index path (default set via env var DEEPSEARCH_ARTIFACT_INDEX, else current working dir).",
 )
 
 CACHE_OPTION = typer.Option(
     None,
     "--cache",
     "-c",
-    help=f"Artifact cache path (default set via env var DEEPSEARCH_ARTIFACT_CACHE, else platform-specific).",
+    help="Artifact cache path (default set via env var DEEPSEARCH_ARTIFACT_CACHE, else platform-specific).",
 )
 
 HIT_STRATEGY_OPTION = typer.Option(
@@ -30,7 +30,7 @@ HIT_STRATEGY_OPTION = typer.Option(
 )
 
 
-@app.command()
+@app.command(help="List artifacts in index")
 def list_index(
     index: str = INDEX_OPTION,
 ):
@@ -40,7 +40,7 @@ def list_index(
         typer.echo(artf)
 
 
-@app.command()
+@app.command(help="List artifacts in cache")
 def list_cache(
     cache: str = CACHE_OPTION,
 ):
@@ -50,14 +50,14 @@ def list_cache(
         typer.echo(artf)
 
 
-@app.command()
+@app.command(help="Show cache path")
 def locate_default_cache():
     artf_mgr = ArtifactManager()
     path_str = str(artf_mgr.get_cache_path().resolve())
     typer.echo(path_str)
 
 
-@app.command()
+@app.command(help="Show path of a cached artifact")
 def locate_cached_artifact(
     artifact_name: str,
     cache: str = CACHE_OPTION,
@@ -68,7 +68,7 @@ def locate_cached_artifact(
     typer.echo(artifact_path_str)
 
 
-@app.command()
+@app.command(help="Download an artifact to cache")
 def download(
     artifact_name: str,
     index: str = INDEX_OPTION,
@@ -86,7 +86,7 @@ def download(
     )
 
 
-@app.command()
+@app.command(help="Download all artifacts to cache")
 def download_all(
     index: str = INDEX_OPTION,
     cache: str = CACHE_OPTION,
