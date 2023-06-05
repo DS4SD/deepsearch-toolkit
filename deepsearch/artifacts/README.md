@@ -3,15 +3,13 @@
 The Deep Search Toolkit provides artifact management capabilities—both via its Python SDK
 and via the CLI.
 
-<img src=".resources/artifact_management.png"
-     alt="artifact management design"
-     style="width: 60%; " />
+<img src=".resources/artifact_management.png" alt="artifact management design" />
 
 - Artifact information is organized in an *artifact index*, which is a directory
   containing one subdirectory for each artifact (multiple artifact indexes are possible)
 - Each artifact subdir contains a JSON file with metadata for the artifact (for filename
   check [artifact_manager.py](artifact_manager.py))
-  - The name of each such subdir serves is used as the *artifact name*
+  - The name of each such subdir is used as the *artifact name*
   - The JSON file contains a key with the URL to the actual artifact data (for key name
     check [artifact_manager.py](artifact_manager.py))
 - Users can download indexed artifacts to a local *artifact cache* for downstream
