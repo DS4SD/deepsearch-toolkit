@@ -1,137 +1,143 @@
 import json
 import os
 import shutil
-import sys
-import tarfile
 import tempfile
-import zipfile
+from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, List
+from urllib.parse import urlparse
 
 import platformdirs
 import requests
 from tqdm import tqdm
 
+DFLT_ARTFCT_INDEX_DIR = os.getenv("DEEPSEARCH_ARTIFACT_INDEX", default=os.getcwd())
+DFLT_ARTFCT_CACHE_DIR = os.getenv(
+    "DEEPSEARCH_ARTIFACT_CACHE",
+    default=Path(platformdirs.user_cache_dir("deepsearch", "ibm")) / "artifact_cache",
+)
+ARTF_META_FILENAME = os.getenv("DEEPSEARCH_ARTIFACT_META_FILENAME", default="meta.info")
+ARTF_META_URL_FIELD = os.getenv("DEEPSEARCH_ARTIFACT_URL_FIELD", default="static_url")
+
 
 class ArtifactManager:
-    def __init__(self):
-        if os.getenv("DEEPSEARCH_ARTIFACT_INDEX"):
-            self.infered_index_directory = Path(os.getenv("DEEPSEARCH_ARTIFACT_INDEX"))
-        else:
-            self.infered_index_directory = Path(os.getcwd())
-        if os.getenv("DEEPSEARCH_ARTIFACT_CACHE"):
-            self.infered_cache_directory = Path(os.getenv("DEEPSEARCH_ARTIFACT_CACHE"))
-        else:
-            self.infered_cache_directory = Path(platformdirs.user_cache_dir(
-                "DeepSearch", "IBM"
-            ))
-            if not Path(self.infered_cache_directory).is_dir():
-                Path(self.infered_cache_directory).mkdir(parents=True)
+    class HitStrategy(str, Enum):
+        RAISE = "raise"
+        PASS = "pass"
+        OVERWRITE = "overwrite"
 
-    def get_artifact_location_in_cache(self, artifact_name: str):
-        artifacts_in_cache = self.get_artifact_cache_list()
-        for artifact in artifacts_in_cache:
-            if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
-                return artifact
+    def __init__(self, index=None, cache=None):
+        self._index_path = Path(index or DFLT_ARTFCT_INDEX_DIR)
+        self._cache_path = Path(cache or DFLT_ARTFCT_CACHE_DIR)
+        self._cache_path.mkdir(parents=True, exist_ok=True)
 
-    def delete_artifact_from_cache(self, artifact_name: str):
-        target_artifacts = []
-        for artifact in self.get_artifact_cache_list():
-            if "folder_name" in artifact and artifact["folder_name"] == artifact_name:
-                target_artifacts.append(artifact)
+    def get_cache_path(self) -> Path:
+        return self._cache_path
 
-        for artifact in target_artifacts:
-            shutil.rmtree(artifact["full_path"])
+    def get_index_path(self) -> Path:
+        return self._index_path
 
-    def download_artifact_to_cache(self, artifact: str, with_progess_bar: bool = False):
-        artifact_meta = self._get_artifact_meta(self.infered_index_directory, artifact)
-        temp_file = tempfile.TemporaryDirectory()
-        downloaded_file_path = self._download_file(
-            artifact_meta, temp_file, with_progess_bar
-        )
-        self._process_downloaded_file(downloaded_file_path, artifact)
-        temp_file.cleanup()
+    def get_artifact_path_in_cache(self, artifact_name: str) -> Path:
+        artifact_path = self._cache_path / artifact_name
+        if not artifact_path.exists():
+            raise FileNotFoundError(f'Artifact "{artifact_name}" not in cache')
+        return artifact_path
 
-    def get_artifact_cache_list(self) -> List:
-        directories = []
+    def download_artifact_to_cache(
+        self,
+        artifact_name: str,
+        unpack_archives: bool = True,
+        hit_strategy: HitStrategy = HitStrategy.OVERWRITE,
+        with_progress_bar: bool = False,
+    ) -> None:
+        artifact_path = self._cache_path / artifact_name
+        if artifact_path.exists():
+            if hit_strategy == self.HitStrategy.RAISE:
+                raise ValueError(f'Artifact "{artifact_name}" already in cache')
+            elif hit_strategy == self.HitStrategy.PASS:
+                return
+            elif hit_strategy == self.HitStrategy.OVERWRITE:
+                shutil.rmtree(artifact_path)
+            else:
+                raise RuntimeError(f'Unexcpected value "{hit_strategy=}"')
 
-        for entry in os.scandir(self.infered_cache_directory):
-            if entry.is_dir():
-                full_path = Path(self.infered_cache_directory, entry.name)
-                folder_name = entry.name
-                directories.append(
-                    {
-                        "full_path": full_path,
-                        "folder_name": folder_name,
-                    }
-                )
+        artifact_path.mkdir(exist_ok=False)
 
-        return directories
+        # read metadata from file
+        meta_path = self._index_path / artifact_name / ARTF_META_FILENAME
+        with open(meta_path, "r") as meta_file:
+            artifact_meta = json.load(meta_file)
+        download_url = artifact_meta[ARTF_META_URL_FIELD]
 
-    def get_index_artifact_list(self):
-        directories = []
+        with tempfile.TemporaryDirectory() as temp_dir:
+            download_path = self._download_file(
+                artifact_name=artifact_name,
+                download_url=download_url,
+                download_root_path=Path(temp_dir),
+                with_progress_bar=with_progress_bar,
+            )
+            self._finalize_download(
+                download_path=download_path,
+                target_path=artifact_path,
+                unpack_archives=unpack_archives,
+            )
 
-        for entry in os.scandir(self.infered_index_directory):
-            if entry.is_dir():
-                full_path = Path(self.infered_index_directory, entry.name)
-                folder_name = entry.name
-                scanned_folder = {
-                    "full_path": full_path,
-                    "folder_name": folder_name,
-                    "contents": [entry.name for entry in os.scandir(full_path)],
-                }
-                if not "meta.info" in scanned_folder["contents"]:
-                    continue
+    def get_artifacts_in_index(self) -> List[str]:
+        artifacts = []
+        for entry in os.scandir(self._index_path):
+            artifact_name = entry.name
+            meta_file_path = self._index_path / artifact_name / ARTF_META_FILENAME
+            if meta_file_path.exists():
+                artifacts.append(artifact_name)
+        return artifacts
 
-                directories.append(
-                    {
-                        k: v
-                        for k, v in scanned_folder.items()
-                        if k in ["full_path", "folder_name"]
-                    }
-                )
+    def get_artifacts_in_cache(self) -> List[str]:
+        artifacts = []
+        for entry in os.scandir(self._cache_path):
+            artifact_name = entry.name
+            artifact_path = self._cache_path / artifact_name
+            if artifact_path.exists():
+                artifacts.append(artifact_name)
+        return artifacts
 
-        return directories
-
-    def _process_downloaded_file(self, downloaded_file: Path, basename: str):
-        # Extract the filename and the extension
-        filename = downloaded_file.name
-        _, extension = filename.split(".")
-
-        # Create the target folder with the same name as the file (without extension)
-        folder_name = Path(self.infered_cache_directory, basename)
-        os.makedirs(folder_name, exist_ok=True)
-
-        # Check if the file is compressed
-        if extension == ".zip":
-            with zipfile.ZipFile(downloaded_file, "r") as zip_ref:
-                zip_ref.extractall(folder_name)
-        elif extension == ".tar" or extension == ".gz" or extension == ".bz2":
-            with tarfile.open(downloaded_file, "r") as tar_ref:
-                tar_ref.extractall(folder_name)
-        else:
-            # Move the file to the target folder
-            destination = Path(folder_name, filename)
-            shutil.move(downloaded_file, destination)
-
-    # TODO Type hinting a tempfile object?
     def _download_file(
-        self, artifact_info: Dict, directory: Any, with_progress_bar: bool = False
+        self,
+        artifact_name: str,
+        download_url: str,
+        download_root_path: Path,
+        with_progress_bar: bool,
     ) -> Path:
-        # Get the filename from the URL
-        filename = artifact_info["model_filename"]
-        file_path = Path(directory.name, filename)
+        response = requests.get(download_url, stream=True)
+        response.raise_for_status()
 
-        # Download the file
-        response = requests.get(artifact_info["static_url"], stream=True)
-        response.raise_for_status()  # Check if the request was successful
+        dl_filename = None
+
+        # try to get filename from response header
+        cont_disposition = response.headers.get("Content-Disposition")
+        if cont_disposition:
+            disp_params = cont_disposition.strip().split(";")
+            for par in disp_params:
+                split_param = par.split("=")
+                # currently only handling directive "filename" (not "*filename")
+                if len(split_param) > 0 and split_param[0].strip() == "filename":
+                    dl_filename = "=".join(split_param[1:]).strip().strip("'\"")
+                    break
+
+        # otherwise, use name from URL:
+        if dl_filename is None:
+            parsed_url = urlparse(download_url)
+            dl_filename = Path(parsed_url.path).name
 
         total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # 1 KB
         if with_progress_bar:
             progress_bar = tqdm(total=total_size, unit="B", unit_scale=True)
+            progress_bar.set_description(
+                f'Downloading "{dl_filename}" ("{artifact_name}")'
+            )
 
-        with open(file_path, "wb") as file:
+        download_path = download_root_path / dl_filename
+        with open(download_path, "wb") as file:
             for data in response.iter_content(block_size):
                 file.write(data)
                 if with_progress_bar:
@@ -139,54 +145,37 @@ class ArtifactManager:
 
         if with_progress_bar:
             progress_bar.close()
-        return file_path
 
-    def _get_artifact_meta(self, artifact_index: Path, artifact_name: str) -> Dict:
-        folder_path = Path(artifact_index, artifact_name)
-        file_path = Path(folder_path, "meta.info")
+        return download_path
 
+    def _finalize_download(
+        self,
+        download_path: Path,
+        target_path: Path,
+        unpack_archives: bool = True,
+    ) -> None:
+
+        dl_filename = download_path.name
+        dl_path_str = str(download_path.resolve())
+        attempt_unpack = False
+        if unpack_archives:
+            unpack_formats = shutil.get_unpack_formats()
+            unpack_extensions = [
+                e for unpk_frmt in unpack_formats for e in unpk_frmt[1]
+            ]
+            for ext in unpack_extensions:
+                if dl_filename.endswith(ext):
+                    attempt_unpack = True
+
+        if attempt_unpack:
+            shutil.unpack_archive(dl_path_str, target_path)
+        else:
+            shutil.move(dl_path_str, target_path / "")
+
+    def _get_artifact_meta(self, artifact_name: str) -> Dict:
+        file_path = self._index_path / artifact_name / ARTF_META_FILENAME
         if not file_path.exists():
-            raise FileNotFoundError(
-                f"The meta.info file does not exist in the folder {folder_path}."
-            )
-
+            raise FileNotFoundError(f'File "{file_path}" does not exist')
         with open(file_path, "r") as file:
             meta_info = json.load(file)
-
         return meta_info
-
-
-def main():
-    test = ArtifactManager()
-    test.infered_index_directory = (
-        "/".join(__file__.split("/")[:-1]) + "/artifact_index_b"
-    )
-    print(f"infered cache dir: {test.infered_cache_directory}")
-    print(f"infered index dir: {test.infered_index_directory}")
-
-    artifacts = test.get_index_artifact_list()
-    print("Artifacts in index dir: ")
-    for value in artifacts:
-        print(value)
-
-    test.download_artifact_to_cache(
-        os.getenv("DEEPSEARCH_ARTIFACT_NAME"), with_progess_bar=True
-    )
-    print("downloaded artifact")
-
-    artifacts = test.get_artifact_cache_list()
-    print("Artifacts in cache dir:")
-    for value in artifacts:
-        print(value)
-    print()
-
-    print(
-        f"Artifact location is: {test.get_artifact_location_in_cache(os.getenv('DEEPSEARCH_ARTIFACT_NAME'))}"
-    )
-
-    test.delete_artifact_from_cache(os.getenv("DEEPSEARCH_ARTIFACT_NAME"))
-    print("deleted artifact")
-
-
-if __name__ == "__main__":
-    main()
