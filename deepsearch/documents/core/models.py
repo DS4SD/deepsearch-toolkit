@@ -150,10 +150,21 @@ class ElasticS3Target(BaseModel):
     )
 
 
+class COSTarget(BaseModel):
+    type: Literal["cos"] = "cos"
+
+    coordinates: S3Coordinates
+
+    add_raw_pages: bool = False
+
+    add_annotations: bool = False
+
+
 ExportTarget = Union[
     ZipTarget,
     MongoS3Target,
     ElasticS3Target,
+    COSTarget,
 ]
 
 
