@@ -144,16 +144,33 @@ class ElasticS3Target(BaseModel):
         DocumentExistsInTargetAction.MERGE
     )
 
+    add_cells: bool = False
+
+    add_raw_pages: bool = False
+
+    add_annotations: bool = False
+
     escape_ref_fields: bool = Field(
         default=True,
         description="If true, `$ref` fields are renamed to `__ref`. This allows the data to then be written into a MongoDB collection.",
     )
 
 
+class COSTarget(BaseModel):
+    type: Literal["cos"] = "cos"
+
+    coordinates: S3Coordinates
+
+    add_raw_pages: bool = False
+
+    add_annotations: bool = False
+
+
 ExportTarget = Union[
     ZipTarget,
     MongoS3Target,
     ElasticS3Target,
+    COSTarget,
 ]
 
 
