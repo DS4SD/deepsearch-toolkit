@@ -5,12 +5,13 @@
 [![License MIT](https://img.shields.io/github/license/ds4sd/deepsearch-toolkit)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Docs](https://img.shields.io/badge/website-live-brightgreen)](https://ds4sd.github.io/deepsearch-toolkit/)
+[![Downloads](https://static.pepy.tech/badge/deepsearch-toolkit)](https://pepy.tech/project/deepsearch-toolkit)
 
 
 *Interact with the Deep Search platform for new knowledge explorations and discoveries*
 
 
-The Deep Search Toolkit is a Python SDK allowing a user to interact with the Deep Search platform. The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
+The Deep Search Toolkit is a Python SDK allowing a user to interact with the Deep Search platform. The toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
 
 
 [Learn about IBM Deep Search](https://ds4sd.github.io/)
@@ -18,11 +19,12 @@ The Deep Search Toolkit is a Python SDK allowing a user to interact with the Dee
 
 ## Quick links
 
-- [Github repository](https://github.com/ds4sd/deepsearch-toolkit)
-- [Documentation](https://ds4sd.github.io/deepsearch-toolkit/)
+- [Documentation](https://ds4sd.github.io/deepsearch-toolkit)
+- [Deep Search Examples](https://github.com/ds4sd/deepsearch-examples)
 
 
 ## Install
+
 To set up, just install `deepsearch-toolkit` with your packaging tool.
 
 With [`poetry`](https://python-poetry.org):
@@ -38,6 +40,12 @@ pip install deepsearch-toolkit
 ### Extras
 Optional functionality can be installed as package "extras". To install all extras, use
 `deepsearch-toolkit[all]` with your packaging tool.
+
+### Install as toolkit developer
+If you are a Deep Search Toolkit developer, set up as follows:
+```console
+poetry install --all-extras
+```
 
 ### Requirements
 
