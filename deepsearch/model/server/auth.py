@@ -1,6 +1,7 @@
-from deepsearch.model.server import settings
 from fastapi import HTTPException, Security, status
 from fastapi.security import APIKeyHeader
+
+from deepsearch.model.server import settings
 
 api_key = APIKeyHeader(name="Authorization")
 

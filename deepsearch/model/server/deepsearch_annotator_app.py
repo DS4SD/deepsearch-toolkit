@@ -11,14 +11,14 @@ from typing import Coroutine, Dict, Union
 import uvicorn
 from anyio import CapacityLimiter
 from anyio.lowlevel import RunVar
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette import status
 
-from deepsearch.model.server.auth import api_key_auth
 from deepsearch.model.base.base_annotator import BaseAnnotator
+from deepsearch.model.server.auth import api_key_auth
 from deepsearch.model.server.request_schemas import AnnotateRequestModel
 
 logger = logging.getLogger("cps-fastapi")
@@ -75,14 +75,16 @@ class DeepSearchAnnotatorApp:
 
         # Will Require an API key
         @self.app.get("/annotator/{annotator_name}")
-        async def get_annotator_specs(annotator_name: str, api_key=Depends(api_key_auth)) -> dict:
+        async def get_annotator_specs(
+            annotator_name: str, api_key=Depends(api_key_auth)
+        ) -> dict:
             return self.annotate_controller.get_annotator_info(annotator_name)
 
         @self.app.post("/annotator/{annotator_name}/predict", response_model=None)
         async def annotator_process(
             annotator_name: str,
             request: AnnotateRequestModel,
-            api_key=Depends(api_key_auth)
+            api_key=Depends(api_key_auth),
         ) -> Union[JSONResponse, Coroutine]:
             # TODO pydantic models for return
             request_body = request.dict()
