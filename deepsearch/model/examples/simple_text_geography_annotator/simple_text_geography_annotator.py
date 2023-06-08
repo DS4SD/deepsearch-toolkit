@@ -10,7 +10,15 @@ import logging
 
 from fastapi import HTTPException
 
-from deepsearch.model.base.base_nlp_annotator import BaseNLPAnnotator
+from deepsearch.model.base.base_annotator import BaseDSModel
+from deepsearch.model.base.base_nlp_annotator import (
+    BaseNLPModel,
+    Entity,
+    Labels,
+    Property,
+    Relationship,
+)
+from deepsearch.model.factories.base_nlp_factory import BaseNLPFactory
 
 logger = logging.getLogger("cps-nlp")
 from typing import List, Optional
@@ -28,10 +36,13 @@ from .relationships.provincies_to_countries_annotator import (  # type: ignore
     ProvinciesToCountriesAnnotator,
 )
 
-# import pprint ## For debugging only.
+
+class SimpleTextGeographyFactory(BaseNLPFactory):
+    def create_model(self) -> BaseDSModel:
+        return SimpleTextGeographyAnnotator()
 
 
-class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
+class SimpleTextGeographyAnnotator(BaseNLPModel):
 
     name = "SimpleTextGeographyAnnotator"
     supports = ["text"]
@@ -49,42 +60,44 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
     ]
 
     def __init__(self):
+        super().__init__()
+
         self._ent_annots = {}
         self._rel_annots = {}
         self._initialize_annotators()
 
         self.entity_names = list(self._ent_annots.keys())
         self.relationship_names = list(self._rel_annots.keys())
-        self.property_names = []  # this annotator does not annotate properties
-        self.labels = self._generate_annotator_labels()
+        self.property_names = []
 
-    def _generate_annotator_labels(self):
+    def get_labels(self) -> Labels:
         # Derive entity labels from classes
-        entities_with_desc = [
-            {"key": annot.key(), "description": annot.description()}
+        entities = [
+            Entity(key=annot.key(), description=annot.description())
             for annot in self._ent_annots.values()
         ]
+
         # Dummy implementation of property labels
-        properties_with_desc = [
-            {"key": property, "description": f"Property of type {property!r}"}
+        properties = [
+            Property(key=property, description=f"Property of type {property}")
             for property in self.property_names
         ]
 
         # Derive relationships labels from classes
-        relationships_with_columns = [
-            {
-                "key": annot.key(),
-                "description": annot.description(),
-                "columns": annot.columns(),
-            }
+        relationships = [
+            Relationship(
+                key=annot.key(),
+                description=annot.description(),
+                columns=annot.columns(),
+            )
             for annot in self._rel_annots.values()
         ]
 
-        return {
-            "entities": entities_with_desc,
-            "relationships": relationships_with_columns,
-            "properties": properties_with_desc,
-        }
+        return Labels(
+            entities=entities,
+            relationships=relationships,
+            properties=properties,
+        )
 
     def _initialize_annotators(self):
         # Initialize dict of annotator instances `self._ent_annots`

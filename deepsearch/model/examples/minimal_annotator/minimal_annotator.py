@@ -2,10 +2,17 @@ from typing import List, Optional
 
 from fastapi import HTTPException
 
-from deepsearch.model.base.base_nlp_annotator import BaseNLPAnnotator
+from deepsearch.model.base.base_annotator import BaseDSModel
+from deepsearch.model.base.base_nlp_annotator import BaseNLPModel, Entity, Labels
+from deepsearch.model.factories.base_nlp_factory import BaseNLPFactory
 
 
-class MinimalAnnotator(BaseNLPAnnotator):
+class MinimalNLPFactory(BaseNLPFactory):
+    def create_model(self) -> BaseDSModel:
+        return MinimalAnnotator()
+
+
+class MinimalAnnotator(BaseNLPModel):
 
     name = "MinimalAnnotator"
     supports = ["text"]
@@ -61,3 +68,14 @@ class MinimalAnnotator(BaseNLPAnnotator):
     ) -> List[dict]:
         # raise HTTP 501 to indicate method not supported
         raise HTTPException(status_code=501, detail="Property annotation not supported")
+
+    def get_labels(self) -> Labels:
+        entities = [
+            Entity(key="entity_foo", description="some entity"),
+            Entity(key="entity_bar", description="another entity"),
+        ]
+        return Labels(
+            entities=entities,
+            relationships=[],
+            properties=[],
+        )

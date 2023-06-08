@@ -27,7 +27,7 @@ class MultiEntitiesRelationshipAnnotator(BaseTextRelationshipAnnotator):
         )
 
     def description(self) -> str:
-        return "Relationship between entities {self._entities!r}"
+        return f"Relationship between entities {self._entities}"
 
     def __init__(self, config: Config):
         self._entities = config.entities

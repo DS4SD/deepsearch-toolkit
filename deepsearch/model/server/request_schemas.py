@@ -82,22 +82,39 @@ class FindRelationshipsTable(BaseModel):
     tables: List[List]
 
 
-class SpecEntities(BaseModel):
+class NLPEntitiesReqSpec(BaseModel):
     findEntities: Union[FindEntitiesText, FindEntitiesImage, FindEntitiesTable]
 
 
-class SpecProperties(BaseModel):
+class NLPPropertiesReqSpec(BaseModel):
     findProperties: Union[FindPropertiesText, FindPropertiesImage, FindPropertiesTable]
 
 
-class SpecRelationships(BaseModel):
+class NLPRelationshipsReqSpec(BaseModel):
     findRelationships: Union[
         FindRelationshipsText, FindRelationshipsImage, FindRelationshipsTable
     ]
 
 
-class AnnotateRequestModel(BaseModel):
+class GenerateAnswers(BaseModel):  # TODO rename?
+    contexts: List[List[str]]
+    questions: List[str]
+
+
+class QAGenReqSpec(BaseModel):
+    generateAnswers: GenerateAnswers  # TODO rename?
+
+
+InferenceReqSpec = Union[
+    NLPRelationshipsReqSpec,
+    NLPPropertiesReqSpec,
+    NLPEntitiesReqSpec,
+    QAGenReqSpec,
+]
+
+
+class InferenceRequest(BaseModel):
     apiVersion: str
     kind: str
     metadata: Metadata
-    spec: Union[SpecRelationships, SpecProperties, SpecEntities]
+    spec: InferenceReqSpec

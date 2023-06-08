@@ -12,14 +12,14 @@ extra, i.e.:
 - with pip: `pip install "deepsearch-toolkit[api]"`
 
 ## Usage
-To run a model, register it with a
-[`DeepSearchAnnotatorApp`](server/deepsearch_annotator_app.py) and run the app:
+To run, register a [model factory](factories/) with a
+[`ModelApp`](server/deepsearch_annotator_app.py) and run the app:
 ```python
-from deepsearch.model.server.deepsearch_annotator_app import DeepSearchAnnotatorApp
+from deepsearch.model.server.deepsearch_annotator_app import ModelApp
 
-annotator = ...  # e.g. SimpleTextGeographyAnnotator()
-app = DeepSearchAnnotatorApp()
-app.register_annotator(annotator)
+model_factory = ...  # e.g. SimpleTextGeographyFactory()
+app = ModelApp()
+app.register_model_factory(model_factory)
 app.run(host="127.0.0.1", port=8000)
 ```
 
@@ -27,10 +27,19 @@ app.run(host="127.0.0.1", port=8000)
 
 The OpenAPI UI is served under `/docs`, e.g. http://127.0.0.1:8000/docs.
 
-#### Inference
+## Developing a new model
+To develop a new model, inherit from a [model factory](factories/) and implement the
+methods and attributes that are declared as abstract.
 
-An example input payload for the `/predict` endpoint would look as follows
-(note that `deepsearch.res.ibm.com/x-deadline` should be a future timestamp):
+### Examples
+- [Minimal annotator](examples/minimal_annotator)
+- [Geography annotator](examples/simple_text_geography_annotator/)
+- [Dummy QA generator](examples/dummy_qa_generator/)
+
+### Inference
+As as example, an input payload for the `/predict` endpoint for the geography annotator
+could look as follows (note that `deepsearch.res.ibm.com/x-deadline` should be a
+future timestamp):
 ```json
 {
     "apiVersion": "v1",
@@ -55,13 +64,3 @@ An example input payload for the `/predict` endpoint would look as follows
     }
 }
 ```
-
-## Developing a new model
-To develop a new model class, inherit from a [base model class](base/) and implement the
-methods and attributes that are declared as abstract.
-
-### Examples
-- Minimal dummy annotator:
-[examples/minimal_annotator/](examples/minimal_annotator)
-- Simple geography annotator:
-[examples/simple_text_geography_annotator/](examples/simple_text_geography_annotator/)

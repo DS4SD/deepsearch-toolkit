@@ -1,12 +1,12 @@
 from deepsearch.model.examples.simple_text_geography_annotator.simple_text_geography_annotator import (  # type: ignore
-    SimpleTextGeographyAnnotator,
+    SimpleTextGeographyFactory,
 )
-from deepsearch.model.server.deepsearch_annotator_app import DeepSearchAnnotatorApp
+from deepsearch.model.server.deepsearch_annotator_app import ModelApp
 
 
 def run():
-    app = DeepSearchAnnotatorApp()
-    app.register_annotator(SimpleTextGeographyAnnotator())
+    app = ModelApp()
+    app.register_model_factory(factory=SimpleTextGeographyFactory())
     app.run()
 
 

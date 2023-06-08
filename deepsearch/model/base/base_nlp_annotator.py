@@ -1,12 +1,51 @@
 from abc import abstractmethod
+from copy import deepcopy
 from typing import List, Optional
 
-from deepsearch.model.base.base_annotator import BaseAnnotator
+from pydantic import BaseModel
+
+from deepsearch.model.base.base_annotator import BaseDSModel
 
 
-class BaseNLPAnnotator(BaseAnnotator):
+class Entity(BaseModel):
+    key: str
+    description: str
 
-    kind: str = "NLPModel"
+
+class RelationshipColumn(BaseModel):
+    key: str
+    entities: List[str]
+
+
+class Relationship(BaseModel):
+    key: str
+    description: str
+    columns: List[RelationshipColumn]
+
+
+class Property(BaseModel):  # TODO verify
+    key: str
+    description: str
+
+
+class Labels(BaseModel):
+    entities: List[Entity]
+    relationships: List[Relationship]
+    properties: List[Property]
+
+
+class BaseNLPModel(BaseDSModel):
+
+    kind = "NLPModel"
+
+    def __init__(self):
+        super().__init__()
+
+        self._cached_def_spec = None
+
+    @abstractmethod
+    def get_labels(self) -> Labels:
+        pass
 
     @abstractmethod
     def annotate_batched_entities(
@@ -55,3 +94,9 @@ class BaseNLPAnnotator(BaseAnnotator):
         property_names: Optional[List[str]],
     ) -> List[dict]:
         return []
+
+    def get_definition_spec(self) -> dict:
+        if self._cached_def_spec is None:
+            self._cached_def_spec = deepcopy(super().get_definition_spec())
+            self._cached_def_spec["definition"] = self.get_labels().dict()
+        return self._cached_def_spec
