@@ -229,9 +229,7 @@ class DeepSearchAnnotatorApp:
                         detail=f"Unsupported object type for this annotator. Supports: {annotator_instance.supports}",
                     )
 
-                items = self._extract_items_from_payload(
-                    find_entities_part
-                )
+                items = self._extract_items_from_payload(find_entities_part)
                 try:
                     entities = annotator_instance.annotate_batched_entities(
                         find_entities_part["objectType"],
@@ -249,15 +247,16 @@ class DeepSearchAnnotatorApp:
             if "findRelationships" in body["spec"]:
                 find_relationships_part = body["spec"]["findRelationships"]
 
-                if find_relationships_part["objectType"] not in annotator_instance.supports:
+                if (
+                    find_relationships_part["objectType"]
+                    not in annotator_instance.supports
+                ):
                     raise HTTPException(
                         status_code=400,
                         detail=f"Unsupported object type for this annotator. Supports: {annotator_instance.supports}",
                     )
 
-                items = self._extract_items_from_payload(
-                    find_relationships_part
-                )
+                items = self._extract_items_from_payload(find_relationships_part)
                 try:
                     relationships = annotator_instance.annotate_batched_relationships(
                         find_relationships_part["objectType"],
@@ -273,15 +272,16 @@ class DeepSearchAnnotatorApp:
             if "findProperties" in body["spec"]:
                 find_properties_part = body["spec"]["findProperties"]
 
-                if find_properties_part["objectType"] not in annotator_instance.supports:
+                if (
+                    find_properties_part["objectType"]
+                    not in annotator_instance.supports
+                ):
                     raise HTTPException(
                         status_code=400,
                         detail=f"Unsupported object type for this annotator. Supports: {annotator_instance.supports}",
                     )
 
-                items = self._extract_items_from_payload(
-                    find_properties_part
-                )
+                items = self._extract_items_from_payload(find_properties_part)
 
                 try:
                     if isinstance(items, dict):
