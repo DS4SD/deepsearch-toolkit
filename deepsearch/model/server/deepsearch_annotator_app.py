@@ -223,8 +223,14 @@ class DeepSearchAnnotatorApp:
             if "findEntities" in body["spec"]:
                 find_entities_part = body["spec"]["findEntities"]
 
-                items = self._validate_and_parse_input(
-                    find_entities_part, annotator_instance
+                if find_entities_part["objectType"] not in annotator_instance.supports:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Unsupported object type for this annotator. Supports: {annotator_instance.supports}",
+                    )
+
+                items = self._extract_items_from_payload(
+                    find_entities_part
                 )
                 try:
                     entities = annotator_instance.annotate_batched_entities(
@@ -243,8 +249,14 @@ class DeepSearchAnnotatorApp:
             if "findRelationships" in body["spec"]:
                 find_relationships_part = body["spec"]["findRelationships"]
 
-                items = self._validate_and_parse_input(
-                    find_relationships_part, annotator_instance
+                if find_relationships_part["objectType"] not in annotator_instance.supports:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Unsupported object type for this annotator. Supports: {annotator_instance.supports}",
+                    )
+
+                items = self._extract_items_from_payload(
+                    find_relationships_part
                 )
                 try:
                     relationships = annotator_instance.annotate_batched_relationships(
@@ -261,8 +273,14 @@ class DeepSearchAnnotatorApp:
             if "findProperties" in body["spec"]:
                 find_properties_part = body["spec"]["findProperties"]
 
-                items = self._validate_and_parse_input(
-                    find_properties_part, annotator_instance
+                if find_properties_part["objectType"] not in annotator_instance.supports:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Unsupported object type for this annotator. Supports: {annotator_instance.supports}",
+                    )
+
+                items = self._extract_items_from_payload(
+                    find_properties_part
                 )
 
                 try:
@@ -292,48 +310,19 @@ class DeepSearchAnnotatorApp:
             )
 
         @staticmethod
-        def _validate_and_parse_input(body_part, annot) -> Union[HTTPException, dict]:
+        def _extract_items_from_payload(body_part) -> Union[HTTPException, dict]:
             # Input: body_part is the part of the request body indexed by the main command, e.g., body['find_entities']
             #        ann_cls is one of the Annotator classes in this repository.
             # Output: "items", i.e., a list of texts, tables, or images, if the request passed validation
             # Connexion seems to fail to validate the polymorphic inputs, so we need to do it ourselves :(
-            object_type = body_part.get("objectType", "text")
-
-            expected = ("text", "image", "table")
-
-            if object_type not in expected:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Invalid object type. Expected one of: {expected}",
-                )
-
-            if object_type not in annot.supports:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Unsupported object type for this annotator. Supports: {annot.supports}",
-                )
-
+            object_type = body_part.get("objectType")
             if object_type == "text":
-                if not isinstance(body_part.get("texts"), list):
-                    raise HTTPException(
-                        status_code=400, detail="Invalid input: Missing 'texts'"
-                    )
                 return body_part["texts"]
 
             if object_type == "image":
-                if not isinstance(body_part.get("images"), list):
-                    raise HTTPException(
-                        status_code=400, detail="Invalid input: Missing 'images'"
-                    )
-
                 return body_part["images"]
 
             if object_type == "table":
-                if not isinstance(body_part.get("tables"), list):
-                    raise HTTPException(
-                        status_code=400, detail="Invalid input: Missing 'tables'"
-                    )
-
                 return body_part["tables"]
 
             raise HTTPException(
