@@ -5,7 +5,7 @@ import logging
 import os
 import time
 from datetime import datetime
-from typing import Coroutine, Dict, Optional, Union
+from typing import Dict, Optional
 
 import uvicorn
 from anyio import CapacityLimiter
@@ -55,19 +55,16 @@ class ModelApp:
                 for name, controller in self._controllers.items()
             }
 
-        # Will Require an API key
-        # TODO rename path?
-        @self.app.get("/annotator/{model_name}")
+        @self.app.get("/model/{model_name}")
         async def get_model_specs(model_name: str) -> dict:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 
-        # TODO rename path?
-        @self.app.post("/annotator/{model_name}/predict", response_model=None)
+        @self.app.post("/model/{model_name}/predict", response_model=None)
         async def predict(
             model_name: str,
             request: AppInferenceInput,
-        ) -> Union[JSONResponse, Coroutine]:
+        ) -> JSONResponse:
             request_arrival_time = time.time()
             try:
                 cur_time = request_arrival_time
@@ -90,14 +87,6 @@ class ModelApp:
                     _run_in_process(_inference_process, model_name, request),
                     timeout=deadline_ts - cur_time,
                 )
-
-                # TODO clean up
-                try:
-                    if isinstance(result, Coroutine):
-                        raise KeyError("Unresolved corroutine")
-                except KeyError as e:
-                    # Handle the exception here
-                    raise e
 
                 result.headers["X-Processing-Pod-Id"] = os.getenv(
                     "MY_POD_NAME", "local"
@@ -128,9 +117,7 @@ class ModelApp:
                         status_code=e.status_code, detail=e.detail, headers=headers
                     )
 
-        async def _run_in_process(
-            fn, *args
-        ) -> Coroutine[Union[JSONResponse, HTTPException]]:
+        async def _run_in_process(fn, *args) -> JSONResponse:
             return await run_in_threadpool(fn, *args)
 
         def _inference_process(
