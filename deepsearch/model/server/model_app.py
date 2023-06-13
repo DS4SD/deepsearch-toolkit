@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import inspect
 import logging
 import os
 import time
@@ -11,18 +10,16 @@ from typing import Coroutine, Dict, Optional, Union
 import uvicorn
 from anyio import CapacityLimiter
 from anyio.lowlevel import RunVar
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.concurrency import run_in_threadpool
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from starlette import status
 
-from deepsearch.model.controllers.base_controller import BaseController
-from deepsearch.model.examples.simple_text_geography_annotator.simple_text_geography_annotator import (
-    SimpleTextGeographyAnnotator,
-)
-from deepsearch.model.factories.base_model_factory import BaseModelFactory
-from deepsearch.model.server.request_schemas import InferenceRequest
+from deepsearch.model.base.controller import BaseController
+from deepsearch.model.base.model import BaseDSModel
+from deepsearch.model.server.controller_factory import ControllerFactory
+from deepsearch.model.server.inference_types import AppInferenceInput
 
 logger = logging.getLogger("cps-fastapi")
 
@@ -31,35 +28,20 @@ class ModelApp:
     def __init__(self):
         self.app = FastAPI()
         self._controllers: Dict[str, BaseController] = {}
+        self._contr_factory = ControllerFactory()
 
         @self.app.on_event("startup")
         async def startup_event():
             # do some initialization here
             RunVar("_default_thread_limiter").set(CapacityLimiter(1))
 
-        # Register some exception handlers
         @self.app.exception_handler(RequestValidationError)
         async def validation_exception_handler(
             request: Request, exc: RequestValidationError
         ):
-            print(exc)
-
-            content = {"status_code": 10422, "message": exc, "data": None}
             return JSONResponse(
-                content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-            )
-
-        # Register endpoints for the app
-        @self.app.exception_handler(RequestValidationError)
-        async def validation_exception_handler(
-            request: Request, exc: RequestValidationError
-        ):
-            exc_str = f"{exc}".replace("\n", " ").replace("   ", " ")
-            # or logger.error(f'{exc}')
-            print(exc_str)
-            content = {"status_code": 10422, "message": exc_str, "data": None}
-            return JSONResponse(
-                content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+                content=jsonable_encoder({"errors": exc.errors()}),
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             )
 
         @self.app.get("/health")
@@ -74,15 +56,17 @@ class ModelApp:
             }
 
         # Will Require an API key
+        # TODO rename path?
         @self.app.get("/annotator/{model_name}")
         async def get_model_specs(model_name: str) -> dict:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 
+        # TODO rename path?
         @self.app.post("/annotator/{model_name}/predict", response_model=None)
         async def predict(
             model_name: str,
-            request: InferenceRequest,
+            request: AppInferenceInput,
         ) -> Union[JSONResponse, Coroutine]:
             request_arrival_time = time.time()
             try:
@@ -94,9 +78,7 @@ class ModelApp:
                 deadline_ts = float(deadline.timestamp())
 
                 controller = self._get_controller(model_name=model_name)
-                compute_min_deadline_ts = (
-                    cur_time + controller.get_model().expected_compute_time
-                )
+                compute_min_deadline_ts = cur_time + controller.get_model_exec_time()
 
                 if compute_min_deadline_ts - deadline_ts > 0:
                     raise HTTPException(
@@ -105,14 +87,15 @@ class ModelApp:
                     )
 
                 result = await asyncio.wait_for(
-                    run_in_process(inference_process, model_name, request),
+                    _run_in_process(_inference_process, model_name, request),
                     timeout=deadline_ts - cur_time,
                 )
 
+                # TODO clean up
                 try:
                     if isinstance(result, Coroutine):
                         raise KeyError("Unresolved corroutine")
-                except KeyError as e:  # FIXME remove?
+                except KeyError as e:
                     # Handle the exception here
                     raise e
 
@@ -145,23 +128,22 @@ class ModelApp:
                         status_code=e.status_code, detail=e.detail, headers=headers
                     )
 
-        async def run_in_process(
+        async def _run_in_process(
             fn, *args
         ) -> Coroutine[Union[JSONResponse, HTTPException]]:
             return await run_in_threadpool(fn, *args)
 
-        def inference_process(
-            model_name: str, request: InferenceRequest
+        def _inference_process(
+            model_name: str, request: AppInferenceInput
         ) -> JSONResponse:
             request_dict = request.dict()
             start_time = time.time()
             controller = self._get_controller(model_name=model_name)
-            if (model_kind := controller.get_model().kind) != request.kind:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Requested kind ('{request.kind}') not matching actual one ('{model_kind}')",
-                )
+
+            self._validate_request_kind(request=request, controller=controller)
+
             result = controller.dispatch_predict(request.spec)
+
             end_time = time.time()
             process_time = end_time - start_time
             headers = {
@@ -171,14 +153,7 @@ class ModelApp:
             }
             if "id" in request_dict.keys():
                 headers["X-request-id"] = str(request_dict["id"])
-            return JSONResponse(content=result, headers=headers)
-
-    def register_model_factory(
-        self, factory: BaseModelFactory, name: Optional[str] = None
-    ):
-        model = factory.create_model()
-        key = name or model.name
-        self._controllers[key] = factory.create_controller(model=model)
+            return JSONResponse(content=jsonable_encoder(result), headers=headers)
 
     def _get_controller(self, model_name: str) -> BaseController:
         controller = self._controllers.get(model_name)
@@ -190,5 +165,38 @@ class ModelApp:
             )
         return controller
 
+    def register_model(
+        self,
+        model: BaseDSModel,
+        name: Optional[str] = None,
+        controller: Optional[BaseController] = None,
+    ):
+        """Registers a model with the app.
+
+        Args:
+            model (BaseDSModel): the model to register.
+            name (Optional[str], optional): an optional name under which to register the model; if not set, the model's default name is used.
+            controller (Optional[BaseController], optional): an optional custom controller to use; if not set, the default controller for the kind is used.
+        """
+        contr = controller or self._contr_factory.create_controller(model=model)
+        self._validate_controller_kind(controller=contr, model=model)
+        key = name or contr.get_model_name()
+        self._controllers[key] = contr
+
     def run(self, host: str = "127.0.0.1", port: int = 8000, **kwargs) -> None:
         uvicorn.run(self.app, host=host, port=port, **kwargs)
+
+    def _validate_controller_kind(
+        self, controller: BaseController, model: BaseDSModel
+    ) -> None:
+        if controller.get_kind() != model.get_config().kind:
+            raise RuntimeError("Controller kind does not match model")
+
+    def _validate_request_kind(
+        self, request: AppInferenceInput, controller: BaseController
+    ) -> None:
+        if request.kind != controller.get_kind():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Request kind does not match controller",
+            )

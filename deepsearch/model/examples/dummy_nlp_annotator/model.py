@@ -1,28 +1,35 @@
 from typing import List, Optional
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
-from deepsearch.model.base.base_annotator import BaseDSModel
-from deepsearch.model.base.base_nlp_annotator import BaseNLPModel, Entity, Labels
-from deepsearch.model.factories.base_nlp_factory import BaseNLPFactory
+from deepsearch.model.base.types import Kind
+from deepsearch.model.kinds.nlp.model import BaseNLPModel, Labels, NLPConfig
+from deepsearch.model.kinds.nlp.types import (
+    AnnotateEntitiesOutput,
+    AnnotatePropertiesOutput,
+    AnnotateRelationshipsOutput,
+    Entity,
+)
 
 
-class MinimalNLPFactory(BaseNLPFactory):
-    def create_model(self) -> BaseDSModel:
-        return MinimalAnnotator()
+class DummyNLPAnnotator(BaseNLPModel):
 
+    _config = NLPConfig(
+        kind=Kind.NLP,
+        name="DummyNLPAnnotator",
+        version="0.1.0",
+        supported_types=["text"],
+    )
 
-class MinimalAnnotator(BaseNLPModel):
-
-    name = "MinimalAnnotator"
-    supports = ["text"]
+    def get_nlp_config(self) -> NLPConfig:
+        return self._config
 
     def annotate_batched_entities(
         self,
         object_type: str,
         items: List[str],
         entity_names: Optional[List[str]],
-    ) -> List[dict]:
+    ) -> AnnotateEntitiesOutput:
         _entity_names = entity_names or ["entity_foo", "entity_bar"]
         results = []
         for item in items:
@@ -53,10 +60,10 @@ class MinimalAnnotator(BaseNLPModel):
         items: List[str],
         entities: List[dict],
         relationship_names: Optional[List[str]],
-    ) -> List[dict]:
-        # raise HTTP 501 to indicate method not supported
+    ) -> AnnotateRelationshipsOutput:
         raise HTTPException(
-            status_code=501, detail="Relationship annotation not supported"
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Relationship annotation not supported",
         )
 
     def annotate_batched_properties(
@@ -65,9 +72,11 @@ class MinimalAnnotator(BaseNLPModel):
         items: List[str],
         entities: List[dict],
         property_names: Optional[List[str]],
-    ) -> List[dict]:
-        # raise HTTP 501 to indicate method not supported
-        raise HTTPException(status_code=501, detail="Property annotation not supported")
+    ) -> AnnotatePropertiesOutput:
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Property annotation not supported",
+        )
 
     def get_labels(self) -> Labels:
         entities = [

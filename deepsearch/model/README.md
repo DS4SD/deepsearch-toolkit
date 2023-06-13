@@ -17,9 +17,9 @@ To run, register a [model factory](factories/) with a
 ```python
 from deepsearch.model.server.deepsearch_annotator_app import ModelApp
 
-model_factory = ...  # e.g. SimpleTextGeographyFactory()
+model = ...  # e.g. SimpleGeoNLPAnnotator()
 app = ModelApp()
-app.register_model_factory(model_factory)
+app.register_model(model)
 app.run(host="127.0.0.1", port=8000)
 ```
 
@@ -28,12 +28,17 @@ app.run(host="127.0.0.1", port=8000)
 The OpenAPI UI is served under `/docs`, e.g. http://127.0.0.1:8000/docs.
 
 ## Developing a new model
-To develop a new model, inherit from a [model factory](factories/) and implement the
-methods and attributes that are declared as abstract.
+To develop a new model class for an existing [kind](kinds/), inherit from the base model
+class of that kind and implement the abstract methods and attributes.
+
+The framework will automatically use the correct controller for your model.
+
+To use a custom controller instead, pass it to `ModelApp.register_model()` via the
+optional parameter `controller`.
 
 ### Examples
-- [Minimal annotator](examples/minimal_annotator)
-- [Geography annotator](examples/simple_text_geography_annotator/)
+- [Dummy NLP annotator](examples/dummy_nlp_annotator/)
+- [Simple geo NLP annotator](examples/simple_geo_nlp_annotator/)
 - [Dummy QA generator](examples/dummy_qa_generator/)
 
 ### Inference
@@ -43,7 +48,7 @@ future timestamp):
 ```json
 {
     "apiVersion": "v1",
-    "kind": "NLPModel",
+    "kind": "NLP",
     "metadata": {
         "annotations": {
             "deepsearch.res.ibm.com/x-deadline": "2024-04-20T12:26:01.479484+00:00",

@@ -3,22 +3,22 @@
 # ALL RIGHTS RESERVED
 
 ## Sample External API Annotator
-## Apart from initialization of provided entities and model loading,
-## the only function you really have to change here is "annotate_entities_text".
 
 import logging
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
-from deepsearch.model.base.base_annotator import BaseDSModel
-from deepsearch.model.base.base_nlp_annotator import (
-    BaseNLPModel,
+from deepsearch.model.base.types import Kind
+from deepsearch.model.kinds.nlp.model import BaseNLPModel, NLPConfig
+from deepsearch.model.kinds.nlp.types import (
+    AnnotateEntitiesOutput,
+    AnnotatePropertiesOutput,
+    AnnotateRelationshipsOutput,
     Entity,
     Labels,
     Property,
     Relationship,
 )
-from deepsearch.model.factories.base_nlp_factory import BaseNLPFactory
 
 logger = logging.getLogger("cps-nlp")
 from typing import List, Optional
@@ -37,15 +37,14 @@ from .relationships.provincies_to_countries_annotator import (  # type: ignore
 )
 
 
-class SimpleTextGeographyFactory(BaseNLPFactory):
-    def create_model(self) -> BaseDSModel:
-        return SimpleTextGeographyAnnotator()
+class SimpleGeoNLPAnnotator(BaseNLPModel):
 
-
-class SimpleTextGeographyAnnotator(BaseNLPModel):
-
-    name = "SimpleTextGeographyAnnotator"
-    supports = ["text"]
+    _config = NLPConfig(
+        kind=Kind.NLP,
+        name="SimpleGeoNLPAnnotator",
+        version="0.1.0",
+        supported_types=["text"],
+    )
 
     _ent_annotator_classes = [
         CitiesAnnotator,
@@ -60,8 +59,6 @@ class SimpleTextGeographyAnnotator(BaseNLPModel):
     ]
 
     def __init__(self):
-        super().__init__()
-
         self._ent_annots = {}
         self._rel_annots = {}
         self._initialize_annotators()
@@ -69,6 +66,9 @@ class SimpleTextGeographyAnnotator(BaseNLPModel):
         self.entity_names = list(self._ent_annots.keys())
         self.relationship_names = list(self._rel_annots.keys())
         self.property_names = []
+
+    def get_nlp_config(self) -> NLPConfig:
+        return self._config
 
     def get_labels(self) -> Labels:
         # Derive entity labels from classes
@@ -112,7 +112,7 @@ class SimpleTextGeographyAnnotator(BaseNLPModel):
 
     def annotate_batched_entities(
         self, object_type, items: List[str], entity_names: Optional[List[str]]
-    ) -> List[dict]:
+    ) -> AnnotateEntitiesOutput:
         ## An item is a string if object_type == "text", and List[List[dict]] if object_type == "table"
         if entity_names is None:
             # This means that the user did not explicitly specify which entities they want.
@@ -131,7 +131,7 @@ class SimpleTextGeographyAnnotator(BaseNLPModel):
         for item in items:
             entity_map = {}
             try:
-                cps_entities = self.annotate_entities_in_item(
+                cps_entities = self._annotate_entities_in_item(
                     object_type, item, desired_entities
                 )
             except Exception as exc:
@@ -148,12 +148,9 @@ class SimpleTextGeographyAnnotator(BaseNLPModel):
                 ]
             results.append(entity_map)
 
-        # print("Entities returned from 'annotate_batched_entities', for type " + object_type)
-        # pprint.pprint(results)
-
         return results
 
-    def annotate_entities_in_item(
+    def _annotate_entities_in_item(
         self, object_type: str, item: str, entity_names: Optional[List[str]]
     ) -> List[dict]:
         # In this case entity_names is never None, however since BaseAnnotator defines the signature of this method as
@@ -182,7 +179,7 @@ class SimpleTextGeographyAnnotator(BaseNLPModel):
         items: List[str],
         entities: List[dict],
         relationship_names: Optional[List[str]],
-    ) -> List[dict]:
+    ) -> AnnotateRelationshipsOutput:
         if relationship_names is None:
             # This means that the user did not explicitly specify which relationships they want.
             # So, assume our list.
@@ -211,6 +208,8 @@ class SimpleTextGeographyAnnotator(BaseNLPModel):
         items: List,
         entities: List[dict],
         property_names: Optional[List[str]],
-    ) -> List[dict]:
-        # raise HTTP 501 to indicate method not supported
-        raise HTTPException(status_code=501, detail="Property annotation not supported")
+    ) -> AnnotatePropertiesOutput:
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Property annotation not supported",
+        )
