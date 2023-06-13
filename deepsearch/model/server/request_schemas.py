@@ -22,113 +22,45 @@ class Metadata(BaseModel):
     annotations: Annotations
 
 
-class SpecFindEntities(BaseModel):
+from typing import List, Optional
+
+from pydantic import BaseModel, root_validator
+
+
+class BaseSpec(BaseModel):
     objectType: str
     texts: Optional[List[str]]
     images: Optional[List[dict]]
     tables: Optional[List[str]]
-    entityNames: Optional[str]
 
     @root_validator()
     def must_contain_correct_content_for_object_type(cls, values):
+        print(values)
         if values["objectType"] == "text":
             if values["texts"] is None:
                 raise ValueError("Text objectType with no field 'texts'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "texts", "entityNames")
-            }
+            return values
         if values["objectType"] == "table":
             if values["tables"] is None:
                 raise ValueError("table objectType with no field 'tables'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "tables", "entityNames")
-            }
+            return values
         if values["objectType"] == "image":
             if values["images"] is None:
-                print("raisin")
                 raise ValueError("image objectType with no field 'images'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "images", "entityNames")
-            }
+            return values
         raise ValueError("Unknown objectType")
 
 
-class SpecFindRelationships(BaseModel):
-    objectType: str
-    texts: Optional[List[str]]
-    images: Optional[List[dict]]
-    tables: Optional[List[str]]
+class SpecFindEntities(BaseSpec):
+    entityNames: Optional[str]
+
+
+class SpecFindRelationships(BaseSpec):
     relationshipNames: Optional[str]
 
-    def must_contain_correct_content_for_object_type(cls, values):
-        if values["objectType"] == "text":
-            if values["texts"] is None:
-                raise ValueError("Text objectType with no field 'texts'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "texts", "entityNames")
-            }
-        if values["objectType"] == "table":
-            if values["tables"] is None:
-                raise ValueError("table objectType with no field 'tables'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "tables", "entityNames")
-            }
-        if values["objectType"] == "image":
-            if values["images"] is None:
-                print("raisin")
-                raise ValueError("image objectType with no field 'images'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "images", "entityNames")
-            }
-        raise ValueError("Unknown objectType")
 
-
-class SpecFindProperties(BaseModel):
-    objectType: str
-    texts: Optional[List[str]]
-    images: Optional[List[dict]]
-    tables: Optional[List[str]]
+class SpecFindProperties(BaseSpec):
     propertyNames: Optional[str]
-
-    def must_contain_correct_content_for_object_type(cls, values):
-        if values["objectType"] == "text":
-            if values["texts"] is None:
-                raise ValueError("Text objectType with no field 'texts'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "texts", "entityNames")
-            }
-        if values["objectType"] == "table":
-            if values["tables"] is None:
-                raise ValueError("table objectType with no field 'tables'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "tables", "entityNames")
-            }
-        if values["objectType"] == "image":
-            if values["images"] is None:
-                print("raisin")
-                raise ValueError("image objectType with no field 'images'")
-            return {
-                k: v
-                for k, v in values.items()
-                if k in ("objectType", "images", "entityNames")
-            }
-        raise ValueError("Unknown objectType")
 
 
 class SpecEntities(BaseModel):
