@@ -6,7 +6,7 @@ import logging
 import os
 import time
 from datetime import datetime
-from typing import Coroutine, Dict, Union
+from typing import Coroutine, Dict, MutableMapping, Union
 
 import uvicorn
 from anyio import CapacityLimiter
@@ -80,7 +80,7 @@ class DeepSearchAnnotatorApp:
         @self.app.post("/annotator/{annotator_name}/predict", response_model=None)
         async def annotator_process(
             annotator_name: str, request: AnnotateRequestModel
-        ) -> Union[JSONResponse, Coroutine]:
+        ) -> Union[JSONResponse, HTTPException]:
             # TODO pydantic models for return
             request_body = request.dict()
 
@@ -122,27 +122,21 @@ class DeepSearchAnnotatorApp:
                     timeout=deadline_ts - cur_time,
                 )
 
-                try:
-                    if isinstance(result, Coroutine):
-                        raise KeyError("Unresolved corroutine")
-                except KeyError as e:
-                    # Handle the exception here
-                    raise e
-
-                result.headers["X-Processing-Pod-Id"] = os.getenv(
-                    "MY_POD_NAME", "local"
-                )
-                result.headers["X-Request-Arrival-Time"] = str(request_arrival_time)
-                result.headers["X-Request-Attempt-Number"] = (
-                    request_body.get("metadata", {})
-                    .get("annotations", {})
-                    .get("deepsearch_res_ibm_com_x_attempt_number")
-                )
-                result.headers["X-Request-Transaction-Id"] = (
-                    request_body.get("metadata", {})
-                    .get("annotations", {})
-                    .get("deepsearch_res_ibm_com_x_transaction_id")
-                )
+                if result.headers is not None:
+                    result.headers["X-Processing-Pod-Id"] = os.getenv(
+                        "MY_POD_NAME", "local"
+                    )
+                    result.headers["X-Request-Arrival-Time"] = str(request_arrival_time)
+                    result.headers["X-Request-Attempt-Number"] = (
+                        request_body.get("metadata", {})
+                        .get("annotations", {})
+                        .get("deepsearch_res_ibm_com_x_attempt_number")
+                    )
+                    result.headers["X-Request-Transaction-Id"] = (
+                        request_body.get("metadata", {})
+                        .get("annotations", {})
+                        .get("deepsearch_res_ibm_com_x_transaction_id")
+                    )
 
                 return result
             except asyncio.TimeoutError:
@@ -160,9 +154,7 @@ class DeepSearchAnnotatorApp:
                 e.headers = failure_headers
                 raise e
 
-        async def run_in_process(
-            fn, *args
-        ) -> Coroutine[Union[JSONResponse, HTTPException]]:
+        async def run_in_process(fn, *args) -> Union[JSONResponse, HTTPException]:
             return await run_in_threadpool(fn, *args)
 
         def annotate_process(
