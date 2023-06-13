@@ -12,8 +12,7 @@ extra, i.e.:
 - with pip: `pip install "deepsearch-toolkit[api]"`
 
 ## Usage
-To run, register a [model factory](factories/) with a
-[`ModelApp`](server/deepsearch_annotator_app.py) and run the app:
+To run a model, register it with a [`ModelApp`](server/model_app.py) and run the app:
 ```python
 from deepsearch.model.server.deepsearch_annotator_app import ModelApp
 
