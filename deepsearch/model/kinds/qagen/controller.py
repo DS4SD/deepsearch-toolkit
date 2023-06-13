@@ -20,7 +20,7 @@ class QAGenController(BaseController):
         return self._model
 
     def get_kind(self) -> str:
-        return Kind.QAGen
+        return Kind.QAGenModel
 
     def dispatch_predict(self, spec: ControllerInput) -> ControllerOutput:
         # TODO: use Pydantic objects instead of dicts

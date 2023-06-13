@@ -9,7 +9,7 @@ class DummyQAGenerator(BaseQAGenerator):
     """A dummy QA generator which answers a question with the question itself."""
 
     _config = QAGenConfig(
-        kind=Kind.QAGen,
+        kind=Kind.QAGenModel,
         name="DummyQAGenerator",
         version="0.1.0",
     )

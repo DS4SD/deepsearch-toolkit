@@ -48,7 +48,7 @@ future timestamp):
 ```json
 {
     "apiVersion": "v1",
-    "kind": "NLP",
+    "kind": "NLPModel",
     "metadata": {
         "annotations": {
             "deepsearch.res.ibm.com/x-deadline": "2024-04-20T12:26:01.479484+00:00",

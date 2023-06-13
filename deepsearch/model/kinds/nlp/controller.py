@@ -22,7 +22,7 @@ class NLPController(BaseController):
         self._model = model
 
     def get_kind(self) -> str:
-        return Kind.NLP
+        return Kind.NLPModel
 
     def _get_model(self) -> BaseDSModel:
         return self._model

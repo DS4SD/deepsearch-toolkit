@@ -13,7 +13,7 @@ class QAGenReqSpec(StrictModel):
 
 
 class QAGenRequest(BaseInfReq):
-    kind: Literal[Kind.QAGen]
+    kind: Literal[Kind.QAGenModel]
     spec: QAGenReqSpec
 
 
@@ -27,4 +27,4 @@ class QAGenControllerOutput(StrictModel):
 
 
 class QAGenConfig(BaseModelConfig):
-    kind: Literal[Kind.QAGen]
+    kind: Literal[Kind.QAGenModel]

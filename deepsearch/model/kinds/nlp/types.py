@@ -86,7 +86,7 @@ NLPReqSpec = Union[
 
 
 class NLPRequest(BaseInfReq):
-    kind: Literal[Kind.NLP]
+    kind: Literal[Kind.NLPModel]
     spec: NLPReqSpec
 
 
@@ -144,5 +144,5 @@ NLPControllerOutput = Union[
 
 
 class NLPConfig(BaseModelConfig):
-    kind: Literal[Kind.NLP]
+    kind: Literal[Kind.NLPModel]
     supported_types: List[str]

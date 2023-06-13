@@ -15,7 +15,7 @@ from deepsearch.model.kinds.nlp.types import (
 class DummyNLPAnnotator(BaseNLPModel):
 
     _config = NLPConfig(
-        kind=Kind.NLP,
+        kind=Kind.NLPModel,
         name="DummyNLPAnnotator",
         version="0.1.0",
         supported_types=["text"],

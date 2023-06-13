@@ -40,7 +40,7 @@ from .relationships.provincies_to_countries_annotator import (  # type: ignore
 class SimpleGeoNLPAnnotator(BaseNLPModel):
 
     _config = NLPConfig(
-        kind=Kind.NLP,
+        kind=Kind.NLPModel,
         name="SimpleGeoNLPAnnotator",
         version="0.1.0",
         supported_types=["text"],

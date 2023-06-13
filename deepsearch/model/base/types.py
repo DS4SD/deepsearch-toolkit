@@ -25,9 +25,8 @@ class Annotations(StrictModel):
 
 
 class Kind(str, Enum):
-    # TODO: review values
-    NLP = "NLP"
-    QAGen = "QAGen"
+    NLPModel = "NLPModel"
+    QAGenModel = "QAGenModel"
 
 
 class Metadata(StrictModel):
