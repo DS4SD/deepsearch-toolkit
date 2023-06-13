@@ -67,25 +67,30 @@ class ModelApp:
         ) -> JSONResponse:
             request_arrival_time = time.time()
             try:
-                cur_time = request_arrival_time
+                controller = self._get_controller(model_name=model_name)
+
+                curr_time = request_arrival_time
                 deadline = datetime.strptime(
                     request.metadata.annotations.deepsearch_res_ibm_com_x_deadline,
                     "%Y-%m-%dT%H:%M:%S.%f%z",
                 )
                 deadline_ts = float(deadline.timestamp())
-
-                controller = self._get_controller(model_name=model_name)
-                compute_min_deadline_ts = cur_time + controller.get_model_exec_time()
-
-                if compute_min_deadline_ts - deadline_ts > 0:
+                if deadline_ts < curr_time:
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST,
-                        detail="Deadline can not be lower than model expected compute time",
+                        detail="Requested deadline lies in the past",
+                    )
+
+                expected_completion_ts = curr_time + controller.get_model_exec_time()
+                if deadline_ts < expected_completion_ts:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Expected completion time lies beyond requested deadline",
                     )
 
                 result = await asyncio.wait_for(
                     _run_in_process(_inference_process, model_name, request),
-                    timeout=deadline_ts - cur_time,
+                    timeout=deadline_ts - curr_time,
                 )
 
                 result.headers["X-Processing-Pod-Id"] = os.getenv(

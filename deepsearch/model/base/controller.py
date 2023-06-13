@@ -44,4 +44,4 @@ class BaseController(ABC):
         return self._get_config().name
 
     def get_model_exec_time(self) -> float:
-        return self._get_config().expected_compute_time or 0  # TODO review
+        return self._get_config().expected_compute_time or 0
