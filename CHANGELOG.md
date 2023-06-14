@@ -1,3 +1,11 @@
+## [v0.18.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.18.0) - 2023-06-14
+
+### Feature
+* Add multi-kind support to Model API ([#101](https://github.com/DS4SD/deepsearch-toolkit/issues/101)) ([`c9fe028`](https://github.com/DS4SD/deepsearch-toolkit/commit/c9fe028d97f1c8198f51cf144c0e701f12a8fc3a))
+
+### Documentation
+* Add toolkit dev setup instructions ([#98](https://github.com/DS4SD/deepsearch-toolkit/issues/98)) ([`0ae1925`](https://github.com/DS4SD/deepsearch-toolkit/commit/0ae1925c8db1417d0f61b8552fb0b5b8b5f94e88))
+
 ## [v0.17.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.17.0) - 2023-06-05
 
 ### Feature
