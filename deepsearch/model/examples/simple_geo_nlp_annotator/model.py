@@ -3,14 +3,23 @@
 # ALL RIGHTS RESERVED
 
 ## Sample External API Annotator
-## Apart from initialization of provided entities and model loading,
-## the only function you really have to change here is "annotate_entities_text".
 
 import logging
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
-from deepsearch.model.base.base_nlp_annotator import BaseNLPAnnotator
+from deepsearch.model.base.types import Kind
+from deepsearch.model.kinds.nlp.model import BaseNLPModel, NLPConfig
+from deepsearch.model.kinds.nlp.types import (
+    AnnotateEntitiesOutput,
+    AnnotatePropertiesOutput,
+    AnnotateRelationshipsOutput,
+    AnnotationLabels,
+    EntityLabel,
+    NLPType,
+    PropertyLabel,
+    RelationshipLabel,
+)
 
 logger = logging.getLogger("cps-nlp")
 from typing import List, Optional
@@ -28,13 +37,8 @@ from .relationships.provincies_to_countries_annotator import (  # type: ignore
     ProvinciesToCountriesAnnotator,
 )
 
-# import pprint ## For debugging only.
 
-
-class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
-
-    name = "SimpleTextGeographyAnnotator"
-    supports = ["text"]
+class SimpleGeoNLPAnnotator(BaseNLPModel):
 
     _ent_annotator_classes = [
         CitiesAnnotator,
@@ -49,42 +53,55 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
     ]
 
     def __init__(self):
+        super().__init__()
+
         self._ent_annots = {}
         self._rel_annots = {}
         self._initialize_annotators()
 
         self.entity_names = list(self._ent_annots.keys())
         self.relationship_names = list(self._rel_annots.keys())
-        self.property_names = []  # this annotator does not annotate properties
-        self.labels = self._generate_annotator_labels()
+        self.property_names = []
 
-    def _generate_annotator_labels(self):
+        self._config = NLPConfig(
+            kind=Kind.NLPModel,
+            name="SimpleGeoNLPAnnotator",
+            version="0.1.0",
+            supported_types=[NLPType.text],
+            labels=self._generate_labels(),
+        )
+
+    def get_nlp_config(self) -> NLPConfig:
+        return self._config
+
+    def _generate_labels(self) -> AnnotationLabels:
         # Derive entity labels from classes
-        entities_with_desc = [
-            {"key": annot.key(), "description": annot.description()}
+        entities = [
+            EntityLabel(key=annot.key(), description=annot.description())
             for annot in self._ent_annots.values()
         ]
+
         # Dummy implementation of property labels
-        properties_with_desc = [
-            {"key": property, "description": f"Property of type {property!r}"}
+        properties = [
+            PropertyLabel(key=property, description=f"Property of type {property}")
             for property in self.property_names
         ]
 
         # Derive relationships labels from classes
-        relationships_with_columns = [
-            {
-                "key": annot.key(),
-                "description": annot.description(),
-                "columns": annot.columns(),
-            }
+        relationships = [
+            RelationshipLabel(
+                key=annot.key(),
+                description=annot.description(),
+                columns=annot.columns(),
+            )
             for annot in self._rel_annots.values()
         ]
 
-        return {
-            "entities": entities_with_desc,
-            "relationships": relationships_with_columns,
-            "properties": properties_with_desc,
-        }
+        return AnnotationLabels(
+            entities=entities,
+            relationships=relationships,
+            properties=properties,
+        )
 
     def _initialize_annotators(self):
         # Initialize dict of annotator instances `self._ent_annots`
@@ -99,7 +116,7 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
 
     def annotate_batched_entities(
         self, object_type, items: List[str], entity_names: Optional[List[str]]
-    ) -> List[dict]:
+    ) -> AnnotateEntitiesOutput:
         ## An item is a string if object_type == "text", and List[List[dict]] if object_type == "table"
         if entity_names is None:
             # This means that the user did not explicitly specify which entities they want.
@@ -118,7 +135,7 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
         for item in items:
             entity_map = {}
             try:
-                cps_entities = self.annotate_entities_in_item(
+                cps_entities = self._annotate_entities_in_item(
                     object_type, item, desired_entities
                 )
             except Exception as exc:
@@ -135,12 +152,9 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
                 ]
             results.append(entity_map)
 
-        # print("Entities returned from 'annotate_batched_entities', for type " + object_type)
-        # pprint.pprint(results)
-
         return results
 
-    def annotate_entities_in_item(
+    def _annotate_entities_in_item(
         self, object_type: str, item: str, entity_names: Optional[List[str]]
     ) -> List[dict]:
         # In this case entity_names is never None, however since BaseAnnotator defines the signature of this method as
@@ -169,7 +183,7 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
         items: List[str],
         entities: List[dict],
         relationship_names: Optional[List[str]],
-    ) -> List[dict]:
+    ) -> AnnotateRelationshipsOutput:
         if relationship_names is None:
             # This means that the user did not explicitly specify which relationships they want.
             # So, assume our list.
@@ -198,6 +212,8 @@ class SimpleTextGeographyAnnotator(BaseNLPAnnotator):
         items: List,
         entities: List[dict],
         property_names: Optional[List[str]],
-    ) -> List[dict]:
-        # raise HTTP 501 to indicate method not supported
-        raise HTTPException(status_code=501, detail="Property annotation not supported")
+    ) -> AnnotatePropertiesOutput:
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Property annotation not supported",
+        )
