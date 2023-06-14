@@ -4,63 +4,69 @@ from typing import List, Literal, Optional, Union
 from deepsearch.model.base.types import BaseInfReq, BaseModelConfig, Kind, StrictModel
 
 
+class NLPType(str, Enum):
+    text = "text"
+    table = "table"
+    image = "image"
+
+
 class FindEntitiesText(StrictModel):
     entityNames: Optional[List[str]]
-    objectType: str
+    objectType: Literal[NLPType.text]
     texts: List[str]
 
 
 class FindPropertiesText(StrictModel):
     propertyNames: Optional[List[str]]
     entities: Optional[List[dict]]
-    objectType: str
+    objectType: Literal[NLPType.text]
     texts: List[str]
 
 
 class FindRelationshipsText(StrictModel):
     relationshipNames: Optional[List[str]]
     entities: List[dict]
-    objectType: str
+    objectType: Literal[NLPType.text]
     texts: List[str]
 
 
 class FindEntitiesImage(StrictModel):
     entityNames: Optional[List[str]]
-    objectType: str
+    objectType: Literal[NLPType.image]
     images: List[dict]
 
 
 class FindPropertiesImage(StrictModel):
     propertyNames: Optional[List[str]]
     entities: Optional[List[dict]]
-    objectType: str
+    objectType: Literal[NLPType.image]
     images: List[dict]
 
 
 class FindRelationshipsImage(StrictModel):
     relationshipNames: Optional[List[str]]
     entities: List[dict]
-    objectType: str
+    objectType: Literal[NLPType.image]
     images: List[dict]
 
 
 class FindEntitiesTable(StrictModel):
     entityNames: Optional[List[str]]
-    objectType: str
+    objectType: Literal[NLPType.table]
     tables: List[List]
 
 
 class FindPropertiesTable(StrictModel):
     propertyNames: Optional[List[str]]
     entities: Optional[List[dict]]
-    objectType: str
+    objectType: Literal[NLPType.table]
     tables: List[List]
 
 
 class FindRelationshipsTable(StrictModel):
     relationshipNames: Optional[List[str]]
     entities: List[dict]
-    objectType: str
+    objectType: Literal[NLPType.table]
     tables: List[List]
 
 
@@ -90,7 +96,7 @@ class NLPRequest(BaseInfReq):
     spec: NLPReqSpec
 
 
-class Entity(StrictModel):
+class EntityLabel(StrictModel):
     key: str
     description: str
 
@@ -100,21 +106,21 @@ class RelationshipColumn(StrictModel):
     entities: List[str]
 
 
-class Relationship(StrictModel):
+class RelationshipLabel(StrictModel):
     key: str
     description: str
     columns: List[RelationshipColumn]
 
 
-class Property(StrictModel):  # TODO verify
+class PropertyLabel(StrictModel):
     key: str
     description: str
 
 
-class Labels(StrictModel):
-    entities: List[Entity]
-    relationships: List[Relationship]
-    properties: List[Property]
+class AnnotationLabels(StrictModel):
+    entities: List[EntityLabel]
+    relationships: List[RelationshipLabel]
+    properties: List[PropertyLabel]
 
 
 # TODO Annotate*Input pydantic models needed?
@@ -145,4 +151,5 @@ NLPControllerOutput = Union[
 
 class NLPConfig(BaseModelConfig):
     kind: Literal[Kind.NLPModel]
-    supported_types: List[str]
+    supported_types: List[NLPType]
+    labels: AnnotationLabels

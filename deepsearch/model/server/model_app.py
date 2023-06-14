@@ -4,7 +4,6 @@ import asyncio
 import logging
 import os
 import time
-from datetime import datetime
 from typing import Dict, Optional
 
 import uvicorn
@@ -70,9 +69,8 @@ class ModelApp:
                 controller = self._get_controller(model_name=model_name)
 
                 curr_time = request_arrival_time
-                deadline = datetime.strptime(
-                    request.metadata.annotations.deepsearch_res_ibm_com_x_deadline,
-                    "%Y-%m-%dT%H:%M:%S.%f%z",
+                deadline = (
+                    request.metadata.annotations.deepsearch_res_ibm_com_x_deadline
                 )
                 deadline_ts = float(deadline.timestamp())
                 if deadline_ts < curr_time:

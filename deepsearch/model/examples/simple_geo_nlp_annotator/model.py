@@ -14,10 +14,11 @@ from deepsearch.model.kinds.nlp.types import (
     AnnotateEntitiesOutput,
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
-    Entity,
-    Labels,
-    Property,
-    Relationship,
+    AnnotationLabels,
+    EntityLabel,
+    NLPType,
+    PropertyLabel,
+    RelationshipLabel,
 )
 
 logger = logging.getLogger("cps-nlp")
@@ -39,13 +40,6 @@ from .relationships.provincies_to_countries_annotator import (  # type: ignore
 
 class SimpleGeoNLPAnnotator(BaseNLPModel):
 
-    _config = NLPConfig(
-        kind=Kind.NLPModel,
-        name="SimpleGeoNLPAnnotator",
-        version="0.1.0",
-        supported_types=["text"],
-    )
-
     _ent_annotator_classes = [
         CitiesAnnotator,
         CountriesAnnotator,
@@ -59,6 +53,8 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
     ]
 
     def __init__(self):
+        super().__init__()
+
         self._ent_annots = {}
         self._rel_annots = {}
         self._initialize_annotators()
@@ -67,25 +63,33 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
         self.relationship_names = list(self._rel_annots.keys())
         self.property_names = []
 
+        self._config = NLPConfig(
+            kind=Kind.NLPModel,
+            name="SimpleGeoNLPAnnotator",
+            version="0.1.0",
+            supported_types=[NLPType.text],
+            labels=self._generate_labels(),
+        )
+
     def get_nlp_config(self) -> NLPConfig:
         return self._config
 
-    def get_labels(self) -> Labels:
+    def _generate_labels(self) -> AnnotationLabels:
         # Derive entity labels from classes
         entities = [
-            Entity(key=annot.key(), description=annot.description())
+            EntityLabel(key=annot.key(), description=annot.description())
             for annot in self._ent_annots.values()
         ]
 
         # Dummy implementation of property labels
         properties = [
-            Property(key=property, description=f"Property of type {property}")
+            PropertyLabel(key=property, description=f"Property of type {property}")
             for property in self.property_names
         ]
 
         # Derive relationships labels from classes
         relationships = [
-            Relationship(
+            RelationshipLabel(
                 key=annot.key(),
                 description=annot.description(),
                 columns=annot.columns(),
@@ -93,7 +97,7 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
             for annot in self._rel_annots.values()
         ]
 
-        return Labels(
+        return AnnotationLabels(
             entities=entities,
             relationships=relationships,
             properties=properties,

@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
 
@@ -10,7 +11,7 @@ class StrictModel(BaseModel, extra=Extra.forbid):
 
 
 class Annotations(StrictModel):
-    deepsearch_res_ibm_com_x_deadline: str = Field(
+    deepsearch_res_ibm_com_x_deadline: datetime = Field(
         ..., alias="deepsearch.res.ibm.com/x-deadline"
     )
     deepsearch_res_ibm_com_x_transaction_id: str = Field(

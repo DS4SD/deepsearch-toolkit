@@ -3,23 +3,27 @@ from typing import List, Optional
 from fastapi import HTTPException, status
 
 from deepsearch.model.base.types import Kind
-from deepsearch.model.kinds.nlp.model import BaseNLPModel, Labels, NLPConfig
+from deepsearch.model.kinds.nlp.model import BaseNLPModel, NLPConfig
 from deepsearch.model.kinds.nlp.types import (
     AnnotateEntitiesOutput,
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
-    Entity,
+    AnnotationLabels,
+    EntityLabel,
 )
 
 
 class DummyNLPAnnotator(BaseNLPModel):
+    def __init__(self) -> None:
+        super().__init__()
 
-    _config = NLPConfig(
-        kind=Kind.NLPModel,
-        name="DummyNLPAnnotator",
-        version="0.1.0",
-        supported_types=["text"],
-    )
+        self._config = NLPConfig(
+            kind=Kind.NLPModel,
+            name="DummyNLPAnnotator",
+            version="0.1.0",
+            supported_types=["text"],
+            labels=self._generate_labels(),
+        )
 
     def get_nlp_config(self) -> NLPConfig:
         return self._config
@@ -78,12 +82,12 @@ class DummyNLPAnnotator(BaseNLPModel):
             detail="Property annotation not supported",
         )
 
-    def get_labels(self) -> Labels:
+    def _generate_labels(self) -> AnnotationLabels:
         entities = [
-            Entity(key="entity_foo", description="some entity"),
-            Entity(key="entity_bar", description="another entity"),
+            EntityLabel(key="entity_foo", description="some entity"),
+            EntityLabel(key="entity_bar", description="another entity"),
         ]
-        return Labels(
+        return AnnotationLabels(
             entities=entities,
             relationships=[],
             properties=[],

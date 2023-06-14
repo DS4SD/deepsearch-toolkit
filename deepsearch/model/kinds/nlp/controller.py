@@ -1,5 +1,3 @@
-from typing import cast
-
 from fastapi import HTTPException, status
 
 from deepsearch.model.base.controller import BaseController
@@ -7,6 +5,9 @@ from deepsearch.model.base.model import BaseDSModel
 from deepsearch.model.base.types import Kind
 from deepsearch.model.kinds.nlp.model import BaseNLPModel
 from deepsearch.model.kinds.nlp.types import (
+    FindEntitiesText,
+    FindPropertiesText,
+    FindRelationshipsText,
     NLPEntitiesControllerOutput,
     NLPEntitiesReqSpec,
     NLPPropertiesControllerOutput,
@@ -28,98 +29,58 @@ class NLPController(BaseController):
         return self._model
 
     def dispatch_predict(self, spec: ControllerInput) -> ControllerOutput:
-        # TODO: use Pydantic objects instead of dicts
-        if isinstance(spec, NLPEntitiesReqSpec):
-            find_entities_part = cast(NLPEntitiesReqSpec, spec).findEntities
-            find_entities_dict = find_entities_part.dict()
-            items = self._validate_and_parse_input(find_entities_dict)
+        cfg = self._model.get_nlp_config()
+        type_ok = True
+
+        # currently only addressing text object types
+        if (
+            isinstance(spec, NLPEntitiesReqSpec)
+            and isinstance(spec.findEntities, FindEntitiesText)
+            and (type_ok := (spec.findEntities.objectType in cfg.supported_types))
+        ):
             entities = self._model.annotate_batched_entities(
-                find_entities_dict["objectType"],
-                items,
-                find_entities_dict["entityNames"],
+                object_type=spec.findEntities.objectType,
+                items=spec.findEntities.texts,
+                entity_names=spec.findEntities.entityNames,
             )
             return NLPEntitiesControllerOutput(entities=entities)
-        elif isinstance(spec, NLPRelationshipsReqSpec):
-            find_relationships_part = cast(
-                NLPRelationshipsReqSpec, spec
-            ).findRelationships
-            find_relationships_dict = find_relationships_part.dict()
-            items = self._validate_and_parse_input(find_relationships_dict)
+        elif (
+            isinstance(spec, NLPRelationshipsReqSpec)
+            and isinstance(spec.findRelationships, FindRelationshipsText)
+            and (type_ok := (spec.findRelationships.objectType in cfg.supported_types))
+        ):
             relationships = self._model.annotate_batched_relationships(
-                find_relationships_dict["objectType"],
-                items,
-                find_relationships_dict["entities"],
-                find_relationships_dict["relationshipNames"],
+                object_type=spec.findRelationships.objectType,
+                items=spec.findRelationships.texts,
+                entities=spec.findRelationships.entities,
+                relationship_names=spec.findRelationships.relationshipNames,
             )
             return NLPRelationshipsControllerOutput(relationships=relationships)
-        elif isinstance(spec, NLPPropertiesReqSpec):
-            find_properties_part = cast(NLPPropertiesReqSpec, spec).findProperties
-            find_properties_dict = find_properties_part.dict()
-            items = self._validate_and_parse_input(find_properties_dict)
+        elif (
+            isinstance(spec, NLPPropertiesReqSpec)
+            and isinstance(spec.findProperties, FindPropertiesText)
+            and (type_ok := (spec.findProperties.objectType in cfg.supported_types))
+        ):
+            # TODO review bugfix
 
-            if isinstance(items, dict):
-                if find_properties_dict.get("entities", None) is None:
-                    find_properties_dict["entities"] = [{}] * len(items)
+            if spec.findProperties.entities is None:
+                entities = [{}] * len(spec.findProperties.texts)
             else:
-                raise KeyError("items is not a dictionary")
-
+                entities = spec.findProperties.entities
             properties = self._model.annotate_batched_properties(
-                find_properties_dict["objectType"],
-                items,
-                find_properties_dict["entities"],
-                find_properties_dict["propertyNames"],
+                object_type=spec.findProperties.objectType,
+                items=spec.findProperties.texts,
+                entities=entities,
+                property_names=spec.findProperties.propertyNames,
             )
-
             return NLPPropertiesControllerOutput(properties=properties)
+        elif not type_ok:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Requested object type not supported by model",
+            )
         else:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Unexpected spec type",
+                detail="Unexpected spec type",
             )
-
-    # TODO replace with pydantic
-    def _validate_and_parse_input(self, spec_part) -> list:
-        object_type = spec_part.get("objectType", "text")
-        expected = ("text", "image", "table")
-
-        if object_type not in expected:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Invalid object type. Expected one of: {expected}",
-            )
-
-        if object_type not in (
-            supported := self._model.get_nlp_config().supported_types
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail=f"Unsupported object type for this model. Supports: {supported}",
-            )
-
-        if object_type == "text":
-            if not isinstance(spec_part.get("texts"), list):
-                raise HTTPException(
-                    status_code=400, detail="Invalid input: Missing 'texts'"
-                )
-            return spec_part["texts"]
-
-        if object_type == "image":
-            if not isinstance(spec_part.get("images"), list):
-                raise HTTPException(
-                    status_code=400, detail="Invalid input: Missing 'images'"
-                )
-
-            return spec_part["images"]
-
-        if object_type == "table":
-            if not isinstance(spec_part.get("tables"), list):
-                raise HTTPException(
-                    status_code=400, detail="Invalid input: Missing 'tables'"
-                )
-
-            return spec_part["tables"]
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal Server Error",
-        )

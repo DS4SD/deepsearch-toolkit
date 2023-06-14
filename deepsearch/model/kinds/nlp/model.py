@@ -7,17 +7,12 @@ from deepsearch.model.kinds.nlp.types import (
     AnnotateEntitiesOutput,
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
-    Labels,
     NLPConfig,
 )
 
 
 class BaseNLPModel(BaseDSModel):
     _cached_def_spec: dict = {}
-
-    @abstractmethod
-    def get_labels(self) -> Labels:
-        raise NotImplementedError()
 
     @abstractmethod
     def annotate_batched_entities(
@@ -52,7 +47,7 @@ class BaseNLPModel(BaseDSModel):
         cfg = self.get_nlp_config()
         if not self._cached_def_spec:
             self._cached_def_spec = deepcopy(super().get_definition_spec())
-            self._cached_def_spec["definition"] = self.get_labels().dict()
+            self._cached_def_spec["definition"] = cfg.labels
             self._cached_def_spec["metadata"][
                 "supported_object_types"
             ] = cfg.supported_types
