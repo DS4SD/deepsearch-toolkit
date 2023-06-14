@@ -5,9 +5,8 @@ from deepsearch.model.base.types import BaseInfReq, BaseModelConfig, Kind, Stric
 
 
 class NLPType(str, Enum):
+    # currently only supporting "text"
     text = "text"
-    table = "table"
-    image = "image"
 
 
 class FindEntitiesText(StrictModel):
@@ -30,58 +29,16 @@ class FindRelationshipsText(StrictModel):
     texts: List[str]
 
 
-class FindEntitiesImage(StrictModel):
-    entityNames: Optional[List[str]]
-    objectType: Literal[NLPType.image]
-    images: List[dict]
-
-
-class FindPropertiesImage(StrictModel):
-    propertyNames: Optional[List[str]]
-    entities: Optional[List[dict]]
-    objectType: Literal[NLPType.image]
-    images: List[dict]
-
-
-class FindRelationshipsImage(StrictModel):
-    relationshipNames: Optional[List[str]]
-    entities: List[dict]
-    objectType: Literal[NLPType.image]
-    images: List[dict]
-
-
-class FindEntitiesTable(StrictModel):
-    entityNames: Optional[List[str]]
-    objectType: Literal[NLPType.table]
-    tables: List[List]
-
-
-class FindPropertiesTable(StrictModel):
-    propertyNames: Optional[List[str]]
-    entities: Optional[List[dict]]
-    objectType: Literal[NLPType.table]
-    tables: List[List]
-
-
-class FindRelationshipsTable(StrictModel):
-    relationshipNames: Optional[List[str]]
-    entities: List[dict]
-    objectType: Literal[NLPType.table]
-    tables: List[List]
-
-
 class NLPEntitiesReqSpec(StrictModel):
-    findEntities: Union[FindEntitiesText, FindEntitiesImage, FindEntitiesTable]
+    findEntities: FindEntitiesText
 
 
 class NLPPropertiesReqSpec(StrictModel):
-    findProperties: Union[FindPropertiesText, FindPropertiesImage, FindPropertiesTable]
+    findProperties: FindPropertiesText
 
 
 class NLPRelationshipsReqSpec(StrictModel):
-    findRelationships: Union[
-        FindRelationshipsText, FindRelationshipsImage, FindRelationshipsTable
-    ]
+    findRelationships: FindRelationshipsText
 
 
 NLPReqSpec = Union[

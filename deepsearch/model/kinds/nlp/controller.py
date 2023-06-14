@@ -61,8 +61,6 @@ class NLPController(BaseController):
             and isinstance(spec.findProperties, FindPropertiesText)
             and (type_ok := (spec.findProperties.objectType in cfg.supported_types))
         ):
-            # TODO review bugfix
-
             if spec.findProperties.entities is None:
                 entities = [{}] * len(spec.findProperties.texts)
             else:
