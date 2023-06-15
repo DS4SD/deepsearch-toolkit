@@ -10,20 +10,20 @@ class NLPType(str, Enum):
 
 
 class FindEntitiesText(StrictModel):
-    entityNames: Optional[List[str]]
+    entityNames: Optional[List[str]] = None
     objectType: Literal[NLPType.text]
     texts: List[str]
 
 
 class FindPropertiesText(StrictModel):
-    propertyNames: Optional[List[str]]
-    entities: Optional[List[dict]]
+    propertyNames: Optional[List[str]] = None
+    entities: Optional[List[dict]] = None
     objectType: Literal[NLPType.text]
     texts: List[str]
 
 
 class FindRelationshipsText(StrictModel):
-    relationshipNames: Optional[List[str]]
+    relationshipNames: Optional[List[str]] = None
     entities: List[dict]
     objectType: Literal[NLPType.text]
     texts: List[str]

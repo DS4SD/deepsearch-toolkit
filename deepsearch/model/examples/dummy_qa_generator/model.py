@@ -1,8 +1,8 @@
 from typing import List, Tuple
 
 from deepsearch.model.base.types import Kind
-from deepsearch.model.kinds.qagen.model import BaseQAGenerator, QAGenConfig
-from deepsearch.model.kinds.qagen.types import GenerateAnswersOutput
+from deepsearch.model.kinds.qagen.model import BaseQAGenerator
+from deepsearch.model.kinds.qagen.types import GenerateAnswersOutput, QAGenConfig
 
 
 class DummyQAGenerator(BaseQAGenerator):

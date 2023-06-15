@@ -1,7 +1,8 @@
 from abc import abstractmethod
-from typing import List, Literal, Tuple
+from typing import List, Tuple
 
-from deepsearch.model.base.model import BaseDSModel, BaseModelConfig
+from deepsearch.model.base.model import BaseDSModel
+from deepsearch.model.base.types import BaseModelConfig
 from deepsearch.model.kinds.qagen.types import GenerateAnswersOutput, QAGenConfig
 
 
