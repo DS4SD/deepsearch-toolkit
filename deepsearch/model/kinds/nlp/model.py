@@ -2,7 +2,8 @@ from abc import abstractmethod
 from copy import deepcopy
 from typing import List, Optional
 
-from deepsearch.model.base.model import BaseDSModel, BaseModelConfig
+from deepsearch.model.base.model import BaseDSModel
+from deepsearch.model.base.types import BaseModelConfig
 from deepsearch.model.kinds.nlp.types import (
     AnnotateEntitiesOutput,
     AnnotatePropertiesOutput,

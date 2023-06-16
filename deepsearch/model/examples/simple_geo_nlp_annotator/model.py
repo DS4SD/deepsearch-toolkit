@@ -9,13 +9,14 @@ import logging
 from fastapi import HTTPException, status
 
 from deepsearch.model.base.types import Kind
-from deepsearch.model.kinds.nlp.model import BaseNLPModel, NLPConfig
+from deepsearch.model.kinds.nlp.model import BaseNLPModel
 from deepsearch.model.kinds.nlp.types import (
     AnnotateEntitiesOutput,
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
     AnnotationLabels,
     EntityLabel,
+    NLPConfig,
     NLPType,
     PropertyLabel,
     RelationshipLabel,
