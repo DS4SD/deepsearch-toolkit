@@ -1,3 +1,8 @@
+## [v0.18.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.18.1) - 2023-06-16
+
+### Fix
+* Define Model API optional type defaults ([#103](https://github.com/DS4SD/deepsearch-toolkit/issues/103)) ([`8256cdf`](https://github.com/DS4SD/deepsearch-toolkit/commit/8256cdfc2343c5496f7764c31c0a407bb5f63b44))
+
 ## [v0.18.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.18.0) - 2023-06-14
 
 ### Feature
