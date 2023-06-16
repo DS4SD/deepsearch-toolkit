@@ -34,7 +34,7 @@ python = "^3.8"
 # Dependencies from generated packages
 urllib3 = "^1.26.8"
 six = "^1.16.0"
-certifi = "^2021.10.8"
+certifi = "^2022.12.07"
 python-dateutil = "^2.8.2"
 
 # Actual dependencies
@@ -46,10 +46,9 @@ tabulate = "^0.8.9"
 pluggy = "^1.0.0"
 tqdm = "^4.64.0"
 
-fastapi = { version = "^0.95.1", optional = true }
+fastapi = { version = "^0.95.2", optional = true }
 uvicorn = { version = "^0.21.1", optional = true }
 anyio = { version = "^3.6.2", optional = true }
-starlette = { version = "^0.26.1", optional = true }
 
 [tool.poetry.extras]
 # MANUAL MAINTENANCE REQUIRED: for every change in the extras, "all" must be updated,
@@ -60,14 +59,12 @@ api = [
     "fastapi",
     "uvicorn",
     "anyio",
-    "starlette",
 ]
 
 all = [
     "fastapi",
     "uvicorn",
     "anyio",
-    "starlette",
 ]
 
 [tool.poetry.group.dev.dependencies]

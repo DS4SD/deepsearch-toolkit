@@ -45,7 +45,7 @@ class BaseModelConfig(StrictModel):
     kind: Kind
     name: str
     version: str
-    url: Optional[str]
-    author: Optional[str]
-    description: Optional[str]
-    expected_compute_time: Optional[PositiveFloat]
+    url: Optional[str] = None
+    author: Optional[str] = None
+    description: Optional[str] = None
+    expected_compute_time: Optional[PositiveFloat] = None

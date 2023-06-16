@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from deepsearch.model.base.model import BaseDSModel, BaseModelConfig
+from deepsearch.model.base.model import BaseDSModel
+from deepsearch.model.base.types import BaseModelConfig
 from deepsearch.model.server.inference_types import ControllerInput, ControllerOutput
 
 
