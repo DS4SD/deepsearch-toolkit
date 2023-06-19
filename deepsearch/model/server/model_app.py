@@ -9,7 +9,7 @@ from typing import Dict, Optional
 import uvicorn
 from anyio import CapacityLimiter
 from anyio.lowlevel import RunVar
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
@@ -17,6 +17,7 @@ from fastapi.responses import JSONResponse
 
 from deepsearch.model.base.controller import BaseController
 from deepsearch.model.base.model import BaseDSModel
+from deepsearch.model.server.auth import api_key_auth
 from deepsearch.model.server.controller_factory import ControllerFactory
 from deepsearch.model.server.inference_types import AppInferenceInput
 
@@ -44,18 +45,18 @@ class ModelApp:
             )
 
         @self.app.get("/health")
-        async def health_check() -> dict:
+        async def health_check(api_key=Depends(api_key_auth)) -> dict:
             return {"message": "HealthCheck"}
 
         @self.app.get("/")
-        async def get_definitions() -> dict:
+        async def get_definitions(api_key=Depends(api_key_auth)) -> dict:
             return {
                 name: controller.get_info()
                 for name, controller in self._controllers.items()
             }
 
         @self.app.get("/model/{model_name}")
-        async def get_model_specs(model_name: str) -> dict:
+        async def get_model_specs(model_name: str, api_key=Depends(api_key_auth)) -> dict:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 
@@ -63,6 +64,7 @@ class ModelApp:
         async def predict(
             model_name: str,
             request: AppInferenceInput,
+            api_key=Depends(api_key_auth)
         ) -> JSONResponse:
             request_arrival_time = time.time()
             try:
