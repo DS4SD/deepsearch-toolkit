@@ -1,3 +1,40 @@
+## [v0.18.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.18.1) - 2023-06-16
+
+### Fix
+* Define Model API optional type defaults ([#103](https://github.com/DS4SD/deepsearch-toolkit/issues/103)) ([`8256cdf`](https://github.com/DS4SD/deepsearch-toolkit/commit/8256cdfc2343c5496f7764c31c0a407bb5f63b44))
+
+## [v0.18.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.18.0) - 2023-06-14
+
+### Feature
+* Add multi-kind support to Model API ([#101](https://github.com/DS4SD/deepsearch-toolkit/issues/101)) ([`c9fe028`](https://github.com/DS4SD/deepsearch-toolkit/commit/c9fe028d97f1c8198f51cf144c0e701f12a8fc3a))
+
+### Documentation
+* Add toolkit dev setup instructions ([#98](https://github.com/DS4SD/deepsearch-toolkit/issues/98)) ([`0ae1925`](https://github.com/DS4SD/deepsearch-toolkit/commit/0ae1925c8db1417d0f61b8552fb0b5b8b5f94e88))
+
+## [v0.17.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.17.0) - 2023-06-05
+
+### Feature
+* Add artifact management ([#93](https://github.com/DS4SD/deepsearch-toolkit/issues/93)) ([`77379c2`](https://github.com/DS4SD/deepsearch-toolkit/commit/77379c2361603abb52d4fe5931b928964a60a6f0))
+
+## [v0.16.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.16.0) - 2023-06-01
+
+### Feature
+* Expose ES highlight option ([#91](https://github.com/DS4SD/deepsearch-toolkit/issues/91)) ([`8e65cbf`](https://github.com/DS4SD/deepsearch-toolkit/commit/8e65cbf6438a781272a6fcce995657292c7e7c9e))
+
+## [v0.15.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.15.0) - 2023-05-24
+
+### Feature
+* Make Model API interface more explicit ([#86](https://github.com/DS4SD/deepsearch-toolkit/issues/86)) ([`5f83d6a`](https://github.com/DS4SD/deepsearch-toolkit/commit/5f83d6ab92acb9be790b79557ee41db798dcaf6e))
+
+## [v0.14.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.14.0) - 2023-04-25
+
+### Feature
+* Add definitions endpoint, minor refactoring ([`43b60d6`](https://github.com/DS4SD/deepsearch-toolkit/commit/43b60d65674e273ab53feea7a77705691594cc60))
+* Set up FastAPI-based model API ([#76](https://github.com/DS4SD/deepsearch-toolkit/issues/76)) ([`383b3f4`](https://github.com/DS4SD/deepsearch-toolkit/commit/383b3f4bf2e84985ec7cc9ba918a868c40cb7c2e))
+
+### Documentation
+* Update data index docs ([#72](https://github.com/DS4SD/deepsearch-toolkit/issues/72)) ([`4c1691a`](https://github.com/DS4SD/deepsearch-toolkit/commit/4c1691a0421a5898fc23a8fe330a6411e41e555e))
+
 ## [v0.13.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.13.0) - 2023-03-14
 
 ### Feature

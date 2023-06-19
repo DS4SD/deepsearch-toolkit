@@ -33,6 +33,7 @@ def DataQuery(
     *,
     source: Optional[List[str]] = None,
     aggregations: Optional[dict] = None,
+    highlight: Optional[dict] = None,
     sort: Optional[List[Dict[str, Any]]] = None,
     limit: int = 20,
     search_after: Optional[List[str]] = None,
@@ -56,6 +57,9 @@ def DataQuery(
 
     if aggregations is not None:
         payload["aggregations"] = aggregations
+
+    if highlight is not None:
+        payload["highlight"] = highlight
 
     if search_after is not None:
         payload["search_after"] = search_after
