@@ -56,15 +56,15 @@ class ModelApp:
             }
 
         @self.app.get("/model/{model_name}")
-        async def get_model_specs(model_name: str, api_key=Depends(api_key_auth)) -> dict:
+        async def get_model_specs(
+            model_name: str, api_key=Depends(api_key_auth)
+        ) -> dict:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 
         @self.app.post("/model/{model_name}/predict", response_model=None)
         async def predict(
-            model_name: str,
-            request: AppInferenceInput,
-            api_key=Depends(api_key_auth)
+            model_name: str, request: AppInferenceInput, api_key=Depends(api_key_auth)
         ) -> JSONResponse:
             request_arrival_time = time.time()
             try:
