@@ -129,6 +129,10 @@ module = "rdkit.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
+module = "dotenv.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
 module = "numpy.*"
 ignore_missing_imports = true
 
