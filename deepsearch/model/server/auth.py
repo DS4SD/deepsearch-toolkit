@@ -9,13 +9,13 @@ api_key = APIKeyHeader(name="Authorization")
 
 
 def api_key_auth(header_api_key: str = Security(api_key)):
-    header_api_key_arg = deepcopy(header_api_key)
+    request_api_key = header_api_key
     # If we run without auth
     if not settings.api_key:
         return
 
     header_api_key_arg = (
-        header_api_key_arg.replace("Bearer ", "")
+        request_api_key.replace("Bearer ", "")
         .replace("bearer ", "")
         .replace("Bearer: ", "")
         .replace("bearer: ", "")
