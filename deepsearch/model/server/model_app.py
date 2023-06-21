@@ -45,7 +45,7 @@ class ModelApp:
             )
 
         @self.app.get("/health")
-        async def health_check(api_key=Depends(api_key_auth)) -> dict:
+        async def health_check() -> dict:
             return {"message": "HealthCheck"}
 
         @self.app.get("/")
