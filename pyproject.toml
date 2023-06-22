@@ -49,6 +49,8 @@ tqdm = "^4.64.0"
 fastapi = { version = "^0.95.2", optional = true }
 uvicorn = { version = "^0.21.1", optional = true }
 anyio = { version = "^3.6.2", optional = true }
+# for Pydantic Dotenv support (https://docs.pydantic.dev/latest/usage/settings/#dotenv-env-support):
+python-dotenv = { version = "^1.0.0", optional = true }
 
 [tool.poetry.extras]
 # MANUAL MAINTENANCE REQUIRED: for every change in the extras, "all" must be updated,
@@ -59,12 +61,14 @@ api = [
     "fastapi",
     "uvicorn",
     "anyio",
+    "python-dotenv",
 ]
 
 all = [
     "fastapi",
     "uvicorn",
     "anyio",
+    "python-dotenv",
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -123,6 +127,10 @@ implicit_reexport = true
 # typings available.
 [[tool.mypy.overrides]]
 module = "rdkit.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "dotenv.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
