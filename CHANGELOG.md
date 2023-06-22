@@ -1,3 +1,8 @@
+## [v0.19.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.19.0) - 2023-06-22
+
+### Feature
+* Add Model API authentication ([#106](https://github.com/DS4SD/deepsearch-toolkit/issues/106)) ([`755f1a0`](https://github.com/DS4SD/deepsearch-toolkit/commit/755f1a0e8f3a4ece4d25529f71fa13474724b86a))
+
 ## [v0.18.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.18.1) - 2023-06-16
 
 ### Fix
