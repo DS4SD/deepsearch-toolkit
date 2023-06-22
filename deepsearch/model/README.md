@@ -1,29 +1,41 @@
 # Model API
-
 > Currently in **beta**.
 
-The Model API allows users to serve and integrate their own models.
+The Model API is a unified and extensible inference API across different model kinds.
+
+Built-in model kind support includes NLP annotators and QA generators.
 
 ## Installation
-To use the Model API, install including the `api`
-extra, i.e.:
+To use the Model API, install including the `api` extra, i.e.:
 - with poetry:
 `poetry add "deepsearch-toolkit[api]"`
 - with pip: `pip install "deepsearch-toolkit[api]"`
 
-## Usage
-To run a model, register it with a [`ModelApp`](server/model_app.py) and run the app:
+## Basic usage
 ```python
-from deepsearch.model.server.deepsearch_annotator_app import ModelApp
+from deepsearch.model.server.config import Settings
+from deepsearch.model.server.model_app import ModelApp
 
+# (1) create an app
+app = ModelApp(settings=Settings())
+
+# (2) register your model(s)
 model = ...  # e.g. SimpleGeoNLPAnnotator()
-app = ModelApp()
 app.register_model(model)
+
+# (3) run the app
 app.run(host="127.0.0.1", port=8000)
 ```
 
-### OpenAPI
+### Settings
+App configuration is done in [`Settings`](server/config.py) based on
+[Pydantic settings management](https://docs.pydantic.dev/latest/usage/settings/).
 
+E.g. the required API key can be set via env var `DS_MODEL_API_KEY` (for precedence rules,
+check the
+[Pydantic docs](https://docs.pydantic.dev/latest/usage/settings/#field-value-priority)).
+
+### OpenAPI
 The OpenAPI UI is served under `/docs`, e.g. http://127.0.0.1:8000/docs.
 
 ## Developing a new model
@@ -39,6 +51,9 @@ optional parameter `controller`.
 - [Dummy NLP annotator](examples/dummy_nlp_annotator/)
 - [Simple geo NLP annotator](examples/simple_geo_nlp_annotator/)
 - [Dummy QA generator](examples/dummy_qa_generator/)
+
+Note: these examples configure the app with API key "example123"; when running them, use
+the same key to access the protected endpoints.
 
 ### Inference
 As as example, an input payload for the `/predict` endpoint for the geography annotator

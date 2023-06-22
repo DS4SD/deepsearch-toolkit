@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 import logging
 import os
@@ -9,15 +7,16 @@ from typing import Dict, Optional
 import uvicorn
 from anyio import CapacityLimiter
 from anyio.lowlevel import RunVar
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Security, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.security import APIKeyHeader
 
 from deepsearch.model.base.controller import BaseController
 from deepsearch.model.base.model import BaseDSModel
-from deepsearch.model.server.auth import api_key_auth
+from deepsearch.model.server.config import Settings
 from deepsearch.model.server.controller_factory import ControllerFactory
 from deepsearch.model.server.inference_types import AppInferenceInput
 
@@ -25,7 +24,9 @@ logger = logging.getLogger("cps-fastapi")
 
 
 class ModelApp:
-    def __init__(self):
+    def __init__(self, settings: Settings):
+        self._settings = settings
+
         self.app = FastAPI()
         self._controllers: Dict[str, BaseController] = {}
         self._contr_factory = ControllerFactory()
@@ -49,22 +50,20 @@ class ModelApp:
             return {"message": "HealthCheck"}
 
         @self.app.get("/")
-        async def get_definitions(api_key=Depends(api_key_auth)) -> dict:
+        async def get_definitions(api_key=Depends(self._auth)) -> dict:
             return {
                 name: controller.get_info()
                 for name, controller in self._controllers.items()
             }
 
         @self.app.get("/model/{model_name}")
-        async def get_model_specs(
-            model_name: str, api_key=Depends(api_key_auth)
-        ) -> dict:
+        async def get_model_specs(model_name: str, api_key=Depends(self._auth)) -> dict:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 
         @self.app.post("/model/{model_name}/predict", response_model=None)
         async def predict(
-            model_name: str, request: AppInferenceInput, api_key=Depends(api_key_auth)
+            model_name: str, request: AppInferenceInput, api_key=Depends(self._auth)
         ) -> JSONResponse:
             request_arrival_time = time.time()
             try:
@@ -146,6 +145,19 @@ class ModelApp:
             if "id" in request_dict.keys():
                 headers["X-request-id"] = str(request_dict["id"])
             return JSONResponse(content=jsonable_encoder(result), headers=headers)
+
+    def _auth(self, header_api_key: str = Security(APIKeyHeader(name="Authorization"))):
+        request_api_key = (
+            header_api_key.replace("Bearer ", "")
+            .replace("bearer ", "")
+            .replace("Bearer: ", "")
+            .replace("bearer: ", "")
+            .strip()
+        )
+        if request_api_key != self._settings.api_key.get_secret_value():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key"
+            )
 
     def _get_controller(self, model_name: str) -> BaseController:
         controller = self._controllers.get(model_name)
