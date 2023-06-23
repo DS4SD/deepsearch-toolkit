@@ -75,8 +75,7 @@ def check_cps_single_task_status(
     """
     Check cps status of individual tasks.
     """
-    current_state = False
-    while current_state is False:
+    while True:
         r: sw_client.CpsTask = sw_api.get_project_celery_task(
             proj_key=cps_proj_key, task_id=task_id
         )
@@ -84,7 +83,6 @@ def check_cps_single_task_status(
         if request_status["task_status"] in TASK_STOP_STATUS:
             return request_status
         else:
-            current_state = request_status["task_status"] in TASK_STOP_STATUS
             time.sleep(wait)
 
 
