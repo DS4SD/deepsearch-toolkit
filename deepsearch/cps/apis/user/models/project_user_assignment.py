@@ -33,27 +33,55 @@ class ProjectUserAssignment(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        'force_role': 'bool',
         'role': 'str',
         'username': 'str'
     }
 
     attribute_map = {
+        'force_role': 'force_role',
         'role': 'role',
         'username': 'username'
     }
 
-    def __init__(self, role=None, username=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, force_role=True, role=None, username=None, local_vars_configuration=None):  # noqa: E501
         """ProjectUserAssignment - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._force_role = None
         self._role = None
         self._username = None
         self.discriminator = None
 
+        if force_role is not None:
+            self.force_role = force_role
         self.role = role
         self.username = username
+
+    @property
+    def force_role(self):
+        """Gets the force_role of this ProjectUserAssignment.  # noqa: E501
+
+        If true, the role will be assigned also for existing users  # noqa: E501
+
+        :return: The force_role of this ProjectUserAssignment.  # noqa: E501
+        :rtype: bool
+        """
+        return self._force_role
+
+    @force_role.setter
+    def force_role(self, force_role):
+        """Sets the force_role of this ProjectUserAssignment.
+
+        If true, the role will be assigned also for existing users  # noqa: E501
+
+        :param force_role: The force_role of this ProjectUserAssignment.  # noqa: E501
+        :type: bool
+        """
+
+        self._force_role = force_role
 
     @property
     def role(self):

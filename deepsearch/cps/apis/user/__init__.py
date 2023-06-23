@@ -37,6 +37,7 @@ from deepsearch.cps.apis.user.models.access_token import AccessToken
 from deepsearch.cps.apis.user.models.api_key import ApiKey
 from deepsearch.cps.apis.user.models.audit_record import AuditRecord
 from deepsearch.cps.apis.user.models.create_project_request_body import CreateProjectRequestBody
+from deepsearch.cps.apis.user.models.create_project_request_body1 import CreateProjectRequestBody1
 from deepsearch.cps.apis.user.models.create_tokens_request_body import CreateTokensRequestBody
 from deepsearch.cps.apis.user.models.error_response import ErrorResponse
 from deepsearch.cps.apis.user.models.get_access_token_request_body import GetAccessTokenRequestBody

@@ -56,7 +56,7 @@ class DataIndicesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: CcsTask
+        :return: CpsTask
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -85,7 +85,7 @@ class DataIndicesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(CcsTask, status_code(int), headers(HTTPHeaderDict))
+        :return: tuple(CpsTask, status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -164,7 +164,7 @@ class DataIndicesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='CcsTask',  # noqa: E501
+            response_type='CpsTask',  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get('async_req'),
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
@@ -945,7 +945,7 @@ class DataIndicesApi(object):
         :param str proj_key: (required)
         :param str index_key: (required)
         :param str index_item_id: (required)
-        :param InlineObject4 params: (required)
+        :param InlineObject5 params: (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -973,7 +973,7 @@ class DataIndicesApi(object):
         :param str proj_key: (required)
         :param str index_key: (required)
         :param str index_item_id: (required)
-        :param InlineObject4 params: (required)
+        :param InlineObject5 params: (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1213,19 +1213,19 @@ class DataIndicesApi(object):
             _request_timeout=local_var_params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def upload_project_data_index_file(self, proj_key, index_key, file, **kwargs):  # noqa: E501
+    def upload_project_data_index_file(self, proj_key, index_key, params, **kwargs):  # noqa: E501
         """upload_project_data_index_file  # noqa: E501
 
         Upload a file to a project data index  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.upload_project_data_index_file(proj_key, index_key, file, async_req=True)
+        >>> thread = api.upload_project_data_index_file(proj_key, index_key, params, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str proj_key: (required)
         :param str index_key: (required)
-        :param file file: (required)
+        :param InlineObject4 params: (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1233,26 +1233,26 @@ class DataIndicesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: CpsTask
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
-        return self.upload_project_data_index_file_with_http_info(proj_key, index_key, file, **kwargs)  # noqa: E501
+        return self.upload_project_data_index_file_with_http_info(proj_key, index_key, params, **kwargs)  # noqa: E501
 
-    def upload_project_data_index_file_with_http_info(self, proj_key, index_key, file, **kwargs):  # noqa: E501
+    def upload_project_data_index_file_with_http_info(self, proj_key, index_key, params, **kwargs):  # noqa: E501
         """upload_project_data_index_file  # noqa: E501
 
         Upload a file to a project data index  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.upload_project_data_index_file_with_http_info(proj_key, index_key, file, async_req=True)
+        >>> thread = api.upload_project_data_index_file_with_http_info(proj_key, index_key, params, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str proj_key: (required)
         :param str index_key: (required)
-        :param file file: (required)
+        :param InlineObject4 params: (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1262,7 +1262,7 @@ class DataIndicesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: tuple(CpsTask, status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1272,7 +1272,7 @@ class DataIndicesApi(object):
         all_params = [
             'proj_key',
             'index_key',
-            'file'
+            'params'
         ]
         all_params.extend(
             [
@@ -1299,10 +1299,10 @@ class DataIndicesApi(object):
         if self.api_client.client_side_validation and ('index_key' not in local_var_params or  # noqa: E501
                                                         local_var_params['index_key'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `index_key` when calling `upload_project_data_index_file`")  # noqa: E501
-        # verify the required parameter 'file' is set
-        if self.api_client.client_side_validation and ('file' not in local_var_params or  # noqa: E501
-                                                        local_var_params['file'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `file` when calling `upload_project_data_index_file`")  # noqa: E501
+        # verify the required parameter 'params' is set
+        if self.api_client.client_side_validation and ('params' not in local_var_params or  # noqa: E501
+                                                        local_var_params['params'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `params` when calling `upload_project_data_index_file`")  # noqa: E501
 
         collection_formats = {}
 
@@ -1318,17 +1318,17 @@ class DataIndicesApi(object):
 
         form_params = []
         local_var_files = {}
-        if 'file' in local_var_params:
-            local_var_files['file'] = local_var_params['file']  # noqa: E501
 
         body_params = None
+        if 'params' in local_var_params:
+            body_params = local_var_params['params']
         # HTTP header `Accept`
         header_params['Accept'] = self.api_client.select_header_accept(
             ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
         header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['multipart/form-data'])  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
         auth_settings = ['Bearer']  # noqa: E501
@@ -1341,7 +1341,7 @@ class DataIndicesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_type='CpsTask',  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get('async_req'),
             _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501

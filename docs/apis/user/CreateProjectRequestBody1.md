@@ -1,11 +1,10 @@
-# ProjectUserAssignment
+# CreateProjectRequestBody1
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**force_role** | **bool** | If true, the role will be assigned also for existing users | [optional] [default to True]
-**role** | **str** | The role to assign to the user | 
-**username** | **str** | The username | 
+**name** | **str** | Name of the project | 
+**proj_key** | **str** | Internal project key to use. (use only if you really know what you are doing) | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

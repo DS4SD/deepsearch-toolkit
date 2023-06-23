@@ -142,7 +142,7 @@ configuration = deepsearch.cps.apis.user.Configuration(
 with deepsearch.cps.apis.user.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.user.ProjectsApi(api_client)
-    data = deepsearch.cps.apis.user.CreateProjectRequestBody() # CreateProjectRequestBody | 
+    data = deepsearch.cps.apis.user.CreateProjectRequestBody1() # CreateProjectRequestBody1 | 
 
     try:
         api_response = api_instance.create(data)
@@ -155,7 +155,7 @@ with deepsearch.cps.apis.user.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**CreateProjectRequestBody**](CreateProjectRequestBody.md)|  | 
+ **data** | [**CreateProjectRequestBody1**](CreateProjectRequestBody1.md)|  | 
 
 ### Return type
 

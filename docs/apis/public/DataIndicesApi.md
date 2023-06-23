@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **ccs_convert_upload_file_project_data_index**
-> CcsTask ccs_convert_upload_file_project_data_index(proj_key, index_key, body)
+> CpsTask ccs_convert_upload_file_project_data_index(proj_key, index_key, body)
 
 
 
@@ -78,7 +78,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**CcsTask**](CcsTask.md)
+[**CpsTask**](CpsTask.md)
 
 ### Authorization
 
@@ -92,7 +92,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | CCS task info |  -  |
+**200** | CPS task info |  -  |
 **404** | Project data index not found. |  -  |
 **500** | Error occured on the server |  -  |
 
@@ -626,7 +626,7 @@ with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
     proj_key = 'proj_key_example' # str | 
 index_key = 'index_key_example' # str | 
 index_item_id = 'index_item_id_example' # str | 
-params = deepsearch.cps.apis.public.InlineObject4() # InlineObject4 | 
+params = deepsearch.cps.apis.public.InlineObject5() # InlineObject5 | 
 
     try:
         api_instance.register_attachment(proj_key, index_key, index_item_id, params)
@@ -641,7 +641,7 @@ Name | Type | Description  | Notes
  **proj_key** | **str**|  | 
  **index_key** | **str**|  | 
  **index_item_id** | **str**|  | 
- **params** | [**InlineObject4**](InlineObject4.md)|  | 
+ **params** | [**InlineObject5**](InlineObject5.md)|  | 
 
 ### Return type
 
@@ -749,7 +749,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **upload_project_data_index_file**
-> upload_project_data_index_file(proj_key, index_key, file)
+> CpsTask upload_project_data_index_file(proj_key, index_key, params)
 
 
 
@@ -791,10 +791,11 @@ with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
     api_instance = deepsearch.cps.apis.public.DataIndicesApi(api_client)
     proj_key = 'proj_key_example' # str | 
 index_key = 'index_key_example' # str | 
-file = '/path/to/file' # file | 
+params = deepsearch.cps.apis.public.InlineObject4() # InlineObject4 | 
 
     try:
-        api_instance.upload_project_data_index_file(proj_key, index_key, file)
+        api_response = api_instance.upload_project_data_index_file(proj_key, index_key, params)
+        pprint(api_response)
     except ApiException as e:
         print("Exception when calling DataIndicesApi->upload_project_data_index_file: %s\n" % e)
 ```
@@ -805,11 +806,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **proj_key** | **str**|  | 
  **index_key** | **str**|  | 
- **file** | **file**|  | 
+ **params** | [**InlineObject4**](InlineObject4.md)|  | 
 
 ### Return type
 
-void (empty response body)
+[**CpsTask**](CpsTask.md)
 
 ### Authorization
 
@@ -817,13 +818,13 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: multipart/form-data
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | File uploaded successfully |  -  |
+**200** | CPS task info |  -  |
 **404** | Project data index not found. |  -  |
 **500** | Error occured on the server |  -  |
 
