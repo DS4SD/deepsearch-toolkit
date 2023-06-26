@@ -103,6 +103,11 @@ def batch_single_files(
     # catch all filenames and batch names
     batched_files = []
 
+    # Check if there are valid targets to iterate over
+    if len(files_to_upload) == 0:
+        print("No files resolved from input")
+        return []
+
     if len(files_to_upload) != 0:
         with tqdm(
             total=len(files_to_upload),

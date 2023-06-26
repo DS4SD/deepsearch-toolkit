@@ -71,6 +71,11 @@ def get_multiple_reports(
         writer = csv.writer(csvfile)
         writer.writerow(["batch_number", "task_id", "status", "document"])
 
+        # Check if there are valid targets to iterate over
+        if len(task_ids) == 0:
+            print("No task_ids resolved from input")
+            return
+
         # start loop
         with tqdm(
             total=len(task_ids),
