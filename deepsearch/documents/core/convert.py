@@ -169,7 +169,10 @@ def send_files_for_conversion(
 
 
 def check_status_running_tasks(
-    cps_proj_key: str, task_ids, api: Optional[CpsApi] = None, progress_bar=False
+    cps_proj_key: str,
+    task_ids: List[str],
+    api: Optional[CpsApi] = None,
+    progress_bar=False,
 ) -> List[str]:
     """
     Check status of multiple running tasks and optionally display progress with progress bar.
@@ -203,13 +206,11 @@ def check_status_running_tasks(
 
 
 def check_cps_status_running_tasks(
-    cps_proj_key: str, task_ids, api: Optional[CpsApi] = None, progress_bar=False
+    cps_proj_key: str, task_ids: List[str], api: CpsApi, progress_bar=False
 ) -> List[str]:
     """
     Check status of multiple running cps tasks and optionally display progress with progress bar.
     """
-    if api is None:
-        api = CpsApi.default_from_env()
 
     sw_api = sw_client.TasksApi(api.client.swagger_client)
     count_total = len(task_ids)
