@@ -62,7 +62,7 @@ def process_url_input(
     api: CpsApi,
     coords: ElasticProjectDataCollectionSource,
     urls: List[str],
-    progress_bar=False,
+    progress_bar: bool = False,
 ):
     """
     Individual urls are uploaded for conversion and storage in data index.
@@ -89,6 +89,7 @@ def process_url_input(
             progress.update(1)
 
     # check status
+    # TODO: add failure handling
     statuses = convert.check_cps_status_running_tasks(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
@@ -101,7 +102,7 @@ def process_local_file(
     api: CpsApi,
     coords: ElasticProjectDataCollectionSource,
     local_file: Path,
-    progress_bar=False,
+    progress_bar: bool = False,
 ):
     """
     Individual files are uploaded for conversion and storage in data index.
@@ -154,6 +155,7 @@ def process_local_file(
             progress.update(1)
 
     # check status of running tasks
+    # TODO: add failure handling
     statuses = convert.check_cps_status_running_tasks(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )

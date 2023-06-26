@@ -70,7 +70,7 @@ def check_ccs_single_task_status(api: CpsApi, ccs_proj_key: str, task_id: str):
 
 
 def check_cps_single_task_status(
-    sw_api: sw_client.TasksApi, cps_proj_key: str, task_id: str, wait=2
+    sw_api: sw_client.TasksApi, cps_proj_key: str, task_id: str, wait: int = 2
 ):
     """
     Check cps status of individual tasks.
@@ -127,7 +127,7 @@ def send_files_for_conversion(
     target: Optional[ExportTarget],
     conversion_settings: Optional[ConversionSettings],
     root_dir: Path,
-    progress_bar=False,
+    progress_bar: bool = False,
 ) -> list:
     """
     Send multiple files for conversion.
@@ -172,7 +172,7 @@ def check_status_running_tasks(
     cps_proj_key: str,
     task_ids: List[str],
     api: Optional[CpsApi] = None,
-    progress_bar=False,
+    progress_bar: bool = False,
 ) -> List[str]:
     """
     Check status of multiple running tasks and optionally display progress with progress bar.
@@ -206,7 +206,7 @@ def check_status_running_tasks(
 
 
 def check_cps_status_running_tasks(
-    cps_proj_key: str, task_ids: List[str], api: CpsApi, progress_bar=False
+    api: CpsApi, cps_proj_key: str, task_ids: List[str], progress_bar: bool = False
 ) -> List[str]:
     """
     Check status of multiple running cps tasks and optionally display progress with progress bar.
@@ -265,7 +265,7 @@ def get_download_url(
 
 
 def download_converted_documents(
-    result_dir: Path, download_urls: List[str], progress_bar=False
+    result_dir: Path, download_urls: List[str], progress_bar: bool = False
 ):
     """
     Download converted documents.
@@ -327,7 +327,7 @@ def send_urls_for_conversion(
     urls: List[str],
     target: Optional[ExportTarget],
     conversion_settings: Optional[ConversionSettings],
-    progress_bar=False,
+    progress_bar: bool = False,
 ) -> List[Any]:
     """
     Send multiple online documents for conversion.
