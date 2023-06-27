@@ -228,9 +228,8 @@ def check_cps_status_running_tasks(
             request_status = check_cps_single_task_status(
                 sw_api=sw_api, cps_proj_key=cps_proj_key, task_id=task_id
             )
-            if (status_val := request_status["task_status"]) in TASK_STOP_STATUS:
-                progress.update(1)
-                statuses.append(status_val)
+            progress.update(1)
+            statuses.append(request_status["task_status"])
 
     return statuses
 
