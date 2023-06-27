@@ -1,3 +1,8 @@
+## [v0.19.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.19.1) - 2023-06-27
+
+### Fix
+* Adjust task waiting to API update ([#107](https://github.com/DS4SD/deepsearch-toolkit/issues/107)) ([`4eadc79`](https://github.com/DS4SD/deepsearch-toolkit/commit/4eadc79e876aaf8baa5e67c2813cb3d470731a00))
+
 ## [v0.19.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.19.0) - 2023-06-22
 
 ### Feature
