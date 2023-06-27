@@ -73,8 +73,7 @@ def get_multiple_reports(
 
         # Check if there are valid targets to iterate over
         if len(task_ids) == 0:
-            print("No task_ids resolved from input")
-            return
+            raise ValueError("No task_ids resolved from input")
 
         # start loop
         with tqdm(

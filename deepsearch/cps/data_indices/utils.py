@@ -77,8 +77,7 @@ def process_url_input(
 
     # Check if there are valid targets to iterate over
     if count_urls == 0:
-        print("No urls resolved from input")
-        return
+        raise ValueError("No urls resolved from input")
     with tqdm(
         total=count_urls,
         desc=f"{'Submitting input:': <{progressbar.padding}}",
@@ -140,8 +139,7 @@ def process_local_file(
 
     # Check if there are valid targets to iterate over
     if count_total_files == 0:
-        print("No files resolved from input")
-        return
+        raise ValueError("No files resolved from input")
     # start loop
     with tqdm(
         total=count_total_files,

@@ -118,8 +118,7 @@ def send_files_for_conversion(
 
     # Check if there are valid targets to iterate over
     if len(files_zip) == 0:
-        print("No files resolved from input")
-        return []
+        raise ValueError("No files resolved from input")
 
     # start loop
     with tqdm(
@@ -170,8 +169,7 @@ def check_status_running_tasks(
 
     # Check if there are valid targets to iterate over
     if count_total == 0:
-        print("No task_ids resolved from input")
-        return []
+        raise ValueError("No task_ids resolved from input")
 
     with tqdm(
         total=count_total,
@@ -239,8 +237,7 @@ def download_converted_documents(
 
     # Check if there are valid targets to iterate over
     if len(download_urls) == 0:
-        print("No urls resolved from input")
-        return
+        raise ValueError("No urls resolved from input")
 
     with tqdm(
         total=len(download_urls),
@@ -298,8 +295,7 @@ def send_urls_for_conversion(
 
     # Check if there are valid targets to iterate over
     if count_urls == 0:
-        print("No urls resolved from input")
-        return []
+        raise ValueError("No urls resolved from input")
 
     with tqdm(
         total=count_urls,
