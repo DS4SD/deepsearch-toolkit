@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import os
@@ -17,6 +19,7 @@ from fastapi.security import APIKeyHeader
 from deepsearch.model.base.controller import BaseController
 from deepsearch.model.base.model import BaseDSModel
 from deepsearch.model.server.config import Settings
+from deepsearch.model.base.types import InfoOutput
 from deepsearch.model.server.controller_factory import ControllerFactory
 from deepsearch.model.server.inference_types import AppInferenceInput
 
@@ -57,7 +60,7 @@ class ModelApp:
             }
 
         @self.app.get("/model/{model_name}")
-        async def get_model_specs(model_name: str, api_key=Depends(self._auth)) -> dict:
+        async def get_model_specs(model_name: str, api_key=Depends(self._auth)) -> InfoOutput:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 

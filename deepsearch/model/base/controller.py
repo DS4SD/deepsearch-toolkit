@@ -2,23 +2,24 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from deepsearch.model.base.model import BaseDSModel
-from deepsearch.model.base.types import BaseModelConfig
+from deepsearch.model.base.types import BaseModelConfig, InfoOutput
 from deepsearch.model.server.inference_types import ControllerInput, ControllerOutput
 
 
 class BaseController(ABC):
     _config: Optional[BaseModelConfig] = None
 
-    def get_info(self) -> dict:
+    def get_info(self) -> InfoOutput:
         model = self._get_model()
         cfg = self._get_config()
-        result = {  # TODO refactor with pydantic
-            "definitions": {
-                "apiVersion": "v1",
+        result = InfoOutput(
+            definitions={
+                "apiVersion": 1,
                 "kind": cfg.kind,
                 "spec": model.get_definition_spec(),
             }
-        }
+        )
+
         return result
 
     def _get_config(self):

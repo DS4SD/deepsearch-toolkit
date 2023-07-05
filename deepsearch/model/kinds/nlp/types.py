@@ -1,7 +1,19 @@
 from enum import Enum
-from typing import List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
-from deepsearch.model.base.types import BaseInfReq, BaseModelConfig, Kind, StrictModel
+from pydantic import BaseModel, validator
+
+from deepsearch.model.base.types import (
+    BaseInfReq,
+    BaseModelConfig,
+    BaseModelInfo,
+    BaseModelMetadata,
+    InfoOutput,
+    InfoOutputDefinitions,
+    InfoOutputDefinitionsSpec,
+    Kind,
+    StrictModel,
+)
 
 
 class NLPType(str, Enum):
@@ -81,10 +93,26 @@ class AnnotationLabels(StrictModel):
 
 
 # TODO Annotate*Input pydantic models needed?
+class AnnotateEntitiesRequiredProperties(StrictModel):
+    type: str
+    match: str
+    original: str
+    range: List[int]
 
-AnnotateEntitiesOutput = List[dict]  # TODO provide real implementation
-AnnotateRelationshipsOutput = List[dict]  # TODO provide real implementation
-AnnotatePropertiesOutput = List[dict]  # TODO provide real implementation
+
+class AnnotateRelationshipsRequiredProperties(StrictModel):
+    header: list
+    data: list
+
+
+AnnotateEntitiesOutput = List[
+    Dict[str, List[Union[None, AnnotateEntitiesRequiredProperties]]]
+]
+AnnotateRelationshipsOutput = List[
+    Dict[str, Union[None, AnnotateRelationshipsRequiredProperties]]
+]
+AnnotatePropertiesOutput = List[Dict]
+# TODO RE: This appears to be a real implementation, without more samples of property annotation it is hard to tell
 
 
 class NLPEntitiesControllerOutput(StrictModel):
@@ -110,3 +138,25 @@ class NLPConfig(BaseModelConfig):
     kind: Literal[Kind.NLPModel]
     supported_types: List[NLPType]
     labels: AnnotationLabels
+
+
+class NLPModelMetadata(BaseModelMetadata):
+    supported_object_types: List[Literal["text", "table", "image"]]
+
+
+class NLPInfoOutputDefinitionsSpec(InfoOutputDefinitionsSpec):
+    metadata: NLPModelMetadata
+
+
+class NLPInfoOutputDefinitions(InfoOutputDefinitions):
+    kind: Literal[Kind.NLPModel]
+    spec: NLPInfoOutputDefinitionsSpec
+
+
+class NLPInfoOutput(InfoOutput):
+    definitions: NLPInfoOutputDefinitions
+
+
+class NLPModelInfo(BaseModelInfo):
+    metadata: NLPModelMetadata
+    definition: Dict

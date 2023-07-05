@@ -1,8 +1,18 @@
-from typing import List, Literal
+from typing import Dict, List, Literal, Union
 
 from pydantic import root_validator
 
-from deepsearch.model.base.types import BaseInfReq, BaseModelConfig, Kind, StrictModel
+from deepsearch.model.base.types import (
+    BaseInfReq,
+    BaseModelConfig,
+    BaseModelInfo,
+    BaseModelMetadata,
+    InfoOutput,
+    InfoOutputDefinitions,
+    InfoOutputDefinitionsSpec,
+    Kind,
+    StrictModel,
+)
 
 
 class GenerateAnswers(StrictModel):  # TODO rename?
@@ -37,3 +47,21 @@ class QAGenControllerOutput(StrictModel):
 
 class QAGenConfig(BaseModelConfig):
     kind: Literal[Kind.QAGenModel]
+
+
+class QAGenInfoOutputDefinitionsSpec(InfoOutputDefinitionsSpec):
+    pass
+
+
+class QAGenInfoOutputDefinitions(InfoOutputDefinitions):
+    kind: Literal[Kind.QAGenModel]
+    spec: QAGenInfoOutputDefinitionsSpec
+
+
+class QAGenInfoOutput(InfoOutput):
+    definitions: QAGenInfoOutputDefinitions
+
+
+class QAGenModelInfo(BaseModelInfo):
+    metadata: BaseModelMetadata
+    definition: Dict

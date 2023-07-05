@@ -9,11 +9,15 @@ from deepsearch.model.kinds.nlp.types import (
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
     NLPConfig,
+    NLPModelInfo,
 )
 
 
 class BaseNLPModel(BaseDSModel):
-    _cached_def_spec: dict = {}
+    _is_def_spec_cached: bool = False
+
+    def __init__(self):
+        self._cached_def_spec = None
 
     @abstractmethod
     def annotate_batched_entities(
@@ -44,14 +48,15 @@ class BaseNLPModel(BaseDSModel):
     ) -> AnnotatePropertiesOutput:
         raise NotImplementedError()
 
-    def get_definition_spec(self) -> dict:
+    def get_definition_spec(self) -> NLPModelInfo:
         cfg = self.get_nlp_config()
-        if not self._cached_def_spec:
-            self._cached_def_spec = deepcopy(super().get_definition_spec())
-            self._cached_def_spec["definition"] = cfg.labels
-            self._cached_def_spec["metadata"][
-                "supported_object_types"
-            ] = cfg.supported_types
+        if not self._is_def_spec_cached:
+            base_model_info = super().get_definition_spec().dict()
+            base_model_info["metadata"]["supported_object_types"] = cfg.supported_types
+            self._cached_def_spec = NLPModelInfo(
+                **base_model_info, definition=cfg.labels
+            )
+            print(self._cached_def_spec)
         return self._cached_def_spec
 
     @abstractmethod

@@ -12,6 +12,7 @@ from deepsearch.model.base.types import Kind
 from deepsearch.model.kinds.nlp.model import BaseNLPModel
 from deepsearch.model.kinds.nlp.types import (
     AnnotateEntitiesOutput,
+    AnnotateEntitiesRequiredProperties,
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
     AnnotationLabels,
@@ -23,7 +24,7 @@ from deepsearch.model.kinds.nlp.types import (
 )
 
 logger = logging.getLogger("cps-nlp")
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from .entities.cities_annotator import CitiesAnnotator  # type: ignore
 from .entities.countries_annotator import CountriesAnnotator  # type: ignore
@@ -157,7 +158,7 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
 
     def _annotate_entities_in_item(
         self, object_type: str, item: str, entity_names: Optional[List[str]]
-    ) -> List[dict]:
+    ) -> List:
         # In this case entity_names is never None, however since BaseAnnotator defines the signature of this method as
         # Optionally having entity names we must ensure that they are defined.
         if entity_names is None:
@@ -171,6 +172,7 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
                 matched_entities.extend(
                     self._ent_annots[entity_name].annotate_entities_text(item)
                 )
+            print(matched_entities)
             return matched_entities
         # elif object_type == "table":
         #     return self.annotate_entities_table(item, desired_entities)
@@ -200,7 +202,7 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
                 if relation in self.relationship_names:
                     result[relation] = self._rel_annots[
                         relation
-                    ].annotate_relationships_text(text, entity_map)
+                    ].annotate_relationships_text(text, entity_map, relation)
 
             if result:
                 results.append(result)
