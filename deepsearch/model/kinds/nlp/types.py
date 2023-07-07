@@ -105,12 +105,8 @@ class AnnotateRelationshipsRequiredProperties(StrictModel):
     data: list
 
 
-AnnotateEntitiesOutput = List[
-    Dict[str, List[Union[None, AnnotateEntitiesRequiredProperties]]]
-]
-AnnotateRelationshipsOutput = List[
-    Dict[str, Union[None, AnnotateRelationshipsRequiredProperties]]
-]
+AnnotateEntitiesOutput = List[Dict[str, List[AnnotateEntitiesRequiredProperties]]]
+AnnotateRelationshipsOutput = List[Dict[str, AnnotateRelationshipsRequiredProperties]]
 AnnotatePropertiesOutput = List[Dict]
 # TODO RE: This appears to be a real implementation, without more samples of property annotation it is hard to tell
 
