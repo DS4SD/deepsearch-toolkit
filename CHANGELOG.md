@@ -1,3 +1,8 @@
+## [v0.20.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.20.0) - 2023-07-11
+
+### Feature
+* Expose additional export parameters ([#97](https://github.com/DS4SD/deepsearch-toolkit/issues/97)) ([`7ac931c`](https://github.com/DS4SD/deepsearch-toolkit/commit/7ac931c4347a72d0bc7b66e2bdb882c5bd3d6fec))
+
 ## [v0.19.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.19.1) - 2023-06-27
 
 ### Fix
