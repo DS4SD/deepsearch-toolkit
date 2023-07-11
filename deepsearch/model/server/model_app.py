@@ -108,7 +108,7 @@ class ModelApp:
 
                 return result
             except (asyncio.TimeoutError, HTTPException) as e:
-                Annotations(
+                headers = Annotations(
                     definitions={
                         "X-Request-Arrival-Time": str(request_arrival_time),
                         "X-Request-Attempt-Number": request.metadata.annotations.deepsearch_res_ibm_com_x_attempt_number,
