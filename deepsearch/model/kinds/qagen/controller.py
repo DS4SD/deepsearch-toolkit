@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from fastapi import HTTPException, status
 
 from deepsearch.model.base.controller import BaseController
