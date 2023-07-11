@@ -16,7 +16,7 @@ from fastapi.security import APIKeyHeader
 
 from deepsearch.model.base.controller import BaseController
 from deepsearch.model.base.model import BaseDSModel
-from deepsearch.model.base.types import InfoOutput
+from deepsearch.model.base.types import InfoOutput, Annotations
 from deepsearch.model.server.config import Settings
 from deepsearch.model.server.controller_factory import ControllerFactory
 from deepsearch.model.server.inference_types import AppInferenceInput
@@ -108,13 +108,15 @@ class ModelApp:
 
                 return result
             except (asyncio.TimeoutError, HTTPException) as e:
-                headers = {
-                    "X-Request-Arrival-Time": str(request_arrival_time),
-                    "X-Request-Attempt-Number": request.metadata.annotations.deepsearch_res_ibm_com_x_attempt_number,
-                    "X-Request-Transaction-Id": request.metadata.annotations.deepsearch_res_ibm_com_x_transaction_id,
-                    "X-Processing-Pod-Id": os.getenv("MY_POD_NAME", "local"),
-                    "X-Request-Reject-Time": str(time.time()),
-                }
+                Annotations(
+                    definitions={
+                        "X-Request-Arrival-Time": str(request_arrival_time),
+                        "X-Request-Attempt-Number": request.metadata.annotations.deepsearch_res_ibm_com_x_attempt_number,
+                        "X-Request-Transaction-Id": request.metadata.annotations.deepsearch_res_ibm_com_x_transaction_id,
+                        "X-Processing-Pod-Id": os.getenv("MY_POD_NAME", "local"),
+                        "X-Request-Reject-Time": str(time.time()),
+                    }
+                )
                 if isinstance(e, asyncio.TimeoutError):
                     raise HTTPException(
                         status_code=status.HTTP_429_TOO_MANY_REQUESTS, headers=headers
