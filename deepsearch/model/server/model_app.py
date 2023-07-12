@@ -108,15 +108,13 @@ class ModelApp:
 
                 return result
             except (asyncio.TimeoutError, HTTPException) as e:
-                headers = Annotations(
-                    definitions={
-                        "X-Request-Arrival-Time": str(request_arrival_time),
-                        "X-Request-Attempt-Number": request.metadata.annotations.deepsearch_res_ibm_com_x_attempt_number,
-                        "X-Request-Transaction-Id": request.metadata.annotations.deepsearch_res_ibm_com_x_transaction_id,
-                        "X-Processing-Pod-Id": os.getenv("MY_POD_NAME", "local"),
-                        "X-Request-Reject-Time": str(time.time()),
-                    }
-                )
+                headers = {
+                    "X-Request-Arrival-Time": str(request_arrival_time),
+                    "X-Request-Attempt-Number": request.metadata.annotations.deepsearch_res_ibm_com_x_attempt_number,
+                    "X-Request-Transaction-Id": request.metadata.annotations.deepsearch_res_ibm_com_x_transaction_id,
+                    "X-Processing-Pod-Id": os.getenv("MY_POD_NAME", "local"),
+                    "X-Request-Reject-Time": str(time.time()),
+                }
                 if isinstance(e, asyncio.TimeoutError):
                     raise HTTPException(
                         status_code=status.HTTP_429_TOO_MANY_REQUESTS, headers=headers
