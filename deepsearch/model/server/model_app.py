@@ -16,7 +16,7 @@ from fastapi.security import APIKeyHeader
 
 from deepsearch.model.base.controller import BaseController
 from deepsearch.model.base.model import BaseDSModel
-from deepsearch.model.base.types import InfoOutput, Annotations
+from deepsearch.model.base.types import Annotations, InfoOutput
 from deepsearch.model.server.config import Settings
 from deepsearch.model.server.controller_factory import ControllerFactory
 from deepsearch.model.server.inference_types import AppInferenceInput, ModelInfoOutput
@@ -51,7 +51,11 @@ class ModelApp:
             return {"message": "HealthCheck"}
 
         @self.app.get("/")
-        async def get_definitions(api_key=Depends(self._auth)) -> dict[str, ModelInfoOutput]:
+        async def get_definitions(
+            api_key=Depends(self._auth),
+        ) -> Dict[str, ModelInfoOutput]:
+            # TODO We can't instantiate a union of pydantic models, which is what ModelInfoOutput is so how pydantic
+            # is performing the check and allowing this but mypy is complaining that they are not the same... solution?
             return {
                 name: controller.get_info()
                 for name, controller in self._controllers.items()
@@ -61,6 +65,8 @@ class ModelApp:
         async def get_model_specs(
             model_name: str, api_key=Depends(self._auth)
         ) -> ModelInfoOutput:
+            # TODO We can't instantiate a union of pydantic models, which is what ModelInfoOutput is so how pydantic
+            # is performing the check and allowing this but mypy is complaining that they are not the same... solution?
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 

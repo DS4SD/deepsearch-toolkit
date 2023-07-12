@@ -51,7 +51,10 @@ class BaseNLPModel(BaseDSModel):
             temp = deepcopy(super().get_definition_spec()).dict()
             temp["definition"] = cfg.labels
             temp["metadata"]["supported_object_types"] = cfg.supported_types
-            self._cached_def_spec = NLPModelInfo(temp)
+            print(temp)
+            self._cached_def_spec = NLPModelInfo(
+                metadata=temp["metadata"], definition=temp["definition"]
+            )
         return self._cached_def_spec
 
     @abstractmethod

@@ -3,16 +3,18 @@ from typing import Union
 from deepsearch.model.kinds.nlp.types import (
     NLPControllerOutput,
     NLPInfoOutput,
+    NLPInfoOutputDefinitions,
     NLPModelInfo,
     NLPReqSpec,
-    NLPRequest, NLPInfoOutputDefinitions,
+    NLPRequest,
 )
 from deepsearch.model.kinds.qagen.types import (
     QAGenControllerOutput,
     QAGenInfoOutput,
+    QAGenInfoOutputDefinitions,
     QAGenModelInfo,
     QAGenReqSpec,
-    QAGenRequest, QAGenInfoOutputDefinitions,
+    QAGenRequest,
 )
 
 AppInferenceInput = Union[
@@ -35,14 +37,6 @@ ModelInfo = Union[
     QAGenModelInfo,
 ]
 
-ModelInfoOutput = Union[
-    NLPInfoOutput,
-    QAGenInfoOutput
-]
+ModelInfoOutput = Union[NLPInfoOutput, QAGenInfoOutput]
 
-ModelInfoOutputDefinitions = Union[
-    NLPInfoOutputDefinitions,
-    QAGenInfoOutputDefinitions
-]
-
-
+ModelInfoOutputDefinitions = Union[NLPInfoOutputDefinitions, QAGenInfoOutputDefinitions]

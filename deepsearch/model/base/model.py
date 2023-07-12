@@ -2,7 +2,11 @@ from abc import ABC, abstractmethod
 
 from pydantic import parse_obj_as
 
-from deepsearch.model.base.types import BaseModelConfig, BaseModelInfo, BaseModelMetadata
+from deepsearch.model.base.types import (
+    BaseModelConfig,
+    BaseModelInfo,
+    BaseModelMetadata,
+)
 
 
 class BaseDSModel(ABC):
@@ -18,7 +22,7 @@ class BaseDSModel(ABC):
             url=cfg.url,
             author=cfg.author,
             description=cfg.description,
-            expected_compute_time=cfg.expected_compute_time
+            expected_compute_time=cfg.expected_compute_time,
         )
         spec = BaseModelInfo(metadata=spec_metadata)
         return spec

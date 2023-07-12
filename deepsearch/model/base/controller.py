@@ -2,7 +2,11 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from deepsearch.model.base.model import BaseDSModel
-from deepsearch.model.base.types import BaseModelConfig, InfoOutputDefinitions, InfoOutput
+from deepsearch.model.base.types import (
+    BaseModelConfig,
+    InfoOutput,
+    InfoOutputDefinitions,
+)
 from deepsearch.model.server.inference_types import ControllerInput, ControllerOutput
 
 
@@ -12,10 +16,12 @@ class BaseController(ABC):
     def get_info(self) -> InfoOutput:
         model = self._get_model()
         cfg = self._get_config()
-        result = InfoOutputDefinitions(apiVersion="v1", kind=cfg.kind, spec=model.get_definition_spec())
-        result = InfoOutput(definitions=result)
+        info_output_definitions = InfoOutputDefinitions(
+            apiVersion="v1", kind=cfg.kind, spec=model.get_definition_spec()
+        )
+        info = InfoOutput(definitions=info_output_definitions)
 
-        return result
+        return info
 
     def _get_config(self):
         if self._config is None:
