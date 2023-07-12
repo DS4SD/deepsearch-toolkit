@@ -51,6 +51,8 @@ uvicorn = { version = "^0.21.1", optional = true }
 anyio = { version = "^3.6.2", optional = true }
 # for Pydantic Dotenv support (https://docs.pydantic.dev/latest/usage/settings/#dotenv-env-support):
 python-dotenv = { version = "^1.0.0", optional = true }
+transformers = { version = "^4.30.2", optional = true }
+torch = { version = "^2.0.1", optional = true }
 
 [tool.poetry.extras]
 # MANUAL MAINTENANCE REQUIRED: for every change in the extras, "all" must be updated,
@@ -64,11 +66,22 @@ api = [
     "python-dotenv",
 ]
 
+api-examples = [
+    "fastapi",
+    "uvicorn",
+    "anyio",
+    "python-dotenv",
+    "transformers",
+    "torch",
+]
+
 all = [
     "fastapi",
     "uvicorn",
     "anyio",
     "python-dotenv",
+    "transformers",
+    "torch",
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -151,6 +164,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "pluggy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "transformers.*"
 ignore_missing_imports = true
 
 [tool.semantic_release]
