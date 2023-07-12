@@ -14,10 +14,7 @@ from deepsearch.model.kinds.nlp.types import (
 
 
 class BaseNLPModel(BaseDSModel):
-    _is_def_spec_cached: bool = False
-
-    def __init__(self):
-        self._cached_def_spec = None
+    _cached_def_spec: Optional[NLPModelInfo] = None
 
     @abstractmethod
     def annotate_batched_entities(
@@ -50,12 +47,11 @@ class BaseNLPModel(BaseDSModel):
 
     def get_definition_spec(self) -> NLPModelInfo:
         cfg = self.get_nlp_config()
-        if not self._is_def_spec_cached:
-            base_model_info = super().get_definition_spec().dict()
-            base_model_info["metadata"]["supported_object_types"] = cfg.supported_types
-            self._cached_def_spec = NLPModelInfo(
-                **base_model_info, definition=cfg.labels
-            )
+        if not self._cached_def_spec:
+            temp = deepcopy(super().get_definition_spec()).dict()
+            temp["definition"] = cfg.labels
+            temp["metadata"]["supported_object_types"] = cfg.supported_types
+            self._cached_def_spec = NLPModelInfo(temp)
         return self._cached_def_spec
 
     @abstractmethod
