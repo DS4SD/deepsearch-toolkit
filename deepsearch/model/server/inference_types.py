@@ -5,14 +5,14 @@ from deepsearch.model.kinds.nlp.types import (
     NLPInfoOutput,
     NLPModelInfo,
     NLPReqSpec,
-    NLPRequest,
+    NLPRequest, NLPInfoOutputDefinitions,
 )
 from deepsearch.model.kinds.qagen.types import (
     QAGenControllerOutput,
     QAGenInfoOutput,
     QAGenModelInfo,
     QAGenReqSpec,
-    QAGenRequest,
+    QAGenRequest, QAGenInfoOutputDefinitions,
 )
 
 AppInferenceInput = Union[
@@ -34,3 +34,15 @@ ModelInfo = Union[
     NLPModelInfo,
     QAGenModelInfo,
 ]
+
+ModelInfoOutput = Union[
+    NLPInfoOutput,
+    QAGenInfoOutput
+]
+
+ModelInfoOutputDefinitions = Union[
+    NLPInfoOutputDefinitions,
+    QAGenInfoOutputDefinitions
+]
+
+

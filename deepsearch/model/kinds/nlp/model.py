@@ -56,7 +56,6 @@ class BaseNLPModel(BaseDSModel):
             self._cached_def_spec = NLPModelInfo(
                 **base_model_info, definition=cfg.labels
             )
-            print(self._cached_def_spec)
         return self._cached_def_spec
 
     @abstractmethod

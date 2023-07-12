@@ -19,7 +19,7 @@ from deepsearch.model.base.model import BaseDSModel
 from deepsearch.model.base.types import InfoOutput, Annotations
 from deepsearch.model.server.config import Settings
 from deepsearch.model.server.controller_factory import ControllerFactory
-from deepsearch.model.server.inference_types import AppInferenceInput
+from deepsearch.model.server.inference_types import AppInferenceInput, ModelInfoOutput
 
 logger = logging.getLogger("cps-fastapi")
 
@@ -51,7 +51,7 @@ class ModelApp:
             return {"message": "HealthCheck"}
 
         @self.app.get("/")
-        async def get_definitions(api_key=Depends(self._auth)) -> dict:
+        async def get_definitions(api_key=Depends(self._auth)) -> dict[str, ModelInfoOutput]:
             return {
                 name: controller.get_info()
                 for name, controller in self._controllers.items()
@@ -60,7 +60,7 @@ class ModelApp:
         @self.app.get("/model/{model_name}")
         async def get_model_specs(
             model_name: str, api_key=Depends(self._auth)
-        ) -> InfoOutput:
+        ) -> ModelInfoOutput:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 

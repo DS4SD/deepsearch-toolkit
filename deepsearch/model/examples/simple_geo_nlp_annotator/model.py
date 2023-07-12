@@ -172,7 +172,6 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
                 matched_entities.extend(
                     self._ent_annots[entity_name].annotate_entities_text(item)
                 )
-            print(matched_entities)
             return matched_entities
         # elif object_type == "table":
         #     return self.annotate_entities_table(item, desired_entities)
