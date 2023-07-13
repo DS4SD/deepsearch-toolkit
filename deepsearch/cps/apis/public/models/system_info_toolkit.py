@@ -34,29 +34,34 @@ class SystemInfoToolkit(object):
     """
     openapi_types = {
         'host': 'str',
+        'name': 'str',
         'required_version': 'str',
         'verify_ssl': 'bool'
     }
 
     attribute_map = {
         'host': 'host',
+        'name': 'name',
         'required_version': 'required_version',
         'verify_ssl': 'verify_ssl'
     }
 
-    def __init__(self, host=None, required_version=None, verify_ssl=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, host=None, name=None, required_version=None, verify_ssl=None, local_vars_configuration=None):  # noqa: E501
         """SystemInfoToolkit - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._host = None
+        self._name = None
         self._required_version = None
         self._verify_ssl = None
         self.discriminator = None
 
         if host is not None:
             self.host = host
+        if name is not None:
+            self.name = name
         self.required_version = required_version
         if verify_ssl is not None:
             self.verify_ssl = verify_ssl
@@ -81,6 +86,27 @@ class SystemInfoToolkit(object):
         """
 
         self._host = host
+
+    @property
+    def name(self):
+        """Gets the name of this SystemInfoToolkit.  # noqa: E501
+
+
+        :return: The name of this SystemInfoToolkit.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this SystemInfoToolkit.
+
+
+        :param name: The name of this SystemInfoToolkit.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     @property
     def required_version(self):

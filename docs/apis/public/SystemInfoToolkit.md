@@ -4,6 +4,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **host** | **str** |  | [optional] 
+**name** | **str** |  | [optional] 
 **required_version** | **str** |  | [optional] 
 **verify_ssl** | **bool** |  | [optional] 
 
