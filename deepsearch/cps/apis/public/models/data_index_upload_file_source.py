@@ -35,16 +35,18 @@ class DataIndexUploadFileSource(object):
     openapi_types = {
         'conversion_settings': 'ProjectDataIndexConversionSettings',
         'file_url': 'list[str]',
+        's3_source': 'ProjectProjKeyDataIndicesIndexKeyActionsCcsConvertUploadS3Source',
         'scratch_files_id': 'list[str]'
     }
 
     attribute_map = {
         'conversion_settings': 'conversion_settings',
         'file_url': 'file_url',
+        's3_source': 's3_source',
         'scratch_files_id': 'scratch_files_id'
     }
 
-    def __init__(self, conversion_settings=None, file_url=None, scratch_files_id=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, conversion_settings=None, file_url=None, s3_source=None, scratch_files_id=None, local_vars_configuration=None):  # noqa: E501
         """DataIndexUploadFileSource - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -52,6 +54,7 @@ class DataIndexUploadFileSource(object):
 
         self._conversion_settings = None
         self._file_url = None
+        self._s3_source = None
         self._scratch_files_id = None
         self.discriminator = None
 
@@ -59,6 +62,8 @@ class DataIndexUploadFileSource(object):
             self.conversion_settings = conversion_settings
         if file_url is not None:
             self.file_url = file_url
+        if s3_source is not None:
+            self.s3_source = s3_source
         if scratch_files_id is not None:
             self.scratch_files_id = scratch_files_id
 
@@ -105,6 +110,27 @@ class DataIndexUploadFileSource(object):
         """
 
         self._file_url = file_url
+
+    @property
+    def s3_source(self):
+        """Gets the s3_source of this DataIndexUploadFileSource.  # noqa: E501
+
+
+        :return: The s3_source of this DataIndexUploadFileSource.  # noqa: E501
+        :rtype: ProjectProjKeyDataIndicesIndexKeyActionsCcsConvertUploadS3Source
+        """
+        return self._s3_source
+
+    @s3_source.setter
+    def s3_source(self, s3_source):
+        """Sets the s3_source of this DataIndexUploadFileSource.
+
+
+        :param s3_source: The s3_source of this DataIndexUploadFileSource.  # noqa: E501
+        :type: ProjectProjKeyDataIndicesIndexKeyActionsCcsConvertUploadS3Source
+        """
+
+        self._s3_source = s3_source
 
     @property
     def scratch_files_id(self):
