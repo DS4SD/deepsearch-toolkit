@@ -5,6 +5,7 @@ from deepsearch.artifacts.artifact_manager import (
     DFLT_ARTFCT_INDEX_DIR,
     ArtifactManager,
 )
+from deepsearch.core.cli.utils import cli_handler
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 
@@ -31,6 +32,7 @@ HIT_STRATEGY_OPTION = typer.Option(
 
 
 @app.command(help="List artifacts in index")
+@cli_handler()
 def list_index(
     index: str = INDEX_OPTION,
 ):
@@ -41,6 +43,7 @@ def list_index(
 
 
 @app.command(help="List artifacts in cache")
+@cli_handler()
 def list_cache(
     cache: str = CACHE_OPTION,
 ):
@@ -51,6 +54,7 @@ def list_cache(
 
 
 @app.command(help="Show cache path")
+@cli_handler()
 def locate_default_cache():
     artf_mgr = ArtifactManager()
     path_str = str(artf_mgr.get_cache_path().resolve())
@@ -58,6 +62,7 @@ def locate_default_cache():
 
 
 @app.command(help="Show path of a cached artifact")
+@cli_handler()
 def locate_cached_artifact(
     artifact_name: str,
     cache: str = CACHE_OPTION,
@@ -69,6 +74,7 @@ def locate_cached_artifact(
 
 
 @app.command(help="Download an artifact to cache")
+@cli_handler()
 def download(
     artifact_name: str,
     index: str = INDEX_OPTION,
@@ -87,6 +93,7 @@ def download(
 
 
 @app.command(help="Download all artifacts to cache")
+@cli_handler()
 def download_all(
     index: str = INDEX_OPTION,
     cache: str = CACHE_OPTION,
