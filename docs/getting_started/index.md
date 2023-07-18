@@ -30,7 +30,7 @@ After registering with [Deep Search](https://ds4sd.github.io/), you can obtain y
     By providing a profile name (via option `--profile-name`) you can configure multiple
     different profiles, which you can then easily switch between and manage.
 
-    For a complete reference, check [`deepsearch profile --help`](../cli-reference.md#profile).
+    For details, check [Profiles](../guide/configuration.md#profiles).
 
 ### Validate the setup
 

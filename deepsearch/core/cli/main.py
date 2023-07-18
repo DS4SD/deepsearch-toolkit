@@ -11,7 +11,7 @@ app = typer.Typer(
     add_completion=False,
     pretty_exceptions_enable=False,
 )
-app.add_typer(profile_app, name="profile", help="Manage DeepSearch SDK configuration")
+app.add_typer(profile_app, name="profile", help="Manage profile configuration")
 app.add_typer(login_app, name="login", help=MSG_LOGIN_DEPRECATION)
 
 

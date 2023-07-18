@@ -83,7 +83,7 @@ def list_profiles() -> None:
 
 @app.command(
     name="show",
-    help=f"Displays a profile.",
+    help=f"Display a profile.",
 )
 @cli_handler()
 def show_profile(
