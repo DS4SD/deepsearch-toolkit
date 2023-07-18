@@ -1,6 +1,7 @@
+import json
 from enum import Enum
 from pathlib import Path
-from typing import List, Union
+from typing import List
 
 import typer
 
@@ -9,6 +10,7 @@ from deepsearch.cps.apis.public.rest import ApiException
 from deepsearch.cps.cli.cli_options import (
     ATTACHMENT_KEY,
     ATTACHMENT_PATH,
+    COORDINATES_PATH,
     INDEX_ITEM_ID,
     INDEX_KEY,
     PROJ_KEY,
@@ -16,7 +18,6 @@ from deepsearch.cps.cli.cli_options import (
     URL,
 )
 from deepsearch.cps.client.api import CpsApi
-from deepsearch.cps.client.components.data_indices import DataIndex
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.cps.data_indices import utils
 from deepsearch.documents.core.common_routines import (
@@ -131,6 +132,7 @@ def upload_files(
     url: str = URL,
     local_file: Path = SOURCE_PATH,
     index_key: str = INDEX_KEY,
+    s3_coordinates: Path = COORDINATES_PATH,
 ):
     """
     Upload pdfs, zips, or online documents to a data index in a project
@@ -141,9 +143,25 @@ def upload_files(
         p = Path(url)
         urls = get_urls(p) if p.exists() else [url]
 
+    def read_cos_file(file: Path):
+        with open(s3_coordinates) as coords_file:
+            return json.load(coords_file)
+
+    cos_coordinates = None
+    if s3_coordinates is not None:
+        try:
+            cos_coordinates = read_cos_file(s3_coordinates)
+        except Exception as e:
+            typer.echo(f"Error occurred: {e}")
+            typer.echo(ERROR_MSG)
+            raise typer.Abort()
+
+    api = CpsApi.default_from_env()
+
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
-    utils.upload_files(coords=coords, url=url, local_file=local_file)
-    return
+    utils.upload_files(
+        coords=coords, url=url, local_file=local_file, s3_coordinates=cos_coordinates
+    )
 
 
 @app.command(

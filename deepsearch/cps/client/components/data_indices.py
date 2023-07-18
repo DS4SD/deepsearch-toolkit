@@ -102,7 +102,7 @@ class CpsApiDataIndices:
     def upload_file(
         self,
         coords: ElasticProjectDataCollectionSource,
-        body: Dict[str, List[str]],
+        body: Union[Dict[str, List[str]], Dict[str, Dict[str, S3Coordinates]]],
     ) -> str:
         """
         Call api for converting and uploading file to a project's data index.
@@ -197,3 +197,16 @@ class DataIndex(BaseModel):
 @dataclass
 class CpsApiDataIndex(ApiConnectedObject):
     project: str
+
+
+@dataclass
+class S3Coordinates(BaseModel):
+    host: str
+    port: int
+    ssl: bool
+    verify_ssl: bool
+    access_key: str
+    secret_key: str
+    bucket: str
+    location: str
+    key_prefix: str = ""
