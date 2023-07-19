@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 import requests
 
 import deepsearch.cps.apis.user
@@ -8,7 +10,8 @@ from deepsearch.core.client import (
     DeepSearchConfig,
     DeepSearchKeyAuth,
 )
-from deepsearch.core.util.config_paths import config_file_path
+from deepsearch.core.client.settings import ProfileSettings
+from deepsearch.core.client.settings_manager import settings_mgr
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.client.components import (
     CpsApiDataCatalogs,
@@ -145,18 +148,23 @@ class CpsApi:
         self._create_members()  # propagate updated token
 
     @classmethod
-    def default_from_env(cls) -> "CpsApi":
-        """
-        Connect to CPS's API using a configured environment file
-        """
+    def from_env(cls, profile_name: Optional[str] = None) -> CpsApi:
+        settings = settings_mgr.get_profile_settings(profile_name=profile_name)
+        return cls._from_settings(settings=settings)
 
-        config_file = config_file_path()
-        if not config_file.exists():
-            raise RuntimeError(
-                f"Config file {config_file} does not exist. Please configure your default authentication with `$ deepsearch login`"
-            )
-        config = DeepSearchConfig.parse_file(config_file)
+    @classmethod
+    def from_cli_prompt(cls) -> CpsApi:
+        settings = ProfileSettings.from_cli_prompt()
+        return cls._from_settings(settings=settings)
 
+    @classmethod
+    def _from_settings(cls, settings: ProfileSettings) -> CpsApi:
+        auth = DeepSearchKeyAuth(
+            username=settings.username,
+            api_key=settings.api_key.get_secret_value(),
+        )
+        config = DeepSearchConfig(
+            host=settings.host, auth=auth, verify_ssl=settings.verify_ssl
+        )
         client = CpsApiClient(config)
-
         return cls(client)

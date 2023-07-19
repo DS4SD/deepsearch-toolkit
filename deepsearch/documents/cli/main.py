@@ -2,6 +2,8 @@ import urllib
 
 import urllib3
 
+from deepsearch.core.cli.utils import cli_handler
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from pathlib import Path
@@ -29,6 +31,7 @@ app = typer.Typer(no_args_is_help=True)
     help="Convert pdf documents using Deep Search Technology",
     no_args_is_help=True,
 )
+@cli_handler()
 def convert(
     proj_key: str = PROJ_KEY,
     urls: str = URL,
@@ -53,7 +56,7 @@ def convert(
 
     NOTE: Either url or source_path should be supplied.
     """
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
 
     input_urls = None
     if urls is not None:
@@ -92,7 +95,7 @@ def convert(
         deepsearch documents get-report -p {proj_key} -t {result_dir.joinpath("task_ids.txt").absolute()}
 
         To automatically generate report after document conversion use the "--report" flag:
-        deepsearch documents convert -p PROJ_KEY -i INPUT_FILES --report 
+        deepsearch documents convert -p PROJ_KEY -i INPUT_FILES --report
         """
         )
 
@@ -104,6 +107,7 @@ def convert(
     help="Generate report of document conversion",
     no_args_is_help=True,
 )
+@cli_handler()
 def get_report(proj_key: str = PROJ_KEY, source_taskids: Path = TASK_IDS):
     """
     Generate report of document conversion.
@@ -113,7 +117,7 @@ def get_report(proj_key: str = PROJ_KEY, source_taskids: Path = TASK_IDS):
     source_taskids : path
         path to text file containing text ids generated during document conversion
     """
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     task_ids = read_lines(source_taskids)
     result_dir = Path(source_taskids).parent.expanduser().resolve()
     info = get_multiple_reports(
