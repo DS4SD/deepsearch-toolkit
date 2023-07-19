@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.cps.projects")
+
 import typer
 
 from deepsearch.core.cli.utils import cli_handler
@@ -14,6 +18,7 @@ def list(
     output: OutputEnum = OutputOption,
 ):
     api = CpsApi.from_env()
+    logger.info("Listing projects")
     projects = api.projects.list()
     results = [{"key": proj.key, "name": proj.name} for proj in projects]
 
@@ -27,6 +32,7 @@ def create(
     output: OutputEnum = OutputOption,
 ):
     api = CpsApi.from_env()
+    logger.info(f"Creating project {proj_name}")
     proj = api.projects.create(name=proj_name)
     results = [{"key": proj.key, "name": proj.name}]
 
@@ -41,6 +47,7 @@ def assign_user(
     role: RoleEnum = typer.Argument(RoleEnum.viewer),
 ):
     api = CpsApi.from_env()
+    logger.info(f"Assigning {username} to {proj_key=}")
     project = api.projects.get(key=proj_key)
     if project is not None:
         api.projects.assign_user(
@@ -49,6 +56,7 @@ def assign_user(
             role=role,
         )
     else:
+        logger.error("Project not found")
         print("Project not found")
         raise typer.Exit(code=1)
 
@@ -59,10 +67,12 @@ def remove(
     proj_key: str,
 ):
     api = CpsApi.from_env()
+    logger.info(f"Removing project {proj_key}")
     project = api.projects.get(key=proj_key)
     if project is not None:
         api.projects.remove(project=project)
     else:
+        logger.error("Project not found")
         print("Project not found")
         raise typer.Exit(code=1)
 
