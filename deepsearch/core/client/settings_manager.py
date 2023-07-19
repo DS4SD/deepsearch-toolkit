@@ -86,6 +86,8 @@ class SettingsManager:
                         username=legacy_cfg.auth.username,
                         api_key=legacy_cfg.auth.api_key,
                         verify_ssl=legacy_cfg.verify_ssl,
+                        log_directory=platformdirs.user_log_dir("DeepSearch", "IBM"),
+                        log_to_console=False,
                     )
                     self.save_settings(
                         profile_settgs=new_cfg,

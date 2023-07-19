@@ -4,6 +4,7 @@ from getpass import getpass
 from pathlib import Path
 from typing import Dict, Optional, Union
 
+import platformdirs
 from pydantic import BaseSettings, SecretStr
 
 
@@ -38,6 +39,8 @@ class ProfileSettings(DumpableSettings):
     username: str
     api_key: SecretStr
     verify_ssl: bool = True
+    log_target_file: str
+    log_to_console: bool
 
     class Config:
         env_prefix = "DEEPSEARCH_"
@@ -49,6 +52,8 @@ class ProfileSettings(DumpableSettings):
             username=input("Username: "),
             api_key=getpass("API key: "),
             verify_ssl=input("SSL verification [y/n]: "),
+            log_directory=input("Log directory: "),
+            log_to_console=input("log_to_console [y/n]: "),
         )
 
 
