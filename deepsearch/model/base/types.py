@@ -34,15 +34,14 @@ class Metadata(StrictModel):
     annotations: Annotations
 
 
-class BaseInfReq(StrictModel):
+class BaseAppPredInput(StrictModel):
     apiVersion: str
     kind: Kind
     metadata: Metadata
     spec: Any
 
 
-class BaseModelConfig(StrictModel):
-    kind: Kind
+class BaseModelMetadata(StrictModel):
     name: str
     version: str
     url: Optional[str] = None
@@ -51,29 +50,20 @@ class BaseModelConfig(StrictModel):
     expected_compute_time: Optional[PositiveFloat] = None
 
 
-class BaseModelMetadata(StrictModel):
-    name: str
-    version: str
-    url: Optional[str]
-    author: Optional[str]
-    description: Optional[str]
-    expected_compute_time: Optional[PositiveFloat]
+class BaseModelConfig(BaseModelMetadata):
+    kind: Kind
 
 
-class BaseModelInfo(StrictModel):
-    metadata: BaseModelMetadata
-
-
-class InfoOutputDefinitionsSpec(StrictModel):
+class ModelInfoOutputDefsSpec(BaseModel):
     definition: Dict
     metadata: BaseModelMetadata
 
 
-class InfoOutputDefinitions(StrictModel):
+class CtrlInfoOutputDefs(BaseModel):
     apiVersion: str
     kind: Kind
-    spec: InfoOutputDefinitionsSpec
+    spec: ModelInfoOutputDefsSpec
 
 
-class InfoOutput(StrictModel):
-    definitions: InfoOutputDefinitions
+class CtrlInfoOutput(BaseModel):
+    definitions: CtrlInfoOutputDefs

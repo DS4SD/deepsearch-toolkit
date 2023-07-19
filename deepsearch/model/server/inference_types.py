@@ -1,42 +1,34 @@
 from typing import Union
 
 from deepsearch.model.kinds.nlp.types import (
-    NLPControllerOutput,
+    NLPAppPredInput,
+    NLPCtrlPredOutput,
     NLPInfoOutput,
-    NLPInfoOutputDefinitions,
-    NLPModelInfo,
     NLPReqSpec,
-    NLPRequest,
 )
 from deepsearch.model.kinds.qagen.types import (
-    QAGenControllerOutput,
+    QAGenAppPredInput,
+    QAGenCtrlPredOutput,
     QAGenInfoOutput,
-    QAGenInfoOutputDefinitions,
-    QAGenModelInfo,
     QAGenReqSpec,
-    QAGenRequest,
 )
 
-AppInferenceInput = Union[
-    NLPRequest,
-    QAGenRequest,
+AppPredInput = Union[
+    NLPAppPredInput,
+    QAGenAppPredInput,
 ]
 
-ControllerInput = Union[
+CtrlPredInput = Union[
     NLPReqSpec,
     QAGenReqSpec,
 ]
 
-ControllerOutput = Union[
-    NLPControllerOutput,
-    QAGenControllerOutput,
+CtrlPredOutput = Union[
+    NLPCtrlPredOutput,
+    QAGenCtrlPredOutput,
 ]
 
-ModelInfo = Union[
-    NLPModelInfo,
-    QAGenModelInfo,
+AppModelInfoOutput = Union[
+    NLPInfoOutput,
+    QAGenInfoOutput,
 ]
-
-ModelInfoOutput = Union[NLPInfoOutput, QAGenInfoOutput]
-
-ModelInfoOutputDefinitions = Union[NLPInfoOutputDefinitions, QAGenInfoOutputDefinitions]

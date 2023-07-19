@@ -12,7 +12,6 @@ from deepsearch.model.base.types import Kind
 from deepsearch.model.kinds.nlp.model import BaseNLPModel
 from deepsearch.model.kinds.nlp.types import (
     AnnotateEntitiesOutput,
-    AnnotateEntitiesRequiredProperties,
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
     AnnotationLabels,
@@ -24,7 +23,7 @@ from deepsearch.model.kinds.nlp.types import (
 )
 
 logger = logging.getLogger("cps-nlp")
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from .entities.cities_annotator import CitiesAnnotator  # type: ignore
 from .entities.countries_annotator import CountriesAnnotator  # type: ignore

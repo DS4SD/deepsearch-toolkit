@@ -1,21 +1,17 @@
-from typing import Dict, List, Literal, Union
+from typing import List, Literal
 
 from pydantic import root_validator
 
 from deepsearch.model.base.types import (
-    BaseInfReq,
+    BaseAppPredInput,
     BaseModelConfig,
-    BaseModelInfo,
-    BaseModelMetadata,
-    InfoOutput,
-    InfoOutputDefinitions,
-    InfoOutputDefinitionsSpec,
+    CtrlInfoOutputDefs,
     Kind,
     StrictModel,
 )
 
 
-class GenerateAnswers(StrictModel):  # TODO rename?
+class GenerateAnswers(StrictModel):
     contexts: List[List[str]]
     questions: List[str]
 
@@ -28,20 +24,18 @@ class GenerateAnswers(StrictModel):  # TODO rename?
 
 
 class QAGenReqSpec(StrictModel):
-    generateAnswers: GenerateAnswers  # TODO rename?
+    generateAnswers: GenerateAnswers
 
 
-class QAGenRequest(BaseInfReq):
+class QAGenAppPredInput(BaseAppPredInput):
     kind: Literal[Kind.QAGenModel]
     spec: QAGenReqSpec
 
 
-# TODO GenerateAnswersInput pydantic model needed?
-
-GenerateAnswersOutput = List[str]  # TODO provide real implementation
+GenerateAnswersOutput = List[str]
 
 
-class QAGenControllerOutput(StrictModel):
+class QAGenCtrlPredOutput(StrictModel):
     answers: GenerateAnswersOutput
 
 
@@ -49,19 +43,9 @@ class QAGenConfig(BaseModelConfig):
     kind: Literal[Kind.QAGenModel]
 
 
-class QAGenInfoOutputDefinitionsSpec(InfoOutputDefinitionsSpec):
-    pass
-
-
-class QAGenInfoOutputDefinitions(InfoOutputDefinitions):
+class QAGenInfoOutputDefinitions(CtrlInfoOutputDefs):
     kind: Literal[Kind.QAGenModel]
-    spec: QAGenInfoOutputDefinitionsSpec
 
 
-class QAGenInfoOutput(InfoOutput):
+class QAGenInfoOutput(StrictModel):
     definitions: QAGenInfoOutputDefinitions
-
-
-class QAGenModelInfo(BaseModelInfo):
-    metadata: BaseModelMetadata
-    definition: Dict
