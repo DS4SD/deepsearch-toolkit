@@ -1,3 +1,8 @@
+## [v0.21.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.21.0) - 2023-07-19
+
+### Feature
+* Add profile-based config management ([#112](https://github.com/DS4SD/deepsearch-toolkit/issues/112)) ([`22800de`](https://github.com/DS4SD/deepsearch-toolkit/commit/22800dec4b1d44947709cff6514dba0dfae4b6a6))
+
 ## [v0.20.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.20.0) - 2023-07-11
 
 ### Feature
