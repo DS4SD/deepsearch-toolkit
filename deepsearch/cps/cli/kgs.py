@@ -1,11 +1,8 @@
-import logging
-
-logger = logging.getLogger("root.cps.kgs")
-
 from typing import Dict, List, Optional
 
 import typer
 
+from deepsearch.core.cli.utils import cli_handler
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption, cli_output
 from deepsearch.cps.cli.cli_options import PROJ_KEY, WAIT
 from deepsearch.cps.client.api import CpsApi
@@ -21,12 +18,12 @@ FLAVOUR = typer.Option(
 
 
 @app.command(name="list", help="List KGs")
+@cli_handler()
 def list_knowledge_graphs(
     proj_key: str = PROJ_KEY,
     output: OutputEnum = OutputOption,
 ):
-    logger.info(f"Listing KGs in {proj_key}")
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     kgs = api.knowledge_graphs.list(project=proj_key)
     results = [{"key": kg.key, "name": kg.name} for kg in kgs]
     # TODO: augment with topology details
@@ -34,12 +31,12 @@ def list_knowledge_graphs(
 
 
 @app.command(name="list-flavours", help="List KG flavours for a project")
+@cli_handler()
 def list_flavours(
     proj_key: str = PROJ_KEY,
     output: OutputEnum = OutputOption,
 ):
-    logger.info(f"Listing KG flavours for project {proj_key}")
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
 
     flavours = api.knowledge_graphs.list_flavours(proj_key)
 
@@ -52,6 +49,7 @@ def list_flavours(
 
 
 @app.command(name="save-snapshot", help="Save a snapshot from an assembled Data Set")
+@cli_handler()
 def save_snapshot_of_data_flow(
     proj_key: str = PROJ_KEY,
     kg_key: str = KG_KEY,
@@ -64,17 +62,13 @@ def save_snapshot_of_data_flow(
     ),
     snapshot_name: Optional[str] = typer.Option(None, "--snapshot-name"),
 ):
-    logger.info(
-        f"Saving snapshot from assembled data-set {proj_key=} {kg_key=} {snapshot_name=}"
-    )
 
     if len(flavour_names) == 0:
-        logger.error("At least one flavour is required --flavour-name")
         raise typer.BadParameter(
             "At least one flavour is required", param_hint="--flavour-name"
         )
 
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
 
     all_flavours = api.knowledge_graphs.list_flavours(proj_key)
 
@@ -84,15 +78,11 @@ def save_snapshot_of_data_flow(
         flavour = next((f for f in all_flavours if f.name == name), None)
 
         if flavour is None:
-            logger.error(f"Unknown flavour {name!r} --flavour-name")
             raise typer.BadParameter(
                 f"Unknown flavour {name!r}", param_hint="--flavour-name"
             )
 
         if flavour.backend in flavours:
-            logger.error(
-                f"A flavour for backend {flavour.backend!r} has already been set: {flavours[flavour.backend]!r} --flavour-name"
-            )
             raise typer.BadParameter(
                 f"A flavour for backend {flavour.backend!r} has already been set: {flavours[flavour.backend]!r}",
                 param_hint="--flavour-name",
@@ -103,7 +93,6 @@ def save_snapshot_of_data_flow(
     kg = api.knowledge_graphs.get(proj_key, kg_key)
 
     if kg is None:
-        logger.error(f"Unknown Knowledge Graph {kg_key!r} in project {proj_key!r} -k")
         raise typer.BadParameter(
             f"Unknown Knowledge Graph {kg_key!r} in project {proj_key!r}",
             param_hint="-k",
@@ -125,16 +114,15 @@ def save_snapshot_of_data_flow(
 
 
 @app.command(name="download", help="Download KG")
+@cli_handler()
 def download_knowledge_graph(
     proj_key: str = PROJ_KEY,
     kg_key: str = KG_KEY,
     output: OutputEnum = OutputOption,
 ):
-    logger.info("Downloading KG")
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     kg = api.knowledge_graphs.get(project=proj_key, key=kg_key)
     if kg is None:
-        logger.error(f"Unknown Knowledge Graph {kg_key!r} in project {proj_key!r}")
         raise typer.BadParameter(
             f"Unknown Knowledge Graph {kg_key!r} in project {proj_key!r}"
         )

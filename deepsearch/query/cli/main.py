@@ -1,7 +1,3 @@
-import logging
-
-logger = logging.getLogger("root.query")
-
 import json
 import typing
 from pathlib import Path
@@ -11,6 +7,7 @@ import typer
 import urllib3
 import urllib3.exceptions
 
+from deepsearch.core.cli.utils import cli_handler
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption
 from deepsearch.cps.cli.cli_options import INDEX_KEY, PROJ_KEY
 from deepsearch.cps.client.api import CpsApi
@@ -43,12 +40,12 @@ app = typer.Typer(no_args_is_help=True)
 
 
 @app.command(name="query-flow", help="Launch a raw flow query")
+@cli_handler()
 def query_raw(
     input_file: Path = typer.Option(..., "--input-file", "-i"),
     output: OutputEnum = OutputOption,
 ):
-    logger.info(f"Launching a raw flow query {input_file=}")
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
 
     query_flow = json.loads(input_file.read_text())
     results = api.queries.run(query_flow)
@@ -57,6 +54,7 @@ def query_raw(
 
 
 @app.command(name="wf", help="Launch a CPS KG Worflow query")
+@cli_handler()
 def query_wf(
     input_file: Path = typer.Option(
         ...,
@@ -68,11 +66,9 @@ def query_wf(
     kg_key: str = typer.Option(..., "--kg-key", "-k"),
     output: OutputEnum = OutputOption,
 ):
-    logger.info(f"Launching CPS KG workflow query {input_file=}, {proj_key=} {kg_key=}")
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     kg = api.knowledge_graphs.get(proj_key, kg_key)
     if kg is None:
-        logger.error(f"Kg with proj_key={proj_key} and kg_key={kg_key} not found.")
         raise typer.BadParameter(
             f"Kg with proj_key={proj_key} and kg_key={kg_key} not found."
         )
@@ -85,6 +81,7 @@ def query_wf(
 
 
 @app.command(name="kg-fts", help="Launch a KG Full Text Search")
+@cli_handler()
 def query_fts(
     search_query: str,
     proj_key: str = PROJ_KEY,
@@ -92,13 +89,9 @@ def query_fts(
     collection: str = typer.Option(..., "--collection", "-c"),
     output: OutputEnum = OutputOption,
 ):
-    logger.info(
-        f"Launching a KG full text search {proj_key=} {kg_key=}, with {search_query=}"
-    )
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     kg = api.knowledge_graphs.get(proj_key, kg_key)
     if kg is None:
-        logger.error(f"Kg with proj_key={proj_key} and kg_key={kg_key} not found.")
         raise typer.BadParameter(
             f"Kg with proj_key={proj_key} and kg_key={kg_key} not found."
         )
@@ -110,6 +103,7 @@ def query_fts(
 
 
 @app.command(name="data-query", help="Launch a DeepSearch data query")
+@cli_handler()
 def query_data(
     search_query: str,
     source: typing.List[str] = typer.Option([], "--source", "-s"),
@@ -118,10 +112,7 @@ def query_data(
     index: str = INDEX_KEY,
     output: OutputEnum = OutputOption,
 ):
-    logger.info(
-        f"Launching a DeepSearch data query {proj_key=} {instance=} {index=}, {search_query=}"
-    )
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
 
     coords: Resource
     if proj_key is not None and instance is None:
@@ -129,7 +120,6 @@ def query_data(
     elif instance is not None and proj_key is None:
         coords = ElasticDataCollectionSource(elastic_id=instance, index_key=index)
     else:
-        logger.error("Only of proj-key+index or instance+index can be defined")
         raise typer.BadParameter(
             "Only of proj-key+index or instance+index can be defined"
         )

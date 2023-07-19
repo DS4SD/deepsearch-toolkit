@@ -1,9 +1,6 @@
-import logging
-
-logger = logging.getLogger("root.cps.elastic_data")
-
 import typer
 
+from deepsearch.core.cli.utils import cli_handler
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption, cli_output
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.elastic import ElasticDataCollectionSource
@@ -12,12 +9,12 @@ app = typer.Typer(no_args_is_help=True)
 
 
 @app.command(name="list", help="List Elastic Data Collections")
+@cli_handler()
 def list(
     domain: str = typer.Option("all"),
     output: OutputEnum = OutputOption,
 ):
-    logger.info(f"Listing elastic data collections {domain=}")
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     collections = api.elastic.list(domain=domain)
 
     results = [

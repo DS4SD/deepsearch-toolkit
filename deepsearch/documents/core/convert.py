@@ -178,7 +178,7 @@ def check_status_running_tasks(
     Check status of multiple running tasks and optionally display progress with progress bar.
     """
     if api is None:
-        api = CpsApi.default_from_env()
+        api = CpsApi.from_env()
     count_total = len(task_ids)
 
     # get ccs proj keys
@@ -243,7 +243,7 @@ def get_download_url(
     Get the urls of converted documents.
     """
     if api is None:
-        api = CpsApi.default_from_env()
+        api = CpsApi.from_env()
     # get ccs proj keys
     ccs_proj_key, collection_name = get_ccs_project_key(
         api=api, cps_proj_key=cps_proj_key

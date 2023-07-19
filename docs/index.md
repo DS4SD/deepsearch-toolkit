@@ -8,7 +8,7 @@
 
 *Interact with the Deep Search platform for new knowledge explorations and discoveries*
 
-The Deep Search Toolkit is a Python SDK allowing a user to interact with the Deep Search platform. The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
+The Deep Search Toolkit provides a Python SDK and a CLI allowing a user to interact with the Deep Search platform. The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
 
 [Learn about IBM Deep Search :octicons-link-external-16:](https://ds4sd.github.io/){ .md-button }
 
@@ -24,7 +24,7 @@ The Deep Search Toolkit is a Python SDK allowing a user to interact with the Dee
 ## Install the Deep Search Toolkit
 
 The Deep Search Toolkit is available as a [PyPI package](https://pypi.org/project/deepsearch-toolkit/).
-It can be installed using the standard Python package managers like `pip`, `poetry`, etc. 
+It can be installed using the standard Python package managers like `pip`, `poetry`, etc.
 
 ### Requirements
 
@@ -49,8 +49,8 @@ $ pip install deepsearch-toolkit
 <div class="termy">
 
 ```console
-// Login to Deep Search, see <a href="https://ds4sd.github.io/deepsearch-toolkit/getting_started/#authentication">authentication</a>.
-$ deepsearch login
+// Set up a profile, see <a href="./guide/configuration#profiles">profiles</a>.
+$ deepsearch profile config
 ...
 
 // Convert a document

@@ -1,5 +1,9 @@
 # User guides
 
+## Configuration
+
+- [Configure the SDK](./configuration.md)
+
 ## Common Deep Search operations
 
 - [Convert a document](./convert_doc.md)
