@@ -33,6 +33,7 @@ class SystemInfoToolkit(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        'cli_command': 'str',
         'host': 'str',
         'name': 'str',
         'required_version': 'str',
@@ -40,24 +41,28 @@ class SystemInfoToolkit(object):
     }
 
     attribute_map = {
+        'cli_command': 'cli_command',
         'host': 'host',
         'name': 'name',
         'required_version': 'required_version',
         'verify_ssl': 'verify_ssl'
     }
 
-    def __init__(self, host=None, name=None, required_version=None, verify_ssl=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, cli_command=None, host=None, name=None, required_version=None, verify_ssl=None, local_vars_configuration=None):  # noqa: E501
         """SystemInfoToolkit - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._cli_command = None
         self._host = None
         self._name = None
         self._required_version = None
         self._verify_ssl = None
         self.discriminator = None
 
+        if cli_command is not None:
+            self.cli_command = cli_command
         if host is not None:
             self.host = host
         if name is not None:
@@ -65,6 +70,27 @@ class SystemInfoToolkit(object):
         self.required_version = required_version
         if verify_ssl is not None:
             self.verify_ssl = verify_ssl
+
+    @property
+    def cli_command(self):
+        """Gets the cli_command of this SystemInfoToolkit.  # noqa: E501
+
+
+        :return: The cli_command of this SystemInfoToolkit.  # noqa: E501
+        :rtype: str
+        """
+        return self._cli_command
+
+    @cli_command.setter
+    def cli_command(self, cli_command):
+        """Sets the cli_command of this SystemInfoToolkit.
+
+
+        :param cli_command: The cli_command of this SystemInfoToolkit.  # noqa: E501
+        :type: str
+        """
+
+        self._cli_command = cli_command
 
     @property
     def host(self):

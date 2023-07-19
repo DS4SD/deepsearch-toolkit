@@ -3,6 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**cli_command** | **str** |  | [optional] 
 **host** | **str** |  | [optional] 
 **name** | **str** |  | [optional] 
 **required_version** | **str** |  | [optional] 
