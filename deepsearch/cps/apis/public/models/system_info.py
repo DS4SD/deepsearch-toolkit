@@ -35,16 +35,18 @@ class SystemInfo(object):
     openapi_types = {
         'allow_non_admins_to_make_resources_public': 'bool',
         'api': 'SystemInfoApi',
-        'deployment': 'SystemInfoDeployment'
+        'deployment': 'SystemInfoDeployment',
+        'toolkit': 'SystemInfoToolkit'
     }
 
     attribute_map = {
         'allow_non_admins_to_make_resources_public': 'allow_non_admins_to_make_resources_public',
         'api': 'api',
-        'deployment': 'deployment'
+        'deployment': 'deployment',
+        'toolkit': 'toolkit'
     }
 
-    def __init__(self, allow_non_admins_to_make_resources_public=None, api=None, deployment=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, allow_non_admins_to_make_resources_public=None, api=None, deployment=None, toolkit=None, local_vars_configuration=None):  # noqa: E501
         """SystemInfo - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -53,6 +55,7 @@ class SystemInfo(object):
         self._allow_non_admins_to_make_resources_public = None
         self._api = None
         self._deployment = None
+        self._toolkit = None
         self.discriminator = None
 
         if allow_non_admins_to_make_resources_public is not None:
@@ -61,6 +64,8 @@ class SystemInfo(object):
             self.api = api
         if deployment is not None:
             self.deployment = deployment
+        if toolkit is not None:
+            self.toolkit = toolkit
 
     @property
     def allow_non_admins_to_make_resources_public(self):
@@ -124,6 +129,27 @@ class SystemInfo(object):
         """
 
         self._deployment = deployment
+
+    @property
+    def toolkit(self):
+        """Gets the toolkit of this SystemInfo.  # noqa: E501
+
+
+        :return: The toolkit of this SystemInfo.  # noqa: E501
+        :rtype: SystemInfoToolkit
+        """
+        return self._toolkit
+
+    @toolkit.setter
+    def toolkit(self, toolkit):
+        """Sets the toolkit of this SystemInfo.
+
+
+        :param toolkit: The toolkit of this SystemInfo.  # noqa: E501
+        :type: SystemInfoToolkit
+        """
+
+        self._toolkit = toolkit
 
     def to_dict(self):
         """Returns the model properties as a dict"""
