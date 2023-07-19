@@ -20,6 +20,7 @@ app.add_typer(profile_app, name="profile", help="Manage profile configuration")
 app.add_typer(login_app, name="login", help=MSG_LOGIN_DEPRECATION)
 logger.info("Core module finished initialization")
 
+
 @app.command(name="version", help=f"Print the client and server version")
 def get_version():
     logger.info("Getting DeepSearch version")
