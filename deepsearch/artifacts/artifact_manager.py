@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.artifacts")
+
 import json
 import os
 import shutil
@@ -40,6 +44,7 @@ class ArtifactManager:
     def get_artifact_path_in_cache(self, artifact_name: str) -> Path:
         artifact_path = self._cache_path / artifact_name
         if not artifact_path.exists():
+            logger.error(f'Artifact "{artifact_name}" not in cache')
             raise FileNotFoundError(f'Artifact "{artifact_name}" not in cache')
         return artifact_path
 
@@ -52,13 +57,18 @@ class ArtifactManager:
     ) -> None:
         artifact_path = self._cache_path / artifact_name
         if artifact_path.exists():
+            logger.info(f"Artifact already in cache using {hit_strategy=}")
             if hit_strategy == self.HitStrategy.RAISE:
+                logger.error(f'Artifact "{artifact_name}" already in cache')
                 raise ValueError(f'Artifact "{artifact_name}" already in cache')
             elif hit_strategy == self.HitStrategy.PASS:
+                logger.info(f"Skipped artifact")
                 return
             elif hit_strategy == self.HitStrategy.OVERWRITE:
+                logger.info(f"Overwriting artifact")
                 shutil.rmtree(artifact_path)
             else:
+                logger.error(f'Unexcpected value "{hit_strategy=}"')
                 raise RuntimeError(f'Unexcpected value "{hit_strategy=}"')
 
         artifact_path.mkdir(exist_ok=False)
@@ -70,6 +80,7 @@ class ArtifactManager:
         download_url = artifact_meta[ARTF_META_URL_FIELD]
 
         with tempfile.TemporaryDirectory() as temp_dir:
+            logger.info("Downloading artifact to temporary directory")
             download_path = self._download_file(
                 artifact_name=artifact_name,
                 download_url=download_url,
@@ -108,6 +119,7 @@ class ArtifactManager:
         with_progress_bar: bool,
     ) -> Path:
         response = requests.get(download_url, stream=True)
+        logger.info(f"{response.status_code} response from {download_url}")
         response.raise_for_status()
 
         dl_filename = None
@@ -123,10 +135,13 @@ class ArtifactManager:
                     dl_filename = "=".join(split_param[1:]).strip().strip("'\"")
                     break
 
-        # otherwise, use name from URL:
-        if dl_filename is None:
+        if dl_filename:
+            logger.info(f"Resolved filename from response header {dl_filename}")
+        else:
+            # otherwise, use name from URL:
             parsed_url = urlparse(download_url)
             dl_filename = Path(parsed_url.path).name
+            logger.info(f"Resolved filename from url {dl_filename}")
 
         total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # 1 KB
@@ -168,13 +183,16 @@ class ArtifactManager:
                     attempt_unpack = True
 
         if attempt_unpack:
+            logger.info("Unpacking archive and moving to destination")
             shutil.unpack_archive(dl_path_str, target_path)
         else:
+            logger.info("Moving archive to destination")
             shutil.move(dl_path_str, target_path / "")
 
     def _get_artifact_meta(self, artifact_name: str) -> Dict:
         file_path = self._index_path / artifact_name / ARTF_META_FILENAME
         if not file_path.exists():
+            logger.error(f'File "{file_path}" does not exist')
             raise FileNotFoundError(f'File "{file_path}" does not exist')
         with open(file_path, "r") as file:
             meta_info = json.load(file)
