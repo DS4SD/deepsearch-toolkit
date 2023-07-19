@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.cps")
+
 import typer
 
 from .data_indices_typer import app as data_indices_app
@@ -10,6 +14,7 @@ app.add_typer(projects_app, name="projects", help="Manage CPS projects")
 app.add_typer(elastic_app, name="elastic-data", help="Manage Elastic data collections")
 app.add_typer(kgs_app, name="kgs", help="Manage CPS KGs")
 app.add_typer(data_indices_app, name="data-indices", help="Manage CPS data indices")
+logger.info("CPS module initialized")
 
 
 if __name__ == "__main__":

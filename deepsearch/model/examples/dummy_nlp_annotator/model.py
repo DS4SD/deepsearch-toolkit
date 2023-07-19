@@ -1,3 +1,8 @@
+# Models can include toolkit provided loggers by inherithing from root.core.model
+import logging
+
+logger = logging.getLogger("root.model.DummyNLP")
+
 from typing import List, Optional
 
 from fastapi import HTTPException, status
@@ -16,6 +21,7 @@ from deepsearch.model.kinds.nlp.types import (
 
 class DummyNLPAnnotator(BaseNLPModel):
     def __init__(self) -> None:
+        logger.info("Initialized DummyNLPAnnotator")
         super().__init__()
 
         self._config = NLPConfig(

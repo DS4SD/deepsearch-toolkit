@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.model")
+
 from fastapi import HTTPException, status
 
 from deepsearch.model.base.controller import BaseController
@@ -21,14 +25,18 @@ from deepsearch.model.server.inference_types import ControllerInput, ControllerO
 class NLPController(BaseController):
     def __init__(self, model: BaseNLPModel):
         self._model = model
+        logger.info("NLPController Initialized")
 
     def get_kind(self) -> str:
+        logger.info("NLPController return kind")
         return Kind.NLPModel
 
     def _get_model(self) -> BaseDSModel:
+        logger.info("NLPController return model")
         return self._model
 
     def dispatch_predict(self, spec: ControllerInput) -> ControllerOutput:
+        logger.info("NLPModel Dispatching predict")
         cfg = self._model.get_nlp_config()
         type_ok = True
 
@@ -38,6 +46,7 @@ class NLPController(BaseController):
             and isinstance(spec.findEntities, FindEntitiesText)
             and (type_ok := (spec.findEntities.objectType in cfg.supported_types))
         ):
+            logger.info("NLPModel Annotating batched entities")
             entities = self._model.annotate_batched_entities(
                 object_type=spec.findEntities.objectType,
                 items=spec.findEntities.texts,
@@ -49,6 +58,7 @@ class NLPController(BaseController):
             and isinstance(spec.findRelationships, FindRelationshipsText)
             and (type_ok := (spec.findRelationships.objectType in cfg.supported_types))
         ):
+            logger.info("NLPModel Annotating batched relationships")
             relationships = self._model.annotate_batched_relationships(
                 object_type=spec.findRelationships.objectType,
                 items=spec.findRelationships.texts,
@@ -65,6 +75,7 @@ class NLPController(BaseController):
                 entities = [{}] * len(spec.findProperties.texts)
             else:
                 entities = spec.findProperties.entities
+            logger.info("NLPModel Annotating batched properties")
             properties = self._model.annotate_batched_properties(
                 object_type=spec.findProperties.objectType,
                 items=spec.findProperties.texts,
@@ -73,11 +84,13 @@ class NLPController(BaseController):
             )
             return NLPPropertiesControllerOutput(properties=properties)
         elif not type_ok:
+            logger.error("Requested object type not supported by model")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Requested object type not supported by model",
             )
         else:
+            logger.error("Unexpected spec type")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Unexpected spec type",

@@ -1,3 +1,9 @@
+import logging
+
+from deepsearch.core.client.config import DeepSearchLogConfig
+
+logger = logging.getLogger("root.core.login")
+
 from pathlib import Path
 
 import typer
@@ -20,11 +26,12 @@ def save_auth(
         help="Where to save configuration to. Use '-' to print to stdout",
     ),
 ):
-
+    logger.info(f"Saving auth information to {output}")
     config = DeepSearchConfig(
         host=host,
         auth=DeepSearchKeyAuth(username=email, api_key=api_key),
         verify_ssl=verify_ssl,
+        log_configuration=DeepSearchLogConfig(),
     )
 
     contents = config.json(indent=2)

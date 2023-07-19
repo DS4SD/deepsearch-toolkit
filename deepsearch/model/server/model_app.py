@@ -1,3 +1,12 @@
+import logging
+
+from deepsearch.core.cli.main import logger as dummy_import
+
+# TODO this does not work because this doesn't run from the regular typer path therefore
+# the root logger does not get instantiated in deepsearch/cli.py
+# Fixed by the dirty import to the typer app above
+logger = logging.getLogger("root.model")
+
 import asyncio
 import logging
 import os
@@ -20,26 +29,36 @@ from deepsearch.model.server.config import Settings
 from deepsearch.model.server.controller_factory import ControllerFactory
 from deepsearch.model.server.inference_types import AppInferenceInput
 
-logger = logging.getLogger("cps-fastapi")
-
 
 class ModelApp:
     def __init__(self, settings: Settings):
+        logger.info("Configuring fast API Instance")
         self._settings = settings
 
+        logger.info("Started fast API Instance")
         self.app = FastAPI()
         self._controllers: Dict[str, BaseController] = {}
         self._contr_factory = ControllerFactory()
+        logger.info(f"Instantiated Base controller successfully")
 
         @self.app.on_event("startup")
         async def startup_event():
+            # TODO this is probably a bad ideia, do our own logging
             # do some initialization here
+            _loggers_to_overwrite = [
+                logging.getLogger("uvicorn"),
+                logging.getLogger("uvicorn.access"),
+            ]
+            for _logger in _loggers_to_overwrite:
+                [_logger.addHandler(handler) for handler in logger.parent.handlers]
+
             RunVar("_default_thread_limiter").set(CapacityLimiter(1))
 
         @self.app.exception_handler(RequestValidationError)
         async def validation_exception_handler(
             request: Request, exc: RequestValidationError
         ):
+            logger.error(exc)
             return JSONResponse(
                 content=jsonable_encoder({"errors": exc.errors()}),
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -75,6 +94,7 @@ class ModelApp:
                 )
                 deadline_ts = float(deadline.timestamp())
                 if deadline_ts < curr_time:
+                    logger.error("Requested deadline lies in the past")
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST,
                         detail="Requested deadline lies in the past",
@@ -82,6 +102,9 @@ class ModelApp:
 
                 expected_completion_ts = curr_time + controller.get_model_exec_time()
                 if deadline_ts < expected_completion_ts:
+                    logger.error(
+                        "Expected completion time lies beyond requested deadline"
+                    )
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST,
                         detail="Expected completion time lies beyond requested deadline",
@@ -113,10 +136,12 @@ class ModelApp:
                     "X-Request-Reject-Time": str(time.time()),
                 }
                 if isinstance(e, asyncio.TimeoutError):
+                    logger.error("Request timed out, too many requests")
                     raise HTTPException(
                         status_code=status.HTTP_429_TOO_MANY_REQUESTS, headers=headers
                     )
                 else:
+                    logger.error(e.detail)
                     raise HTTPException(
                         status_code=e.status_code, detail=e.detail, headers=headers
                     )
@@ -155,6 +180,7 @@ class ModelApp:
             .strip()
         )
         if request_api_key != self._settings.api_key.get_secret_value():
+            logger.error("Invalid API key")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key"
             )
@@ -162,6 +188,7 @@ class ModelApp:
     def _get_controller(self, model_name: str) -> BaseController:
         controller = self._controllers.get(model_name)
         if controller is None:
+            logger.error(f"Invalid model '{model_name}'")
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Invalid model '{model_name}'",
@@ -186,6 +213,7 @@ class ModelApp:
         self._validate_controller_kind(controller=contr, model=model)
         key = name or contr.get_model_name()
         self._controllers[key] = contr
+        logger.info(f"Registering {model=} under {name=} with {contr=}")
 
     def run(self, host: str = "127.0.0.1", port: int = 8000, **kwargs) -> None:
         uvicorn.run(self.app, host=host, port=port, **kwargs)
@@ -194,12 +222,14 @@ class ModelApp:
         self, controller: BaseController, model: BaseDSModel
     ) -> None:
         if controller.get_kind() != model.get_config().kind:
+            logger.error("Controller kind does not match model")
             raise RuntimeError("Controller kind does not match model")
 
     def _validate_request_kind(
         self, request: AppInferenceInput, controller: BaseController
     ) -> None:
         if request.kind != controller.get_kind():
+            logger.error("Request kind does not match controller")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Request kind does not match controller",

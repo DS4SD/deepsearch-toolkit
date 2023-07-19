@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.cps.data_indices")
+
 from enum import Enum
 from pathlib import Path
 from typing import List, Union
@@ -40,6 +44,7 @@ def list(
     proj_key: str = PROJ_KEY,
     output: OutputEnum = OutputOption,
 ):
+    logger.info(f"Listing data indices in project {proj_key}")
     api = CpsApi.default_from_env()
 
     try:
@@ -55,6 +60,7 @@ def list(
             for index in indices
         ]
     except ValueError as e:
+        logger.error(e)
         print(f"Error occurred: {e}")
 
     cli_output(results, output, headers="keys")
@@ -73,6 +79,7 @@ def create(
         help="Type of Data Index",
     ),
 ):
+    logger.info(f"Create data index in project {proj_key}, {name=}, {desc=}, {type=}")
     api = CpsApi.default_from_env()
 
     try:
@@ -84,6 +91,7 @@ def create(
         )
         typer.echo("Data Index Created.")
     except ValueError as e:
+        logger.error(e)
         typer.echo(f"Error occurred: {e}")
         typer.echo(ERROR_MSG)
         raise typer.Abort()
@@ -95,6 +103,7 @@ def delete_data_index(
     proj_key: str = PROJ_KEY,
     index_key: str = INDEX_KEY,
 ):
+    logger.info(f"Deleting data index from project {proj_key}, {index_key=}")
     api = CpsApi.default_from_env()
     delete = typer.confirm("Are you sure you want to delete this data index?")
 
@@ -102,13 +111,16 @@ def delete_data_index(
 
     if not delete:
         typer.echo("Cancelling delete operation.")
+        logger.info("Cancelling delete operation.")
         raise typer.Abort()
     elif delete:
         # get confirmation token
         try:
             api.data_indices.delete(coords)
             typer.echo("Deleted!")
+            logger.info("Index deleted")
         except ApiException as e:
+            logger.error(e)
             typer.echo(f"Error occurred: {e}")
             typer.echo(ERROR_MSG)
             raise typer.Abort()
@@ -119,7 +131,7 @@ def get_urls(path: Path) -> List[str]:
     """
     Returns list of url from input file.
     """
-
+    logger.info(f"Getting url list from {path}")
     lines = path.read_text()
     urls = [line.strip() for line in lines.split("\n") if line.strip() != ""]
     return urls
@@ -136,12 +148,17 @@ def upload_files(
     Upload pdfs, zips, or online documents to a data index in a project
     """
 
+    logger.info(
+        f"Uploading files/urls to {proj_key=} in {index_key=}. {url=} {local_file=}"
+    )
     urls = None
     if url is not None:
         p = Path(url)
         urls = get_urls(p) if p.exists() else [url]
 
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
+    # TODO this looks bugged ? urls is never used only the unprocessed url
+    logger.info(f"Uploading to {coords=}")
     utils.upload_files(coords=coords, url=url, local_file=local_file)
     return
 
@@ -159,6 +176,9 @@ def add_attachment(
     """
     Add attachment to a index item
     """
+    logger.info(
+        f"Adding attachment to index item {proj_key=} {index_key=}, {index_item_id=}, {attachment_key=} {attachment_path=}"
+    )
     api = CpsApi.default_from_env()
 
     # get indices of the project
@@ -175,13 +195,16 @@ def add_attachment(
                 attachment_path=attachment_path,
                 attachment_key=attachment_key,
             )
+            logger.info(f"Attachment added successfully.")
             typer.echo("Attachment added successfully.")
         except ValueError as e:
+            logger.error(e)
             typer.echo(f"Error occurred: {e}")
             typer.echo(ERROR_MSG)
             raise typer.Abort()
         return
     else:
+        logger.info("Index key not found")
         typer.echo("Index key not found")
         raise typer.Abort()
 

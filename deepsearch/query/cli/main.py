@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.query")
+
 import json
 import typing
 from pathlib import Path
@@ -43,6 +47,7 @@ def query_raw(
     input_file: Path = typer.Option(..., "--input-file", "-i"),
     output: OutputEnum = OutputOption,
 ):
+    logger.info(f"Launching a raw flow query {input_file=}")
     api = CpsApi.default_from_env()
 
     query_flow = json.loads(input_file.read_text())
@@ -63,9 +68,11 @@ def query_wf(
     kg_key: str = typer.Option(..., "--kg-key", "-k"),
     output: OutputEnum = OutputOption,
 ):
+    logger.info(f"Launching CPS KG workflow query {input_file=}, {proj_key=} {kg_key=}")
     api = CpsApi.default_from_env()
     kg = api.knowledge_graphs.get(proj_key, kg_key)
     if kg is None:
+        logger.error(f"Kg with proj_key={proj_key} and kg_key={kg_key} not found.")
         raise typer.BadParameter(
             f"Kg with proj_key={proj_key} and kg_key={kg_key} not found."
         )
@@ -85,9 +92,13 @@ def query_fts(
     collection: str = typer.Option(..., "--collection", "-c"),
     output: OutputEnum = OutputOption,
 ):
+    logger.info(
+        f"Launching a KG full text search {proj_key=} {kg_key=}, with {search_query=}"
+    )
     api = CpsApi.default_from_env()
     kg = api.knowledge_graphs.get(proj_key, kg_key)
     if kg is None:
+        logger.error(f"Kg with proj_key={proj_key} and kg_key={kg_key} not found.")
         raise typer.BadParameter(
             f"Kg with proj_key={proj_key} and kg_key={kg_key} not found."
         )
@@ -107,6 +118,9 @@ def query_data(
     index: str = INDEX_KEY,
     output: OutputEnum = OutputOption,
 ):
+    logger.info(
+        f"Launching a DeepSearch data query {proj_key=} {instance=} {index=}, {search_query=}"
+    )
     api = CpsApi.default_from_env()
 
     coords: Resource
@@ -115,6 +129,7 @@ def query_data(
     elif instance is not None and proj_key is None:
         coords = ElasticDataCollectionSource(elastic_id=instance, index_key=index)
     else:
+        logger.error("Only of proj-key+index or instance+index can be defined")
         raise typer.BadParameter(
             "Only of proj-key+index or instance+index can be defined"
         )

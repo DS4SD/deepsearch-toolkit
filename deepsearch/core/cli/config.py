@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.core.config")
+
 from pathlib import Path
 
 import typer
@@ -17,6 +21,7 @@ app = typer.Typer(no_args_is_help=True)
     help=f"Get current configuration file path. This takes into account the environment variable {ENV_VAR_NAME!r} and the presence of a file named {CONFIG_FILE_NAME!r} unless '--default' is passed",
 )
 def get_config_file_path(default: bool = typer.Option(default=False)):
+    logger.info("Getting config file path")
     if default:
         typer.echo(default_config_file_path())
     else:
