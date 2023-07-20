@@ -89,20 +89,20 @@ class AnnotationLabels(StrictModel):
     properties: List[PropertyLabel]
 
 
-class AnnotateEntitiesRequiredProperties(StrictModel):
+class AnnotateEntitiesEntry(StrictModel):
     type: str
     match: str
     original: str
     range: List[int]
 
 
-class AnnotateRelationshipsRequiredProperties(StrictModel):
+class AnnotateRelationshipsEntry(StrictModel):
     header: list
     data: list
 
 
-AnnotateEntitiesOutput = List[Dict[str, List[AnnotateEntitiesRequiredProperties]]]
-AnnotateRelationshipsOutput = List[Dict[str, AnnotateRelationshipsRequiredProperties]]
+AnnotateEntitiesOutput = List[Dict[str, List[AnnotateEntitiesEntry]]]
+AnnotateRelationshipsOutput = List[Dict[str, AnnotateRelationshipsEntry]]
 AnnotatePropertiesOutput = List[Dict]  # TODO specify
 
 
