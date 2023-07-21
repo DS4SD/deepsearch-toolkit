@@ -1,3 +1,8 @@
+## [v0.22.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.22.0) - 2023-07-21
+
+### Feature
+* Expand Model API Pydantic types ([`ead7246`](https://github.com/DS4SD/deepsearch-toolkit/commit/ead724695e5065428f57467a53bf44dfbe7bbb87))
+
 ## [v0.21.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.21.0) - 2023-07-19
 
 ### Feature
