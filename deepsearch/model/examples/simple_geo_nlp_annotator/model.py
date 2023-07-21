@@ -157,7 +157,7 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
 
     def _annotate_entities_in_item(
         self, object_type: str, item: str, entity_names: Optional[List[str]]
-    ) -> List[dict]:
+    ) -> List:
         # In this case entity_names is never None, however since BaseAnnotator defines the signature of this method as
         # Optionally having entity names we must ensure that they are defined.
         if entity_names is None:
@@ -200,7 +200,7 @@ class SimpleGeoNLPAnnotator(BaseNLPModel):
                 if relation in self.relationship_names:
                     result[relation] = self._rel_annots[
                         relation
-                    ].annotate_relationships_text(text, entity_map)
+                    ].annotate_relationships_text(text, entity_map, relation)
 
             if result:
                 results.append(result)
