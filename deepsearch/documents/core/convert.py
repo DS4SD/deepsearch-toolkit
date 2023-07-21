@@ -137,6 +137,10 @@ def send_files_for_conversion(
     # container for task_ids
     task_ids = []
 
+    # Check if there are valid targets to iterate over
+    if len(files_zip) == 0:
+        raise ValueError("No files resolved from input")
+
     # start loop
     with tqdm(
         total=len(files_zip),
@@ -186,6 +190,10 @@ def check_status_running_tasks(
         api=api, cps_proj_key=cps_proj_key
     )
     statuses = []
+
+    # Check if there are valid targets to iterate over
+    if count_total == 0:
+        raise ValueError("No task_ids resolved from input")
 
     with tqdm(
         total=count_total,
@@ -280,6 +288,10 @@ def download_converted_documents(
         shows progress bar if True
     """
 
+    # Check if there are valid targets to iterate over
+    if len(download_urls) == 0:
+        raise ValueError("No urls resolved from input")
+
     with tqdm(
         total=len(download_urls),
         desc=f"{'Downloading result:': <{progressbar.padding}}",
@@ -333,6 +345,11 @@ def send_urls_for_conversion(
     """
     count_urls = len(urls)
     task_ids = []
+
+    # Check if there are valid targets to iterate over
+    if count_urls == 0:
+        raise ValueError("No urls resolved from input")
+
     with tqdm(
         total=count_urls,
         desc=f"{'Submitting input:': <{progressbar.padding}}",
