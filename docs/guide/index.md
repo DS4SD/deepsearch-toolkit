@@ -16,3 +16,6 @@
 - [List and manage KGs](./kgs.md)
 - [Operate with manual API calls](./apis.md)
 - [Custom CLI plugins](./cli_plugins.md)
+
+## Custom models
+- [Custom model examples](./model.md)
