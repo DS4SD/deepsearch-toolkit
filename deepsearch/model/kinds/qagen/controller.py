@@ -1,7 +1,8 @@
-from fastapi import HTTPException, status
 from __future__ import annotations
 
 import logging
+
+from fastapi import HTTPException, status
 
 logger = logging.getLogger("root.model")
 
