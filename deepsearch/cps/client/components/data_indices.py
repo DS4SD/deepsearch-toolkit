@@ -199,7 +199,6 @@ class CpsApiDataIndex(ApiConnectedObject):
     project: str
 
 
-@dataclass
 class S3Coordinates(BaseModel):
     host: str
     port: int

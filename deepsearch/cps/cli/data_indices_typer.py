@@ -1,7 +1,7 @@
 import json
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import typer
 
@@ -19,6 +19,7 @@ from deepsearch.cps.cli.cli_options import (
     URL,
 )
 from deepsearch.cps.client.api import CpsApi
+from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.cps.data_indices import utils
 from deepsearch.documents.core.common_routines import ERROR_MSG
@@ -146,14 +147,10 @@ def upload_files(
         p = Path(url)
         urls = get_urls(p) if p.exists() else [url]
 
-    def read_cos_file(file: Path):
-        with open(s3_coordinates) as coords_file:
-            return json.load(coords_file)
-
-    cos_coordinates = None
+    cos_coordinates: Optional[S3Coordinates] = None
     if s3_coordinates is not None:
         try:
-            cos_coordinates = read_cos_file(s3_coordinates)
+            cos_coordinates = json.load(open(s3_coordinates))
         except Exception as e:
             typer.echo(f"Error occurred: {e}")
             typer.echo(ERROR_MSG)
