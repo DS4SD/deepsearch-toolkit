@@ -20,19 +20,15 @@ logger = logging.getLogger(__name__)
 
 
 def upload_files(
+    api: CpsApi,
     coords: ElasticProjectDataCollectionSource,
     url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
     s3_coordinates: Optional[S3Coordinates] = None,
-    api: Optional[CpsApi] = None,
 ):
     """
     Orchestrate document conversion and upload to an index in a project
     """
-
-    # initialize default Api if not specified
-    if api is None:
-        api = CpsApi.from_env()
 
     # check required inputs are present
     if url is None and local_file is None and s3_coordinates is None:

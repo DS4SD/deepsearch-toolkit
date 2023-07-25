@@ -139,6 +139,8 @@ def upload_files(
     Upload pdfs, zips, or online documents to a data index in a project
     """
 
+    api = CpsApi.from_env()
+
     urls = None
     if url is not None:
         p = Path(url)
@@ -159,7 +161,11 @@ def upload_files(
 
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
     utils.upload_files(
-        coords=coords, url=urls, local_file=local_file, s3_coordinates=cos_coordinates
+        api=api,
+        coords=coords,
+        url=urls,
+        local_file=local_file,
+        s3_coordinates=cos_coordinates,
     )
 
 
