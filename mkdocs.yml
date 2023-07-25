@@ -53,6 +53,7 @@ nav:
   - Getting started: getting_started/index.md
   - User guide:
       - "guide/index.md"
+      - Configuration: guide/configuration.md
       - Document conversion: guide/convert_doc.md
       - Projects: guide/projects.md
       - Data: guide/data_indices.md

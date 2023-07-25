@@ -2,6 +2,7 @@ from typing import Dict, List, Optional
 
 import typer
 
+from deepsearch.core.cli.utils import cli_handler
 from deepsearch.core.util.cli_output import OutputEnum, OutputOption, cli_output
 from deepsearch.cps.cli.cli_options import PROJ_KEY, WAIT
 from deepsearch.cps.client.api import CpsApi
@@ -17,11 +18,12 @@ FLAVOUR = typer.Option(
 
 
 @app.command(name="list", help="List KGs")
+@cli_handler()
 def list_knowledge_graphs(
     proj_key: str = PROJ_KEY,
     output: OutputEnum = OutputOption,
 ):
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     kgs = api.knowledge_graphs.list(project=proj_key)
     results = [{"key": kg.key, "name": kg.name} for kg in kgs]
     # TODO: augment with topology details
@@ -29,11 +31,12 @@ def list_knowledge_graphs(
 
 
 @app.command(name="list-flavours", help="List KG flavours for a project")
+@cli_handler()
 def list_flavours(
     proj_key: str = PROJ_KEY,
     output: OutputEnum = OutputOption,
 ):
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
 
     flavours = api.knowledge_graphs.list_flavours(proj_key)
 
@@ -46,6 +49,7 @@ def list_flavours(
 
 
 @app.command(name="save-snapshot", help="Save a snapshot from an assembled Data Set")
+@cli_handler()
 def save_snapshot_of_data_flow(
     proj_key: str = PROJ_KEY,
     kg_key: str = KG_KEY,
@@ -64,7 +68,7 @@ def save_snapshot_of_data_flow(
             "At least one flavour is required", param_hint="--flavour-name"
         )
 
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
 
     all_flavours = api.knowledge_graphs.list_flavours(proj_key)
 
@@ -110,12 +114,13 @@ def save_snapshot_of_data_flow(
 
 
 @app.command(name="download", help="Download KG")
+@cli_handler()
 def download_knowledge_graph(
     proj_key: str = PROJ_KEY,
     kg_key: str = KG_KEY,
     output: OutputEnum = OutputOption,
 ):
-    api = CpsApi.default_from_env()
+    api = CpsApi.from_env()
     kg = api.knowledge_graphs.get(project=proj_key, key=kg_key)
     if kg is None:
         raise typer.BadParameter(

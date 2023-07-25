@@ -14,11 +14,7 @@ from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import progressbar, success_message
-from deepsearch.documents.core.utils import (
-    cleanup,
-    collect_all_local_files,
-    create_root_dir,
-)
+from deepsearch.documents.core.utils import cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +32,7 @@ def upload_files(
 
     # initialize default Api if not specified
     if api is None:
-        api = CpsApi.default_from_env()
+        api = CpsApi.from_env()
 
     # check required inputs are present
     if url is None and local_file is None and s3_coordinates is None:

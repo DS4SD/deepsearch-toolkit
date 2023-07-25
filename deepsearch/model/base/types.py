@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Extra, Field, PositiveFloat
 
@@ -34,18 +34,36 @@ class Metadata(StrictModel):
     annotations: Annotations
 
 
-class BaseInfReq(StrictModel):
+class BaseAppPredInput(StrictModel):
     apiVersion: str
     kind: Kind
     metadata: Metadata
     spec: Any
 
 
-class BaseModelConfig(StrictModel):
-    kind: Kind
+class BaseModelMetadata(StrictModel):
     name: str
     version: str
     url: Optional[str] = None
     author: Optional[str] = None
     description: Optional[str] = None
     expected_compute_time: Optional[PositiveFloat] = None
+
+
+class BaseModelConfig(BaseModelMetadata):
+    kind: Kind
+
+
+class ModelInfoOutputDefsSpec(BaseModel):
+    definition: Dict
+    metadata: BaseModelMetadata
+
+
+class CtrlInfoOutputDefs(BaseModel):
+    apiVersion: str
+    kind: Kind
+    spec: ModelInfoOutputDefsSpec
+
+
+class CtrlInfoOutput(BaseModel):
+    definitions: CtrlInfoOutputDefs

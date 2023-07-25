@@ -1,3 +1,18 @@
+## [v0.22.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.22.0) - 2023-07-21
+
+### Feature
+* Expand Model API Pydantic types ([`ead7246`](https://github.com/DS4SD/deepsearch-toolkit/commit/ead724695e5065428f57467a53bf44dfbe7bbb87))
+
+## [v0.21.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.21.0) - 2023-07-19
+
+### Feature
+* Add profile-based config management ([#112](https://github.com/DS4SD/deepsearch-toolkit/issues/112)) ([`22800de`](https://github.com/DS4SD/deepsearch-toolkit/commit/22800dec4b1d44947709cff6514dba0dfae4b6a6))
+
+## [v0.20.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.20.0) - 2023-07-11
+
+### Feature
+* Expose additional export parameters ([#97](https://github.com/DS4SD/deepsearch-toolkit/issues/97)) ([`7ac931c`](https://github.com/DS4SD/deepsearch-toolkit/commit/7ac931c4347a72d0bc7b66e2bdb882c5bd3d6fec))
+
 ## [v0.19.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.19.1) - 2023-06-27
 
 ### Fix

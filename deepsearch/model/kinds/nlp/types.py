@@ -1,7 +1,16 @@
 from enum import Enum
-from typing import List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Union
 
-from deepsearch.model.base.types import BaseInfReq, BaseModelConfig, Kind, StrictModel
+from deepsearch.model.base.types import (
+    BaseAppPredInput,
+    BaseModelConfig,
+    BaseModelMetadata,
+    CtrlInfoOutput,
+    CtrlInfoOutputDefs,
+    Kind,
+    ModelInfoOutputDefsSpec,
+    StrictModel,
+)
 
 
 class NLPType(str, Enum):
@@ -48,7 +57,7 @@ NLPReqSpec = Union[
 ]
 
 
-class NLPRequest(BaseInfReq):
+class NLPAppPredInput(BaseAppPredInput):
     kind: Literal[Kind.NLPModel]
     spec: NLPReqSpec
 
@@ -80,29 +89,39 @@ class AnnotationLabels(StrictModel):
     properties: List[PropertyLabel]
 
 
-# TODO Annotate*Input pydantic models needed?
+class AnnotateEntitiesEntry(StrictModel):
+    type: str
+    match: str
+    original: str
+    range: List[int]
 
-AnnotateEntitiesOutput = List[dict]  # TODO provide real implementation
-AnnotateRelationshipsOutput = List[dict]  # TODO provide real implementation
-AnnotatePropertiesOutput = List[dict]  # TODO provide real implementation
+
+class AnnotateRelationshipsEntry(StrictModel):
+    header: list
+    data: list
 
 
-class NLPEntitiesControllerOutput(StrictModel):
+AnnotateEntitiesOutput = List[Dict[str, List[AnnotateEntitiesEntry]]]
+AnnotateRelationshipsOutput = List[Dict[str, AnnotateRelationshipsEntry]]
+AnnotatePropertiesOutput = List[Dict]  # TODO specify
+
+
+class NLPEntsCtrlPredOuput(StrictModel):
     entities: AnnotateEntitiesOutput
 
 
-class NLPRelationshipsControllerOutput(StrictModel):
+class NLPRelsCtrlPredOutput(StrictModel):
     relationships: AnnotateRelationshipsOutput
 
 
-class NLPPropertiesControllerOutput(StrictModel):
+class NLPPropsCtrlPredOutput(StrictModel):
     properties: AnnotatePropertiesOutput
 
 
-NLPControllerOutput = Union[
-    NLPEntitiesControllerOutput,
-    NLPRelationshipsControllerOutput,
-    NLPPropertiesControllerOutput,
+NLPCtrlPredOutput = Union[
+    NLPEntsCtrlPredOuput,
+    NLPRelsCtrlPredOutput,
+    NLPPropsCtrlPredOutput,
 ]
 
 
@@ -110,3 +129,20 @@ class NLPConfig(BaseModelConfig):
     kind: Literal[Kind.NLPModel]
     supported_types: List[NLPType]
     labels: AnnotationLabels
+
+
+class NLPModelMetadata(BaseModelMetadata):
+    supported_object_types: List[Literal["text", "table", "image"]]
+
+
+class NLPInfoOutputDefinitionsSpec(ModelInfoOutputDefsSpec):
+    metadata: NLPModelMetadata
+
+
+class NLPInfoOutputDefinitions(CtrlInfoOutputDefs):
+    kind: Literal[Kind.NLPModel]
+    spec: NLPInfoOutputDefinitionsSpec
+
+
+class NLPInfoOutput(CtrlInfoOutput):
+    definitions: NLPInfoOutputDefinitions

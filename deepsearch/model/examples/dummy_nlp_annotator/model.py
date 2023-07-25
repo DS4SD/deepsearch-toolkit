@@ -5,6 +5,7 @@ from fastapi import HTTPException, status
 from deepsearch.model.base.types import Kind
 from deepsearch.model.kinds.nlp.model import BaseNLPModel
 from deepsearch.model.kinds.nlp.types import (
+    AnnotateEntitiesEntry,
     AnnotateEntitiesOutput,
     AnnotatePropertiesOutput,
     AnnotateRelationshipsOutput,
@@ -41,18 +42,18 @@ class DummyNLPAnnotator(BaseNLPModel):
             results.append(
                 {
                     k: [
-                        {
-                            "type": k,
-                            "match": f"a '{k}' match in '{item}'",
-                            "original": f"a '{k}' original in '{item}'",
-                            "range": [1, 5],
-                        },
-                        {
-                            "type": k,
-                            "match": f"another '{k}' match in '{item}'",
-                            "original": f"another '{k}' original in '{item}'",
-                            "range": [12, 42],
-                        },
+                        AnnotateEntitiesEntry(
+                            type=k,
+                            match=f"a '{k}' match in '{item}'",
+                            original=f"a '{k}' original in '{item}'",
+                            range=[1, 5],
+                        ),
+                        AnnotateEntitiesEntry(
+                            type=k,
+                            match=f"another '{k}' match in '{item}'",
+                            original=f"another '{k}' original in '{item}'",
+                            range=[12, 42],
+                        ),
                     ]
                     for k in _entity_names
                 }
