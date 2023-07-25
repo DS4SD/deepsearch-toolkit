@@ -157,11 +157,9 @@ def upload_files(
             typer.echo(ERROR_MSG)
             raise typer.Abort()
 
-    api = CpsApi.default_from_env()
-
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
     utils.upload_files(
-        coords=coords, url=url, local_file=local_file, s3_coordinates=cos_coordinates
+        coords=coords, url=urls, local_file=local_file, s3_coordinates=cos_coordinates
     )
 
 
