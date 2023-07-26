@@ -4,7 +4,7 @@ import ast
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional, Union
 
 import requests
 from pydantic import BaseModel
@@ -20,6 +20,14 @@ if TYPE_CHECKING:
     from deepsearch.cps.client import CpsApi
 
 
+DATA_INDEX_TYPE = Literal[
+    "Document",
+    "DB Record",
+    "Generic",
+    "Experiment",
+]
+
+
 class CpsApiDataIndices:
     def __init__(self, api: CpsApi) -> None:
         self.api = api
@@ -30,7 +38,12 @@ class CpsApiDataIndices:
             sw_client.ProjectDataIndexWithStatus
         ] = self.sw_api.get_project_data_indices(proj_key=proj_key)
 
-        return [DataIndex.parse_obj(item.to_dict()) for item in response]
+        # filter out saved searchs index
+        return [
+            DataIndex.parse_obj(item.to_dict())
+            for item in response
+            if item.to_dict()["type"] != "View"
+        ]
 
     def create(
         self,
@@ -102,15 +115,26 @@ class CpsApiDataIndices:
     def upload_file(
         self,
         coords: ElasticProjectDataCollectionSource,
-        body: Union[Dict[str, List[str]], Dict[str, Dict[str, S3Coordinates]]],
+        index_type: DATA_INDEX_TYPE,
+        body: Union[
+            Dict[str, List[str]], Dict[str, str], Dict[str, Dict[str, S3Coordinates]]
+        ],
     ) -> str:
         """
         Call api for converting and uploading file to a project's data index.
         """
-        task_id = self.sw_api.ccs_convert_upload_file_project_data_index(
-            proj_key=coords.proj_key, index_key=coords.index_key, body=body
-        ).task_id
-        return task_id
+        if index_type == "Document":
+            task_id = self.sw_api.ccs_convert_upload_file_project_data_index(
+                proj_key=coords.proj_key, index_key=coords.index_key, body=body
+            ).task_id
+            return task_id
+        elif index_type == "Generic" or index_type == "DB Record":
+            task_id = self.sw_api.upload_project_data_index_file(
+                proj_key=coords.proj_key, index_key=coords.index_key, params=body
+            ).task_id
+            return task_id
+        else:
+            raise NotImplementedError
 
 
 class ElasticProjectDataCollectionSource(BaseModel):
@@ -130,7 +154,7 @@ class DataIndex(BaseModel):
     health: str
     status: str
     schema_key: str
-    type: str
+    type: DATA_INDEX_TYPE
 
     def add_item_attachment(
         self,
@@ -192,6 +216,46 @@ class DataIndex(BaseModel):
             index_item_id=index_item_id,
             params=params,
         )
+
+    def upload_files(
+        self,
+        api: CpsApi,
+        url: Optional[Union[str, List[str]]] = None,
+        local_file: Optional[Union[str, Path]] = None,
+        s3_coordinates: Optional[S3Coordinates] = None,
+    ) -> None:
+        """
+        Method to upload files to an index.
+        Input
+        -----
+        api : CpsApi
+            CpsApi Class
+        url : string | list[string], OPTIONAL
+            single url string or list of urls string
+        local_file : string | Path, OPTIONAL
+            path to file on local folder
+        s3_coordinates : S3Coordinates, OPTIONAL
+            coordinates of COS to use files on the bucket to convert and upload. Params:
+        """
+
+        # Avoid circular imports
+        from deepsearch.cps.data_indices.utils import upload_files
+
+        if (
+            self.type == "Generic"
+            or self.type == "Document"
+            or self.type == "DB Record"
+        ):
+            upload_files(
+                api=api,
+                coords=self.source,
+                index_type=self.type,
+                url=url,
+                local_file=local_file,
+                s3_coordinates=s3_coordinates,
+            )
+        else:
+            raise NotImplementedError
 
 
 @dataclass

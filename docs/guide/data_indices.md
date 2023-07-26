@@ -90,7 +90,8 @@ To delete a data index, you need to specify an index via its `INDEX_KEY`. [Listi
 
 ## Adding documents to a project
 
-Documents can be converted and added, directly, to a data index in a project. Briefly, documents can be on a local machine or on the remote files. Local documents can be in PDF format, ZIP archives, or directory containing both (`PATH_DOCS`). The web address of a remote document is input directly or multiple web addresses can be stored in a text file (`PATH_URL`). The specification of documents is same as in [Document Conversion](../guide/convert-doc.md).
+Documents can be converted and added, directly, to a data index with type `Document` in a project. Briefly, documents can be on a local machine or on the remote files. Local documents can be in PDF format, ZIP archives, or directory containing both (`PATH_DOCS`). The web address of a remote document is input directly or multiple web addresses can be stored in a text file (`PATH_URL`). The COS coordinates of a remote COS with files to upload and convert is stored on local `.json` file. The specification of documents is same as in [Document Conversion](../guide/convert-doc.md). 
+To add documents to a data index with type `Generic` or `DB Records`, documents have to be on local machine and be format `.json` or `.jsonl`. Add documents to a data index with type `Experiment` is not supported. 
 
 
 === "CLI"
@@ -102,28 +103,43 @@ Documents can be converted and added, directly, to a data index in a project. Br
 
     // for online documents
     $ deepsearch cps data-indices upload -p PROJ_KEY -x INDEX_KEY -u PATH_URL
+
+    // for COS documents
+    $ deepsearch cps data-indices upload -p PROJ_KEY -x INDEX_KEY -c PATH_COS_COORDINATES
     ```
 
     </div>
 === "Python"
     ```python
-    from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
-    from deepsearch.cps.data_indices import utils as data_indices_utils
+    from deepsearch.cps.client.components.data_indices import DataIndex
+    import json
 
-    # Specify index
-    coords = ElasticProjectDataCollectionSource(proj_key=PROJ_KEY, index_key=INDEX_KEY)
+    # For local documents, 
+    local_file=PATH_DOCS
 
-    # For local documents
-    data_indices_utils.upload_files(api=api, coords=coords, local_file=PATH_DOCS)
-
-    # For online documents
-
+    # For online documents,
     # load the urls from the file to a list
     input_urls = open(PATH_URL).readlines()
     # or, define a list directly
     #input_urls = ["https:///URL1", "https://URL2", "https://URL3"]
 
-    data_indices_utils.upload_files(api=api, coords=coords, url=input_urls)
+    # For COS documents
+    with open(PATH_COS_COORDS):
+        s3_coordinates = json.load(coords_file)
+
+    # get indices of the project
+    indices = api.data_indices.list(PROJ_KEY)
+
+    # get specific index to add documents
+    index = next((x for x in indices if x.source.index_key == index_key), None)
+
+    # add document to index
+    index.upload_files(
+        api=api,
+        url=input_urls,  # Optional, required if local file and s3_coordinates are None
+        local_file=local_file,  # Optional, required if url is and s3_coordinates are None
+        s3_coordinates=s3_coordinates,  # Optional, required if url is and local_file are None
+    )
     ```
 
 ---
