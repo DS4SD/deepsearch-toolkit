@@ -10,6 +10,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from tqdm import tqdm
 
 from deepsearch.cps.client.api import CpsApi
+from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import progressbar, success_message
@@ -19,39 +20,41 @@ logger = logging.getLogger(__name__)
 
 
 def upload_files(
+    api: CpsApi,
     coords: ElasticProjectDataCollectionSource,
     url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
-    api: Optional[CpsApi] = None,
+    s3_coordinates: Optional[S3Coordinates] = None,
 ):
     """
     Orchestrate document conversion and upload to an index in a project
     """
 
-    # initialize default Api if not specified
-    if api is None:
-        api = CpsApi.from_env()
-
     # check required inputs are present
-    if url is None and local_file is None:
+    if url is None and local_file is None and s3_coordinates is None:
         raise ValueError(
-            "No input provided. Please provide either a url or a local file for conversion."
+            "No input provided. Please provide either a url, a local file, or coordinates to COS."
         )
-    elif url is not None and local_file is None:
+    elif url is not None and local_file is None and s3_coordinates is None:
         if isinstance(url, str):
             urls = [url]
         else:
             urls = url
 
         return process_url_input(api=api, coords=coords, urls=urls)
-    elif url is None and local_file is not None:
+    elif url is None and local_file is not None and s3_coordinates is None:
         return process_local_file(
             api=api,
             coords=coords,
             local_file=Path(local_file),
         )
-
-    raise ValueError("Please provide only one input: url or local file.")
+    elif url is None and local_file is None and s3_coordinates is not None:
+        return process_external_cos(
+            api=api, coords=coords, s3_coordinates=s3_coordinates
+        )
+    raise ValueError(
+        "Please provide only one input: url, local file, or coordinates to COS."
+    )
 
 
 def process_url_input(
@@ -157,4 +160,41 @@ def process_local_file(
     )
     print(success_message)
     cleanup(root_dir=root_dir)
+    return
+
+
+def process_external_cos(
+    api: CpsApi,
+    coords: ElasticProjectDataCollectionSource,
+    s3_coordinates: S3Coordinates,
+    progress_bar=False,
+):
+    """
+    Individual files are processed before upload.
+    """
+    # container for task_ids
+    task_ids = []
+
+    with tqdm(
+        total=1,
+        desc=f"{'Submitting input:': <{progressbar.padding}}",
+        disable=not (progress_bar),
+        colour=progressbar.colour,
+        bar_format=progressbar.bar_format,
+    ) as progress:
+        # upload using coordinates
+        payload = {"s3_source": {"coordinates": s3_coordinates}}
+        task_id = api.data_indices.upload_file(
+            coords=coords,
+            body=payload,
+        )
+        task_ids.append(task_id)
+        progress.update(1)
+
+    # check status of running tasks
+    # TODO: add failure handling
+    statuses = convert.check_cps_status_running_tasks(
+        api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
+    )
+    print(success_message)
     return
