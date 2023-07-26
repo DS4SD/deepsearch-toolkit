@@ -1,3 +1,8 @@
+## [v0.23.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.0) - 2023-07-26
+
+### Feature
+* Add upload from object storage ([#113](https://github.com/DS4SD/deepsearch-toolkit/issues/113)) ([`e010abc`](https://github.com/DS4SD/deepsearch-toolkit/commit/e010abce51cc4196c9b51b43f8f1ce214183c3b9))
+
 ## [v0.22.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.22.0) - 2023-07-21
 
 ### Feature
