@@ -18,4 +18,4 @@
 - [Custom CLI plugins](./cli_plugins.md)
 
 ## Custom models
-- [Custom model examples](./model.md)
+- [Model API](./model.md)

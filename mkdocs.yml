@@ -60,7 +60,7 @@ nav:
       - Knowledge graphs: guide/kgs.md
       - APIs: guide/apis.md
       - Plugin system: guide/cli_plugins.md
-      - Custom model examples: guide/model.md
+      - Model API: guide/model.md
   - Example gallery: gallery/index.md
   - API reference:
       - Toolkit reference: api-reference.md
