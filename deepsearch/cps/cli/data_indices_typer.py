@@ -156,14 +156,28 @@ def upload_files(
             typer.echo(ERROR_MSG)
             raise typer.Abort()
 
-    coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
-    utils.upload_files(
-        api=api,
-        coords=coords,
-        url=urls,
-        local_file=local_file,
-        s3_coordinates=cos_coordinates,
-    )
+    # get indices of the project
+    indices = api.data_indices.list(proj_key)
+
+    # get specific index to add attachment
+    index = next((x for x in indices if x.source.index_key == index_key), None)
+
+    if index is not None:
+        try:
+            index.upload_files(
+                api=api,
+                url=urls,
+                local_file=local_file,
+                s3_coordinates=cos_coordinates,
+            )
+        except ValueError as e:
+            typer.echo(f"Error occurred: {e}")
+            typer.echo(ERROR_MSG)
+            raise typer.Abort()
+        return
+    else:
+        typer.echo("Index key not found")
+        raise typer.Abort()
 
 
 @app.command(
