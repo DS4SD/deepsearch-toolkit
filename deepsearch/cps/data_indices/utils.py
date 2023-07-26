@@ -52,7 +52,9 @@ def upload_files(
         return process_external_cos(
             api=api, coords=coords, s3_coordinates=s3_coordinates
         )
-    raise ValueError("Please provide only one input: url, local file, or coordinates to COS.")
+    raise ValueError(
+        "Please provide only one input: url, local file, or coordinates to COS."
+    )
 
 
 def process_url_input(
