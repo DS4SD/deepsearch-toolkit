@@ -64,7 +64,7 @@ More example queries are available in the [examples gallery](../gallery/index.md
     $ deepsearch cps kgs download -p 'abc123' -k 'zxc987'
 
     url
-    -------------------------------- 
+    --------------------------------
     https://host.domain/download-url
     ```
 
@@ -72,7 +72,7 @@ More example queries are available in the [examples gallery](../gallery/index.md
 
 === "Python"
 
-    After you have generated the `api` object (from [login configuration](../getting_started/#authentication))
+    After you have generated the `api` object (from a [profile](../configuration#usage-in-python)):
 
     ```python
     proj_key = "abc123" # get your proj_key from the UI details

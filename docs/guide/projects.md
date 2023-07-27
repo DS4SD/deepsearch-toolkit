@@ -17,8 +17,7 @@ A collaborator may be added to a project as `owner`, `editor`, or `viewer`. Belo
 ## Project management
 
 !!! info
-    Make sure to [configure your login](../getting_started/index.md#authentication) before
-    using the project management features listed below.
+    Make sure to [complete your profile setup](../getting_started/index.md#set-up-a-profile) before using the project management features listed below.
 
 ### Creating a project
 
@@ -39,7 +38,7 @@ A collaborator may be added to a project as `owner`, `editor`, or `viewer`. Belo
 
 === "Python"
 
-    After you have generated the `api` object (from [login configuration](../getting_started/#authentication)), creating a project is very easy.
+    After you have generated the `api` object (from a [profile](../configuration#usage-in-python)), creating a project is very easy.
 
     ```python
     proj = api.projects.create(name="my-project")
@@ -70,7 +69,7 @@ A collaborator may be added to a project as `owner`, `editor`, or `viewer`. Belo
 
 === "Python"
 
-    After you have generated the `api` object (from [login configuration](../getting_started/#authentication)), listing projects is very easy.
+    After you have generated the `api` object (from a [profile](../configuration#usage-in-python)), listing projects is very easy.
 
     ```python
     projects = api.projects.list()     # returns list of projects

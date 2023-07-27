@@ -83,12 +83,9 @@ Options:
   --help                          Show this message and exit.
 
 Commands:
-  config   Manage CLI config files
-  cps      Interact with DeepSearch CPS component
+  [ ... ]  [ ... ]
   example
-  login    Login to DeepSearch platform
-  query    Interact with DeepSearch Query component
-  version  Print the client and server version information
+  [ ... ]  [ ... ]
 ```
 
 And running our newly added command gives us...
