@@ -30,10 +30,6 @@ def add_profile(
     username: str = typer.Option(prompt=True),
     api_key: str = typer.Option(prompt=True, hide_input=True),
     verify_ssl: bool = typer.Option(default=True),
-    log_directory: str = typer.Option(
-        prompt=True, default=platformdirs.user_log_dir("DeepSearch", "IBM")
-    ),
-    log_to_console: bool = typer.Option(default=False),
     profile_name: str = typer.Option(
         default="",
         help="If not set, the active profile will be updated or, if no profile available, a new profile with a predetermined name will be created.",
@@ -49,8 +45,6 @@ def add_profile(
         username=username,
         api_key=api_key,
         verify_ssl=verify_ssl,
-        log_target_file=log_directory,
-        log_to_console=log_to_console,
     )
 
     settings_mgr.save_settings(

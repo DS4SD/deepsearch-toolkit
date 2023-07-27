@@ -1,7 +1,6 @@
 import logging
 
 logger = logging.getLogger("root.cps")
-print(logger.handlers)
 
 import typer
 

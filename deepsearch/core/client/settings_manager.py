@@ -86,8 +86,6 @@ class SettingsManager:
                         username=legacy_cfg.auth.username,
                         api_key=legacy_cfg.auth.api_key,
                         verify_ssl=legacy_cfg.verify_ssl,
-                        log_directory=platformdirs.user_log_dir("DeepSearch", "IBM"),
-                        log_to_console=False,
                     )
                     self.save_settings(
                         profile_settgs=new_cfg,
@@ -98,6 +96,9 @@ class SettingsManager:
 
     def _get_profile_path(self, profile_name: str) -> Path:
         return self._profile_root_path / f"{profile_name}.env"
+
+    def get_logging_conf(self) -> tuple[str, bool]:
+        return self._main_settings.log_file, self._main_settings.log_to_console
 
     def get_all_profile_settings(self) -> Dict[str, ProfileSettings]:
         return {k: self._profile_cache[k].settings for k in self._profile_cache}

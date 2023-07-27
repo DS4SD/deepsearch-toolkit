@@ -7,11 +7,9 @@ from deepsearch.core.client.settings_manager import settings_mgr
 
 def setup_logger():
     # Setting up root logger
-    active_profile_settings = settings_mgr.get_profile_settings(
-        settings_mgr.get_active_profile()
-    )
+    log_target_file, log_to_console = settings_mgr.get_logging_conf()
 
-    p = Path(active_profile_settings.log_target_file)
+    p = Path(log_target_file)
     if not p.parent.is_dir():
         p.parent.mkdir(parents=True)
 
@@ -20,7 +18,7 @@ def setup_logger():
     handlers: List[logging.Handler] = [
         logging.FileHandler(p),
     ]
-    if active_profile_settings.log_to_console:
+    if log_to_console:
         handlers.append(logging.StreamHandler())
     formatter = logging.Formatter(
         "%(asctime)s %(name)s — %(levelname)s — %(module)s:%(funcName)s:%(lineno)d — %(message)s"

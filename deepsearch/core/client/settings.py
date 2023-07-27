@@ -39,8 +39,6 @@ class ProfileSettings(DumpableSettings):
     username: str
     api_key: SecretStr
     verify_ssl: bool = True
-    log_target_file: str
-    log_to_console: bool
 
     class Config:
         env_prefix = "DEEPSEARCH_"
@@ -52,8 +50,6 @@ class ProfileSettings(DumpableSettings):
             username=input("Username: "),
             api_key=getpass("API key: "),
             verify_ssl=input("SSL verification [y/n]: "),
-            log_directory=input("Log directory: "),
-            log_to_console=input("log_to_console [y/n]: "),
         )
 
 
@@ -61,6 +57,8 @@ class MainSettings(DumpableSettings):
 
     profile: Optional[str] = None  # None only when profiles not yet iniitialized
     show_cli_stack_traces: bool = False
+    log_file: str = platformdirs.user_log_dir("DeepSearch", "IBM")
+    log_to_console: bool = False
 
     class Config:
         env_prefix = "DEEPSEARCH_"
