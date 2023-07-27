@@ -175,6 +175,13 @@ def process_external_cos(
     # container for task_ids
     task_ids = []
 
+    # coordinates to dict
+    s3_coordinates_dict: dict = {}
+    if isinstance(s3_coordinates, S3Coordinates):
+        s3_coordinates_dict = s3_coordinates.dict()
+    else:
+        s3_coordinates_dict = s3_coordinates
+
     with tqdm(
         total=1,
         desc=f"{'Submitting input:': <{progressbar.padding}}",
@@ -183,7 +190,7 @@ def process_external_cos(
         bar_format=progressbar.bar_format,
     ) as progress:
         # upload using coordinates
-        payload = {"s3_source": {"coordinates": s3_coordinates.dict()}}
+        payload = {"s3_source": {"coordinates": s3_coordinates_dict}}
         task_id = api.data_indices.upload_file(
             coords=coords,
             body=payload,
