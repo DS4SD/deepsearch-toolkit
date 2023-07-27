@@ -1,3 +1,11 @@
+## [v0.23.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.1) - 2023-07-27
+
+### Fix
+* Fix COS source coordinate passing ([#118](https://github.com/DS4SD/deepsearch-toolkit/issues/118)) ([`5178c04`](https://github.com/DS4SD/deepsearch-toolkit/commit/5178c04347e0c954536c748a238803cb4bdd7483))
+
+### Documentation
+* Reflect new configuration setup ([#119](https://github.com/DS4SD/deepsearch-toolkit/issues/119)) ([`a58f770`](https://github.com/DS4SD/deepsearch-toolkit/commit/a58f770be2288b86f6e3de5b8cb87add2c7c5cc1))
+
 ## [v0.23.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.0) - 2023-07-26
 
 ### Feature

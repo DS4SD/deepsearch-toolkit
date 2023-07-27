@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "deepsearch-toolkit"
-version = "0.23.0"  # DO NOT EDIT, updated automatically
+version = "0.23.1"  # DO NOT EDIT, updated automatically
 description = "Interact with the Deep Search platform for new knowledge explorations and discoveries"
 authors = ["Michele Dolfi <dol@zurich.ibm.com>", "André Carvalho <andre.carvalho2@ibm.com>", "Lokesh Mishra <mis@zurich.ibm.com>", "Christoph Auer <cau@zurich.ibm.com>", "Kasper Dinkla <dkl@zurich.ibm.com>", "Cesar Berrospi Ramis <ceb@zurich.ibm.com>", "Panos Vagenas <pva@zurich.ibm.com>", "Peter Staar <taa@zurich.ibm.com>"]
 license = "MIT"
