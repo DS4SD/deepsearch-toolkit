@@ -1,6 +1,5 @@
 from typing import Union
 
-from platformdirs import user_log_dir
 from pydantic import BaseModel
 
 
