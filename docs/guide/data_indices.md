@@ -126,15 +126,12 @@ Documents can be converted and added, directly, to a data index in a project. Br
     # or, define a list directly
     #input_urls = ["https:///URL1", "https://URL2", "https://URL3"]
 
+    data_indices_utils.upload_files(api=api, coords=coords, url=input_urls)
+
     # For COS documents
     cos_coordinates = S3Coordinates.parse_file(s3_coordinates)
 
-    data_indices_utils.upload_files(
-        api=api, 
-        coords=coords, 
-        url=input_urls, 
-        s3_coordinates=cos_coordinates,
-    )
+    data_indices_utils.upload_files(api=api, coords=coords, s3_coordinates=cos_coordinates)
     ```
 
 ---
