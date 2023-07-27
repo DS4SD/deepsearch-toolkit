@@ -22,7 +22,7 @@ Suppose you want to create an index called `NAME`. Optionally, a description,`DE
     </div>
 === "Python"
 
-    After you have generated the api object (from [login configuration](../installation/login.md)),
+    After you have generated the api object (from a [profile](../configuration#usage-in-python)):
 
     ```python
     api.data_indices.create(proj_key=PROJ_KEY, name=NAME, desc=DESC)
@@ -159,9 +159,9 @@ Attachments can be added to an index item in a project. Briefly, attachments hav
         attachment_key = "usr_my_attachment"  # optional. if set need start with 'usr_' and be snake_case
 
         index.add_item_attachment(
-            api=api, 
-            index_item_id=index_item_id, 
-            attachment_path=attachment_path, 
+            api=api,
+            index_item_id=index_item_id,
+            attachment_path=attachment_path,
             attachment_key=attachment_key,  # optional
         )
     ```

@@ -8,7 +8,9 @@
 
 *Interact with the Deep Search platform for new knowledge explorations and discoveries*
 
-The Deep Search Toolkit provides a Python SDK and a CLI allowing a user to interact with the Deep Search platform. The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
+The Deep Search Toolkit is a Python SDK and CLI allowing users to interact with the Deep Search platform.
+The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
+
 
 [Learn about IBM Deep Search :octicons-link-external-16:](https://ds4sd.github.io/){ .md-button }
 

@@ -6,31 +6,26 @@ After registering with [Deep Search](https://ds4sd.github.io/), you can obtain y
 
 
 ---
-### Configure a profile
+### Set up a profile
 
 === "CLI"
-    Configure a profile using [`deepsearch profile config`](../cli-reference.md#profile).
+    Set up a [profile][profiles] using `deepsearch profile config`.
     In its basic form it looks like this:
     <div class="termy">
 
     ```console
     $ deepsearch profile config
-
-    Host:                 # (1)
-    Username:             # (2)
-    Api key:              # (3)
+    Host: https://ds.example.com  # the Deep Search instance you are using
+    Username: name@example.com    # your username
+    Api key: (hidden)             # your API key
     ```
 
     </div>
 
-    1.  Input the Deep Search deployment host to use.
-    2.  Enter your `User name`.
-    3.  Enter your `API key`.
-
     By providing a profile name (via option `--profile-name`) you can configure multiple
     different profiles, which you can then easily switch between and manage.
 
-    For details, check [Profiles](../guide/configuration.md#profiles).
+    For details, check [Profiles][profiles].
 
 ### Validate the setup
 
@@ -89,3 +84,6 @@ Here, we show a simple way to convert documents using [Deep Search](https://ds4s
     ```
 
 ---
+
+
+[profiles]: ../guide/configuration.md#profiles

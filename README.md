@@ -11,7 +11,8 @@
 *Interact with the Deep Search platform for new knowledge explorations and discoveries*
 
 
-The Deep Search Toolkit is a Python SDK allowing a user to interact with the Deep Search platform. The toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
+The Deep Search Toolkit is a Python SDK and CLI allowing users to interact with the Deep Search platform.
+The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
 
 
 [Learn about IBM Deep Search](https://ds4sd.github.io/)
@@ -53,14 +54,14 @@ Python 3.8+
 
 ## Start using the toolkit
 
-### Login to Deep Search
-For details, check the [authentication docs](https://ds4sd.github.io/deepsearch-toolkit/getting_started/#authentication).
+### Set up a profile
+For details, check [Profiles](https://ds4sd.github.io/deepsearch-toolkit/guide/configuration#profiles).
 ```console
-deepsearch login
+deepsearch profile config
 ```
 
 ### Convert a document
-For details, check the [document conversion docs](https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc).
+For details, check [Document conversion](https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc).
 ```console
 deepsearch documents convert -p 1234567890abcdefghijklmnopqrstvwyz123456 -u https://arxiv.org/pdf/2206.00785.pdf
 ```

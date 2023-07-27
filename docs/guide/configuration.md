@@ -1,12 +1,15 @@
 # Configuration
 
-The Toolkit can be configured both via the CLI and via
-environment variables.
+The Toolkit can be configured via the CLI and via environment variables.
 
 Besides *global* settings, the Toolkit also allows the configuration of multiple
 *profiles* for enabling users to easily work with different Deep Search deployments.
 
 ## Profiles
+
+The Toolkit provides the capability of easily interacting with different Deep Search
+instances through the use of *profiles*. A user may define multiple profiles, identified
+by profile name, and can easily switch between them.
 
 ### Overview
 
@@ -32,8 +35,8 @@ $ deepsearch profile --help
 
 ### Profile setup
 
-To setup a profile use [`deepsearch profile config`](../cli-reference.md#profile),
-providing options as needed (for a full reference run with `--help`).
+To set up a profile use `deepsearch profile config`, providing options as needed (for a
+full reference check `deepsearch profile config --help`).
 
 Here is a basic invocation example:
 
@@ -44,76 +47,70 @@ Username: name@example.com
 Api key:
 ```
 
-> NOTE: If you had used the meanwhile deprecated `deepsearch login` command to set up a
-config file in the default location, that will automatically be migrated to a profile.
+!!! note
+    If you had used the meanwhile deprecated `deepsearch login` command to set up a
+    config file in the default location, that will automatically be migrated to a profile.
 
 ### Usage
 
-Here some usage examples:
+#### Usage in CLI
 
-=== "CLI"
+```console
+$ # configure a profile
+$ deepsearch profile config --profile-name foo --host ds-1.example.com ...
+$ # -> "foo" now available and selected as the active profile
+$
+$ deepsearch cps projects list
+$ # -> outputs projects corresponding to "foo"
+$
+$ # configure another profile
+$ deepsearch profile config --profile-name bar --host ds-2.example.com ...
+$ # -> "bar" now available and selected as the active profile
+$
+$ deepsearch profile list
+$ # -> displays all profiles, with "bar" marked as the active one
+$
+$ deepsearch cps projects list
+$ # -> outputs projects corresponding to "bar"
+$
+$ # switch to previous profile
+$ deepsearch profile use foo
+$ # -> "foo" now selected as the active profile
+$
+$ deepsearch cps projects list
+$ # -> outputs projects corresponding to "foo"
+```
 
-    ```console
-    $ # configure a profile
-    $ deepsearch profile config --profile-name foo --host ds-1.example.com ...
-    $ # -> "foo" now available and selected as the active profile
-    $
-    $ deepsearch cps projects list
-    $ # -> outputs projects corresponding to "foo"
-    $
-    $ # configure another profile
-    $ deepsearch profile config --profile-name bar --host ds-2.example.com ...
-    $ # -> "bar" now available and selected as the active profile
-    $
-    $ deepsearch profile list
-    $ # -> displays all profiles, with "bar" marked as the active one
-    $
-    $ deepsearch cps projects list
-    $ # -> outputs projects corresponding to "bar"
-    $
-    $ # switch to previous profile
-    $ deepsearch profile use foo
-    $ # -> "foo" now selected as the active profile
-    $
-    $ deepsearch cps projects list
-    $ # -> outputs projects corresponding to "foo"
-    ```
+#### Usage in Python
 
-=== "Python"
+To use the active profile (recommended usage pattern):
+```python
+from deepsearch.cps.client.api import CpsApi
 
-    ```python
-    from deepsearch.cps.client.api import CpsApi
+api = CpsApi.from_env()
 
-    # using the active profile; let's assume that is "foo"
-    api = CpsApi.from_env()
-    print([p.name for p in api.projects.list()])
-    # -> outputs projects corresponding to "foo"
+print([p.name for p in api.projects.list()])
+# -> outputs projects corresponding to active profile
+```
 
-    # using a profile by name
-    api = CpsApi.from_env(profile_name="bar")
-    print([p.name for p in api.projects.list()])
-    # -> outputs projects corresponding to "bar"
-    ```
+To use a specific profile:
+```python
+from deepsearch.cps.client.api import CpsApi
 
----
+api = CpsApi.from_env(profile_name="foo")
 
+print([p.name for p in api.projects.list()])
+# -> outputs projects corresponding to "foo"
+```
 
 ## Environment variables
 
-Under the hood, configuration management in the Toolkit is implemented based on [Pydantic
-Settings with dotenv support](https://docs.pydantic.dev/1.10/usage/settings).
-
-Configuration is persisted in Toolkit-managed dotenv files, but can be overriden via
-environment variables.
+Under the hood, the Toolkit leverages [Pydantic Settings with dotenv
+support][pydantic_settings], so configuration settings can be easily overriden via
+environment variables. This can be useful e.g. in a containerization scenario.
 
 To see which environment variables are supported, check the relevant [Pydantic Settings
 classes][settings_file], also taking into account any defined prefixes.
 
-For example you can set the profile for the scope of a single operation (e.g. a project
-listing) as follows:
-
-```console
-DEEPSEARCH_PROFILE=bar deepsearch cps projects list
-```
-
+[pydantic_settings]: https://docs.pydantic.dev/dev-v1/usage/settings
 [settings_file]: https://github.com/DS4SD/deepsearch-toolkit/blob/main/deepsearch/core/client/settings.py
