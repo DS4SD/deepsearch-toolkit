@@ -150,7 +150,7 @@ def upload_files(
     cos_coordinates: Optional[S3Coordinates] = None
     if s3_coordinates is not None:
         try:
-            cos_coordinates = json.load(open(s3_coordinates))
+            cos_coordinates = S3Coordinates.parse_file(s3_coordinates)
         except Exception as e:
             typer.echo(f"Error occurred: {e}")
             typer.echo(ERROR_MSG)
