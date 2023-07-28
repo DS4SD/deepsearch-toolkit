@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import logging
 import os
 import time
@@ -16,7 +17,7 @@ from fastapi.security import APIKeyHeader
 
 from deepsearch.model.base.controller import BaseController
 from deepsearch.model.base.model import BaseDSModel
-from deepsearch.model.server.config import Settings
+from deepsearch.model.server.config import ModelAppSettings
 from deepsearch.model.server.controller_factory import ControllerFactory
 from deepsearch.model.server.inference_types import AppModelInfoOutput, AppPredInput
 
@@ -24,8 +25,8 @@ logger = logging.getLogger("cps-fastapi")
 
 
 class ModelApp:
-    def __init__(self, settings: Settings):
-        self._settings = settings
+    def __init__(self, settings: Optional[ModelAppSettings] = None):
+        self._settings = settings or ModelAppSettings()
 
         self.app = FastAPI()
         self._controllers: Dict[str, BaseController] = {}
@@ -189,8 +190,17 @@ class ModelApp:
         key = name or contr.get_model_name()
         self._controllers[key] = contr
 
-    def run(self, host: str = "127.0.0.1", port: int = 8000, **kwargs) -> None:
-        uvicorn.run(self.app, host=host, port=port, **kwargs)
+    def run(self, **kwargs) -> None:
+        """Run app. Accepts all keyword arguments that can be passed to `uvicoirn.run`"""
+        new_kwargs = copy.deepcopy(kwargs)
+        host = new_kwargs.pop("host", None) or self._settings.host
+        port = new_kwargs.pop("port", None) or self._settings.port
+        uvicorn.run(
+            app=self.app,
+            host=host,
+            port=port,
+            **new_kwargs,
+        )
 
     def _validate_controller_kind(
         self, controller: BaseController, model: BaseDSModel

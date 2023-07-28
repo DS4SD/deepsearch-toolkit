@@ -2,8 +2,8 @@
 
 The Toolkit can be configured via the CLI and via environment variables.
 
-Besides *global* settings, the Toolkit also allows the configuration of multiple
-*profiles* for enabling users to easily work with different Deep Search deployments.
+Besides global settings, the Toolkit also allows the configuration of multiple
+profiles for enabling users to easily work with different Deep Search deployments.
 
 ## Profiles
 
@@ -109,8 +109,29 @@ Under the hood, the Toolkit leverages [Pydantic Settings with dotenv
 support][pydantic_settings], so configuration settings can be easily overriden via
 environment variables. This can be useful e.g. in a containerization scenario.
 
-To see which environment variables are supported, check the relevant [Pydantic Settings
-classes][settings_file], also taking into account any defined prefixes.
+To see which environment variables are supported, check the following Pydantic Settings
+classes, also taking into account the respective prefixes:
+
+| Class | Prefix | Description |
+| --- | --- | --- |
+| [`ProfileSettings`][settings_file] | `DEEPSEARCH_PROFILE_` | Profile settings (e.g. host, port etc.) |
+| [`ModelAppSettings`][model_app_settings] | `DEEPSEARCH_MODELAPP_` | Model app settings |
+| [`ArtifactSettings`][artifact_settings] | `DEEPSEARCH_ARTIFACT_` | Artifact management settings |
+| [`CLISettings`][cli_settings] | `DEEPSEARCH_CLI_` | Command line utility settings |
+| [`PrflManagerSettings`][settings_file] | `DEEPSEARCH_PRM_` |  Profile manager settings (e.g. which profile to use) |
+
+For instance, `DEEPSEARCH_PROFILE_*` environment variables, i.e. `DEEPSEARCH_PROFILE_HOST` etc.
+(see [`ProfileSettings`][settings_file]), can be used for injecting profile data even if
+no profile has been configured.
+
+!!! note
+
+    When extending the settings (e.g. as for the [model app][model_app_settings]),
+    developers must ensure `env_prefix` is [properly set][settings_file] to prevent
+    conflicts.
 
 [pydantic_settings]: https://docs.pydantic.dev/dev-v1/usage/settings
 [settings_file]: https://github.com/DS4SD/deepsearch-toolkit/blob/main/deepsearch/core/client/settings.py
+[model_app_settings]: https://github.com/DS4SD/deepsearch-toolkit/blob/main/deepsearch/model/server/config.py
+[artifact_settings]: https://github.com/DS4SD/deepsearch-toolkit/blob/main/deepsearch/artifacts/settings.py
+[cli_settings]: https://github.com/DS4SD/deepsearch-toolkit/blob/main/deepsearch/core/cli/settings.py

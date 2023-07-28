@@ -10,8 +10,8 @@ from deepsearch.core.client import (
     DeepSearchConfig,
     DeepSearchKeyAuth,
 )
+from deepsearch.core.client.profile_manager import profile_mgr
 from deepsearch.core.client.settings import ProfileSettings
-from deepsearch.core.client.settings_manager import settings_mgr
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.client.components import (
     CpsApiDataCatalogs,
@@ -149,7 +149,7 @@ class CpsApi:
 
     @classmethod
     def from_env(cls, profile_name: Optional[str] = None) -> CpsApi:
-        settings = settings_mgr.get_profile_settings(profile_name=profile_name)
+        settings = profile_mgr.get_profile_settings(profile_name=profile_name)
         return cls._from_settings(settings=settings)
 
     @classmethod

@@ -1,9 +1,9 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
-import platformdirs
+from pydantic import ValidationError
 
 from deepsearch.core.cli.profile_utils import (
     MSG_AMBIGUOUS_SUCCESSOR,
@@ -11,10 +11,15 @@ from deepsearch.core.cli.profile_utils import (
     MSG_NO_PROFILES_DEFINED,
 )
 from deepsearch.core.client.config import DeepSearchConfig, DeepSearchKeyAuth
-from deepsearch.core.client.settings import MainSettings, ProfileSettings
+from deepsearch.core.client.settings import (
+    CFG_ROOT_PATH,
+    DSSettings,
+    ProfileSettings,
+    SubPrefix,
+)
 
 FALLBACK_PRFL_NAME = "ds"
-MAIN_DOTENV_FILENAME = "main.env"
+PRFL_MGR_DOTENV_FILENAME = "main.env"
 PROFILES_DIR_NAME = "profiles"
 LEGACY_CFG_FILENAME = "deepsearch_toolkit.json"
 
@@ -25,33 +30,43 @@ class ProfileSettingsEntry:
     settings: ProfileSettings
 
 
-class SettingsManager:
+class PrflManagerSettings(DSSettings):
+    class Config:
+        env_prefix = DSSettings.build_prefix(sub_prefix=SubPrefix.PRFL_MGR)
+
+    profile: Optional[str] = None  # None only when profiles not yet initialized
+
+
+class ProfileManager:
     def __init__(self) -> None:
         """Initialize a SettingsManager instance. We allow cases with no selected profile
         despite available ones to go through initialization; these have to get handled
         as needed, when needed."""
-        self.config_root_path = Path(
-            platformdirs.user_config_dir(
-                appname="DeepSearch",
-                appauthor="IBM",
-                ensure_exists=True,
-            )
-        )
-        self._main_path = self.config_root_path / MAIN_DOTENV_FILENAME
-        self._main_settings = MainSettings(_env_file=self._main_path)
-        self._profile_root_path = self.config_root_path / PROFILES_DIR_NAME
+
+        self._main_path = CFG_ROOT_PATH / PRFL_MGR_DOTENV_FILENAME
+        self._main_settings = PrflManagerSettings(_env_file=self._main_path)
+        self._profile_root_path = CFG_ROOT_PATH / PROFILES_DIR_NAME
         self._profile_root_path.mkdir(exist_ok=True)
 
         # initialize internal profile cache from Pydantic Settings based on dotenv
         self._profile_cache: Dict[str, ProfileSettingsEntry] = {}
+        invalid_files: List[Path] = []
         for f in os.listdir(self._profile_root_path):
             file_path = self._profile_root_path / f
             if file_path.suffix == ".env":
                 profile_name = file_path.stem
-                self._profile_cache[profile_name] = ProfileSettingsEntry(
-                    path=file_path,
-                    settings=ProfileSettings(_env_file=file_path),
-                )
+                try:
+                    settings = ProfileSettings(_env_file=file_path)
+                    self._profile_cache[profile_name] = ProfileSettingsEntry(
+                        path=file_path,
+                        settings=settings,
+                    )
+                except ValidationError:
+                    invalid_files.append(file_path)
+        # remove any invalid files
+        for invalid_file in invalid_files:
+            print(f'Removing invalid profile "{invalid_file.stem}"')
+            invalid_file.unlink()
 
         # reset any stale active profile config
         if (
@@ -77,7 +92,7 @@ class SettingsManager:
 
     def _migrate_legacy_config(self) -> None:
         if self._main_settings.profile is None:
-            legacy_cfg_path = self.config_root_path / LEGACY_CFG_FILENAME
+            legacy_cfg_path = CFG_ROOT_PATH / LEGACY_CFG_FILENAME
             if legacy_cfg_path.exists():
                 legacy_cfg = DeepSearchConfig.parse_file(legacy_cfg_path)
                 if isinstance(legacy_cfg.auth, DeepSearchKeyAuth):
@@ -173,8 +188,5 @@ class SettingsManager:
         prfl_settgs_entry = self._profile_cache.pop(profile_name)  # update cache
         prfl_settgs_entry.path.unlink()  # remove file
 
-    def get_show_cli_stack_traces(self) -> bool:
-        return self._main_settings.show_cli_stack_traces
 
-
-settings_mgr = SettingsManager()
+profile_mgr = ProfileManager()

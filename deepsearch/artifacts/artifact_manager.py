@@ -2,33 +2,21 @@ import json
 import os
 import shutil
 import tempfile
-from enum import Enum
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
-import platformdirs
 import requests
 from tqdm import tqdm
 
-DFLT_ARTFCT_INDEX_DIR = os.getenv("DEEPSEARCH_ARTIFACT_INDEX", default=os.getcwd())
-DFLT_ARTFCT_CACHE_DIR = os.getenv(
-    "DEEPSEARCH_ARTIFACT_CACHE",
-    default=Path(platformdirs.user_cache_dir("deepsearch", "ibm")) / "artifact_cache",
-)
-ARTF_META_FILENAME = os.getenv("DEEPSEARCH_ARTIFACT_META_FILENAME", default="meta.info")
-ARTF_META_URL_FIELD = os.getenv("DEEPSEARCH_ARTIFACT_URL_FIELD", default="static_url")
+from deepsearch.artifacts.settings import ArtifactSettings
 
 
 class ArtifactManager:
-    class HitStrategy(str, Enum):
-        RAISE = "raise"
-        PASS = "pass"
-        OVERWRITE = "overwrite"
-
-    def __init__(self, index=None, cache=None):
-        self._index_path = Path(index or DFLT_ARTFCT_INDEX_DIR)
-        self._cache_path = Path(cache or DFLT_ARTFCT_CACHE_DIR)
+    def __init__(self, settings: Optional[ArtifactSettings] = None):
+        self._settings = settings or ArtifactSettings()
+        self._index_path = Path(self._settings.index_path)
+        self._cache_path = Path(self._settings.cache_path)
         self._cache_path.mkdir(parents=True, exist_ok=True)
 
     def get_cache_path(self) -> Path:
@@ -46,47 +34,48 @@ class ArtifactManager:
     def download_artifact_to_cache(
         self,
         artifact_name: str,
-        unpack_archives: bool = True,
-        hit_strategy: HitStrategy = HitStrategy.OVERWRITE,
-        with_progress_bar: bool = False,
     ) -> None:
         artifact_path = self._cache_path / artifact_name
         if artifact_path.exists():
-            if hit_strategy == self.HitStrategy.RAISE:
+            if self._settings.hit_strategy == ArtifactSettings.HitStrategy.RAISE:
                 raise ValueError(f'Artifact "{artifact_name}" already in cache')
-            elif hit_strategy == self.HitStrategy.PASS:
+            elif self._settings.hit_strategy == ArtifactSettings.HitStrategy.PASS:
                 return
-            elif hit_strategy == self.HitStrategy.OVERWRITE:
+            elif self._settings.hit_strategy == ArtifactSettings.HitStrategy.OVERWRITE:
                 shutil.rmtree(artifact_path)
             else:
-                raise RuntimeError(f'Unexcpected value "{hit_strategy=}"')
+                raise RuntimeError(
+                    f'Unexcpected value "{self._settings.hit_strategy=}"'
+                )
 
         artifact_path.mkdir(exist_ok=False)
 
         # read metadata from file
-        meta_path = self._index_path / artifact_name / ARTF_META_FILENAME
+        meta_path = self._index_path / artifact_name / self._settings.meta_filename
         with open(meta_path, "r") as meta_file:
             artifact_meta = json.load(meta_file)
-        download_url = artifact_meta[ARTF_META_URL_FIELD]
+        download_url = artifact_meta[self._settings.meta_url_field]
 
         with tempfile.TemporaryDirectory() as temp_dir:
             download_path = self._download_file(
                 artifact_name=artifact_name,
                 download_url=download_url,
                 download_root_path=Path(temp_dir),
-                with_progress_bar=with_progress_bar,
+                with_progress_bar=self._settings.progress_bar,
             )
             self._finalize_download(
                 download_path=download_path,
                 target_path=artifact_path,
-                unpack_archives=unpack_archives,
+                unpack_archives=self._settings.unpack_archives,
             )
 
     def get_artifacts_in_index(self) -> List[str]:
         artifacts = []
         for entry in os.scandir(self._index_path):
             artifact_name = entry.name
-            meta_file_path = self._index_path / artifact_name / ARTF_META_FILENAME
+            meta_file_path = (
+                self._index_path / artifact_name / self._settings.meta_filename
+            )
             if meta_file_path.exists():
                 artifacts.append(artifact_name)
         return artifacts
@@ -96,7 +85,7 @@ class ArtifactManager:
         for entry in os.scandir(self._cache_path):
             artifact_name = entry.name
             artifact_path = self._cache_path / artifact_name
-            if artifact_path.exists():
+            if artifact_path.is_dir():
                 artifacts.append(artifact_name)
         return artifacts
 
@@ -173,7 +162,7 @@ class ArtifactManager:
             shutil.move(dl_path_str, target_path / "")
 
     def _get_artifact_meta(self, artifact_name: str) -> Dict:
-        file_path = self._index_path / artifact_name / ARTF_META_FILENAME
+        file_path = self._index_path / artifact_name / self._settings.meta_filename
         if not file_path.exists():
             raise FileNotFoundError(f'File "{file_path}" does not exist')
         with open(file_path, "r") as file:

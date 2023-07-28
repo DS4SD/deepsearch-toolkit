@@ -1,13 +1,39 @@
 from __future__ import annotations
 
+from enum import Enum
 from getpass import getpass
 from pathlib import Path
-from typing import Dict, Optional, Union
+from typing import Dict, Union
 
+import platformdirs
 from pydantic import BaseSettings, SecretStr
 
+CFG_ROOT_PATH = Path(
+    platformdirs.user_config_dir(
+        appname="DeepSearch",
+        appauthor="IBM",
+        ensure_exists=True,
+    )
+)
 
-class DumpableSettings(BaseSettings):
+
+class SubPrefix(str, Enum):
+    # NOTE: to prevent conflicts, values must not be substring of one another
+    PROFILE = "PROFILE_"  # reserved for ProfileSettings
+    PRFL_MGR = "PRM_"  # reserved for PrflManagerSettings
+    MODEL_APP = "MODELAPP_"  # reserved for ModelAppSettings
+    ARTIFACT = "ARTIFACT_"  # reserved for ArtifactSettings
+    CLI = "CLI_"  # reserved for CLISettings
+
+
+class DSSettings(BaseSettings):
+    class Literals:
+        PREFIX = "DEEPSEARCH_"
+
+    @classmethod
+    def build_prefix(cls, sub_prefix: SubPrefix) -> str:
+        return DSSettings.Literals.PREFIX + sub_prefix
+
     @classmethod
     def get_env_var_name(cls, attr_name) -> str:
         return cls.Config.env_prefix + attr_name.upper()
@@ -33,14 +59,14 @@ class DumpableSettings(BaseSettings):
                     target_file.write(f'{k}="{val}"\n')
 
 
-class ProfileSettings(DumpableSettings):
+class ProfileSettings(DSSettings):
+    class Config:
+        env_prefix = DSSettings.build_prefix(sub_prefix=SubPrefix.PROFILE)
+
     host: str
     username: str
     api_key: SecretStr
     verify_ssl: bool = True
-
-    class Config:
-        env_prefix = "DEEPSEARCH_"
 
     @classmethod
     def from_cli_prompt(cls) -> ProfileSettings:
@@ -50,12 +76,3 @@ class ProfileSettings(DumpableSettings):
             api_key=getpass("API key: "),
             verify_ssl=input("SSL verification [y/n]: "),
         )
-
-
-class MainSettings(DumpableSettings):
-
-    profile: Optional[str] = None  # None only when profiles not yet iniitialized
-    show_cli_stack_traces: bool = False
-
-    class Config:
-        env_prefix = "DEEPSEARCH_"

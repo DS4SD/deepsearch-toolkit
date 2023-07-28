@@ -10,8 +10,8 @@ from deepsearch.core.cli.profile_utils import (
     MSG_NO_PROFILES_DEFINED,
 )
 from deepsearch.core.cli.utils import cli_handler
+from deepsearch.core.client.profile_manager import profile_mgr
 from deepsearch.core.client.settings import ProfileSettings
-from deepsearch.core.client.settings_manager import settings_mgr
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -36,7 +36,7 @@ def add_profile(
     activate_profile: bool = typer.Option(default=True),
 ):
     prfl_name = (
-        profile_name if profile_name else settings_mgr.get_profile_name_suggestion()
+        profile_name if profile_name else profile_mgr.get_profile_name_suggestion()
     )
 
     profile_settings = ProfileSettings(
@@ -46,7 +46,7 @@ def add_profile(
         verify_ssl=verify_ssl,
     )
 
-    settings_mgr.save_settings(
+    profile_mgr.save_settings(
         profile_settgs=profile_settings,
         profile_name=prfl_name,
         activate_profile=activate_profile,
@@ -63,8 +63,8 @@ def list_profiles() -> None:
         "active",
         "profile",
     )
-    profiles = settings_mgr.get_all_profile_settings()
-    active_profile = settings_mgr.get_active_profile()
+    profiles = profile_mgr.get_all_profile_settings()
+    active_profile = profile_mgr.get_active_profile()
 
     if len(profiles) > 0:
         for k in profiles:
@@ -98,8 +98,8 @@ def show_profile(
         "profile",
         "config",
     )
-    prfl_name = profile_name or settings_mgr.get_active_profile()
-    profile = settings_mgr.get_profile_settings(profile_name=prfl_name)
+    prfl_name = profile_name or profile_mgr.get_active_profile()
+    profile = profile_mgr.get_profile_settings(profile_name=prfl_name)
 
     table.add_row(
         prfl_name,
@@ -117,7 +117,7 @@ def show_profile(
 def set_default_profile(
     profile_name: str,
 ) -> None:
-    settings_mgr.activate_profile(profile_name=profile_name)
+    profile_mgr.activate_profile(profile_name=profile_name)
 
 
 @app.command(
@@ -129,4 +129,4 @@ def set_default_profile(
 def remove_profile(
     profile_name: str,
 ) -> None:
-    settings_mgr.remove_profile(profile_name=profile_name)
+    profile_mgr.remove_profile(profile_name=profile_name)

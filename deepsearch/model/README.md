@@ -13,28 +13,37 @@ To use the Model API, install including the `api` extra, i.e.:
 
 ## Basic usage
 ```python
-from deepsearch.model.server.config import Settings
 from deepsearch.model.server.model_app import ModelApp
 
 # (1) create an app
-app = ModelApp(settings=Settings())
+app = ModelApp()
 
 # (2) register your model(s)
-model = ...  # e.g. SimpleGeoNLPAnnotator()
-app.register_model(model)
+app.register_model(
+    model=...  # e.g. SimpleGeoNLPAnnotator()
+)
 
 # (3) run the app
-app.run(host="127.0.0.1", port=8000)
+app.run()
 ```
-
-### Settings
-App configuration is done in [`Settings`](server/config.py) based on
-[Pydantic Settings with dotenv support](https://docs.pydantic.dev/dev-v1/usage/settings/).
-
-E.g. the required API key can be injected via env var `DS_MODEL_API_KEY`.
 
 ### OpenAPI
 The OpenAPI UI is served under `/docs`, i.e. by default at http://127.0.0.1:8000/docs.
+
+## Configuration
+
+The user can explicitly specify the settings when instantiating the app:
+```python
+app = ModelApp(
+    settings=ModelAppSettings(...)
+)
+```
+
+Settings can also be defined via environment variables, as described in [Toolkit
+Configuration][toolkit_configuration].
+
+For example, the required API key can be injected via env var
+`DEEPSEARCH_MODELAPP_API_KEY`.
 
 ## Developing a new model
 To develop a new model class for an existing [kind](kinds/), inherit from the base model
@@ -81,3 +90,5 @@ future timestamp):
     }
 }
 ```
+
+[toolkit_configuration]: https://ds4sd.github.io/deepsearch-toolkit/guide/configuration/

@@ -2,7 +2,9 @@ from functools import wraps
 
 import typer
 
-from deepsearch.core.client.settings_manager import settings_mgr
+from deepsearch.core.cli.settings import CLISettings
+
+_cli_settings = CLISettings()
 
 
 def cli_handler():
@@ -14,7 +16,7 @@ def cli_handler():
             try:
                 return func(*args, **kwargs)
             except Exception as e:
-                if settings_mgr.get_show_cli_stack_traces():
+                if _cli_settings.show_stacktrace:
                     raise e
                 else:
                     typer.secho(str(e), fg=typer.colors.RED)
