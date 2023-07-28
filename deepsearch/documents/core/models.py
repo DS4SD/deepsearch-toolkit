@@ -137,7 +137,7 @@ class ElasticS3Target(BaseModel):
     coordinates: ElasticS3TargetCoordinates
 
     if_document_exists: DocumentExistsInTargetAction = (
-        DocumentExistsInTargetAction.MERGE
+        DocumentExistsInTargetAction.REPLACE
     )
 
     add_cells: bool = False
