@@ -30,7 +30,12 @@ class CpsApiDataIndices:
             sw_client.ProjectDataIndexWithStatus
         ] = self.sw_api.get_project_data_indices(proj_key=proj_key)
 
-        return [DataIndex.parse_obj(item.to_dict()) for item in response]
+        # filter out saved searchs index
+        return [
+            DataIndex.parse_obj(item.to_dict())
+            for item in response
+            if item.to_dict()["type"] != "View"
+        ]
 
     def create(
         self,
