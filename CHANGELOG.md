@@ -1,3 +1,8 @@
+## [v0.23.2](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.2) - 2023-07-28
+
+### Fix
+* Refrain from instantiating DataIndex from saved searches ([#120](https://github.com/DS4SD/deepsearch-toolkit/issues/120)) ([`141e3d2`](https://github.com/DS4SD/deepsearch-toolkit/commit/141e3d2de02daa69d67a757d5fe1cad50eb7a564))
+
 ## [v0.23.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.1) - 2023-07-27
 
 ### Fix
