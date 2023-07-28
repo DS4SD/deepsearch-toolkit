@@ -52,29 +52,28 @@ print(artf_mgr.get_cache_path())
 
 ### Usage with CLI
 ```console
-$ deepsearch artifacts --help
-Usage: deepsearch artifacts [OPTIONS] COMMAND [ARGS]...
+$ deepsearch artifact --help
 
-  Manage artifacts
+ Usage: deepsearch artifact [OPTIONS] COMMAND [ARGS]...
 
-Options:
-  --help  Show this message and exit.
+ Manage artifacts
 
-Commands:
-  download                Download an artifact to cache
-  download-all            Download all artifacts to cache
-  list-cache              List artifacts in cache
-  list-index              List artifacts in index
-  locate-cached-artifact  Show path of a cached artifact
-  locate-default-cache    Show cache path
+╭─ Options ───────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                 │
+╰─────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ──────────────────────────────────────────────────────────────────╮
+│ cache             Manage artifact caches.                                   │
+│ download          Download an artifact to cache.                            │
+│ index             Manage artifact indices.                                  │
+│ locate            Show path of a cached artifact.                           │
+╰─────────────────────────────────────────────────────────────────────────────╯
 ```
 
-### Environment variables
+## Configuration
+The artifact management facility extends the Toolkit configuration with its own settings.
 
-Environment variables can be used for overriding internal defaults—for the latest status,
-check [artifact_manager.py](artifact_manager.py).
+For details check [Toolkit Configuration][toolkit_configuration].
 
-- `DEEPSEARCH_ARTIFACT_INDEX`: default index path
-- `DEEPSEARCH_ARTIFACT_CACHE`: default cache path
-- `DEEPSEARCH_ARTIFACT_META_FILENAME`: name of JSON metadata file
-- `DEEPSEARCH_ARTIFACT_URL_FIELD`: field for download URL within JSON metadata file
+For example, the index path can be injected via env var `DEEPSEARCH_ARTIFACT_INDEX`.
+
+[toolkit_configuration]: https://ds4sd.github.io/deepsearch-toolkit/guide/configuration/

@@ -12,7 +12,7 @@ app.add_typer(
     name="documents",
     help="Interact with DeepSearch Document Conversion component",
 )
-app.add_typer(artifacts_app, name="artifacts", help="Manage artifacts")
+app.add_typer(artifacts_app, name="artifact", help="Manage artifacts")
 
 for group in get_cli_groups():
     app.add_typer(group)
