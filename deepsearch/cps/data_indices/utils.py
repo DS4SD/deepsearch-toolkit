@@ -13,7 +13,7 @@ from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
-from deepsearch.documents.core.common_routines import progressbar, success_message
+from deepsearch.documents.core.common_routines import progressbar
 from deepsearch.documents.core.utils import cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
@@ -92,7 +92,6 @@ def process_url_input(
     statuses = convert.check_cps_status_running_tasks(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
-    print(success_message)
 
     return
 
@@ -158,7 +157,7 @@ def process_local_file(
     statuses = convert.check_cps_status_running_tasks(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
-    print(success_message)
+
     cleanup(root_dir=root_dir)
     return
 
@@ -196,5 +195,5 @@ def process_external_cos(
     statuses = convert.check_cps_status_running_tasks(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
-    print(success_message)
+
     return

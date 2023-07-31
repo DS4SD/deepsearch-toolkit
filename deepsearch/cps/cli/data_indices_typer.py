@@ -55,7 +55,7 @@ def list(
             for index in indices
         ]
     except ValueError as e:
-        print(f"Error occurred: {e}")
+        typer.echo(f"Error occurred: {e}")
 
     cli_output(results, output, headers="keys")
     return
@@ -164,6 +164,9 @@ def upload_files(
         local_file=local_file,
         s3_coordinates=cos_coordinates,
     )
+
+    # TODO since statuses are not returned from utils this is not very useful!
+    typer.echo("File upload queued successfully")
 
 
 @app.command(

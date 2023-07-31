@@ -15,4 +15,5 @@ class ProgressBarParameters:
 
 
 progressbar = ProgressBarParameters()
-success_message = "Completed successfully"
+# TODO possibly deprecated? confirm with @pva
+# success_message = "Completed successfully"
