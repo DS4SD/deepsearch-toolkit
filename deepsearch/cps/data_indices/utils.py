@@ -93,7 +93,7 @@ def process_url_input(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
 
-    return
+    return statuses
 
 
 def process_local_file(
@@ -159,7 +159,7 @@ def process_local_file(
     )
 
     cleanup(root_dir=root_dir)
-    return
+    return statuses
 
 
 def process_external_cos(
@@ -196,4 +196,4 @@ def process_external_cos(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
 
-    return
+    return statuses
