@@ -165,13 +165,11 @@ def upload_files(
         s3_coordinates=cos_coordinates,
     )
 
-    if all([status=="SUCCESS" for status in statuses]):
+    if all([status == "SUCCESS" for status in statuses]):
         typer.echo("File upload completed successfully")
     else:
         # TODO
         typer.echo("Some files did not upload successfully")
-
-
 
 
 @app.command(
