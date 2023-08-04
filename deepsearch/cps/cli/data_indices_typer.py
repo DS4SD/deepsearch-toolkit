@@ -44,6 +44,7 @@ def list(
 
     try:
         indices = api.data_indices.list(proj_key=proj_key)
+        print(indices)
         results = [
             {
                 "Index key": index.source.index_key,
@@ -56,6 +57,7 @@ def list(
         ]
     except ValueError as e:
         typer.echo(f"Error occurred: {e}")
+        raise typer.Abort()
 
     cli_output(results, output, headers="keys")
     return
