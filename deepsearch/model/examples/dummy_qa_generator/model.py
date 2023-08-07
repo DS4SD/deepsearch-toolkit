@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from deepsearch.model.base.types import Kind
 from deepsearch.model.kinds.qagen.model import BaseQAGenerator
@@ -18,7 +18,7 @@ class DummyQAGenerator(BaseQAGenerator):
         return self._config
 
     def generate_answers(
-        self, texts: List[Tuple[List[str], str]]
+        self, texts: List[Tuple[List[Dict], str]]
     ) -> GenerateAnswersOutput:
         """Just answers with the question itself.
         Args:
