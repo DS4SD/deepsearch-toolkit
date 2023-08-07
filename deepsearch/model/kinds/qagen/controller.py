@@ -39,7 +39,10 @@ class QAGenController(BaseController):
         if isinstance(spec, QAGenReqSpec):
             gen_answers = spec.generateAnswers
             answers = self._model.generate_answers(
-                [(c, q) for c, q in zip(gen_answers.contexts, gen_answers.questions)]
+                texts=[
+                    ([ctx_entry.dict() for ctx_entry in ctx_list], q)
+                    for ctx_list, q in zip(gen_answers.contexts, gen_answers.questions)
+                ],
             )
             return QAGenCtrlPredOutput(
                 answers=answers,

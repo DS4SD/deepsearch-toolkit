@@ -11,8 +11,14 @@ from deepsearch.model.base.types import (
 )
 
 
+class ContextEntry(StrictModel):
+    text: str
+    type: str
+    representation_type: str
+
+
 class GenerateAnswers(StrictModel):
-    contexts: List[List[str]]
+    contexts: List[List[ContextEntry]]
     questions: List[str]
 
     @root_validator
