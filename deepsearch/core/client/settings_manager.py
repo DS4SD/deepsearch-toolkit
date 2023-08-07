@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 import platformdirs
+from pydantic import ValidationError
 
 from deepsearch.core.cli.profile_utils import (
     MSG_AMBIGUOUS_SUCCESSOR,
@@ -111,10 +112,13 @@ class SettingsManager:
     ) -> ProfileSettings:
         prfl_name = profile_name or self.get_active_profile()
         if prfl_name is None:
-            if len(self._profile_cache) == 0:
-                raise RuntimeError(MSG_NO_PROFILES_DEFINED)
-            else:
-                raise RuntimeError(MSG_NO_PROFILE_SELECTED)
+            try:  # try to instantiate from environment alone
+                return ProfileSettings()
+            except ValidationError:
+                if len(self._profile_cache) == 0:
+                    raise RuntimeError(MSG_NO_PROFILES_DEFINED)
+                else:
+                    raise RuntimeError(MSG_NO_PROFILE_SELECTED)
         else:
             return self._safe_get_profile_entry(profile_name=prfl_name).settings
 
