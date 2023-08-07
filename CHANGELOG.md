@@ -1,3 +1,9 @@
+## [v0.23.3](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.3) - 2023-08-07
+
+### Fix
+* Support env-only profile config instantiation ([#125](https://github.com/DS4SD/deepsearch-toolkit/issues/125)) ([`85f5793`](https://github.com/DS4SD/deepsearch-toolkit/commit/85f579337beb88d520f57924355b8e485043775b))
+* Align model with allowed values in backend ([#122](https://github.com/DS4SD/deepsearch-toolkit/issues/122)) ([`0491ed4`](https://github.com/DS4SD/deepsearch-toolkit/commit/0491ed4a2bea85a8d38bd9ca3d41496abb7b5a23))
+
 ## [v0.23.2](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.2) - 2023-07-28
 
 ### Fix
