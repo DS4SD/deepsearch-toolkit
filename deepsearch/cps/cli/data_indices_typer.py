@@ -165,6 +165,7 @@ def upload_files(
         s3_coordinates=cos_coordinates,
     )
 
+    typer.echo("Tasks have been queued successfully")
 
 @app.command(
     name="add-attachment", help="Add attachment to a index item", no_args_is_help=True
