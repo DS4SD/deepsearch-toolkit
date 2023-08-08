@@ -171,6 +171,7 @@ def upload_files(
         # TODO
         typer.echo("Some files did not upload successfully")
 
+
 @app.command(
     name="add-attachment", help="Add attachment to a index item", no_args_is_help=True
 )
