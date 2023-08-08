@@ -157,13 +157,19 @@ def upload_files(
             raise typer.Abort()
 
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
-    utils.upload_files(
+    statuses = utils.upload_files(
         api=api,
         coords=coords,
         url=urls,
         local_file=local_file,
         s3_coordinates=cos_coordinates,
     )
+
+    if all([status == "SUCCESS" for status in statuses]):
+        typer.echo("File upload completed successfully")
+    else:
+        # TODO
+        typer.echo("Some files did not upload successfully")
 
 
 @app.command(
