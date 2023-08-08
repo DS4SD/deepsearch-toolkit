@@ -348,26 +348,37 @@ optional parameter `controller`.
 ??? note "Genarate request payload"
     ```json
     {
-      "apiVersion": "string",
-      "kind": "QAGenModel",
-      "metadata": {
-        "annotations": {
-          "deepsearch.res.ibm.com/x-deadline": "2038-01-18T00:00:00.000Z",
-          "deepsearch.res.ibm.com/x-transaction-id": "string",
-          "deepsearch.res.ibm.com/x-attempt-number": "string",
-          "deepsearch.res.ibm.com/x-max-attempts": "string"
-        }
-      },
-      "spec": {
-        "generateAnswers": {
-                "contexts": [
-                    ["What is the best model"]
-                ],
-                "questions": [
-                    "If you are a dummy repeat what I said!"
+       "apiVersion":"v1",
+       "kind":"QAGenModel",
+       "metadata":{
+          "annotations":{
+             "deepsearch.res.ibm.com/x-deadline":"2028-04-20T12:26:01.479484+00:00",
+             "deepsearch.res.ibm.com/x-transaction-id":"testing",
+             "deepsearch.res.ibm.com/x-attempt-number":5,
+             "deepsearch.res.ibm.com/x-max-attempts":5
+          }
+       },
+       "spec":{
+          "generateAnswers":{
+             "contexts":[
+                [
+                   {
+                      "text":"A textual transformation of a given table",
+                      "type":"table",
+                      "representation_type":"triplets"
+                   },
+                   {
+                      "text":"A raw paragraph as it appears on the raw text",
+                      "type":"text",
+                      "representation_type":"raw"
+                   }
                 ]
-        }
-      }
+             ],
+             "questions":[
+                "42"
+             ]
+          }
+       }
     }
     ```
 
