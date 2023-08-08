@@ -55,7 +55,7 @@ def list(
             for index in indices
         ]
     except ValueError as e:
-        print(f"Error occurred: {e}")
+        raise typer.Abort()
 
     cli_output(results, output, headers="keys")
     return
