@@ -55,6 +55,8 @@ def list(
             for index in indices
         ]
     except ValueError as e:
+        typer.echo(f"Error occurred: {e}")
+        typer.echo(ERROR_MSG)
         raise typer.Abort()
 
     cli_output(results, output, headers="keys")
