@@ -15,4 +15,3 @@ class ProgressBarParameters:
 
 
 progressbar = ProgressBarParameters()
-success_message = "Completed successfully"
