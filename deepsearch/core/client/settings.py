@@ -47,8 +47,10 @@ class ProfileSettings(DumpableSettings):
         return cls(
             host=input("Host: "),
             username=input("Username: "),
-            api_key=getpass("API key: "),
-            verify_ssl=input("SSL verification [y/n]: "),
+            api_key=SecretStr(getpass("API key: ")),
+            verify_ssl=True
+            if input("SSL verification [y/n]: ") == "y" or "Y"
+            else False,
         )
 
 

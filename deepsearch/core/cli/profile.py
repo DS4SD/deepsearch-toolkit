@@ -1,6 +1,7 @@
 from typing import Optional
 
 import typer
+from pydantic import SecretStr
 from rich.console import Console
 from rich.table import Table
 from typing_extensions import Annotated
@@ -42,7 +43,7 @@ def add_profile(
     profile_settings = ProfileSettings(
         host=host,
         username=username,
-        api_key=api_key,
+        api_key=SecretStr(api_key),
         verify_ssl=verify_ssl,
     )
 

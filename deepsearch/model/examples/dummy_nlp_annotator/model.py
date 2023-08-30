@@ -12,6 +12,7 @@ from deepsearch.model.kinds.nlp.types import (
     AnnotationLabels,
     EntityLabel,
     NLPConfig,
+    NLPType,
 )
 
 
@@ -23,7 +24,7 @@ class DummyNLPAnnotator(BaseNLPModel):
             kind=Kind.NLPModel,
             name="DummyNLPAnnotator",
             version="0.1.0",
-            supported_types=["text"],
+            supported_types=[NLPType("text")],
             labels=self._generate_labels(),
         )
 

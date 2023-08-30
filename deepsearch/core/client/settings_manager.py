@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 import platformdirs
-from pydantic import ValidationError
+from pydantic import SecretStr, ValidationError
 
 from deepsearch.core.cli.profile_utils import (
     MSG_AMBIGUOUS_SUCCESSOR,
@@ -39,7 +39,7 @@ class SettingsManager:
             )
         )
         self._main_path = self.config_root_path / MAIN_DOTENV_FILENAME
-        self._main_settings = MainSettings(_env_file=self._main_path)
+        self._main_settings = MainSettings(_env_file=self._main_path)  # type: ignore
         self._profile_root_path = self.config_root_path / PROFILES_DIR_NAME
         self._profile_root_path.mkdir(exist_ok=True)
 
@@ -51,7 +51,7 @@ class SettingsManager:
                 profile_name = file_path.stem
                 self._profile_cache[profile_name] = ProfileSettingsEntry(
                     path=file_path,
-                    settings=ProfileSettings(_env_file=file_path),
+                    settings=ProfileSettings(_env_file=file_path),  # type: ignore
                 )
 
         # reset any stale active profile config
@@ -85,7 +85,7 @@ class SettingsManager:
                     new_cfg = ProfileSettings(
                         host=legacy_cfg.host,
                         username=legacy_cfg.auth.username,
-                        api_key=legacy_cfg.auth.api_key,
+                        api_key=SecretStr(legacy_cfg.auth.api_key),
                         verify_ssl=legacy_cfg.verify_ssl,
                     )
                     self.save_settings(
@@ -113,7 +113,7 @@ class SettingsManager:
         prfl_name = profile_name or self.get_active_profile()
         if prfl_name is None:
             try:  # try to instantiate from environment alone
-                return ProfileSettings()
+                return ProfileSettings()  # type: ignore
             except ValidationError:
                 if len(self._profile_cache) == 0:
                     raise RuntimeError(MSG_NO_PROFILES_DEFINED)
