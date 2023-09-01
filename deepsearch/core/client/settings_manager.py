@@ -39,7 +39,9 @@ class SettingsManager:
             )
         )
         self._main_path = self.config_root_path / MAIN_DOTENV_FILENAME
-        self._main_settings = MainSettings(_env_file=self._main_path)
+        self._main_settings = MainSettings(_env_file=self._main_path)  # type: ignore
+        # suppressing due to known Pydantic bug https://github.com/pydantic/pydantic/issues/3072
+
         self._profile_root_path = self.config_root_path / PROFILES_DIR_NAME
         self._profile_root_path.mkdir(exist_ok=True)
 
@@ -51,7 +53,8 @@ class SettingsManager:
                 profile_name = file_path.stem
                 self._profile_cache[profile_name] = ProfileSettingsEntry(
                     path=file_path,
-                    settings=ProfileSettings(_env_file=file_path),
+                    settings=ProfileSettings(_env_file=file_path),  # type: ignore
+                    # suppressing due to known Pydantic bug https://github.com/pydantic/pydantic/issues/3072
                 )
 
         # reset any stale active profile config
