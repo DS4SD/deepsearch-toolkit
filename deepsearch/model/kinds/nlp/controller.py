@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import HTTPException, status
 
 from deepsearch.model.base.controller import BaseController
@@ -29,11 +31,11 @@ class NLPController(BaseController):
     def get_info(self) -> NLPInfoOutput:
         cfg = self._model.get_nlp_config()
         metadata = NLPModelMetadata(
-            supported_object_types=cfg.supported_types,
+            supported_object_types=cfg.supported_types,  # type: ignore
             **self._get_metadata().dict(),  # passing parent metadata dict as kwargs
         )
         spec = NLPInfoOutputDefinitionsSpec(
-            definition=cfg.labels,
+            definition=cfg.labels.dict(),
             metadata=metadata,
         )
         definitions = NLPInfoOutputDefinitions(
@@ -43,7 +45,7 @@ class NLPController(BaseController):
         )
         return NLPInfoOutput(definitions=definitions)
 
-    def get_kind(self) -> str:
+    def get_kind(self) -> Literal[Kind.NLPModel]:
         return Kind.NLPModel
 
     def _get_model(self) -> BaseDSModel:
