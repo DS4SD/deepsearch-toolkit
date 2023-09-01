@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from deepsearch.model.base.model import BaseDSModel
 from deepsearch.model.base.types import BaseModelConfig
@@ -9,7 +9,7 @@ from deepsearch.model.kinds.qagen.types import GenerateAnswersOutput, QAGenConfi
 class BaseQAGenerator(BaseDSModel):
     @abstractmethod
     def generate_answers(
-        self, texts: List[Tuple[List[Dict], str]]
+        self, texts: List[Tuple[List[Dict], str]], extras: Dict[str, Any]
     ) -> GenerateAnswersOutput:
         raise NotImplementedError()
 

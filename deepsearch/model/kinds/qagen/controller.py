@@ -43,6 +43,7 @@ class QAGenController(BaseController):
                     ([ctx_entry.dict() for ctx_entry in ctx_list], q)
                     for ctx_list, q in zip(gen_answers.contexts, gen_answers.questions)
                 ],
+                extras=gen_answers.extras or {},
             )
             return QAGenCtrlPredOutput(
                 answers=answers,
