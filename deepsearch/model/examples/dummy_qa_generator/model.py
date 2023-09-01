@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from deepsearch.model.base.types import Kind
 from deepsearch.model.kinds.qagen.model import BaseQAGenerator
@@ -22,11 +22,14 @@ class DummyQAGenerator(BaseQAGenerator):
         return self._config
 
     def generate_answers(
-        self, texts: List[Tuple[List[Dict], str]]
+        self,
+        texts: List[Tuple[List[Dict], str]],
+        extras: Dict[str, Any],
     ) -> GenerateAnswersOutput:
         """Just answers with the question itself.
         Args:
             texts: a list of context, question pairs.
+            extras: any extras to pass.
         """
         return [
             GenerateAnswersOutEntry(

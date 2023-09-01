@@ -1,6 +1,6 @@
-from typing import Any, Dict, List, Literal
+from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, root_validator
+from pydantic import root_validator
 
 from deepsearch.model.base.types import (
     BaseAppPredInput,
@@ -20,6 +20,7 @@ class ContextEntry(StrictModel):
 class GenerateAnswers(StrictModel):
     contexts: List[List[ContextEntry]]
     questions: List[str]
+    extras: Optional[Dict[str, Any]] = None
 
     @root_validator
     def check_lengths_match(cls, values):
@@ -29,7 +30,7 @@ class GenerateAnswers(StrictModel):
         return values
 
 
-class QAGenReqSpec(BaseModel):
+class QAGenReqSpec(StrictModel):
     generateAnswers: GenerateAnswers
 
 
