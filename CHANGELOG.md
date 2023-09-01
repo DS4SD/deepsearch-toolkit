@@ -1,3 +1,9 @@
+## [v0.25.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.25.0) - 2023-09-01
+
+### Feature
+
+* Extend QA gen types ([#133](https://github.com/DS4SD/deepsearch-toolkit/issues/133)) ([`43eeb57`](https://github.com/DS4SD/deepsearch-toolkit/commit/43eeb575580bcf9f19c74f6e837196072863d0eb))
+
 ## [v0.24.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.24.0) - 2023-08-07
 
 ### Feature
