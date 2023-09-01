@@ -351,7 +351,7 @@ class ConversionSettings(BaseModel):
 
     @classmethod
     def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
-        conv_settings = cls()  # type: ignore
+        conv_settings = cls()
 
         proj_key, _ = get_ccs_project_key(api, proj_key)
 
@@ -372,7 +372,7 @@ class ConversionSettings(BaseModel):
 
     @classmethod
     def from_defaults(cls, api: CpsApi) -> "ConversionSettings":
-        conv_settings = cls()  # type: ignore
+        conv_settings = cls()
 
         request_conv_settings = api.client.session.get(
             url=URLNavigator(api).url_conversion_defaults()

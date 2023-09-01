@@ -108,6 +108,7 @@ py_version=38
 known_first_party = ["cps"]
 
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 pretty = true
 # strict = true
 no_implicit_optional = true

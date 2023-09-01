@@ -1,5 +1,3 @@
-from typing import Literal
-
 from fastapi import HTTPException, status
 
 from deepsearch.model.base.controller import BaseController
@@ -34,7 +32,7 @@ class QAGenController(BaseController):
     def _get_model(self) -> BaseDSModel:
         return self._model
 
-    def get_kind(self) -> Literal[Kind.QAGenModel]:
+    def get_kind(self) -> str:
         return Kind.QAGenModel
 
     def dispatch_predict(self, spec: CtrlPredInput) -> CtrlPredOutput:
