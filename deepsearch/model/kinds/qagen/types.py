@@ -1,6 +1,6 @@
-from typing import List, Literal
+from typing import Any, Dict, List, Literal
 
-from pydantic import root_validator
+from pydantic import BaseModel, root_validator
 
 from deepsearch.model.base.types import (
     BaseAppPredInput,
@@ -29,7 +29,7 @@ class GenerateAnswers(StrictModel):
         return values
 
 
-class QAGenReqSpec(StrictModel):
+class QAGenReqSpec(BaseModel):
     generateAnswers: GenerateAnswers
 
 
@@ -38,7 +38,12 @@ class QAGenAppPredInput(BaseAppPredInput):
     spec: QAGenReqSpec
 
 
-GenerateAnswersOutput = List[str]
+class GenerateAnswersOutEntry(StrictModel):
+    answer: str
+    metadata: Dict[str, Any]
+
+
+GenerateAnswersOutput = List[GenerateAnswersOutEntry]
 
 
 class QAGenCtrlPredOutput(StrictModel):

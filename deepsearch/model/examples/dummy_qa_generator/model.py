@@ -2,7 +2,11 @@ from typing import Dict, List, Tuple
 
 from deepsearch.model.base.types import Kind
 from deepsearch.model.kinds.qagen.model import BaseQAGenerator
-from deepsearch.model.kinds.qagen.types import GenerateAnswersOutput, QAGenConfig
+from deepsearch.model.kinds.qagen.types import (
+    GenerateAnswersOutEntry,
+    GenerateAnswersOutput,
+    QAGenConfig,
+)
 
 
 class DummyQAGenerator(BaseQAGenerator):
@@ -24,4 +28,10 @@ class DummyQAGenerator(BaseQAGenerator):
         Args:
             texts: a list of context, question pairs.
         """
-        return [question for _, question in texts]
+        return [
+            GenerateAnswersOutEntry(
+                answer=question,
+                metadata={"foo": "bar"},
+            )
+            for _, question in texts
+        ]
