@@ -25,6 +25,7 @@ def upload_files(
     url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
     s3_coordinates: Optional[S3Coordinates] = None,
+    conv_settings: Optional[Any] = None,
 ):
     """
     Orchestrate document conversion and upload to an index in a project
@@ -47,6 +48,7 @@ def upload_files(
             api=api,
             coords=coords,
             local_file=Path(local_file),
+            conv_settings=conv_settings,
         )
     elif url is None and local_file is None and s3_coordinates is not None:
         return process_external_cos(
@@ -101,12 +103,15 @@ def process_local_file(
     coords: ElasticProjectDataCollectionSource,
     local_file: Path,
     progress_bar: bool = False,
+    conv_settings=None,
 ):
     """
     Individual files are uploaded for conversion and storage in data index.
     """
 
     # process multiple files from local directory
+    if conv_settings is None:
+        conv_settings = {}
     root_dir = create_root_dir()
     # batch individual pdfs into zips and add them to root_dir
     batched_files = input_process.batch_single_files(
@@ -147,7 +152,8 @@ def process_local_file(
                 api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
             )
             file_url_array = [private_download_url]
-            payload = {"file_url": file_url_array}
+            payload = {"file_url": file_url_array, "conversion_settings": conv_settings}
+            print(payload)
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
             progress.update(1)

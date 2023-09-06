@@ -32,6 +32,12 @@ COORDINATES_PATH = typer.Option(
     containing coordinates of COS.""",
 )
 
+CONV_SETTINGS = typer.Option(
+    None,
+    "--conv-settings",
+    help="""Provide conversion settings to be used on local file upload""",
+)
+
 SOURCE_PATH = typer.Option(
     None,
     "--input-file",

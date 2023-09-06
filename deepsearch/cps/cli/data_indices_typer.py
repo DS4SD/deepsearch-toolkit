@@ -11,6 +11,7 @@ from deepsearch.cps.apis.public.rest import ApiException
 from deepsearch.cps.cli.cli_options import (
     ATTACHMENT_KEY,
     ATTACHMENT_PATH,
+    CONV_SETTINGS,
     COORDINATES_PATH,
     INDEX_ITEM_ID,
     INDEX_KEY,
@@ -135,6 +136,7 @@ def upload_files(
     local_file: Path = SOURCE_PATH,
     index_key: str = INDEX_KEY,
     s3_coordinates: Path = COORDINATES_PATH,
+    conv_settings=CONV_SETTINGS,
 ):
     """
     Upload pdfs, zips, or online documents to a data index in a project
@@ -163,6 +165,7 @@ def upload_files(
         url=urls,
         local_file=local_file,
         s3_coordinates=cos_coordinates,
+        conv_settings=conv_settings,
     )
 
     typer.echo("Tasks have been queued successfully")
