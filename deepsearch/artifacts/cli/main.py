@@ -1,3 +1,6 @@
+import logging
+
+logger = logging.getLogger("root.artifacts")
 import typer
 
 from deepsearch.artifacts.artifact_manager import (
@@ -36,6 +39,7 @@ HIT_STRATEGY_OPTION = typer.Option(
 def list_index(
     index: str = INDEX_OPTION,
 ):
+    logger.info("Listing artifacts in index")
     artf_mgr = ArtifactManager(index=index)
     artifacts = artf_mgr.get_artifacts_in_index()
     for artf in artifacts:
@@ -47,6 +51,7 @@ def list_index(
 def list_cache(
     cache: str = CACHE_OPTION,
 ):
+    logger.info("Listing artifacts in cache")
     artf_mgr = ArtifactManager(cache=cache)
     artifacts = artf_mgr.get_artifacts_in_cache()
     for artf in artifacts:
@@ -56,6 +61,7 @@ def list_cache(
 @app.command(help="Show cache path")
 @cli_handler()
 def locate_default_cache():
+    logger.info("Resolving cache path")
     artf_mgr = ArtifactManager()
     path_str = str(artf_mgr.get_cache_path().resolve())
     typer.echo(path_str)
@@ -83,6 +89,7 @@ def download(
     unpack: bool = typer.Option(True),
     progress_bar: bool = typer.Option(True),
 ):
+    logger.info(f"Attempting to download {artifact_name=} from {index=}")
     artf_mgr = ArtifactManager(index=index, cache=cache)
     artf_mgr.download_artifact_to_cache(
         artifact_name=artifact_name,
@@ -101,6 +108,7 @@ def download_all(
     unpack: bool = typer.Option(True),
     progress_bar: bool = typer.Option(True),
 ):
+    logger.info(f"Attempting to download all artifacts from {index=}")
     artf_mgr = ArtifactManager(index=index, cache=cache)
     for artf_name in artf_mgr.get_artifacts_in_index():
         artf_mgr.download_artifact_to_cache(

@@ -101,6 +101,9 @@ class SettingsManager:
     def _get_profile_path(self, profile_name: str) -> Path:
         return self._profile_root_path / f"{profile_name}.env"
 
+    def get_logging_conf(self) -> tuple[str, bool]:
+        return self._main_settings.log_file, self._main_settings.log_to_console
+
     def get_all_profile_settings(self) -> Dict[str, ProfileSettings]:
         return {k: self._profile_cache[k].settings for k in self._profile_cache}
 

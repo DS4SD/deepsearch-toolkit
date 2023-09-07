@@ -4,6 +4,7 @@ from getpass import getpass
 from pathlib import Path
 from typing import Dict, Optional, Union
 
+import platformdirs
 from pydantic import BaseSettings, SecretStr
 
 
@@ -56,6 +57,8 @@ class MainSettings(DumpableSettings):
 
     profile: Optional[str] = None  # None only when profiles not yet iniitialized
     show_cli_stack_traces: bool = False
+    log_file: str = platformdirs.user_log_dir("DeepSearch", "IBM")
+    log_to_console: bool = False
 
     class Config:
         env_prefix = "DEEPSEARCH_"

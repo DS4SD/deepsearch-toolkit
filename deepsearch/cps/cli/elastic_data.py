@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger("root.cps.elastic_data")
+
 import typer
 
 from deepsearch.core.cli.utils import cli_handler
@@ -15,6 +19,7 @@ def list(
     output: OutputEnum = OutputOption,
 ):
     api = CpsApi.from_env()
+    logger.info(f"Listing elastic data collections {domain=}")
     collections = api.elastic.list(domain=domain)
 
     results = [
