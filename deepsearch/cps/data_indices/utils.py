@@ -1,4 +1,5 @@
 import glob
+import json
 import logging
 import os
 from pathlib import Path
@@ -14,6 +15,7 @@ from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import progressbar
+from deepsearch.documents.core.models import ConversionSettings
 from deepsearch.documents.core.utils import cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
@@ -25,11 +27,21 @@ def upload_files(
     url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
     s3_coordinates: Optional[S3Coordinates] = None,
-    conv_settings: Optional[Any] = None,
+    conv_settings: Optional[Union[ConversionSettings, str]] = None,
 ):
     """
     Orchestrate document conversion and upload to an index in a project
     """
+    if conv_settings is None:
+        final_conv_settings = ConversionSettings().from_defaults(api)
+
+    if type(conv_settings) == str:
+        try:
+            final_conv_settings = ConversionSettings.from_dict(
+                json.loads(conv_settings)
+            )
+        except ValueError as e:
+            raise ValueError("Could not parse dict from --conv-settings string")
 
     # check required inputs are present
     if url is None and local_file is None and s3_coordinates is None:
@@ -48,7 +60,7 @@ def upload_files(
             api=api,
             coords=coords,
             local_file=Path(local_file),
-            conv_settings=conv_settings,
+            conv_settings=final_conv_settings,
         )
     elif url is None and local_file is None and s3_coordinates is not None:
         return process_external_cos(
@@ -103,7 +115,7 @@ def process_local_file(
     coords: ElasticProjectDataCollectionSource,
     local_file: Path,
     progress_bar: bool = False,
-    conv_settings=None,
+    conv_settings: Optional[ConversionSettings] = None,
 ):
     """
     Individual files are uploaded for conversion and storage in data index.
@@ -111,7 +123,8 @@ def process_local_file(
 
     # process multiple files from local directory
     if conv_settings is None:
-        conv_settings = {}
+        conv_settings = ConversionSettings.from_defaults(api)
+
     root_dir = create_root_dir()
     # batch individual pdfs into zips and add them to root_dir
     batched_files = input_process.batch_single_files(
@@ -152,7 +165,10 @@ def process_local_file(
                 api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
             )
             file_url_array = [private_download_url]
-            payload = {"file_url": file_url_array, "conversion_settings": conv_settings}
+            payload = {
+                "file_url": file_url_array,
+                "conversion_settings": conv_settings.dict(),
+            }
             print(payload)
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
