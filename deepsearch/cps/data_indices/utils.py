@@ -148,7 +148,7 @@ def process_local_file(
     count_total_files = len(files_zip)
 
     # container for task_ids
-    task_ids = []
+    task_ids: List[str] = []
 
     # start loop
     with tqdm(
@@ -169,7 +169,6 @@ def process_local_file(
                 "file_url": file_url_array,
                 "conversion_settings": conv_settings.dict(),
             }
-            print(payload)
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
             progress.update(1)
