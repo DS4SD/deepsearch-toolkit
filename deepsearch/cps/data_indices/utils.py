@@ -3,7 +3,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import urllib3
 
@@ -32,16 +32,16 @@ def upload_files(
     """
     Orchestrate document conversion and upload to an index in a project
     """
-    if conv_settings is None:
-        final_conv_settings = ConversionSettings().from_defaults(api)
-
+    final_conv_settings: Optional[ConversionSettings] = None
     if type(conv_settings) == str:
         try:
-            final_conv_settings = ConversionSettings.from_dict(
+            final_conv_settings = ConversionSettings.parse_obj(
                 json.loads(conv_settings)
             )
         except ValueError as e:
             raise ValueError("Could not parse dict from --conv-settings string")
+    else:
+        final_conv_settings = conv_settings  # type: ignore  # Type checking unnecessarily complicated, string is already taken care of
 
     # check required inputs are present
     if url is None and local_file is None and s3_coordinates is None:
@@ -122,9 +122,6 @@ def process_local_file(
     """
 
     # process multiple files from local directory
-    if conv_settings is None:
-        conv_settings = ConversionSettings.from_defaults(api)
-
     root_dir = create_root_dir()
     # batch individual pdfs into zips and add them to root_dir
     batched_files = input_process.batch_single_files(
@@ -165,10 +162,12 @@ def process_local_file(
                 api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
             )
             file_url_array = [private_download_url]
-            payload = {
+            payload: Dict[str, Any] = {
                 "file_url": file_url_array,
-                "conversion_settings": conv_settings.dict(),
             }
+            if conv_settings is not None:
+                payload["conversion_settings"] = conv_settings.dict()
+
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
             progress.update(1)

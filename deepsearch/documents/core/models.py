@@ -350,19 +350,6 @@ class ConversionSettings(BaseModel):
     metadata: Optional[ConversionMetadata]
 
     @classmethod
-    def from_dict(cls, source_dict) -> "ConversionSettings":
-        conv_settings: ConversionSettings = ConversionSettings(
-            pipeline=source_dict["pipeline"],
-            ocr=source_dict["ocr"],
-            metadata=source_dict["metadata"],
-        )
-        assert conv_settings.ocr is not None
-        conv_settings.ocr.merge_mode = source_dict["ocr"][
-            "merge_mode"
-        ]  # TODO this had to be re-set or it would come back an enum, better solution?
-        return conv_settings
-
-    @classmethod
     def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
         conv_settings = cls()
 
