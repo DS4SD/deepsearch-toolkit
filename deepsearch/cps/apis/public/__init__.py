@@ -22,7 +22,7 @@ from deepsearch.cps.apis.public.api.data_catalogs_api import DataCatalogsApi
 from deepsearch.cps.apis.public.api.data_flows_api import DataFlowsApi
 from deepsearch.cps.apis.public.api.data_indices_api import DataIndicesApi
 from deepsearch.cps.apis.public.api.dictionaries_api import DictionariesApi
-from deepsearch.cps.apis.public.api.document_annotation_api import DocumentAnnotationApi
+from deepsearch.cps.apis.public.api.document_inspection_api import DocumentInspectionApi
 from deepsearch.cps.apis.public.api.elastic_api import ElasticApi
 from deepsearch.cps.apis.public.api.knowledge_graphs_api import KnowledgeGraphsApi
 from deepsearch.cps.apis.public.api.model_configurations_api import ModelConfigurationsApi
@@ -163,6 +163,7 @@ from deepsearch.cps.apis.public.models.import_from_elastic_to_data_catalog_s3_co
 from deepsearch.cps.apis.public.models.import_to_data_catalog_collection_options import ImportToDataCatalogCollectionOptions
 from deepsearch.cps.apis.public.models.import_to_data_catalog_options import ImportToDataCatalogOptions
 from deepsearch.cps.apis.public.models.infer_project_data_catalog_category_schema import InferProjectDataCatalogCategorySchema
+from deepsearch.cps.apis.public.models.ingest_document_qa_request import IngestDocumentQARequest
 from deepsearch.cps.apis.public.models.inline_object import InlineObject
 from deepsearch.cps.apis.public.models.inline_object1 import InlineObject1
 from deepsearch.cps.apis.public.models.inline_object2 import InlineObject2

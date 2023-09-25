@@ -4,10 +4,91 @@ All URIs are relative to *http://localhost/api/cps/public/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**delete_project_integration_config**](ProjectApi.md#delete_project_integration_config) | **DELETE** /project/{proj_key}/integrations/{integration_name} | 
 [**get_project_default_values**](ProjectApi.md#get_project_default_values) | **GET** /project/{proj_key}/default_values | 
+[**get_project_integration_config**](ProjectApi.md#get_project_integration_config) | **GET** /project/{proj_key}/integrations/{integration_name} | 
 [**provision_project_packages**](ProjectApi.md#provision_project_packages) | **POST** /project/{proj_key}/packages | 
 [**update_project_default_values**](ProjectApi.md#update_project_default_values) | **POST** /project/{proj_key}/default_values | 
+[**update_project_integration_config**](ProjectApi.md#update_project_integration_config) | **POST** /project/{proj_key}/integrations/{integration_name} | 
 
+
+# **delete_project_integration_config**
+> delete_project_integration_config(proj_key, integration_name)
+
+
+
+Delete the config for a given project integration
+
+### Example
+
+* Api Key Authentication (Bearer):
+```python
+from __future__ import print_function
+import time
+import deepsearch.cps.apis.public
+from deepsearch.cps.apis.public.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/api/cps/public/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1",
+    api_key = {
+        'Authorization': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public.ProjectApi(api_client)
+    proj_key = 'proj_key_example' # str | 
+integration_name = 'integration_name_example' # str | 
+
+    try:
+        api_instance.delete_project_integration_config(proj_key, integration_name)
+    except ApiException as e:
+        print("Exception when calling ProjectApi->delete_project_integration_config: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **proj_key** | **str**|  | 
+ **integration_name** | **str**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**500** | Error occured on the server |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_project_default_values**
 > ProjectDefaultValues get_project_default_values(proj_key)
@@ -68,6 +149,87 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ProjectDefaultValues**](ProjectDefaultValues.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**500** | Error occured on the server |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **get_project_integration_config**
+> object get_project_integration_config(proj_key, integration_name, decode_secrets=decode_secrets)
+
+
+
+Get the config for a given project integration
+
+### Example
+
+* Api Key Authentication (Bearer):
+```python
+from __future__ import print_function
+import time
+import deepsearch.cps.apis.public
+from deepsearch.cps.apis.public.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/api/cps/public/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1",
+    api_key = {
+        'Authorization': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public.ProjectApi(api_client)
+    proj_key = 'proj_key_example' # str | 
+integration_name = 'integration_name_example' # str | 
+decode_secrets = False # bool | Project owners can retrieve decoded secrets (optional) (default to False)
+
+    try:
+        api_response = api_instance.get_project_integration_config(proj_key, integration_name, decode_secrets=decode_secrets)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ProjectApi->get_project_integration_config: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **proj_key** | **str**|  | 
+ **integration_name** | **str**|  | 
+ **decode_secrets** | **bool**| Project owners can retrieve decoded secrets | [optional] [default to False]
+
+### Return type
+
+**object**
 
 ### Authorization
 
@@ -222,6 +384,86 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **proj_key** | **str**|  | 
  **default_values** | [**ProjectDefaultValues**](ProjectDefaultValues.md)|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**500** | Error occured on the server |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **update_project_integration_config**
+> update_project_integration_config(proj_key, integration_name, config)
+
+
+
+Update the config for a given project integration
+
+### Example
+
+* Api Key Authentication (Bearer):
+```python
+from __future__ import print_function
+import time
+import deepsearch.cps.apis.public
+from deepsearch.cps.apis.public.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/api/cps/public/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration = deepsearch.cps.apis.public.Configuration(
+    host = "http://localhost/api/cps/public/v1",
+    api_key = {
+        'Authorization': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public.ProjectApi(api_client)
+    proj_key = 'proj_key_example' # str | 
+integration_name = 'integration_name_example' # str | 
+config = None # object | 
+
+    try:
+        api_instance.update_project_integration_config(proj_key, integration_name, config)
+    except ApiException as e:
+        print("Exception when calling ProjectApi->update_project_integration_config: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **proj_key** | **str**|  | 
+ **integration_name** | **str**|  | 
+ **config** | **object**|  | 
 
 ### Return type
 
