@@ -136,6 +136,7 @@ from deepsearch.cps.apis.public.models.import_from_elastic_to_data_catalog_s3_co
 from deepsearch.cps.apis.public.models.import_to_data_catalog_collection_options import ImportToDataCatalogCollectionOptions
 from deepsearch.cps.apis.public.models.import_to_data_catalog_options import ImportToDataCatalogOptions
 from deepsearch.cps.apis.public.models.infer_project_data_catalog_category_schema import InferProjectDataCatalogCategorySchema
+from deepsearch.cps.apis.public.models.ingest_document_qa_request import IngestDocumentQARequest
 from deepsearch.cps.apis.public.models.inline_object import InlineObject
 from deepsearch.cps.apis.public.models.inline_object1 import InlineObject1
 from deepsearch.cps.apis.public.models.inline_object2 import InlineObject2
