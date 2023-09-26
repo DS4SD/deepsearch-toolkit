@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -18,6 +19,19 @@ FALLBACK_PRFL_NAME = "ds"
 MAIN_DOTENV_FILENAME = "main.env"
 PROFILES_DIR_NAME = "profiles"
 LEGACY_CFG_FILENAME = "deepsearch_toolkit.json"
+
+
+class KnownProfile(str, Enum):
+    SDS = "sds"
+    # DS_EXPERIENCE = "ds-experience"  # TODO: uncomment once applicable
+    DS_INTERNAL = "ds-internal"
+
+
+HOST_BY_PROFILE = {
+    KnownProfile.SDS.value: "https://sds.app.accelerate.science",
+    # KnownProfile.DS_EXPERIENCE.value: "https://deepsearch-experience.res.ibm.com",  # TODO: uncomment once applicable
+    KnownProfile.DS_INTERNAL.value: "https://cps.foc-deepsearch.zurich.ibm.com",
+}
 
 
 @dataclass
@@ -155,7 +169,11 @@ class SettingsManager:
         try:
             return self._profile_cache[profile_name]
         except KeyError:
-            raise ValueError(f'No profile "{profile_name}" configured')
+            if url := HOST_BY_PROFILE.get(profile_name):
+                msg = f'Profile "{profile_name}" not configured. To set up, go to: {url}/credentials'
+            else:
+                msg = f'No profile "{profile_name}" configured. To set up, check: `deepsearch profile config --help`'
+            raise ValueError(msg)
 
     def _validate_existing_profile_name(self, profile_name: str) -> None:
         _ = self._safe_get_profile_entry(profile_name=profile_name)
