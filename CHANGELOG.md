@@ -1,3 +1,9 @@
+## [v0.26.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.26.0) - 2023-09-26
+
+### Feature
+
+* Add API object creation from settings ([#137](https://github.com/DS4SD/deepsearch-toolkit/issues/137)) ([`8eeb789`](https://github.com/DS4SD/deepsearch-toolkit/commit/8eeb78914f287e981c26ea377c82499cae05298a))
+
 ## [v0.25.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.25.0) - 2023-09-01
 
 ### Feature
