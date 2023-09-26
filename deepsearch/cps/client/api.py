@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 import requests
+from pydantic import ValidationError
 
 import deepsearch.cps.apis.user
 from deepsearch.core.client import (
@@ -149,22 +150,38 @@ class CpsApi:
 
     @classmethod
     def from_env(cls, profile_name: Optional[str] = None) -> CpsApi:
-        settings = settings_mgr.get_profile_settings(profile_name=profile_name)
-        return cls._from_settings(settings=settings)
+        """Create an API object resolving the required settings from the environment if possible, otherwise from a stored profile.
+
+        Args:
+            profile_name (Optional[str], optional): profile to use if resolution from environment not possible. Defaults to None (active profile).
+
+        Returns:
+            CpsApi: the created API object
+        """
+        try:
+            settings = ProfileSettings()
+        except ValidationError:
+            settings = settings_mgr.get_profile_settings(profile_name=profile_name)
+        return cls.from_settings(settings=settings)
 
     @classmethod
-    def from_cli_prompt(cls) -> CpsApi:
-        settings = ProfileSettings.from_cli_prompt()
-        return cls._from_settings(settings=settings)
+    def from_settings(cls, settings: ProfileSettings) -> CpsApi:
+        """Create an API object from the provided settings.
 
-    @classmethod
-    def _from_settings(cls, settings: ProfileSettings) -> CpsApi:
+        Args:
+            settings (ProfileSettings): the settings to use.
+
+        Returns:
+            CpsApi: the created API object
+        """
         auth = DeepSearchKeyAuth(
             username=settings.username,
             api_key=settings.api_key.get_secret_value(),
         )
         config = DeepSearchConfig(
-            host=settings.host, auth=auth, verify_ssl=settings.verify_ssl
+            host=settings.host,
+            auth=auth,
+            verify_ssl=settings.verify_ssl,
         )
         client = CpsApiClient(config)
         return cls(client)
