@@ -27,21 +27,11 @@ def upload_files(
     url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
     s3_coordinates: Optional[S3Coordinates] = None,
-    conv_settings: Optional[Union[ConversionSettings, str]] = None,
+    conv_settings: Optional[ConversionSettings] = None,
 ):
     """
     Orchestrate document conversion and upload to an index in a project
     """
-    final_conv_settings: Optional[ConversionSettings] = None
-    if type(conv_settings) == str:
-        try:
-            final_conv_settings = ConversionSettings.parse_obj(
-                json.loads(conv_settings)
-            )
-        except ValueError as e:
-            raise ValueError("Could not parse dict from --conv-settings string")
-    else:
-        final_conv_settings = conv_settings  # type: ignore  # Type checking unnecessarily complicated, string is already taken care of
 
     # check required inputs are present
     if url is None and local_file is None and s3_coordinates is None:
@@ -60,7 +50,7 @@ def upload_files(
             api=api,
             coords=coords,
             local_file=Path(local_file),
-            conv_settings=final_conv_settings,
+            conv_settings=conv_settings,
         )
     elif url is None and local_file is None and s3_coordinates is not None:
         return process_external_cos(

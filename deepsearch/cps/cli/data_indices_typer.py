@@ -24,6 +24,7 @@ from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.cps.data_indices import utils
 from deepsearch.documents.core.common_routines import ERROR_MSG
+from deepsearch.documents.core.models import ConversionSettings
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -159,13 +160,26 @@ def upload_files(
             raise typer.Abort()
 
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
+
+    if type(conv_settings) == str:
+        try:
+            final_conv_settings = ConversionSettings.parse_obj(
+                json.loads(conv_settings)
+            )
+        except ValueError as e:
+            raise ValueError(
+                "Could not parse a ConversionSettings object from --conv-settings string"
+            )
+    else:
+        final_conv_settings = None
+
     utils.upload_files(
         api=api,
         coords=coords,
         url=urls,
         local_file=local_file,
         s3_coordinates=cos_coordinates,
-        conv_settings=conv_settings,
+        conv_settings=final_conv_settings,
     )
 
     typer.echo("Tasks have been queued successfully")
