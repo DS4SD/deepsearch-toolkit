@@ -22,6 +22,7 @@ from deepsearch.cps.client.components import (
     CpsApiProjects,
     CpsApiQueries,
     CpsApiTasks,
+    DSApiDocuments,
 )
 
 
@@ -99,6 +100,7 @@ class CpsApi:
     data_catalogs: CpsApiDataCatalogs
     elastic: CpsApiElastic
     data_indices: CpsApiDataIndices
+    documents: DSApiDocuments
 
     def __init__(self, client: CpsApiClient) -> None:
         self.client = client
@@ -112,6 +114,7 @@ class CpsApi:
         self.data_catalogs = CpsApiDataCatalogs(self)
         self.elastic = CpsApiElastic(self)
         self.data_indices = CpsApiDataIndices(self)
+        self.documents = DSApiDocuments(self)
 
     def refresh_token(self, admin: bool = False):
         """Refresh access token

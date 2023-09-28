@@ -1,6 +1,7 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from deepsearch.cps.client.components.elastic import ElasticSearchQuery
+from deepsearch.cps.client.components.projects import Project, QAGenAIResource
 from deepsearch.cps.client.queries import Query, TaskCoordinates
 
 
@@ -72,5 +73,30 @@ def DataQuery(
     task.output("aggregations").output_as("data_aggs")
 
     query.paginated_task = task
+
+    return query
+
+
+def DocumentQuestionQuery(
+    question: str,
+    *,
+    document_hash: str,
+    project: Union[str, Project],
+) -> Query:
+
+    proj_key = project.key if isinstance(project, Project) else project
+
+    query = Query()
+    task = query.add(
+        "QA",
+        parameters={
+            "doc_id": document_hash,
+            "question": question,
+        },
+        coordinates=QAGenAIResource(proj_key=proj_key),
+    )
+    task.output("answer").output_as("answer")
+    task.output("contexts").output_as("contexts")
+    task.output("provenance").output_as("provenance")
 
     return query
