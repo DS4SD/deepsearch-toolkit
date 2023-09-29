@@ -137,7 +137,7 @@ def upload_files(
     local_file: Path = SOURCE_PATH,
     index_key: str = INDEX_KEY,
     s3_coordinates: Path = COORDINATES_PATH,
-    conv_settings=CONV_SETTINGS,
+    conv_settings: Optional[str] = CONV_SETTINGS,
 ):
     """
     Upload pdfs, zips, or online documents to a data index in a project
@@ -161,15 +161,8 @@ def upload_files(
 
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
 
-    if type(conv_settings) == str:
-        try:
-            final_conv_settings = ConversionSettings.parse_obj(
-                json.loads(conv_settings)
-            )
-        except ValueError as e:
-            raise ValueError(
-                "Could not parse a ConversionSettings object from --conv-settings string"
-            )
+    if conv_settings is not None:
+        final_conv_settings = ConversionSettings.parse_obj(json.loads(conv_settings))
     else:
         final_conv_settings = None
 
