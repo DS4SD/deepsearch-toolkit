@@ -11,6 +11,7 @@ from deepsearch.cps.apis.public.rest import ApiException
 from deepsearch.cps.cli.cli_options import (
     ATTACHMENT_KEY,
     ATTACHMENT_PATH,
+    CONV_SETTINGS,
     COORDINATES_PATH,
     INDEX_ITEM_ID,
     INDEX_KEY,
@@ -23,6 +24,7 @@ from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.cps.data_indices import utils
 from deepsearch.documents.core.common_routines import ERROR_MSG
+from deepsearch.documents.core.models import ConversionSettings
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -135,6 +137,7 @@ def upload_files(
     local_file: Path = SOURCE_PATH,
     index_key: str = INDEX_KEY,
     s3_coordinates: Path = COORDINATES_PATH,
+    conv_settings: Optional[str] = CONV_SETTINGS,
 ):
     """
     Upload pdfs, zips, or online documents to a data index in a project
@@ -157,12 +160,26 @@ def upload_files(
             raise typer.Abort()
 
     coords = ElasticProjectDataCollectionSource(proj_key=proj_key, index_key=index_key)
+
+    if conv_settings is not None:
+        try:
+            final_conv_settings = ConversionSettings.parse_obj(
+                json.loads(conv_settings)
+            )
+        except json.JSONDecodeError:
+            raise ValueError(
+                "Could not parse a ConversionSettings object from --conv-settings flag"
+            )
+    else:
+        final_conv_settings = None
+
     utils.upload_files(
         api=api,
         coords=coords,
         url=urls,
         local_file=local_file,
         s3_coordinates=cos_coordinates,
+        conv_settings=final_conv_settings,
     )
 
     typer.echo("Tasks have been queued successfully")

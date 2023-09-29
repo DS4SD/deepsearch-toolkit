@@ -107,7 +107,7 @@ class CpsApiDataIndices:
     def upload_file(
         self,
         coords: ElasticProjectDataCollectionSource,
-        body: Union[Dict[str, List[str]], Dict[str, Dict[str, Dict]]],
+        body: Dict[str, Any],
     ) -> str:
         """
         Call api for converting and uploading file to a project's data index.
