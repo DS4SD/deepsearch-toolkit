@@ -163,9 +163,13 @@ def upload_files(
 
     if conv_settings is not None:
         try:
-            final_conv_settings = ConversionSettings.parse_obj(json.loads(conv_settings))
+            final_conv_settings = ConversionSettings.parse_obj(
+                json.loads(conv_settings)
+            )
         except json.JSONDecodeError:
-            raise ValueError("Could not parse a ConversionSettings object from --conv-settings flag")
+            raise ValueError(
+                "Could not parse a ConversionSettings object from --conv-settings flag"
+            )
     else:
         final_conv_settings = None
 
