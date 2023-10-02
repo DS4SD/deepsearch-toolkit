@@ -2,7 +2,7 @@ import glob
 import logging
 import os
 from pathlib import Path
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import urllib3
 
@@ -14,6 +14,7 @@ from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import progressbar
+from deepsearch.documents.core.models import ConversionSettings
 from deepsearch.documents.core.utils import cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,7 @@ def upload_files(
     url: Optional[Union[str, List[str]]] = None,
     local_file: Optional[Union[str, Path]] = None,
     s3_coordinates: Optional[S3Coordinates] = None,
+    conv_settings: Optional[ConversionSettings] = None,
 ):
     """
     Orchestrate document conversion and upload to an index in a project
@@ -47,6 +49,7 @@ def upload_files(
             api=api,
             coords=coords,
             local_file=Path(local_file),
+            conv_settings=conv_settings,
         )
     elif url is None and local_file is None and s3_coordinates is not None:
         return process_external_cos(
@@ -101,6 +104,7 @@ def process_local_file(
     coords: ElasticProjectDataCollectionSource,
     local_file: Path,
     progress_bar: bool = False,
+    conv_settings: Optional[ConversionSettings] = None,
 ):
     """
     Individual files are uploaded for conversion and storage in data index.
@@ -130,7 +134,7 @@ def process_local_file(
     count_total_files = len(files_zip)
 
     # container for task_ids
-    task_ids = []
+    task_ids: List[str] = []
 
     # start loop
     with tqdm(
@@ -147,7 +151,12 @@ def process_local_file(
                 api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
             )
             file_url_array = [private_download_url]
-            payload = {"file_url": file_url_array}
+            payload: Dict[str, Any] = {
+                "file_url": file_url_array,
+            }
+            if conv_settings is not None:
+                payload["conversion_settings"] = conv_settings.dict()
+
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
             progress.update(1)

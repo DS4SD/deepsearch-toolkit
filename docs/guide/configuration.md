@@ -83,7 +83,7 @@ $ # -> outputs projects corresponding to "foo"
 
 #### Usage in Python
 
-To use the active profile (recommended usage pattern):
+To use the active profile:
 ```python
 from deepsearch.cps.client.api import CpsApi
 
@@ -101,6 +101,24 @@ api = CpsApi.from_env(profile_name="foo")
 
 print([p.name for p in api.projects.list()])
 # -> outputs projects corresponding to "foo"
+```
+
+To use specific settings:
+```python
+from deepsearch.core.client.settings import ProfileSettings
+from deepsearch.cps.client.api import CpsApi
+
+# create a ProfileSettings object, e.g.:
+settings = ProfileSettings(
+    # ...
+)
+# or interactively via the CLI:
+# settings = ProfileSettings.from_cli_prompt()
+
+api = CpsApi.from_settings(settings=settings)
+
+print([p.name for p in api.projects.list()])
+# -> outputs projects corresponding to provided settings
 ```
 
 ## Environment variables
