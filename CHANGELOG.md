@@ -1,3 +1,9 @@
+## [v0.28.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.28.0) - 2023-10-02
+
+### Feature
+
+* Documentqa ([#136](https://github.com/DS4SD/deepsearch-toolkit/issues/136)) ([`5b639c8`](https://github.com/DS4SD/deepsearch-toolkit/commit/5b639c8d88d27862fd3916e797e46a85bf0c5c36))
+
 ## [v0.27.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.27.0) - 2023-09-29
 
 ### Feature
