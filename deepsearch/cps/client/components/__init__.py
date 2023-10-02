@@ -1,5 +1,6 @@
 from .data_catalogs import CpsApiDataCatalogs
 from .data_indices import CpsApiDataIndices
+from .documents import DSApiDocuments
 from .elastic import CpsApiElastic
 from .knowledge_graphs import CpsApiKnowledgeGraphs
 from .projects import CpsApiProjects
@@ -14,4 +15,5 @@ __all__ = [
     "CpsApiQueries",
     "CpsApiTasks",
     "CpsApiDataIndices",
+    "DSApiDocuments",
 ]

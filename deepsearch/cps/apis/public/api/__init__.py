@@ -8,7 +8,7 @@ from deepsearch.cps.apis.public.api.data_catalogs_api import DataCatalogsApi
 from deepsearch.cps.apis.public.api.data_flows_api import DataFlowsApi
 from deepsearch.cps.apis.public.api.data_indices_api import DataIndicesApi
 from deepsearch.cps.apis.public.api.dictionaries_api import DictionariesApi
-from deepsearch.cps.apis.public.api.document_annotation_api import DocumentAnnotationApi
+from deepsearch.cps.apis.public.api.document_inspection_api import DocumentInspectionApi
 from deepsearch.cps.apis.public.api.elastic_api import ElasticApi
 from deepsearch.cps.apis.public.api.knowledge_graphs_api import KnowledgeGraphsApi
 from deepsearch.cps.apis.public.api.model_configurations_api import ModelConfigurationsApi
