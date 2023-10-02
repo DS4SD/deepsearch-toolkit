@@ -24,7 +24,7 @@ class DSApiDocuments:
             self.api.client.swagger_client
         )
 
-    def ingest_documentqa(
+    def ingest_for_qa(
         self,
         project: Union[Project, str],
         data_source: Union[
@@ -62,7 +62,7 @@ class DSApiDocuments:
             ElasticDataCollectionSource, ElasticProjectDataCollectionSource
         ],
         item_index: Optional[int] = None,
-    ):
+    ) -> str:
         """
         Generate a URL pointing to the document search in the Deep Search UI
         """
