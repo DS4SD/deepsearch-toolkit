@@ -1,3 +1,9 @@
+## [v0.28.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.28.1) - 2023-10-05
+
+### Fix
+
+* OCR settings sent to DS are malformed ([#139](https://github.com/DS4SD/deepsearch-toolkit/issues/139)) ([`d50edd9`](https://github.com/DS4SD/deepsearch-toolkit/commit/d50edd9102be0f728e0f97edccb4635233441406))
+
 ## [v0.28.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.28.0) - 2023-10-02
 
 ### Feature
