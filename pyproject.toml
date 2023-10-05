@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "deepsearch-toolkit"
-version = "0.20.0"  # DO NOT EDIT, updated automatically
+version = "0.28.0"  # DO NOT EDIT, updated automatically
 description = "Interact with the Deep Search platform for new knowledge explorations and discoveries"
 authors = ["Michele Dolfi <dol@zurich.ibm.com>", "André Carvalho <andre.carvalho2@ibm.com>", "Lokesh Mishra <mis@zurich.ibm.com>", "Christoph Auer <cau@zurich.ibm.com>", "Kasper Dinkla <dkl@zurich.ibm.com>", "Cesar Berrospi Ramis <ceb@zurich.ibm.com>", "Panos Vagenas <pva@zurich.ibm.com>", "Peter Staar <taa@zurich.ibm.com>"]
 license = "MIT"
@@ -34,23 +34,21 @@ python = "^3.8"
 # Dependencies from generated packages
 urllib3 = "^1.26.8"
 six = "^1.16.0"
-certifi = "^2022.12.07"
+certifi = "^2023.07.22"
 python-dateutil = "^2.8.2"
 
 # Actual dependencies
-pydantic = "^1.10.8"
+pydantic = {version = "^1.10.8", extras = ["dotenv"]}
 requests = "^2.27.1"
-typer = "^0.9.0"
+typer = {extras = ["all"], version = "^0.9.0"}
 platformdirs = "^3.5.1"
 tabulate = "^0.8.9"
 pluggy = "^1.0.0"
 tqdm = "^4.64.0"
 
-fastapi = { version = "^0.95.2", optional = true }
+fastapi = { version = "^0.103.0", optional = true }
 uvicorn = { version = "^0.21.1", optional = true }
 anyio = { version = "^3.6.2", optional = true }
-# for Pydantic Dotenv support (https://docs.pydantic.dev/latest/usage/settings/#dotenv-env-support):
-python-dotenv = { version = "^1.0.0", optional = true }
 
 [tool.poetry.extras]
 # MANUAL MAINTENANCE REQUIRED: for every change in the extras, "all" must be updated,
@@ -61,14 +59,12 @@ api = [
     "fastapi",
     "uvicorn",
     "anyio",
-    "python-dotenv",
 ]
 
 all = [
     "fastapi",
     "uvicorn",
     "anyio",
-    "python-dotenv",
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -76,9 +72,10 @@ black = {extras = ["jupyter"], version = "^22.1.0"}
 pylint = "^2.15.8"
 pytest = "^7.0.1"
 pre-commit = "^2.17.0"
-mypy = "^0.931"
+mypy = "^1.0.0"
 isort = "^5.10.1"
-mkdocs = "^1.2.3"
+mkdocs = "1.4.2"
+griffe = "0.25.0"
 Jinja2 = "<3.1.0" # See https://github.com/mkdocs/mkdocs/issues/2794
 mkdocs-material = "^8.2.6"
 mkdocstrings = {version = "^0.19.0", extras = ["python"]}
@@ -111,6 +108,7 @@ py_version=38
 known_first_party = ["cps"]
 
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 pretty = true
 # strict = true
 no_implicit_optional = true

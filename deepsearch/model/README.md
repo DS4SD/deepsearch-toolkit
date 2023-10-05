@@ -29,14 +29,12 @@ app.run(host="127.0.0.1", port=8000)
 
 ### Settings
 App configuration is done in [`Settings`](server/config.py) based on
-[Pydantic settings management](https://docs.pydantic.dev/latest/usage/settings/).
+[Pydantic Settings with dotenv support](https://docs.pydantic.dev/dev-v1/usage/settings/).
 
-E.g. the required API key can be set via env var `DS_MODEL_API_KEY` (for precedence rules,
-check the
-[Pydantic docs](https://docs.pydantic.dev/latest/usage/settings/#field-value-priority)).
+E.g. the required API key can be injected via env var `DS_MODEL_API_KEY`.
 
 ### OpenAPI
-The OpenAPI UI is served under `/docs`, e.g. http://127.0.0.1:8000/docs.
+The OpenAPI UI is served under `/docs`, i.e. by default at http://127.0.0.1:8000/docs.
 
 ## Developing a new model
 To develop a new model class for an existing [kind](kinds/), inherit from the base model

@@ -18,7 +18,7 @@ from deepsearch.model.base.controller import BaseController
 from deepsearch.model.base.model import BaseDSModel
 from deepsearch.model.server.config import Settings
 from deepsearch.model.server.controller_factory import ControllerFactory
-from deepsearch.model.server.inference_types import AppInferenceInput
+from deepsearch.model.server.inference_types import AppModelInfoOutput, AppPredInput
 
 logger = logging.getLogger("cps-fastapi")
 
@@ -50,20 +50,24 @@ class ModelApp:
             return {"message": "HealthCheck"}
 
         @self.app.get("/")
-        async def get_definitions(api_key=Depends(self._auth)) -> dict:
+        async def get_definitions(
+            api_key=Depends(self._auth),
+        ) -> Dict[str, AppModelInfoOutput]:
             return {
                 name: controller.get_info()
                 for name, controller in self._controllers.items()
             }
 
         @self.app.get("/model/{model_name}")
-        async def get_model_specs(model_name: str, api_key=Depends(self._auth)) -> dict:
+        async def get_model_specs(
+            model_name: str, api_key=Depends(self._auth)
+        ) -> AppModelInfoOutput:
             controller = self._get_controller(model_name=model_name)
             return controller.get_info()
 
         @self.app.post("/model/{model_name}/predict", response_model=None)
         async def predict(
-            model_name: str, request: AppInferenceInput, api_key=Depends(self._auth)
+            model_name: str, request: AppPredInput, api_key=Depends(self._auth)
         ) -> JSONResponse:
             request_arrival_time = time.time()
             try:
@@ -124,9 +128,7 @@ class ModelApp:
         async def _run_in_process(fn, *args) -> JSONResponse:
             return await run_in_threadpool(fn, *args)
 
-        def _inference_process(
-            model_name: str, request: AppInferenceInput
-        ) -> JSONResponse:
+        def _inference_process(model_name: str, request: AppPredInput) -> JSONResponse:
             request_dict = request.dict()
             start_time = time.time()
             controller = self._get_controller(model_name=model_name)
@@ -174,7 +176,7 @@ class ModelApp:
         model: BaseDSModel,
         name: Optional[str] = None,
         controller: Optional[BaseController] = None,
-    ):
+    ) -> None:
         """Registers a model with the app.
 
         Args:
@@ -197,7 +199,7 @@ class ModelApp:
             raise RuntimeError("Controller kind does not match model")
 
     def _validate_request_kind(
-        self, request: AppInferenceInput, controller: BaseController
+        self, request: AppPredInput, controller: BaseController
     ) -> None:
         if request.kind != controller.get_kind():
             raise HTTPException(

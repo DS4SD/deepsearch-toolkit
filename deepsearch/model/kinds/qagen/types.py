@@ -1,13 +1,26 @@
-from typing import List, Literal
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import root_validator
 
-from deepsearch.model.base.types import BaseInfReq, BaseModelConfig, Kind, StrictModel
+from deepsearch.model.base.types import (
+    BaseAppPredInput,
+    BaseModelConfig,
+    CtrlInfoOutputDefs,
+    Kind,
+    StrictModel,
+)
 
 
-class GenerateAnswers(StrictModel):  # TODO rename?
-    contexts: List[List[str]]
+class ContextEntry(StrictModel):
+    text: str
+    type: str
+    representation_type: str
+
+
+class GenerateAnswers(StrictModel):
+    contexts: List[List[ContextEntry]]
     questions: List[str]
+    extras: Optional[Dict[str, Any]] = None
 
     @root_validator
     def check_lengths_match(cls, values):
@@ -18,22 +31,33 @@ class GenerateAnswers(StrictModel):  # TODO rename?
 
 
 class QAGenReqSpec(StrictModel):
-    generateAnswers: GenerateAnswers  # TODO rename?
+    generateAnswers: GenerateAnswers
 
 
-class QAGenRequest(BaseInfReq):
+class QAGenAppPredInput(BaseAppPredInput):
     kind: Literal[Kind.QAGenModel]
     spec: QAGenReqSpec
 
 
-# TODO GenerateAnswersInput pydantic model needed?
+class GenerateAnswersOutEntry(StrictModel):
+    answer: str
+    metadata: Dict[str, Any]
 
-GenerateAnswersOutput = List[str]  # TODO provide real implementation
+
+GenerateAnswersOutput = List[GenerateAnswersOutEntry]
 
 
-class QAGenControllerOutput(StrictModel):
+class QAGenCtrlPredOutput(StrictModel):
     answers: GenerateAnswersOutput
 
 
 class QAGenConfig(BaseModelConfig):
     kind: Literal[Kind.QAGenModel]
+
+
+class QAGenInfoOutputDefinitions(CtrlInfoOutputDefs):
+    kind: Literal[Kind.QAGenModel]
+
+
+class QAGenInfoOutput(StrictModel):
+    definitions: QAGenInfoOutputDefinitions

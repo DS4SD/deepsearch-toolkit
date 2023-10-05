@@ -22,7 +22,7 @@ Suppose you want to create an index called `NAME`. Optionally, a description,`DE
     </div>
 === "Python"
 
-    After you have generated the api object (from [login configuration](../installation/login.md)),
+    After you have generated the api object (from a [profile](../configuration#usage-in-python)):
 
     ```python
     api.data_indices.create(proj_key=PROJ_KEY, name=NAME, desc=DESC)
@@ -102,6 +102,9 @@ Documents can be converted and added, directly, to a data index in a project. Br
 
     // for online documents
     $ deepsearch cps data-indices upload -p PROJ_KEY -x INDEX_KEY -u PATH_URL
+
+    // for COS documents
+    $ deepsearch cps data-indices upload -p PROJ_KEY -x INDEX_KEY -c PATH_COS_COORDINATES
     ```
 
     </div>
@@ -124,6 +127,11 @@ Documents can be converted and added, directly, to a data index in a project. Br
     #input_urls = ["https:///URL1", "https://URL2", "https://URL3"]
 
     data_indices_utils.upload_files(api=api, coords=coords, url=input_urls)
+
+    # For COS documents
+    cos_coordinates = S3Coordinates.parse_file(s3_coordinates)
+
+    data_indices_utils.upload_files(api=api, coords=coords, s3_coordinates=cos_coordinates)
     ```
 
 ---
@@ -159,9 +167,9 @@ Attachments can be added to an index item in a project. Briefly, attachments hav
         attachment_key = "usr_my_attachment"  # optional. if set need start with 'usr_' and be snake_case
 
         index.add_item_attachment(
-            api=api, 
-            index_item_id=index_item_id, 
-            attachment_path=attachment_path, 
+            api=api,
+            index_item_id=index_item_id,
+            attachment_path=attachment_path,
             attachment_key=attachment_key,  # optional
         )
     ```

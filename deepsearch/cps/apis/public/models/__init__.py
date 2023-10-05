@@ -136,6 +136,7 @@ from deepsearch.cps.apis.public.models.import_from_elastic_to_data_catalog_s3_co
 from deepsearch.cps.apis.public.models.import_to_data_catalog_collection_options import ImportToDataCatalogCollectionOptions
 from deepsearch.cps.apis.public.models.import_to_data_catalog_options import ImportToDataCatalogOptions
 from deepsearch.cps.apis.public.models.infer_project_data_catalog_category_schema import InferProjectDataCatalogCategorySchema
+from deepsearch.cps.apis.public.models.ingest_document_qa_request import IngestDocumentQARequest
 from deepsearch.cps.apis.public.models.inline_object import InlineObject
 from deepsearch.cps.apis.public.models.inline_object1 import InlineObject1
 from deepsearch.cps.apis.public.models.inline_object2 import InlineObject2
@@ -178,6 +179,7 @@ from deepsearch.cps.apis.public.models.processing_model_data_flow import Process
 from deepsearch.cps.apis.public.models.processing_model_description import ProcessingModelDescription
 from deepsearch.cps.apis.public.models.project_data_index_conversion_settings import ProjectDataIndexConversionSettings
 from deepsearch.cps.apis.public.models.project_data_index_non_view import ProjectDataIndexNonView
+from deepsearch.cps.apis.public.models.project_data_index_s3_coordinates import ProjectDataIndexS3Coordinates
 from deepsearch.cps.apis.public.models.project_data_index_source import ProjectDataIndexSource
 from deepsearch.cps.apis.public.models.project_data_index_view import ProjectDataIndexView
 from deepsearch.cps.apis.public.models.project_data_index_view_of import ProjectDataIndexViewOf
@@ -208,6 +210,7 @@ from deepsearch.cps.apis.public.models.project_proj_key_data_catalogues_dc_key_c
 from deepsearch.cps.apis.public.models.project_proj_key_data_catalogues_from_mongo_options import ProjectProjKeyDataCataloguesFromMongoOptions
 from deepsearch.cps.apis.public.models.project_proj_key_data_catalogues_from_mongo_target import ProjectProjKeyDataCataloguesFromMongoTarget
 from deepsearch.cps.apis.public.models.project_proj_key_data_catalogues_from_url_options import ProjectProjKeyDataCataloguesFromUrlOptions
+from deepsearch.cps.apis.public.models.project_proj_key_data_indices_index_key_actions_ccs_convert_upload_s3_source import ProjectProjKeyDataIndicesIndexKeyActionsCcsConvertUploadS3Source
 from deepsearch.cps.apis.public.models.project_proj_key_dictionaries_from_mongo_target import ProjectProjKeyDictionariesFromMongoTarget
 from deepsearch.cps.apis.public.models.project_proj_key_kgc_dataflow_templates_debug_df_tpl_key_target_bag import ProjectProjKeyKgcDataflowTemplatesDebugDfTplKeyTargetBag
 from deepsearch.cps.apis.public.models.project_proj_key_kgc_dataflow_templates_df_tpl_key_actions_load_render import ProjectProjKeyKgcDataflowTemplatesDfTplKeyActionsLoadRender
@@ -244,6 +247,7 @@ from deepsearch.cps.apis.public.models.system_info import SystemInfo
 from deepsearch.cps.apis.public.models.system_info_api import SystemInfoApi
 from deepsearch.cps.apis.public.models.system_info_deployment import SystemInfoDeployment
 from deepsearch.cps.apis.public.models.system_info_deployment_linked_ccs_api import SystemInfoDeploymentLinkedCcsApi
+from deepsearch.cps.apis.public.models.system_info_toolkit import SystemInfoToolkit
 from deepsearch.cps.apis.public.models.system_kgs_backend import SystemKgsBackend
 from deepsearch.cps.apis.public.models.system_kgs_deployment import SystemKgsDeployment
 from deepsearch.cps.apis.public.models.system_kgs_deployment_resources import SystemKgsDeploymentResources

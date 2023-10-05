@@ -64,17 +64,13 @@ class S3Coordinates(BaseModel):
 class DocumentExistsInTargetAction(str, Enum):
     """
     What to do if the document already exists on the target.
-
     - `replace` will replace the document, destroying any external modifications.
-    - `merge` will try to merge the updated contents with the already-present document.
     - `skip` will not touch the document on the target, leaving it as-is.
-
     Using `skip` will incur in a performance increase, however, if the document
     is modified externally, CCS will not update it back to the original state.
     """
 
     REPLACE = "replace"
-    MERGE = "merge"
     SKIP = "skip"
 
 
@@ -98,7 +94,7 @@ class MongoS3Target(BaseModel):
     coordinates: MongoS3TargetCoordinates
 
     if_document_exists: DocumentExistsInTargetAction = (
-        DocumentExistsInTargetAction.MERGE
+        DocumentExistsInTargetAction.REPLACE
     )
 
 
@@ -141,7 +137,7 @@ class ElasticS3Target(BaseModel):
     coordinates: ElasticS3TargetCoordinates
 
     if_document_exists: DocumentExistsInTargetAction = (
-        DocumentExistsInTargetAction.MERGE
+        DocumentExistsInTargetAction.REPLACE
     )
 
     add_cells: bool = False

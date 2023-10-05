@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from typing import Optional
+
 import requests
+from pydantic import ValidationError
 
 import deepsearch.cps.apis.user
 from deepsearch.core.client import (
@@ -8,7 +11,8 @@ from deepsearch.core.client import (
     DeepSearchConfig,
     DeepSearchKeyAuth,
 )
-from deepsearch.core.util.config_paths import config_file_path
+from deepsearch.core.client.settings import ProfileSettings
+from deepsearch.core.client.settings_manager import settings_mgr
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.client.components import (
     CpsApiDataCatalogs,
@@ -18,6 +22,7 @@ from deepsearch.cps.client.components import (
     CpsApiProjects,
     CpsApiQueries,
     CpsApiTasks,
+    DSApiDocuments,
 )
 
 
@@ -95,6 +100,7 @@ class CpsApi:
     data_catalogs: CpsApiDataCatalogs
     elastic: CpsApiElastic
     data_indices: CpsApiDataIndices
+    documents: DSApiDocuments
 
     def __init__(self, client: CpsApiClient) -> None:
         self.client = client
@@ -108,6 +114,7 @@ class CpsApi:
         self.data_catalogs = CpsApiDataCatalogs(self)
         self.elastic = CpsApiElastic(self)
         self.data_indices = CpsApiDataIndices(self)
+        self.documents = DSApiDocuments(self)
 
     def refresh_token(self, admin: bool = False):
         """Refresh access token
@@ -145,18 +152,39 @@ class CpsApi:
         self._create_members()  # propagate updated token
 
     @classmethod
-    def default_from_env(cls) -> "CpsApi":
-        """
-        Connect to CPS's API using a configured environment file
-        """
+    def from_env(cls, profile_name: Optional[str] = None) -> CpsApi:
+        """Create an API object resolving the required settings from the environment if possible, otherwise from a stored profile.
 
-        config_file = config_file_path()
-        if not config_file.exists():
-            raise RuntimeError(
-                f"Config file {config_file} does not exist. Please configure your default authentication with `$ deepsearch login`"
-            )
-        config = DeepSearchConfig.parse_file(config_file)
+        Args:
+            profile_name (Optional[str], optional): profile to use if resolution from environment not possible. Defaults to None (active profile).
 
+        Returns:
+            CpsApi: the created API object
+        """
+        try:
+            settings = ProfileSettings()
+        except ValidationError:
+            settings = settings_mgr.get_profile_settings(profile_name=profile_name)
+        return cls.from_settings(settings=settings)
+
+    @classmethod
+    def from_settings(cls, settings: ProfileSettings) -> CpsApi:
+        """Create an API object from the provided settings.
+
+        Args:
+            settings (ProfileSettings): the settings to use.
+
+        Returns:
+            CpsApi: the created API object
+        """
+        auth = DeepSearchKeyAuth(
+            username=settings.username,
+            api_key=settings.api_key.get_secret_value(),
+        )
+        config = DeepSearchConfig(
+            host=settings.host,
+            auth=auth,
+            verify_ssl=settings.verify_ssl,
+        )
         client = CpsApiClient(config)
-
         return cls(client)

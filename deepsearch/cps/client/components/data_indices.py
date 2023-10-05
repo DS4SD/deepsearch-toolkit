@@ -30,7 +30,12 @@ class CpsApiDataIndices:
             sw_client.ProjectDataIndexWithStatus
         ] = self.sw_api.get_project_data_indices(proj_key=proj_key)
 
-        return [DataIndex.parse_obj(item.to_dict()) for item in response]
+        # filter out saved searchs index
+        return [
+            DataIndex.parse_obj(item.to_dict())
+            for item in response
+            if item.to_dict()["type"] != "View"
+        ]
 
     def create(
         self,
@@ -102,7 +107,7 @@ class CpsApiDataIndices:
     def upload_file(
         self,
         coords: ElasticProjectDataCollectionSource,
-        body: Dict[str, List[str]],
+        body: Dict[str, Any],
     ) -> str:
         """
         Call api for converting and uploading file to a project's data index.
@@ -197,3 +202,15 @@ class DataIndex(BaseModel):
 @dataclass
 class CpsApiDataIndex(ApiConnectedObject):
     project: str
+
+
+class S3Coordinates(BaseModel):
+    host: str
+    port: int
+    ssl: bool
+    verify_ssl: bool
+    access_key: str
+    secret_key: str
+    bucket: str
+    location: str
+    key_prefix: str = ""

@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, List, Optional, Union
 
+from pydantic import BaseModel
+
 import deepsearch.cps.apis.user
 from deepsearch.cps.apis.user.models.token_response import TokenResponse
 
@@ -84,3 +86,15 @@ class CpsApiProjects:
 class Project:
     key: str
     name: str
+
+
+class QAGenAIResource(BaseModel):
+    proj_key: str
+
+    def to_resource(self):
+        return {
+            "type": "qa_genai",
+            "proj_key": self.proj_key,
+            "integration_id": "genai",
+            "instance_id": "qa_api",
+        }

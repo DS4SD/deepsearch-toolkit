@@ -24,6 +24,20 @@ URL = typer.Option(
             multiple urls separated by empty lines.""",
 )
 
+COORDINATES_PATH = typer.Option(
+    None,
+    "--coordinates-file",
+    "-c",
+    help="""Provide absolute path to local json file
+    containing coordinates of COS.""",
+)
+
+CONV_SETTINGS = typer.Option(
+    None,
+    "--conv-settings",
+    help="""Provide conversion settings to be used on local file upload""",
+)
+
 SOURCE_PATH = typer.Option(
     None,
     "--input-file",

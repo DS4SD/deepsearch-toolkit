@@ -1,3 +1,66 @@
+## [v0.28.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.28.0) - 2023-10-02
+
+### Feature
+
+* Documentqa ([#136](https://github.com/DS4SD/deepsearch-toolkit/issues/136)) ([`5b639c8`](https://github.com/DS4SD/deepsearch-toolkit/commit/5b639c8d88d27862fd3916e797e46a85bf0c5c36))
+
+## [v0.27.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.27.0) - 2023-09-29
+
+### Feature
+
+* Expose conversion settings in upload ([#134](https://github.com/DS4SD/deepsearch-toolkit/issues/134)) ([`9ab9723`](https://github.com/DS4SD/deepsearch-toolkit/commit/9ab972398c1ba31a937f875c8765044604217e6c))
+
+## [v0.26.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.26.0) - 2023-09-26
+
+### Feature
+
+* Add API object creation from settings ([#137](https://github.com/DS4SD/deepsearch-toolkit/issues/137)) ([`8eeb789`](https://github.com/DS4SD/deepsearch-toolkit/commit/8eeb78914f287e981c26ea377c82499cae05298a))
+
+## [v0.25.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.25.0) - 2023-09-01
+
+### Feature
+
+* Extend QA gen types ([#133](https://github.com/DS4SD/deepsearch-toolkit/issues/133)) ([`43eeb57`](https://github.com/DS4SD/deepsearch-toolkit/commit/43eeb575580bcf9f19c74f6e837196072863d0eb))
+
+## [v0.24.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.24.0) - 2023-08-07
+
+### Feature
+* Extend QA generation types ([#126](https://github.com/DS4SD/deepsearch-toolkit/issues/126)) ([`8900d17`](https://github.com/DS4SD/deepsearch-toolkit/commit/8900d176b3b2ba8da2658f9d6e338fb04f371d15))
+
+## [v0.23.3](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.3) - 2023-08-07
+
+### Fix
+* Support env-only profile config instantiation ([#125](https://github.com/DS4SD/deepsearch-toolkit/issues/125)) ([`85f5793`](https://github.com/DS4SD/deepsearch-toolkit/commit/85f579337beb88d520f57924355b8e485043775b))
+* Align model with allowed values in backend ([#122](https://github.com/DS4SD/deepsearch-toolkit/issues/122)) ([`0491ed4`](https://github.com/DS4SD/deepsearch-toolkit/commit/0491ed4a2bea85a8d38bd9ca3d41496abb7b5a23))
+
+## [v0.23.2](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.2) - 2023-07-28
+
+### Fix
+* Refrain from instantiating DataIndex from saved searches ([#120](https://github.com/DS4SD/deepsearch-toolkit/issues/120)) ([`141e3d2`](https://github.com/DS4SD/deepsearch-toolkit/commit/141e3d2de02daa69d67a757d5fe1cad50eb7a564))
+
+## [v0.23.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.1) - 2023-07-27
+
+### Fix
+* Fix COS source coordinate passing ([#118](https://github.com/DS4SD/deepsearch-toolkit/issues/118)) ([`5178c04`](https://github.com/DS4SD/deepsearch-toolkit/commit/5178c04347e0c954536c748a238803cb4bdd7483))
+
+### Documentation
+* Reflect new configuration setup ([#119](https://github.com/DS4SD/deepsearch-toolkit/issues/119)) ([`a58f770`](https://github.com/DS4SD/deepsearch-toolkit/commit/a58f770be2288b86f6e3de5b8cb87add2c7c5cc1))
+
+## [v0.23.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.23.0) - 2023-07-26
+
+### Feature
+* Add upload from object storage ([#113](https://github.com/DS4SD/deepsearch-toolkit/issues/113)) ([`e010abc`](https://github.com/DS4SD/deepsearch-toolkit/commit/e010abce51cc4196c9b51b43f8f1ce214183c3b9))
+
+## [v0.22.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.22.0) - 2023-07-21
+
+### Feature
+* Expand Model API Pydantic types ([`ead7246`](https://github.com/DS4SD/deepsearch-toolkit/commit/ead724695e5065428f57467a53bf44dfbe7bbb87))
+
+## [v0.21.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.21.0) - 2023-07-19
+
+### Feature
+* Add profile-based config management ([#112](https://github.com/DS4SD/deepsearch-toolkit/issues/112)) ([`22800de`](https://github.com/DS4SD/deepsearch-toolkit/commit/22800dec4b1d44947709cff6514dba0dfae4b6a6))
+
 ## [v0.20.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.20.0) - 2023-07-11
 
 ### Feature

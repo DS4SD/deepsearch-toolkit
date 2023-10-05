@@ -6,7 +6,7 @@ from typing import List, Optional
 import urllib3
 
 from deepsearch.cps.client.api import CpsApi
-from deepsearch.cps.client.components.documents import DocumentConversionResult
+from deepsearch.documents.core.results import DocumentConversionResult
 
 from .models import ConversionSettings, ExportTarget, S3Coordinates
 from .utils import batch_single_files

@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from copy import deepcopy
 from typing import List, Optional
 
 from deepsearch.model.base.model import BaseDSModel
@@ -13,8 +12,6 @@ from deepsearch.model.kinds.nlp.types import (
 
 
 class BaseNLPModel(BaseDSModel):
-    _cached_def_spec: dict = {}
-
     @abstractmethod
     def annotate_batched_entities(
         self,
@@ -43,16 +40,6 @@ class BaseNLPModel(BaseDSModel):
         property_names: Optional[List[str]],
     ) -> AnnotatePropertiesOutput:
         raise NotImplementedError()
-
-    def get_definition_spec(self) -> dict:
-        cfg = self.get_nlp_config()
-        if not self._cached_def_spec:
-            self._cached_def_spec = deepcopy(super().get_definition_spec())
-            self._cached_def_spec["definition"] = cfg.labels
-            self._cached_def_spec["metadata"][
-                "supported_object_types"
-            ] = cfg.supported_types
-        return self._cached_def_spec
 
     @abstractmethod
     def get_nlp_config(self) -> NLPConfig:
