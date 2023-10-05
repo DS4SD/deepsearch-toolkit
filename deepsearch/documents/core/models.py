@@ -326,7 +326,12 @@ class OCRSettings(BaseModel):
         return request_backends.json()
 
     def to_ccs_spec(self):
-        return self.dict()
+        return {
+            "enabled": self.enabled,
+            "backend": self.backend,
+            "backend_settings": self.config,
+            "merge_mode": self.merge_mode,
+        }
 
     @classmethod
     def from_ccs_spec(cls, obj):
