@@ -1,3 +1,9 @@
+## [v0.29.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.29.0) - 2023-10-06
+
+### Feature
+
+* Add chemistry queries ([#138](https://github.com/DS4SD/deepsearch-toolkit/issues/138)) ([`63a0dd3`](https://github.com/DS4SD/deepsearch-toolkit/commit/63a0dd3252951436d8fdb24fb64ca53024a3165d))
+
 ## [v0.28.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.28.1) - 2023-10-05
 
 ### Fix
