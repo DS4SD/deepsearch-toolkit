@@ -11,7 +11,7 @@ from deepsearch.core.cli.profile_utils import (
 )
 from deepsearch.core.cli.utils import cli_handler
 from deepsearch.core.client.settings import ProfileSettings
-from deepsearch.core.client.settings_manager import settings_mgr
+from deepsearch.core.client.settings_manager import SettingsManager
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -35,6 +35,7 @@ def add_profile(
     ),
     activate_profile: bool = typer.Option(default=True),
 ):
+    settings_mgr = SettingsManager()
     prfl_name = (
         profile_name if profile_name else settings_mgr.get_profile_name_suggestion()
     )
@@ -63,6 +64,7 @@ def list_profiles() -> None:
         "active",
         "profile",
     )
+    settings_mgr = SettingsManager()
     profiles = settings_mgr.get_all_profile_settings()
     active_profile = settings_mgr.get_active_profile()
 
@@ -98,6 +100,7 @@ def show_profile(
         "profile",
         "config",
     )
+    settings_mgr = SettingsManager()
     prfl_name = profile_name or settings_mgr.get_active_profile()
     profile = settings_mgr.get_profile_settings(profile_name=prfl_name)
 
@@ -117,6 +120,7 @@ def show_profile(
 def set_default_profile(
     profile_name: str,
 ) -> None:
+    settings_mgr = SettingsManager()
     settings_mgr.activate_profile(profile_name=profile_name)
 
 
@@ -129,4 +133,5 @@ def set_default_profile(
 def remove_profile(
     profile_name: str,
 ) -> None:
+    settings_mgr = SettingsManager()
     settings_mgr.remove_profile(profile_name=profile_name)
