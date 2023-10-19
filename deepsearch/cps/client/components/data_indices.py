@@ -13,6 +13,7 @@ from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.apis.public.models.attachment_upload_data import (
     AttachmentUploadData,
 )
+from deepsearch.cps.apis.public.models.task import Task
 from deepsearch.cps.apis.public.models.token_response import TokenResponse
 from deepsearch.cps.client.components.api_object import ApiConnectedObject
 
@@ -110,12 +111,60 @@ class CpsApiDataIndices:
         body: Dict[str, Any],
     ) -> str:
         """
+        Deprecated. Use upload_and_convert() instead.
+        """
+        return self.upload_and_convert(coords, body).task_id
+
+    def upload_and_convert(
+        self,
+        coords: ElasticProjectDataCollectionSource,
+        body: Dict[str, Any],
+    ) -> Task:
+        """
         Call api for converting and uploading file to a project's data index.
         """
-        task_id = self.sw_api.ccs_convert_upload_file_project_data_index(
+        task: Task = self.sw_api.ccs_convert_upload_file_project_data_index(
             proj_key=coords.proj_key, index_key=coords.index_key, body=body
-        ).task_id
-        return task_id
+        )
+        return task
+
+    def upload(
+        self,
+        coords: ElasticProjectDataCollectionSource,
+        source_path: Optional[Union[str, Path]] = None,
+        source_url: Optional[str] = None,
+    ) -> Task:
+        """
+        Call api for uploading files to a project's data index.
+        The source files can be provided by URL with the `source_url` argument,
+        or by file path with the `source_path` argument.
+        The arguments `source_url` and `source_path` are mutually exclusive.
+        """
+
+        if source_url is not None and source_path is not None:
+            raise ValueError(
+                "Only one of `source_url` and `source_path` can be provided."
+            )
+
+        if source_path is not None and source_url is None:
+            uploaded_file = self.api.uploader.upload_file(
+                project=coords.proj_key, source_path=source_path
+            )
+            source_url = uploaded_file.internal_url
+
+        if source_url is None:
+            raise ValueError(
+                "One source between of `source_url` and `source_path` must be provided "
+            )
+
+        task = self.sw_api.upload_project_data_index_file(
+            proj_key=coords.proj_key,
+            index_key=coords.index_key,
+            params={
+                "file_url": source_url,
+            },
+        )
+        return task
 
 
 class ElasticProjectDataCollectionSource(BaseModel):
