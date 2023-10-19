@@ -147,10 +147,10 @@ def process_local_file(
         # loop over all files
         for single_zip in files_zip:
             # upload file
-            private_download_url = convert.upload_single_file(
-                api=api, cps_proj_key=coords.proj_key, source_path=Path(single_zip)
+            uploaded_file = api.uploader.upload_file(
+                project=coords.proj_key, source_path=Path(single_zip)
             )
-            file_url_array = [private_download_url]
+            file_url_array = [uploaded_file.internal_url]
             payload: Dict[str, Any] = {
                 "file_url": file_url_array,
             }
