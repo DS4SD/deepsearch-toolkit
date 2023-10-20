@@ -1,3 +1,9 @@
+## [v0.29.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.29.1) - 2023-10-20
+
+### Fix
+
+* Handle invalid profiles ([#141](https://github.com/DS4SD/deepsearch-toolkit/issues/141)) ([`61469d8`](https://github.com/DS4SD/deepsearch-toolkit/commit/61469d813867a382cf026ff9f8fd0c9182372d87))
+
 ## [v0.29.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.29.0) - 2023-10-06
 
 ### Feature
