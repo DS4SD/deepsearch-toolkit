@@ -77,6 +77,14 @@ class SettingsManager:
                 except ValidationError:
                     paths_to_remove.append(file_path)
 
+        # handle any invalid profiles
+        if paths_to_remove:
+            for path_to_rem in paths_to_remove:
+                path_to_rem.unlink()
+            profile_names = ", ".join([f'"{p.stem}"' for p in paths_to_remove])
+            err_msg = f"Following profiles were invalid and have been removed: {profile_names}; if needed please re-add"
+            raise RuntimeError(err_msg)
+
         # reset any stale active profile config
         if (
             self._main_settings.profile is not None
@@ -98,13 +106,6 @@ class SettingsManager:
             self.activate_profile(profile_name=str(next(iter(self._profile_cache))))
 
         self._migrate_legacy_config()
-
-        if paths_to_remove:
-            for path_to_rem in paths_to_remove:
-                path_to_rem.unlink()
-            profile_names = ", ".join([f'"{p.stem}"' for p in paths_to_remove])
-            err_msg = f"Following profiles were invalid and have been removed: {profile_names}; if needed please re-add"
-            raise RuntimeError(err_msg)
 
     def _migrate_legacy_config(self) -> None:
         if self._main_settings.profile is None:
