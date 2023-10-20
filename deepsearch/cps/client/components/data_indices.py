@@ -5,6 +5,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from urllib.parse import urlparse
 
 import requests
 from pydantic import BaseModel
@@ -131,31 +132,21 @@ class CpsApiDataIndices:
     def upload(
         self,
         coords: ElasticProjectDataCollectionSource,
-        source_path: Optional[Union[str, Path]] = None,
-        source_url: Optional[str] = None,
+        source: Union[Path, str],
     ) -> Task:
         """
         Call api for uploading files to a project's data index.
-        The source files can be provided by URL with the `source_url` argument,
-        or by file path with the `source_path` argument.
-        The arguments `source_url` and `source_path` are mutually exclusive.
+        The source files can be provided by local path or URL via `source`.
         """
 
-        if source_url is not None and source_path is not None:
-            raise ValueError(
-                "Only one of `source_url` and `source_path` can be provided."
-            )
-
-        if source_path is not None and source_url is None:
+        parsed = urlparse(str(source))
+        if parsed.scheme and parsed.netloc:  # is url
+            source_url = source
+        else:
             uploaded_file = self.api.uploader.upload_file(
-                project=coords.proj_key, source_path=source_path
+                project=coords.proj_key, source_path=source
             )
             source_url = uploaded_file.internal_url
-
-        if source_url is None:
-            raise ValueError(
-                "One source between of `source_url` and `source_path` must be provided "
-            )
 
         task = self.sw_api.upload_project_data_index_file(
             proj_key=coords.proj_key,
