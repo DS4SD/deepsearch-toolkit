@@ -53,8 +53,13 @@ class ProfileSettings(DumpableSettings):
 
 
 class MainSettings(DumpableSettings):
+    profile: Optional[str] = None
 
-    profile: Optional[str] = None  # None only when profiles not yet iniitialized
+    class Config:
+        env_prefix = "DEEPSEARCH_"
+
+
+class CLISettings(DumpableSettings):
     show_cli_stack_traces: bool = False
 
     class Config:

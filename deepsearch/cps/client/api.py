@@ -12,7 +12,7 @@ from deepsearch.core.client import (
     DeepSearchKeyAuth,
 )
 from deepsearch.core.client.settings import ProfileSettings
-from deepsearch.core.client.settings_manager import settings_mgr
+from deepsearch.core.client.settings_manager import SettingsManager
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.client.components import (
     CpsApiDataCatalogs,
@@ -164,6 +164,7 @@ class CpsApi:
         try:
             settings = ProfileSettings()
         except ValidationError:
+            settings_mgr = SettingsManager()
             settings = settings_mgr.get_profile_settings(profile_name=profile_name)
         return cls.from_settings(settings=settings)
 

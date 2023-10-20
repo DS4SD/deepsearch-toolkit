@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 import platformdirs
 from pydantic import ValidationError
@@ -23,13 +23,13 @@ LEGACY_CFG_FILENAME = "deepsearch_toolkit.json"
 
 class KnownProfile(str, Enum):
     SDS = "sds"
-    # DS_EXPERIENCE = "ds-experience"  # TODO: uncomment once applicable
+    DS_EXPERIENCE = "ds-experience"
     DS_INTERNAL = "ds-internal"
 
 
 HOST_BY_PROFILE = {
     KnownProfile.SDS.value: "https://sds.app.accelerate.science",
-    # KnownProfile.DS_EXPERIENCE.value: "https://deepsearch-experience.res.ibm.com",  # TODO: uncomment once applicable
+    KnownProfile.DS_EXPERIENCE.value: "https://deepsearch-experience.res.ibm.com",
     KnownProfile.DS_INTERNAL.value: "https://cps.foc-deepsearch.zurich.ibm.com",
 }
 
@@ -61,15 +61,29 @@ class SettingsManager:
 
         # initialize internal profile cache from Pydantic Settings based on dotenv
         self._profile_cache: Dict[str, ProfileSettingsEntry] = {}
+        paths_to_remove: List[Path] = []
         for f in os.listdir(self._profile_root_path):
             file_path = self._profile_root_path / f
             if file_path.suffix == ".env":
                 profile_name = file_path.stem
-                self._profile_cache[profile_name] = ProfileSettingsEntry(
-                    path=file_path,
-                    settings=ProfileSettings(_env_file=file_path),  # type: ignore
+                try:
+                    profile_settings = ProfileSettings(_env_file=file_path)  # type: ignore
                     # suppressing due to known Pydantic bug https://github.com/pydantic/pydantic/issues/3072
-                )
+
+                    self._profile_cache[profile_name] = ProfileSettingsEntry(
+                        path=file_path,
+                        settings=profile_settings,
+                    )
+                except ValidationError:
+                    paths_to_remove.append(file_path)
+
+        # handle any invalid profiles
+        if paths_to_remove:
+            for path_to_rem in paths_to_remove:
+                path_to_rem.unlink()
+            profile_names = ", ".join([f'"{p.stem}"' for p in paths_to_remove])
+            err_msg = f"Following profiles were invalid and have been removed: {profile_names}; if needed please re-add"
+            raise RuntimeError(err_msg)
 
         # reset any stale active profile config
         if (
@@ -197,9 +211,3 @@ class SettingsManager:
 
         prfl_settgs_entry = self._profile_cache.pop(profile_name)  # update cache
         prfl_settgs_entry.path.unlink()  # remove file
-
-    def get_show_cli_stack_traces(self) -> bool:
-        return self._main_settings.show_cli_stack_traces
-
-
-settings_mgr = SettingsManager()
