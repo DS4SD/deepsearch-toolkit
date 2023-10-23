@@ -24,6 +24,7 @@ from deepsearch.cps.client.components import (
     CpsApiTasks,
     DSApiDocuments,
 )
+from deepsearch.cps.client.components.uploader import DSApiUploader
 
 
 class CpsApiClient:
@@ -101,6 +102,7 @@ class CpsApi:
     elastic: CpsApiElastic
     data_indices: CpsApiDataIndices
     documents: DSApiDocuments
+    uploader: DSApiUploader
 
     def __init__(self, client: CpsApiClient) -> None:
         self.client = client
@@ -115,6 +117,7 @@ class CpsApi:
         self.elastic = CpsApiElastic(self)
         self.data_indices = CpsApiDataIndices(self)
         self.documents = DSApiDocuments(self)
+        self.uploader = DSApiUploader(self)
 
     def refresh_token(self, admin: bool = False):
         """Refresh access token

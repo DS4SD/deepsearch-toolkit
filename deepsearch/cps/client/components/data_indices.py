@@ -5,6 +5,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from urllib.parse import urlparse
 
 import requests
 from pydantic import BaseModel
@@ -13,6 +14,7 @@ from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.apis.public.models.attachment_upload_data import (
     AttachmentUploadData,
 )
+from deepsearch.cps.apis.public.models.task import Task
 from deepsearch.cps.apis.public.models.token_response import TokenResponse
 from deepsearch.cps.client.components.api_object import ApiConnectedObject
 
@@ -110,12 +112,50 @@ class CpsApiDataIndices:
         body: Dict[str, Any],
     ) -> str:
         """
+        Deprecated. Use upload_and_convert() instead.
+        """
+        return self.upload_and_convert(coords, body).task_id
+
+    def upload_and_convert(
+        self,
+        coords: ElasticProjectDataCollectionSource,
+        body: Dict[str, Any],
+    ) -> Task:
+        """
         Call api for converting and uploading file to a project's data index.
         """
-        task_id = self.sw_api.ccs_convert_upload_file_project_data_index(
+        task: Task = self.sw_api.ccs_convert_upload_file_project_data_index(
             proj_key=coords.proj_key, index_key=coords.index_key, body=body
-        ).task_id
-        return task_id
+        )
+        return task
+
+    def upload(
+        self,
+        coords: ElasticProjectDataCollectionSource,
+        source: Union[Path, str],
+    ) -> Task:
+        """
+        Call api for uploading files to a project's data index.
+        The source files can be provided by local path or URL via `source`.
+        """
+
+        parsed = urlparse(str(source))
+        if parsed.scheme and parsed.netloc:  # is url
+            source_url = source
+        else:
+            uploaded_file = self.api.uploader.upload_file(
+                project=coords.proj_key, source_path=source
+            )
+            source_url = uploaded_file.internal_url
+
+        task = self.sw_api.upload_project_data_index_file(
+            proj_key=coords.proj_key,
+            index_key=coords.index_key,
+            params={
+                "file_url": source_url,
+            },
+        )
+        return task
 
 
 class ElasticProjectDataCollectionSource(BaseModel):

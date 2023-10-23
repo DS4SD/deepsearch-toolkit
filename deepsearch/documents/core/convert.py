@@ -148,8 +148,8 @@ def send_files_for_conversion(
         # loop over all files
         for single_zip in files_zip:
             # upload file
-            private_download_url = upload_single_file(
-                api=api, cps_proj_key=cps_proj_key, source_path=Path(single_zip)
+            uploaded_file = api.uploader.upload_file(
+                project=cps_proj_key, source_path=Path(single_zip)
             )
             # submit url for conversion
             task_id = submit_conversion_payload(
@@ -157,7 +157,7 @@ def send_files_for_conversion(
                 cps_proj_key=cps_proj_key,
                 source={
                     "type": "url",
-                    "download_url": private_download_url,
+                    "download_url": uploaded_file.internal_url,
                 },
                 target=target,
                 conversion_settings=conversion_settings,
@@ -294,30 +294,6 @@ def download_converted_documents(
             count += 1
             progress.update(1)
     return
-
-
-def upload_single_file(api: CpsApi, cps_proj_key: str, source_path: Path) -> str:
-    """
-    Uploads a single file. Return internal download url.
-    """
-    filename = os.path.basename(source_path)
-    sw_api = sw_client.UploadsApi(api.client.swagger_client)
-
-    get_pointer: TemporaryUploadFileResult = sw_api.create_project_scratch_file(
-        proj_key=cps_proj_key, filename=filename
-    )
-    # upload file
-    upload = get_pointer.upload
-    private_download_url = get_pointer.download_private.url
-
-    with open(source_path, "rb") as f:
-        files = {"file": (os.path.basename(source_path), f)}
-        request_upload = requests.post(
-            url=upload.url, data=upload.fields, files=files, verify=False
-        )
-        request_upload.raise_for_status()
-
-    return private_download_url
 
 
 def send_urls_for_conversion(
