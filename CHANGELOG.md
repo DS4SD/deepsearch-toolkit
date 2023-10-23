@@ -1,3 +1,9 @@
+## [v0.30.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.30.0) - 2023-10-23
+
+### Feature
+
+* Expose ds uploader and upload tasks ([#142](https://github.com/DS4SD/deepsearch-toolkit/issues/142)) ([`a00fc03`](https://github.com/DS4SD/deepsearch-toolkit/commit/a00fc033a8bfe4e3bfb2f5c66ba613807c30b50a))
+
 ## [v0.29.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.29.1) - 2023-10-20
 
 ### Fix
