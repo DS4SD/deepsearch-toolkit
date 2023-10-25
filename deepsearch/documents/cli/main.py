@@ -1,8 +1,10 @@
 import urllib
+from enum import Enum
 
 import urllib3
 
 from deepsearch.core.cli.utils import cli_handler
+from deepsearch.documents.core.export import export_to_markdown
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -21,7 +23,18 @@ from deepsearch.cps.cli.cli_options import (
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.create_report import get_multiple_reports
 from deepsearch.documents.core.main import convert_documents
-from deepsearch.documents.core.utils import create_root_dir, read_lines, write_taskids
+from deepsearch.documents.core.utils import (
+    create_root_dir,
+    iterate_converted_files,
+    read_lines,
+    write_taskids,
+)
+
+
+class ExportFormats(str, Enum):
+    json = "json"
+    markdown = "markdown"
+
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -38,6 +51,7 @@ def convert(
     source_path: Path = SOURCE_PATH,
     progress_bar: bool = PROGRESS_BAR,
     get_report: bool = GET_REPORT,
+    export_format: ExportFormats = typer.Option(ExportFormats.json, "--export", "-e"),
 ):
     """
     Document conversion via Deep Search Technology.
@@ -82,6 +96,24 @@ def convert(
         {result_dir.absolute()}
         """
     )
+
+    if export_format == ExportFormats.markdown:
+        markdown_output_dir = result_dir / "export_markdown"
+        markdown_output_dir.mkdir(exist_ok=True)
+
+        for converted_document in iterate_converted_files(result_dir):
+            markdown_filename = f'{converted_document.archive_path.name.replace("/", "_").replace(".zip", "")}_{converted_document.file_path.name.replace("/", "_").replace(".json", ".md")}'
+            exported_filename = markdown_output_dir / markdown_filename
+            markdown_content = export_to_markdown(converted_document.document)
+            with exported_filename.open("w") as f:
+                f.write(markdown_content)
+
+        typer.echo(
+            f"""
+        The converted documents have been exported to markdown. You can find them in folder
+        {markdown_output_dir}
+            """
+        )
 
     if get_report:
         info = result.generate_report(result_dir=result_dir, progress_bar=True)
