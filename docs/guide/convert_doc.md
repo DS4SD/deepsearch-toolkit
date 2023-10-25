@@ -230,7 +230,7 @@ conv_settings = ConversionSettings.from_defaults(api)
 conv_settings.ocr.enabled = True
 ```
 
-#### Example 2: Choose alternative OCR backend
+#### Example 2: Choose alternative OCR engine
 
 ```python
 from deepsearch.documents.core.models import ConversionSettings, OCRSettings
@@ -239,11 +239,21 @@ conv_settings = ConversionSettings.from_defaults(api)
 conv_settings.ocr.enabled = True
 
 # Find out which OCR backends are available
-ocr_backends = OCRSettings.get_backends(api) 
+engines = OCRSettings.get_backends(api)
 
-for b in ocr_backends:
-  print(f"Got OCR backend id={b.id}, name={b.name}")
+for b in engines:
+  print(f"Got OCR backend id={b.id}")
 
-conv_settings.ocr.backend = "alpine-ocr" # set a different backend
+# We pick the first engine from the list above
+conv_settings.ocr.engine = engines[0]
+```
 
+#### Example 3: Specify OCR engine and language
+
+```python
+from deepsearch.documents.core.models import ConversionSettings, OCRSettings, AlpineOcrEngine
+
+conv_settings = ConversionSettings.from_defaults(api)
+conv_settings.ocr.enabled = True
+conv_settings.ocr.engine = AlpineOcrEngine(languages=[AlpineOcrLanguage.Japanese])
 ```
