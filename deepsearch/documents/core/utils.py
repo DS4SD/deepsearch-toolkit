@@ -1,13 +1,15 @@
 import datetime
 import glob
+import json
 import os
 import pathlib
 import urllib
 import zipfile as z
 from pathlib import Path
-from typing import Any, List
+from typing import Any, Dict, Iterator, List
 
 import requests
+from pydantic import BaseModel
 from tqdm import tqdm
 
 from deepsearch.cps.client.api import CpsApi
@@ -257,3 +259,29 @@ def write_taskids(result_dir: Path, list_to_write: List[str]) -> None:
         for t in list_to_write:
             text_file.write(t + "\n")
     return
+
+
+class IteratedDocument(BaseModel):
+    archive_path: Path
+    file_path: Path
+    document: Dict[str, Any]
+
+
+def iterate_converted_files(result_dir: Path) -> Iterator[IteratedDocument]:
+    """
+    Iterate through all the converted documents in the downloaded results.
+    """
+    for output_file in Path(result_dir).rglob("json*.zip"):
+        with z.ZipFile(output_file) as archive:
+            all_files = archive.namelist()
+            for name in all_files:
+                if not name.endswith(".json"):
+                    continue
+
+                basename = name.rstrip(".json")
+                doc_jsondata = json.loads(archive.read(f"{basename}.json"))
+                yield IteratedDocument(
+                    archive_path=output_file,
+                    file_path=Path(name),
+                    document=doc_jsondata,
+                )
