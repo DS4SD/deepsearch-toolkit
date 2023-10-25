@@ -501,7 +501,7 @@ class OCRModeEnum(str, Enum):
 
 class OCRSettings(BaseModel):
     enabled: bool = False
-    engine: Optional[OcrEngine]
+    engine: Optional[OcrEngine] = None
     merge_mode: OCRModeEnum = OCRModeEnum.prioritize_ocr
 
     @classmethod
@@ -515,15 +515,23 @@ class OCRSettings(BaseModel):
         backend_list = request_backends.json()
         engines = []
         for item in backend_list:
-            for cl in get_args(OcrEngine):
-                if cl.id == item["id"]:
-                    engines.append(cl())  # create default instance
+            for engine_cls in get_args(OcrEngine):
+                if engine_cls.id == item["id"]:
+                    engines.append(engine_cls())  # create default instance
 
         return engines
 
     def to_ccs_spec(self):
         if self.enabled and not self.engine:
             raise ValueError("OCR can't be enabled because no OCR engine is available.")
+
+        if not self.engine:
+            return {
+                "enabled": False,
+                "backend": "",
+                "backend_settings": {},
+                "merge_mode": OCRModeEnum.prioritize_ocr.value,
+            }
 
         return {
             "enabled": self.enabled,
@@ -534,13 +542,13 @@ class OCRSettings(BaseModel):
 
     @classmethod
     def from_ccs_spec(cls, obj):
-        ci = None
-        for cl in get_args(OcrEngine):
-            if cl.id == obj["backend"]:
-                ci = cl()
+        engine = None
+        for engine_cls in get_args(OcrEngine):
+            if engine_cls.id == obj["backend"]:
+                engine = engine_cls()
                 break
 
-        s = OCRSettings(enabled=obj["enabled"], engine=ci)
+        s = OCRSettings(enabled=obj["enabled"], engine=engine)
         if obj["merge_mode"]:
             s.merge_mode = OCRModeEnum(obj["merge_mode"])
 
