@@ -1,3 +1,9 @@
+## [v0.31.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.31.0) - 2023-10-25
+
+### Feature
+
+* Typing for OCR engines and language settings ([#140](https://github.com/DS4SD/deepsearch-toolkit/issues/140)) ([`de7c434`](https://github.com/DS4SD/deepsearch-toolkit/commit/de7c4343d84dbcc371202aa32c087deccee15dde))
+
 ## [v0.30.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.30.0) - 2023-10-23
 
 ### Feature
