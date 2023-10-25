@@ -1,9 +1,9 @@
 import collections
 from enum import Enum
 from textwrap import dedent
-from typing import Dict, List, Literal, Optional, Set, Union
+from typing import ClassVar, Dict, List, Literal, Optional, Set, Union, get_args
 
-from pydantic import BaseModel, Field, ValidationError, parse_obj_as
+from pydantic import BaseModel, Field, ValidationError, conlist, parse_obj_as
 
 from deepsearch import CpsApi
 from deepsearch.core.util.ccs_utils import get_ccs_project_key
@@ -170,6 +170,200 @@ ExportTarget = Union[
 ]
 
 
+class AlpineOcrLanguage(str, Enum):
+    English = "en"
+    Japanese = "ja"
+    Chinese = "zh"
+
+
+class TesseractOcrLanguage(str, Enum):
+    Arabic = "Arabic"
+    Armenian = "Armenian"
+    Bengali = "Bengali"
+    Canadian_Aboriginal = "Canadian_Aboriginal"
+    Cherokee = "Cherokee"
+    Cyrillic = "Cyrillic"
+    Devanagari = "Devanagari"
+    Ethiopic = "Ethiopic"
+    Fraktur = "Fraktur"
+    Georgian = "Georgian"
+    Greek = "Greek"
+    Gujarati = "Gujarati"
+    Gurmukhi = "Gurmukhi"
+    HanS = "HanS"
+    HanS_vert = "HanS_vert"
+    HanT = "HanT"
+    HanT_vert = "HanT_vert"
+    Hangul = "Hangul"
+    Hangul_vert = "Hangul_vert"
+    Hebrew = "Hebrew"
+    Japanese = "Japanese"
+    Japanese_vert = "Japanese_vert"
+    Kannada = "Kannada"
+    Khmer = "Khmer"
+    Lao = "Lao"
+    Latin = "Latin"
+    Malayalam = "Malayalam"
+    Myanmar = "Myanmar"
+    Oriya = "Oriya"
+    Sinhala = "Sinhala"
+    Syriac = "Syriac"
+    Tamil = "Tamil"
+    Telugu = "Telugu"
+    Thaana = "Thaana"
+    Thai = "Thai"
+    Tibetan = "Tibetan"
+    Vietnamese = "Vietnamese"
+    afr = "afr"
+    amh = "amh"
+    ara = "ara"
+    asm = "asm"
+    aze = "aze"
+    aze_cyrl = "aze_cyrl"
+    bel = "bel"
+    ben = "ben"
+    bod = "bod"
+    bos = "bos"
+    bre = "bre"
+    bul = "bul"
+    cat = "cat"
+    ceb = "ceb"
+    ces = "ces"
+    chi_sim = "chi_sim"
+    chi_sim_vert = "chi_sim_vert"
+    chi_tra = "chi_tra"
+    chi_tra_vert = "chi_tra_vert"
+    chr = "chr"
+    cos = "cos"
+    cym = "cym"
+    dan = "dan"
+    deu = "deu"
+    div = "div"
+    dzo = "dzo"
+    ell = "ell"
+    eng = "eng"
+    enm = "enm"
+    epo = "epo"
+    est = "est"
+    eus = "eus"
+    fao = "fao"
+    fas = "fas"
+    fil = "fil"
+    fin = "fin"
+    fra = "fra"
+    frk = "frk"
+    frm = "frm"
+    fry = "fry"
+    gla = "gla"
+    gle = "gle"
+    glg = "glg"
+    grc = "grc"
+    guj = "guj"
+    hat = "hat"
+    heb = "heb"
+    hin = "hin"
+    hrv = "hrv"
+    hun = "hun"
+    hye = "hye"
+    iku = "iku"
+    ind = "ind"
+    isl = "isl"
+    ita = "ita"
+    ita_old = "ita_old"
+    jav = "jav"
+    jpn = "jpn"
+    jpn_vert = "jpn_vert"
+    kan = "kan"
+    kat = "kat"
+    kat_old = "kat_old"
+    kaz = "kaz"
+    khm = "khm"
+    kir = "kir"
+    kmr = "kmr"
+    kor = "kor"
+    kor_vert = "kor_vert"
+    lao = "lao"
+    lat = "lat"
+    lav = "lav"
+    lit = "lit"
+    ltz = "ltz"
+    mal = "mal"
+    mar = "mar"
+    mkd = "mkd"
+    mlt = "mlt"
+    mon = "mon"
+    mri = "mri"
+    msa = "msa"
+    mya = "mya"
+    nep = "nep"
+    nld = "nld"
+    nor = "nor"
+    oci = "oci"
+    ori = "ori"
+    osd = "osd"
+    pan = "pan"
+    pol = "pol"
+    por = "por"
+    pus = "pus"
+    que = "que"
+    ron = "ron"
+    rus = "rus"
+    san = "san"
+    sin = "sin"
+    slk = "slk"
+    slv = "slv"
+    snd = "snd"
+    spa = "spa"
+    spa_old = "spa_old"
+    sqi = "sqi"
+    srp = "srp"
+    srp_latn = "srp_latn"
+    sun = "sun"
+    swa = "swa"
+    swe = "swe"
+    syr = "syr"
+    tam = "tam"
+    tat = "tat"
+    tel = "tel"
+    tgk = "tgk"
+    tha = "tha"
+    tir = "tir"
+    ton = "ton"
+    tur = "tur"
+    uig = "uig"
+    ukr = "ukr"
+    urd = "urd"
+    uzb = "uzb"
+    uzb_cyrl = "uzb_cyrl"
+    vie = "vie"
+    yid = "yid"
+    yor = "yor"
+
+
+class TesseractOcrEngine(BaseModel):
+    id: ClassVar[str] = "tesseract-ocr"
+    languages: conlist(TesseractOcrLanguage, min_items=1, unique_items=True) = [  # type: ignore
+        TesseractOcrLanguage.eng,
+        TesseractOcrLanguage.deu,
+    ]
+
+    class Config:
+        use_enum_values = True
+
+
+class AlpineOcrEngine(BaseModel):
+    id: ClassVar[str] = "alpine-ocr"
+    languages: conlist(  # type: ignore
+        AlpineOcrLanguage, min_items=1, max_items=1, unique_items=True
+    ) = [AlpineOcrLanguage.English]
+
+    class Config:
+        use_enum_values = True
+
+
+OcrEngine = Union[AlpineOcrEngine, TesseractOcrEngine]
+
+
 class ProjectConversionModel(BaseModel):
     name: Optional[str]  # named model (config)
     config_id: str  # the model config key. Validate with available models CCS project.
@@ -307,31 +501,58 @@ class OCRModeEnum(str, Enum):
 
 class OCRSettings(BaseModel):
     enabled: bool = False
-    backend: str = "tesseract-ocr"  # validate with available options on CCS API
-    config: dict = {}  # implementation specific to OCR backend
-    merge_mode: Optional[OCRModeEnum] = OCRModeEnum.prioritize_ocr
+    engine: Optional[OcrEngine] = None
+    merge_mode: OCRModeEnum = OCRModeEnum.prioritize_ocr
 
     @classmethod
     def get_backends(
         cls, api: CpsApi
-    ) -> List[Dict]:  # get list of available OCR backends
+    ) -> List[OcrEngine]:  # get list of available OCR backends
         request_backends = api.client.session.get(
-            url=URLNavigator(api).url_conversion_defaults()
+            url=URLNavigator(api).url_system_ocr_backends()
         )
         request_backends.raise_for_status()
-        return request_backends.json()
+        backend_list = request_backends.json()
+        engines = []
+        for item in backend_list:
+            for engine_cls in get_args(OcrEngine):
+                if engine_cls.id == item["id"]:
+                    engines.append(engine_cls())  # create default instance
+
+        return engines
 
     def to_ccs_spec(self):
+        if self.enabled and not self.engine:
+            raise ValueError("OCR can't be enabled because no OCR engine is available.")
+
+        if not self.engine:
+            return {
+                "enabled": False,
+                "backend": "",
+                "backend_settings": {},
+                "merge_mode": OCRModeEnum.prioritize_ocr.value,
+            }
+
         return {
             "enabled": self.enabled,
-            "backend": self.backend,
-            "backend_settings": self.config,
+            "backend": self.engine.id,
+            "backend_settings": self.engine.dict(),
             "merge_mode": self.merge_mode,
         }
 
     @classmethod
     def from_ccs_spec(cls, obj):
-        return cls.parse_obj(obj or {})
+        engine = None
+        for engine_cls in get_args(OcrEngine):
+            if engine_cls.id == obj["backend"]:
+                engine = engine_cls()
+                break
+
+        s = OCRSettings(enabled=obj["enabled"], engine=engine)
+        if obj["merge_mode"]:
+            s.merge_mode = OCRModeEnum(obj["merge_mode"])
+
+        return s
 
 
 class ConversionMetadata(BaseModel):

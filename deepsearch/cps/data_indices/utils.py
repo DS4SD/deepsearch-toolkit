@@ -155,7 +155,7 @@ def process_local_file(
                 "file_url": file_url_array,
             }
             if conv_settings is not None:
-                payload["conversion_settings"] = conv_settings.dict()
+                payload["conversion_settings"] = conv_settings.to_ccs_spec()
 
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
