@@ -1,3 +1,9 @@
+## [v0.32.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.32.0) - 2023-10-30
+
+### Feature
+
+* Export converted documents to markdown ([#144](https://github.com/DS4SD/deepsearch-toolkit/issues/144)) ([`f79a673`](https://github.com/DS4SD/deepsearch-toolkit/commit/f79a673d8c7d3dda1e61d71bc6b0ded8566b64a3))
+
 ## [v0.31.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.31.0) - 2023-10-25
 
 ### Feature
