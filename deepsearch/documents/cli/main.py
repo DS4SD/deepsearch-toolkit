@@ -1,8 +1,10 @@
 import urllib
+from enum import Enum
 
 import urllib3
 
 from deepsearch.core.cli.utils import cli_handler
+from deepsearch.documents.core.export import export_to_markdown
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -21,7 +23,12 @@ from deepsearch.cps.cli.cli_options import (
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.create_report import get_multiple_reports
 from deepsearch.documents.core.main import convert_documents
-from deepsearch.documents.core.utils import create_root_dir, read_lines, write_taskids
+from deepsearch.documents.core.utils import (
+    create_root_dir,
+    iterate_converted_files,
+    read_lines,
+    write_taskids,
+)
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -38,6 +45,7 @@ def convert(
     source_path: Path = SOURCE_PATH,
     progress_bar: bool = PROGRESS_BAR,
     get_report: bool = GET_REPORT,
+    export_md: bool = False,
 ):
     """
     Document conversion via Deep Search Technology.
@@ -82,6 +90,35 @@ def convert(
         {result_dir.absolute()}
         """
     )
+
+    if export_md:
+        markdown_output_dir = result_dir / "export_markdown"
+        markdown_output_dir.mkdir(exist_ok=True)
+
+        for converted_document in iterate_converted_files(result_dir):
+            # The output exported filename will be composed by
+            # - the name of the zip file where it is contained
+            # - the name of the file inside the zip archive
+            # For example json_000001_2206.00785.md, where "json_000001" is the name of the zip archive and "2206.00785" the filename
+            clean_archive_name = converted_document.archive_path.name.replace(
+                "/", "_"
+            ).replace(".zip", "")
+            clean_filename = converted_document.file_path.name.replace(
+                "/", "_"
+            ).replace(".json", "")
+            exported_filename = (
+                markdown_output_dir / f"{clean_archive_name}_{clean_filename}.md"
+            )
+            markdown_content = export_to_markdown(converted_document.document)
+            with exported_filename.open("w") as f:
+                f.write(markdown_content)
+
+        typer.echo(
+            f"""
+        The converted documents have been exported to markdown. You can find them in folder
+        {markdown_output_dir}
+            """
+        )
 
     if get_report:
         info = result.generate_report(result_dir=result_dir, progress_bar=True)
