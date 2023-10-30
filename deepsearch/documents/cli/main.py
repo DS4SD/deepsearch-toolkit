@@ -30,12 +30,6 @@ from deepsearch.documents.core.utils import (
     write_taskids,
 )
 
-
-class ExportFormats(str, Enum):
-    json = "json"
-    markdown = "markdown"
-
-
 app = typer.Typer(no_args_is_help=True)
 
 
@@ -51,7 +45,7 @@ def convert(
     source_path: Path = SOURCE_PATH,
     progress_bar: bool = PROGRESS_BAR,
     get_report: bool = GET_REPORT,
-    export_format: ExportFormats = typer.Option(ExportFormats.json, "--export", "-e"),
+    export_md: bool = False,
 ):
     """
     Document conversion via Deep Search Technology.
@@ -97,13 +91,24 @@ def convert(
         """
     )
 
-    if export_format == ExportFormats.markdown:
+    if export_md:
         markdown_output_dir = result_dir / "export_markdown"
         markdown_output_dir.mkdir(exist_ok=True)
 
         for converted_document in iterate_converted_files(result_dir):
-            markdown_filename = f'{converted_document.archive_path.name.replace("/", "_").replace(".zip", "")}_{converted_document.file_path.name.replace("/", "_").replace(".json", ".md")}'
-            exported_filename = markdown_output_dir / markdown_filename
+            # The output exported filename will be composed by
+            # - the name of the zip file where it is contained
+            # - the name of the file inside the zip archive
+            # For example json_000001_2206.00785.md, where "json_000001" is the name of the zip archive and "2206.00785" the filename
+            clean_archive_name = converted_document.archive_path.name.replace(
+                "/", "_"
+            ).replace(".zip", "")
+            clean_filename = converted_document.file_path.name.replace(
+                "/", "_"
+            ).replace(".json", "")
+            exported_filename = (
+                markdown_output_dir / f"{clean_archive_name}_{clean_filename}.md"
+            )
             markdown_content = export_to_markdown(converted_document.document)
             with exported_filename.open("w") as f:
                 f.write(markdown_content)
