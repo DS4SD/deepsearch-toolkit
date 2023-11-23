@@ -94,6 +94,7 @@ def MoleculeQuery(
 def MoleculesInPatentsQuery(
     patents: Union[str, List[str]],
     num_items: int = 10,
+    partial_lookup: bool = False,
 ) -> Query:
     """
     List all molecules contained in a list of patents.
@@ -117,6 +118,7 @@ def MoleculesInPatentsQuery(
                     for v in patents
                 ]
             },
+            "partial_references": partial_lookup,
             "limit": num_items,
         },
         coordinates=KnowledgeDbResource(),
