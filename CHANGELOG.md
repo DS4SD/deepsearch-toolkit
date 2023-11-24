@@ -1,3 +1,9 @@
+## [v0.33.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.33.0) - 2023-11-24
+
+### Feature
+
+* Partial db lookup, document entities lookup and render ([#145](https://github.com/DS4SD/deepsearch-toolkit/issues/145)) ([`106de7c`](https://github.com/DS4SD/deepsearch-toolkit/commit/106de7cee44c982fc3217c3f1a8b1d1b20a42b1e))
+
 ## [v0.32.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.32.0) - 2023-10-30
 
 ### Feature
