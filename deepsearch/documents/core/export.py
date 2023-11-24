@@ -2,28 +2,7 @@ from typing import Any, Dict
 
 from tabulate import tabulate
 
-
-def _resolve_item(item, doc):
-    """
-    Return the resolved item in the document.
-    If the item is referencing another part of the document, it will be retrieved.
-    """
-
-    # TODO: improve the function for handling proper json path (not only two segments)
-    try:
-        if "$ref" in item:
-            parts = item["$ref"].split("/")
-            citem = doc[parts[1]][int(parts[2])]
-        elif "__ref" in item:
-            parts = item["__ref"].split("/")
-            citem = doc[parts[1]][int(parts[2])]
-        else:
-            citem = item
-
-        return citem
-
-    except KeyError:
-        return None
+from deepsearch.documents.core.lookup import _resolve_item
 
 
 def export_to_markdown(document: Dict[str, Any]) -> str:
