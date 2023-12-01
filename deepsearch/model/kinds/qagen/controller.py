@@ -24,7 +24,7 @@ class QAGenController(BaseController):
         )
         definitions = QAGenInfoOutputDefinitions(
             apiVersion=super()._get_api_version(),
-            kind=self.get_kind(),
+            kind=self.get_kind(),  # type: ignore[arg-type]
             spec=spec,
         )
         return QAGenInfoOutput(definitions=definitions)

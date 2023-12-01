@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import root_validator
+from pydantic.v1 import root_validator
 
 from deepsearch.model.base.types import (
     BaseAppPredInput,

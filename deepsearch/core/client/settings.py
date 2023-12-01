@@ -4,7 +4,7 @@ from getpass import getpass
 from pathlib import Path
 from typing import Dict, Optional, Union
 
-from pydantic import BaseSettings, SecretStr
+from pydantic.v1 import BaseSettings, SecretStr
 
 
 class DumpableSettings(BaseSettings):
@@ -47,8 +47,8 @@ class ProfileSettings(DumpableSettings):
         return cls(
             host=input("Host: "),
             username=input("Username: "),
-            api_key=getpass("API key: "),
-            verify_ssl=input("SSL verification [y/n]: "),
+            api_key=getpass("API key: "),  # type: ignore[arg-type]
+            verify_ssl=input("SSL verification [y/n]: "),  # type: ignore[arg-type]
         )
 
 

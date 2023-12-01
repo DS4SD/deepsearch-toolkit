@@ -43,7 +43,7 @@ def add_profile(
     profile_settings = ProfileSettings(
         host=host,
         username=username,
-        api_key=api_key,
+        api_key=api_key,  # type: ignore[arg-type]
         verify_ssl=verify_ssl,
     )
 

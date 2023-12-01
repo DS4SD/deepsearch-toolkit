@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Union
 
 import requests
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.apis.public.models.temporary_upload_file_result import (

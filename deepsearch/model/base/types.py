@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Extra, Field, PositiveFloat
+from pydantic.v1 import BaseModel, Extra, Field, PositiveFloat
 
 
 class StrictModel(BaseModel, extra=Extra.forbid):
