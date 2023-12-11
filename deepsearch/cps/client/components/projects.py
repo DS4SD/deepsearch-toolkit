@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 import deepsearch.cps.apis.user
 from deepsearch.cps.apis.user.models.token_response import TokenResponse

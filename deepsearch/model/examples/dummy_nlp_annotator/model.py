@@ -23,7 +23,7 @@ class DummyNLPAnnotator(BaseNLPModel):
             kind=Kind.NLPModel,
             name="DummyNLPAnnotator",
             version="0.1.0",
-            supported_types=["text"],
+            supported_types=["text"],  # type: ignore[list-item]
             labels=self._generate_labels(),
         )
 

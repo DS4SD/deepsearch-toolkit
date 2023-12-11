@@ -3,7 +3,7 @@ from enum import Enum
 from textwrap import dedent
 from typing import ClassVar, Dict, List, Literal, Optional, Set, Union, get_args
 
-from pydantic import BaseModel, Field, ValidationError, conlist, parse_obj_as
+from pydantic.v1 import BaseModel, Field, ValidationError, conlist, parse_obj_as
 
 from deepsearch import CpsApi
 from deepsearch.core.util.ccs_utils import get_ccs_project_key
@@ -31,13 +31,13 @@ class S3Coordinates(BaseModel):
         "",
         description=dedent(
             """
-            Control the infix of the object keys that are saved on the document's `_s3_data`, after `key_prefix`, 
+            Control the infix of the object keys that are saved on the document's `_s3_data`, after `key_prefix`,
             and before `PDFDocuments/{document_hash}.pdf` or `PDFPages/{page_hash}.pdf`.
 
             By default, the infix is empty.
             For using the name of the index in the coordinates, you can use `key_infix_format = "{index_name}"`.
 
-            For example, if: 
+            For example, if:
 
             ```
             key_prefix = "my_prefix/"
@@ -577,8 +577,6 @@ class ConversionSettings(BaseModel):
 
     @classmethod
     def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
-        conv_settings = cls()
-
         proj_key, _ = get_ccs_project_key(api, proj_key)
 
         request_conv_settings = api.client.session.get(
@@ -587,34 +585,36 @@ class ConversionSettings(BaseModel):
         request_conv_settings.raise_for_status()
         settings_dict = request_conv_settings.json()
 
-        conv_settings.pipeline = ConversionPipelineSettings.from_ccs_spec(
+        pipeline = ConversionPipelineSettings.from_ccs_spec(
             settings_dict.get("model_pipeline")
         )
-        conv_settings.ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
-        conv_settings.metadata = ConversionMetadata.from_ccs_spec(
-            settings_dict.get("metadata")
+        ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
+        metadata = ConversionMetadata.from_ccs_spec(settings_dict.get("metadata"))
+        return cls(
+            pipeline=pipeline,
+            ocr=ocr,
+            metadata=metadata,
         )
-        return conv_settings
 
     @classmethod
     def from_defaults(cls, api: CpsApi) -> "ConversionSettings":
-        conv_settings = cls()
-
         request_conv_settings = api.client.session.get(
             url=URLNavigator(api).url_conversion_defaults()
         )
         request_conv_settings.raise_for_status()
         settings_dict = request_conv_settings.json()
 
-        conv_settings.pipeline = ConversionPipelineSettings.from_ccs_spec(
+        pipeline = ConversionPipelineSettings.from_ccs_spec(
             settings_dict.get("model_pipeline")
         )
-        conv_settings.ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
-        conv_settings.metadata = ConversionMetadata.from_ccs_spec(
-            settings_dict.get("metadata")
-        )
+        ocr = OCRSettings.from_ccs_spec(settings_dict.get("ocr"))
+        metadata = ConversionMetadata.from_ccs_spec(settings_dict.get("metadata"))
 
-        return conv_settings
+        return cls(
+            pipeline=pipeline,
+            ocr=ocr,
+            metadata=metadata,
+        )
 
     def to_ccs_spec(self):
         obj = {}

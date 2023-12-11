@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 import requests
-from pydantic import ValidationError
+from pydantic.v1 import ValidationError
 
 import deepsearch.cps.apis.user
 from deepsearch.core.client import (
@@ -165,7 +165,7 @@ class CpsApi:
             CpsApi: the created API object
         """
         try:
-            settings = ProfileSettings()
+            settings = ProfileSettings()  # type: ignore[call-arg]
         except ValidationError:
             settings_mgr = SettingsManager()
             settings = settings_mgr.get_profile_settings(profile_name=profile_name)

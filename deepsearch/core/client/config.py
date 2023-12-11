@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 
 class DeepSearchBearerTokenAuth(BaseModel):
