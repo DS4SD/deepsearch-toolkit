@@ -1,3 +1,9 @@
+## [v0.34.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.34.0) - 2023-12-11
+
+### Chore
+
+* Update pydantic dependency to v2 ([#146](https://github.com/DS4SD/deepsearch-toolkit/issues/146)) ([`db95852`](https://github.com/DS4SD/deepsearch-toolkit/commit/db95852a41df0f6d19d3c25e531c057e3d175cfe))
+
 ## [v0.33.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.33.0) - 2023-11-24
 
 ### Feature
