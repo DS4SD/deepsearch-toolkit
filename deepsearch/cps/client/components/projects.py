@@ -90,11 +90,11 @@ class Project:
 
 class QAGenAIResource(BaseModel):
     proj_key: str
+    index_key: str
 
     def to_resource(self):
         return {
-            "type": "qa_genai",
+            "type": "semantic_backend_genai_runner",
             "proj_key": self.proj_key,
-            "integration_id": "genai",
-            "instance_id": "qa_api",
+            "index_key": self.index_key,
         }

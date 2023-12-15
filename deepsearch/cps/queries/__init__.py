@@ -80,23 +80,23 @@ def DataQuery(
 def DocumentQuestionQuery(
     question: str,
     *,
-    document_hash: str,
+    # document_hash: str,
     project: Union[str, Project],
+    index_key: str,
 ) -> Query:
 
     proj_key = project.key if isinstance(project, Project) else project
 
     query = Query()
     task = query.add(
-        "QA",
+        task_id="QA",
+        kind_or_task="SemanticRag",
         parameters={
-            "doc_id": document_hash,
             "question": question,
         },
-        coordinates=QAGenAIResource(proj_key=proj_key),
+        coordinates=QAGenAIResource(proj_key=proj_key, index_key=index_key),
     )
     task.output("answer").output_as("answer")
-    task.output("contexts").output_as("contexts")
     task.output("provenance").output_as("provenance")
 
     return query
