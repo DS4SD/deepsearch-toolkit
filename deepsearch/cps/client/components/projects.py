@@ -88,7 +88,7 @@ class Project:
     name: str
 
 
-class QAGenAIResource(BaseModel):
+class SemanticBackendResource(BaseModel):
     proj_key: str
     index_key: str
 

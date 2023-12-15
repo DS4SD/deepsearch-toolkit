@@ -24,38 +24,28 @@ if TYPE_CHECKING:
 
 
 class SemIngestUrlSource(BaseModel):
-    kind: Literal["doc_url"] = "doc_url"
     url: str
 
 
 class SemIngestPublicDataDocumentSource(BaseModel):
-    kind: Literal["public_doc"] = "public_doc"
-    elastic_id: str
-    index_key: str
+    source: ElasticDataCollectionSource
     document_hash: str
 
 
 class SemIngestPrivateDataDocumentSource(BaseModel):
-    kind: Literal["private_doc"] = "private_doc"
-    proj_key: str
-    index_key: str
+    source: ElasticProjectDataCollectionSource
     document_hash: str
 
 
 class SemIngestPrivateDataCollectionSource(BaseModel):
-    kind: Literal["private_coll"] = "private_coll"
-    proj_key: str
-    index_key: str
+    source: ElasticProjectDataCollectionSource
 
 
-SemIngestSource = Annotated[
-    Union[
-        SemIngestUrlSource,
-        SemIngestPublicDataDocumentSource,
-        SemIngestPrivateDataDocumentSource,
-        SemIngestPrivateDataCollectionSource,
-    ],
-    Field(discriminator="kind"),
+SemIngestSource = Union[
+    SemIngestUrlSource,
+    SemIngestPublicDataDocumentSource,
+    SemIngestPrivateDataDocumentSource,
+    SemIngestPrivateDataCollectionSource,
 ]
 
 
@@ -114,20 +104,20 @@ class DSApiDocuments:
             )
         elif isinstance(data_source, SemIngestPublicDataDocumentSource):
             api_src_data = _APISemanticIngestSourcePublicDataDocument(
-                elastic_id=data_source.elastic_id,
-                index_key=data_source.index_key,
+                elastic_id=data_source.source.elastic_id,
+                index_key=data_source.source.index_key,
                 document_hash=data_source.document_hash,
             )
         elif isinstance(data_source, SemIngestPrivateDataDocumentSource):
             api_src_data = _APISemanticIngestSourcePrivateDataDocument(
-                proj_key=data_source.proj_key,
-                index_key=data_source.index_key,
+                proj_key=data_source.source.proj_key,
+                index_key=data_source.source.index_key,
                 document_hash=data_source.document_hash,
             )
         elif isinstance(data_source, SemIngestPrivateDataCollectionSource):
             api_src_data = _APISemanticIngestSourcePrivateDataCollection(
-                proj_key=data_source.proj_key,
-                index_key=data_source.index_key,
+                proj_key=data_source.source.proj_key,
+                index_key=data_source.source.index_key,
             )
         else:
             raise RuntimeError("Unknown data source format for ingest_for_qa")

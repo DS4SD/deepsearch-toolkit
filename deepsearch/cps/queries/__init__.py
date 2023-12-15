@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional, Union
 
 from deepsearch.cps.client.components.elastic import ElasticSearchQuery
-from deepsearch.cps.client.components.projects import Project, QAGenAIResource
+from deepsearch.cps.client.components.projects import Project, SemanticBackendResource
 from deepsearch.cps.client.queries import Query, TaskCoordinates
 
 
@@ -94,7 +94,7 @@ def DocumentQuestionQuery(
         parameters={
             "question": question,
         },
-        coordinates=QAGenAIResource(proj_key=proj_key, index_key=index_key),
+        coordinates=SemanticBackendResource(proj_key=proj_key, index_key=index_key),
     )
     task.output("answer").output_as("answer")
     task.output("provenance").output_as("provenance")
