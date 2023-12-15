@@ -28,6 +28,7 @@ from deepsearch.cps.apis.public.api.knowledge_graphs_api import KnowledgeGraphsA
 from deepsearch.cps.apis.public.api.model_configurations_api import ModelConfigurationsApi
 from deepsearch.cps.apis.public.api.processing_model_api import ProcessingModelApi
 from deepsearch.cps.apis.public.api.project_api import ProjectApi
+from deepsearch.cps.apis.public.api.semantic_api import SemanticApi
 from deepsearch.cps.apis.public.api.system_api import SystemApi
 from deepsearch.cps.apis.public.api.tasks_api import TasksApi
 from deepsearch.cps.apis.public.api.uploads_api import UploadsApi
@@ -263,6 +264,7 @@ from deepsearch.cps.apis.public.models.run_data_flow_template_options1 import Ru
 from deepsearch.cps.apis.public.models.s3_coordinates import S3Coordinates
 from deepsearch.cps.apis.public.models.s3_coordinates_with_backup_key import S3CoordinatesWithBackupKey
 from deepsearch.cps.apis.public.models.s3_coordinates_with_backup_key_presigned import S3CoordinatesWithBackupKeyPresigned
+from deepsearch.cps.apis.public.models.semantic_ingest_request import SemanticIngestRequest
 from deepsearch.cps.apis.public.models.storage_summary_dc import StorageSummaryDC
 from deepsearch.cps.apis.public.models.storage_summary_kg import StorageSummaryKG
 from deepsearch.cps.apis.public.models.storage_summary_kg_categories_fraction import StorageSummaryKGCategoriesFraction

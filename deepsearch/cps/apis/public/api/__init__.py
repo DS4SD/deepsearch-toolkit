@@ -14,6 +14,7 @@ from deepsearch.cps.apis.public.api.knowledge_graphs_api import KnowledgeGraphsA
 from deepsearch.cps.apis.public.api.model_configurations_api import ModelConfigurationsApi
 from deepsearch.cps.apis.public.api.processing_model_api import ProcessingModelApi
 from deepsearch.cps.apis.public.api.project_api import ProjectApi
+from deepsearch.cps.apis.public.api.semantic_api import SemanticApi
 from deepsearch.cps.apis.public.api.system_api import SystemApi
 from deepsearch.cps.apis.public.api.tasks_api import TasksApi
 from deepsearch.cps.apis.public.api.uploads_api import UploadsApi
