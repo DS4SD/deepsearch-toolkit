@@ -23,10 +23,6 @@ if TYPE_CHECKING:
     from deepsearch.cps.client import CpsApi
 
 
-class SemIngestUrlSource(BaseModel):
-    url: str
-
-
 class SemIngestPublicDataDocumentSource(BaseModel):
     source: ElasticDataCollectionSource
     document_hash: str
@@ -42,7 +38,6 @@ class SemIngestPrivateDataCollectionSource(BaseModel):
 
 
 SemIngestSource = Union[
-    SemIngestUrlSource,
     SemIngestPublicDataDocumentSource,
     SemIngestPrivateDataDocumentSource,
     SemIngestPrivateDataCollectionSource,
@@ -90,7 +85,7 @@ class DSApiDocuments:
         self.api = api
         self.semantic_api = sw_client.SemanticApi(self.api.client.swagger_client)
 
-    def ingest_for_qa(
+    def semantic_ingest(
         self,
         project: Union[Project, str],
         data_source: SemIngestSource,
@@ -98,11 +93,7 @@ class DSApiDocuments:
 
         proj_key = project.key if isinstance(project, Project) else project
         api_src_data: _APISemanticIngestSourceType
-        if isinstance(data_source, SemIngestUrlSource):
-            api_src_data = _APISemanticIngestSourceUrl(
-                url=data_source.url,
-            )
-        elif isinstance(data_source, SemIngestPublicDataDocumentSource):
+        if isinstance(data_source, SemIngestPublicDataDocumentSource):
             api_src_data = _APISemanticIngestSourcePublicDataDocument(
                 elastic_id=data_source.source.elastic_id,
                 index_key=data_source.source.index_key,
