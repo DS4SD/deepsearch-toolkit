@@ -9,6 +9,9 @@ from pydantic.v1 import BaseModel, Field
 from typing_extensions import Annotated
 
 from deepsearch.cps.apis import public as sw_client
+from deepsearch.cps.apis.public.models.semantic_ingest_request import (
+    SemanticIngestRequest,
+)
 from deepsearch.cps.apis.public.models.task import Task
 from deepsearch.cps.client.components.data_indices import (
     ElasticProjectDataCollectionSource,
@@ -92,10 +95,6 @@ _APISemanticIngestSourceType = Annotated[
 ]
 
 
-class _APISemanticIngestSourceWrapper(BaseModel):
-    source: _APISemanticIngestSourceType
-
-
 class DSApiDocuments:
     def __init__(self, api: CpsApi) -> None:
         self.api = api
@@ -135,7 +134,7 @@ class DSApiDocuments:
 
         task: Task = self.semantic_api.ingest(
             proj_key=proj_key,
-            body=_APISemanticIngestSourceWrapper(source=api_src_data).dict(),
+            body=SemanticIngestRequest(source=api_src_data.dict()),
         )
 
         return task
