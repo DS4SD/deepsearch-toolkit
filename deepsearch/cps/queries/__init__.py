@@ -84,7 +84,7 @@ def CorpusQuestionQuery(
     index_key: str,
 ) -> Query:
 
-    return _get_document_query(
+    return _get_semantic_query(
         question=question,
         project=project,
         index_key=index_key,
@@ -99,7 +99,7 @@ def DocumentQuestionQuery(
     index_key: Optional[str] = None,  # set in case of private collection
 ) -> Query:
 
-    return _get_document_query(
+    return _get_semantic_query(
         question=question,
         document_hash=document_hash,
         project=project,
@@ -107,7 +107,7 @@ def DocumentQuestionQuery(
     )
 
 
-def _get_document_query(
+def _get_semantic_query(
     question: str,
     *,
     document_hash: Optional[str] = None,
