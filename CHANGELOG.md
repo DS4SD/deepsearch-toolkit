@@ -1,3 +1,9 @@
+## [v0.35.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.35.0) - 2023-12-18
+
+### Feature
+
+* Expose new semantic backend, add corpus RAG ([#148](https://github.com/DS4SD/deepsearch-toolkit/issues/148)) ([`5a2bbd8`](https://github.com/DS4SD/deepsearch-toolkit/commit/5a2bbd89a9f4777d74bca32ff45eb0668ffe9433))
+
 ## [v0.34.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.34.0) - 2023-12-11
 
 ### Chore
