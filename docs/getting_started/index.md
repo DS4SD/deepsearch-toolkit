@@ -1,31 +1,12 @@
-### Get your credentials
+### Set up your profile
 
-After registering with [Deep Search](https://ds4sd.github.io/), you can obtain your authentication data by clicking on "API" in the top-right corner. Your credentials consist of your `User name` and your `API key`.
+After logging in to the Deep Search UI, you can set up your profile as shown below:
+
+1. click on the "Toolkit / API" icon on the top-right corner
+2. from the "Toolkit" section, copy the command and run on your terminal
+3. when prompted for the API key, copy it from the "HTTP" section
 
 ![Deep Search Authentication Info](../images/deepsearch-auth-info.png)
-
-
----
-### Set up a profile
-
-=== "CLI"
-    Set up a [profile][profiles] using `deepsearch profile config`.
-    In its basic form it looks like this:
-    <div class="termy">
-
-    ```console
-    $ deepsearch profile config
-    Host: https://ds.example.com  # the Deep Search instance you are using
-    Username: name@example.com    # your username
-    Api key: (hidden)             # your API key
-    ```
-
-    </div>
-
-    By providing a profile name (via option `--profile-name`) you can configure multiple
-    different profiles, which you can then easily switch between and manage.
-
-    For details, check [Profiles][profiles].
 
 ### Validate the setup
 
