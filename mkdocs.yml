@@ -60,7 +60,7 @@ nav:
       - Knowledge graphs: guide/kgs.md
       - APIs: guide/apis.md
       - Plugin system: guide/cli_plugins.md
-  - Example gallery: gallery/index.md
+  - Example gallery: "https://github.com/DS4SD/deepsearch-examples"
   - API reference:
       - Toolkit reference: api-reference.md
       - OpenAPI:
