@@ -20,7 +20,7 @@ The Toolkit provides easy-to-use functionalities for several common processes su
 [Deep Search](https://ds4sd.github.io/){ .md-button .md-button--primary }
 [Github](https://github.com/ds4sd/){ .md-button .md-button--primary }
 [Getting started](getting_started/index.md){ .md-button .md-button--primary }
-[User guide](guide/index.md){ .md-button .md-button--primary }
+[Examples](https://github.com/DS4SD/deepsearch-examples){ .md-button .md-button--primary }
 
 
 ## Install the Deep Search Toolkit
