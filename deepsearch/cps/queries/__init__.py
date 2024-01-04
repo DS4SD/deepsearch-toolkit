@@ -77,7 +77,63 @@ def DataQuery(
     return query
 
 
-def CorpusQuestionQuery(
+def CorpusRAGQuery(
+    question: str,
+    *,
+    project: Union[str, Project],
+    index_key: str,
+) -> Query:
+
+    return _get_rag_query(
+        question=question,
+        project=project,
+        index_key=index_key,
+    )
+
+
+def DocumentRAGQuery(
+    question: str,
+    *,
+    document_hash: str,
+    project: Union[str, Project],
+    index_key: Optional[str] = None,  # set in case of private collection
+) -> Query:
+
+    return _get_rag_query(
+        question=question,
+        document_hash=document_hash,
+        project=project,
+        index_key=index_key,
+    )
+
+
+def _get_rag_query(
+    question: str,
+    *,
+    document_hash: Optional[str] = None,
+    project: Union[str, Project],
+    index_key: Optional[str] = None,
+) -> Query:
+    proj_key = project.key if isinstance(project, Project) else project
+    idx_key = index_key or "__project__"
+
+    query = Query()
+    q_params = {"question": question}
+    if document_hash:
+        q_params["doc_id"] = document_hash
+    task = query.add(
+        task_id="QA",
+        kind_or_task="SemanticRag",
+        parameters=q_params,
+        coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
+    )
+    task.output("answer").output_as("answer")
+    task.output("provenance").output_as("provenance")
+
+    return query
+
+
+def CorpusSemanticQuery(
     question: str,
     *,
     project: Union[str, Project],
@@ -91,7 +147,7 @@ def CorpusQuestionQuery(
     )
 
 
-def DocumentQuestionQuery(
+def DocumentSemanticQuery(
     question: str,
     *,
     document_hash: str,
@@ -123,11 +179,10 @@ def _get_semantic_query(
         q_params["doc_id"] = document_hash
     task = query.add(
         task_id="QA",
-        kind_or_task="SemanticRag",
+        kind_or_task="SemanticRetrieval",
         parameters=q_params,
         coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
     )
-    task.output("answer").output_as("answer")
-    task.output("provenance").output_as("provenance")
+    task.output("contexts").output_as("contexts")
 
     return query
