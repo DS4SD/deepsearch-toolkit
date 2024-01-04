@@ -1,3 +1,13 @@
+## [v0.36.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.36.0) - 2024-01-04
+
+### Feature
+
+* Add semantic retrieval ([#151](https://github.com/DS4SD/deepsearch-toolkit/issues/151)) ([`ebbb396`](https://github.com/DS4SD/deepsearch-toolkit/commit/ebbb39620e3392bb6ee0ec03735f6dfe21e29d28))
+
+### Documentation
+
+* Update getting-started guide ([#149](https://github.com/DS4SD/deepsearch-toolkit/issues/149)) ([`277448a`](https://github.com/DS4SD/deepsearch-toolkit/commit/277448a7a03b62ed88bd558b4128ade22126fb5d))
+
 ## [v0.35.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.35.0) - 2023-12-18
 
 ### Feature
