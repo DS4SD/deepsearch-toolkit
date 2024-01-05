@@ -5,64 +5,72 @@
 [![License MIT](https://img.shields.io/github/license/ds4sd/deepsearch-toolkit)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Docs](https://img.shields.io/badge/website-live-brightgreen)](https://ds4sd.github.io/deepsearch-toolkit/)
+[![Downloads](https://static.pepy.tech/badge/deepsearch-toolkit/month)](https://pepy.tech/project/deepsearch-toolkit)
 
 *Interact with the Deep Search platform for new knowledge explorations and discoveries*
 
 The Deep Search Toolkit is a Python SDK and CLI allowing users to interact with the Deep Search platform.
-The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
+The Toolkit provides easy-to-use features for several common document workflows such as conversion, graph creation, and querying, including semantic retrieval and RAG.
 
+[Deep Search :octicons-link-external-16:](https://ds4sd.github.io/){ .md-button .md-button--primary }
+[Deep Search GitHub :octicons-link-external-16:](https://github.com/ds4sd/){ .md-button }
+[Examples :octicons-link-external-16:](https://github.com/DS4SD/deepsearch-examples){ .md-button }
 
-[Learn about IBM Deep Search :octicons-link-external-16:](https://ds4sd.github.io/){ .md-button }
+## Getting Started
 
+### Install
 
-## Quick Links
+=== "pip"
 
-[Deep Search](https://ds4sd.github.io/){ .md-button .md-button--primary }
-[Github](https://github.com/ds4sd/){ .md-button .md-button--primary }
-[Getting started](getting_started/index.md){ .md-button .md-button--primary }
-[Examples](https://github.com/DS4SD/deepsearch-examples){ .md-button .md-button--primary }
+    ```shell
+    pip install deepsearch-toolkit
+    ```
 
+=== "pipx"
 
-## Install the Deep Search Toolkit
+    ```shell
+    pipx install deepsearch-toolkit
+    ```
 
-The Deep Search Toolkit is available as a [PyPI package](https://pypi.org/project/deepsearch-toolkit/).
-It can be installed using the standard Python package managers like `pip`, `poetry`, etc.
+=== "poetry"
 
-### Requirements
+    ```shell
+    poetry add deepsearch-toolkit
+    ```
 
-Python 3.8+
+### Set up your Profile
 
-### Install using pip
+After logging in to Deep Search, you can set up your profile as shown below:
 
-<div class="termy">
+1. click on the *Toolkit / API* icon on the top-right corner
+2. from the *Toolkit* section, copy the command and run on your terminal
+3. when prompted for the API key, copy it from the *HTTP* section and complete the setup
 
-```console
-$ pip install deepsearch-toolkit
+![Deep Search Authentication Info](../images/deepsearch-auth-info.png)
 
----> 100%
-```
+To quickly check your profile setup, run the following — your projects should be displayed:
 
-</div>
+=== "CLI"
 
+    ```shell
+    deepsearch cps projects list
+    ```
 
-### Start using the toolkit
+=== "Python"
 
+    ```python
+    import deepsearch as ds
+    api = ds.CpsApi.from_env()
+    print([p.name for p in api.projects.list()])
+    ```
 
-<div class="termy">
+!!! info "Multi-profile support"
 
-```console
-// Set up a profile, see <a href="./guide/configuration#profiles">profiles</a>.
-$ deepsearch profile config
-...
+    You can set up multiple profiles, e.g. for different deployments. For details on managing profiles, check
+    [Profiles](./guide/configuration.md#profiles).
 
-// Convert a document
-// for more details, see <a href="https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc/">document conversion</a>.
-$ deepsearch documents convert -p 1234567890abcdefghijklmnopqrstvwyz123456 -u https://arxiv.org/pdf/2206.00785.pdf
-Submitting input:     : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.52s/it]
-Converting input:     : 100%|██████████████████████████████| 1/1 [00:33<00:00, 33.80s/it]
-Downloading result:   : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.11s/it]
-Total online documents             1
-Successfully converted documents   1
-```
+### Start Using the Toolkit
 
-</div>
+Check out [Deep Search Examples :octicons-link-external-16:](https://github.com/DS4SD/deepsearch-examples) for
+interactive notebooks showcasing various common usage scenarios and find inspiration on
+how to make the most out of your own documents.

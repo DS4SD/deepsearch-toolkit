@@ -11,7 +11,11 @@ The Toolkit provides the capability of easily interacting with different Deep Se
 instances through the use of *profiles*. A user may define multiple profiles, identified
 by profile name, and can easily switch between them.
 
-### Overview
+### Profile Setup
+
+To configure your Deep Search profile, check out [Set up your Profile](../index.md#set-up-your-profile).
+
+### Command Overview
 
 For an overview of the profile management commands check `deepsearch profile --help`:
 ```console
@@ -32,24 +36,6 @@ $ deepsearch profile --help
 │ use            Activate a profile.                             │
 ╰────────────────────────────────────────────────────────────────╯
 ```
-
-### Profile setup
-
-To set up a profile use `deepsearch profile config`, providing options as needed (for a
-full reference check `deepsearch profile config --help`).
-
-Here is a basic invocation example:
-
-```console
-$ deepsearch profile config
-Host: https://deepsearch-experience.res.ibm.com
-Username: name@example.com
-Api key:
-```
-
-!!! note
-    If you had used the meanwhile deprecated `deepsearch login` command to set up a
-    config file in the default location, that will automatically be migrated to a profile.
 
 ### Usage
 
@@ -121,7 +107,7 @@ print([p.name for p in api.projects.list()])
 # -> outputs projects corresponding to provided settings
 ```
 
-## Environment variables
+## Environment Variables
 
 Under the hood, the Toolkit leverages [Pydantic Settings with dotenv
 support][pydantic_settings], so configuration settings can be easily overriden via

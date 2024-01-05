@@ -5,75 +5,32 @@
 [![License MIT](https://img.shields.io/github/license/ds4sd/deepsearch-toolkit)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Docs](https://img.shields.io/badge/website-live-brightgreen)](https://ds4sd.github.io/deepsearch-toolkit/)
-[![Downloads](https://static.pepy.tech/badge/deepsearch-toolkit)](https://pepy.tech/project/deepsearch-toolkit)
+[![Downloads](https://static.pepy.tech/badge/deepsearch-toolkit/month)](https://pepy.tech/project/deepsearch-toolkit)
 
 
 *Interact with the Deep Search platform for new knowledge explorations and discoveries*
 
 
-The Deep Search Toolkit is a Python SDK and CLI allowing users to interact with the Deep Search platform.
-The Toolkit provides easy-to-use functionalities for several common processes such as document conversion, graph creation and querying.
-
-
-[Learn about IBM Deep Search](https://ds4sd.github.io/)
+The Deep Search Toolkit is a Python SDK and CLI allowing users to interact with the [Deep Search](https://ds4sd.github.io) platform.
+The Toolkit provides easy-to-use features for several common document workflows such as conversion, graph creation, and querying, including semantic retrieval and RAG.
 
 
 ## Quick links
 
-- [Documentation](https://ds4sd.github.io/deepsearch-toolkit)
+- [Deep Search](https://ds4sd.github.io)
+- [Deep Search Toolkit](https://ds4sd.github.io/deepsearch-toolkit)
 - [Deep Search Examples](https://github.com/ds4sd/deepsearch-examples)
 
 
 ## Install
 
-To set up, just install `deepsearch-toolkit` with your packaging tool.
-
-With [`poetry`](https://python-poetry.org):
-```console
-poetry add deepsearch-toolkit
-```
-
-With `pip`:
-```console
+```shell
 pip install deepsearch-toolkit
 ```
 
-### Extras
-Optional functionality can be installed as package "extras". To install all extras, use
-`deepsearch-toolkit[all]` with your packaging tool.
+## Getting started
 
-### Install as toolkit developer
-If you are a Deep Search Toolkit developer, set up as follows:
-```console
-poetry install --all-extras
-```
-
-### Requirements
-
-Python 3.8+
-
-## Start using the toolkit
-
-### Set up a profile
-For details, check [Profiles](https://ds4sd.github.io/deepsearch-toolkit/guide/configuration#profiles).
-```console
-deepsearch profile config
-```
-
-### Convert a document
-For details, check [Document conversion](https://ds4sd.github.io/deepsearch-toolkit/guide/convert_doc).
-```console
-deepsearch documents convert -p 1234567890abcdefghijklmnopqrstvwyz123456 -u https://arxiv.org/pdf/2206.00785.pdf
-```
-
-The output should look like:
-```
-Submitting input:     : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.52s/it]
-Converting input:     : 100%|██████████████████████████████| 1/1 [00:33<00:00, 33.80s/it]
-Downloading result:   : 100%|██████████████████████████████| 1/1 [00:01<00:00,  1.11s/it]
-Total online documents             1
-Successfully converted documents   1
-```
+Check out [Getting started](https://ds4sd.github.io/deepsearch-toolkit/#getting-started).
 
 
 ## Get help and support

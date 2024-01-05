@@ -1,4 +1,4 @@
-# User guides
+# User guide
 
 ## Configuration
 
