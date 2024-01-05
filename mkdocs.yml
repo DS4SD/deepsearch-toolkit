@@ -50,7 +50,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Getting started: getting_started/index.md
+  - Examples [↗]: "https://github.com/DS4SD/deepsearch-examples"
   - User guide:
       - "guide/index.md"
       - Configuration: guide/configuration.md
@@ -60,7 +60,6 @@ nav:
       - Knowledge graphs: guide/kgs.md
       - APIs: guide/apis.md
       - Plugin system: guide/cli_plugins.md
-  - Example gallery: "https://github.com/DS4SD/deepsearch-examples"
   - API reference:
       - Toolkit reference: api-reference.md
       - OpenAPI:
@@ -69,7 +68,7 @@ nav:
       - CLI reference: cli-reference.md
 
 # Copyright
-copyright: Copyright &copy; 2023 <strong>IBM</strong> Research Europe – Deep Search team
+copyright: Copyright &copy; 2024 <strong>IBM</strong> Research Europe – Deep Search team
 
 # Customization
 extra:
