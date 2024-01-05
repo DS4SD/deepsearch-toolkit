@@ -46,7 +46,7 @@ After logging in to Deep Search, you can set up your profile as shown below:
 2. from the *Toolkit* section, copy the command and run on your terminal
 3. when prompted for the API key, copy it from the *HTTP* section and complete the setup
 
-![Deep Search Authentication Info](../images/deepsearch-auth-info.png)
+![Deep Search Authentication Info](./images/deepsearch-auth-info.png)
 
 To quickly check your profile setup, run the following — your projects should be displayed:
 
