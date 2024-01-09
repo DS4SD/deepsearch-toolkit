@@ -49,7 +49,7 @@ def assign_user(
             role=role,
         )
     else:
-        print("Project not found")
+        typer.echo("Project not found")
         raise typer.Exit(code=1)
 
 
@@ -63,7 +63,7 @@ def remove(
     if project is not None:
         api.projects.remove(project=project)
     else:
-        print("Project not found")
+        typer.echo("Project not found")
         raise typer.Exit(code=1)
 
 
