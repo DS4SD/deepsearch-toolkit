@@ -1,3 +1,13 @@
+## [v0.36.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.36.1) - 2024-01-10
+
+### Fix
+
+* Add table data check to Markdown export ([#155](https://github.com/DS4SD/deepsearch-toolkit/issues/155)) ([`6f30987`](https://github.com/DS4SD/deepsearch-toolkit/commit/6f309871292fda75e49e983cd5730dcc931b5082))
+
+### Documentation
+
+* Refactor docs and README ([#153](https://github.com/DS4SD/deepsearch-toolkit/issues/153)) ([`0a7cb87`](https://github.com/DS4SD/deepsearch-toolkit/commit/0a7cb87937e20adf56bded8a4d29f04fff6c6bb8))
+
 ## [v0.36.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.36.0) - 2024-01-04
 
 ### Feature
