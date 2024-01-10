@@ -49,8 +49,7 @@ def export_to_markdown(document: Dict[str, Any]) -> str:
             else:
                 markdown_text += f"{text}\n\n"
 
-        elif item_type in ("table"):
-
+        elif item_type in ("table") and item.get("data", []):
             table = []
             for row in item["data"]:
 
