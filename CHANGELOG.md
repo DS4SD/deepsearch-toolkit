@@ -1,3 +1,9 @@
+## [v0.37.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.37.0) - 2024-01-11
+
+### Feature
+
+* Upload html page urls ([#156](https://github.com/DS4SD/deepsearch-toolkit/issues/156)) ([`c62d4e2`](https://github.com/DS4SD/deepsearch-toolkit/commit/c62d4e268485f5a0618a71a35e3f93048fb73b5d))
+
 ## [v0.36.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.36.1) - 2024-01-10
 
 ### Fix
