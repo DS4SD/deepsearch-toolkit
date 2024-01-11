@@ -135,7 +135,7 @@ class CpsApiDataIndices:
         )
         return task
 
-    def print_html_and_convert(
+    def convert_from_page_urls(
         self,
         coords: ElasticProjectDataCollectionSource,
         urls: List[PageUrl],
