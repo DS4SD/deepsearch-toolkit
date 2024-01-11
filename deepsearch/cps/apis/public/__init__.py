@@ -138,6 +138,7 @@ from deepsearch.cps.apis.public.models.data_flow_template_list_item import DataF
 from deepsearch.cps.apis.public.models.data_flow_template_variable import DataFlowTemplateVariable
 from deepsearch.cps.apis.public.models.data_flow_topology_options import DataFlowTopologyOptions
 from deepsearch.cps.apis.public.models.data_index_upload_file_source import DataIndexUploadFileSource
+from deepsearch.cps.apis.public.models.data_index_upload_file_source1 import DataIndexUploadFileSource1
 from deepsearch.cps.apis.public.models.dictionary import Dictionary
 from deepsearch.cps.apis.public.models.dictionary_clone_result import DictionaryCloneResult
 from deepsearch.cps.apis.public.models.dictionary_collection import DictionaryCollection
