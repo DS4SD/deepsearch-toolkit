@@ -22,6 +22,12 @@ if TYPE_CHECKING:
     from deepsearch.cps.client import CpsApi
 
 
+class PageUrl(BaseModel):
+    url: str
+    filename: Optional[str] = None
+    meta: dict[str, Any] = {}
+
+
 class CpsApiDataIndices:
     def __init__(self, api: CpsApi) -> None:
         self.api = api
@@ -126,6 +132,21 @@ class CpsApiDataIndices:
         """
         task: Task = self.sw_api.ccs_convert_upload_file_project_data_index(
             proj_key=coords.proj_key, index_key=coords.index_key, body=body
+        )
+        return task
+
+    def print_html_and_convert(
+        self,
+        coords: ElasticProjectDataCollectionSource,
+        urls: List[PageUrl],
+    ) -> Task:
+        """
+        Call api for printing HTML pages to PDF and converting them to a project's data index document.
+        """
+        task: Task = self.sw_api.html_print_convert_upload(
+            proj_key=coords.proj_key,
+            index_key=coords.index_key,
+            body={"urls": [item.dict() for item in urls]},
         )
         return task
 
