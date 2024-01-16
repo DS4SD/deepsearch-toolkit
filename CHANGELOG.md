@@ -1,3 +1,9 @@
+## [v0.37.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.37.1) - 2024-01-16
+
+### Fix
+
+* Disable number parsing in multi-type columns ([#157](https://github.com/DS4SD/deepsearch-toolkit/issues/157)) ([`667e7fc`](https://github.com/DS4SD/deepsearch-toolkit/commit/667e7fc84c675f2830d514be2968f50e1860b090))
+
 ## [v0.37.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.37.0) - 2024-01-11
 
 ### Feature
