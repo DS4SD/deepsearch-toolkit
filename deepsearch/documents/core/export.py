@@ -59,10 +59,17 @@ def export_to_markdown(document: Dict[str, Any]) -> str:
                 table.append(tmp)
 
             if len(table) > 1 and len(table[0]) > 0:
+                try:
+                    md_table = tabulate(table[1:], headers=table[0], tablefmt="github")
+                except ValueError:
+                    md_table = tabulate(
+                        table[1:],
+                        headers=table[0],
+                        tablefmt="github",
+                        disable_numparse=True,
+                    )
 
-                markdown_text += tabulate(
-                    table[1:], headers=table[0], tablefmt="github"
-                )
+                markdown_text += md_table
                 markdown_text += "\n\n"
 
     return markdown_text
