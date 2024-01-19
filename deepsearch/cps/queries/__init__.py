@@ -1,5 +1,8 @@
 from typing import Any, Dict, List, Optional, Union
 
+from pydantic.v1 import Field, validate_arguments
+from typing_extensions import Annotated
+
 from deepsearch.cps.client.components.elastic import ElasticSearchQuery
 from deepsearch.cps.client.components.projects import Project, SemanticBackendResource
 from deepsearch.cps.client.queries import Query, TaskCoordinates
@@ -77,17 +80,38 @@ def DataQuery(
     return query
 
 
+ConstrainedWeight = Annotated[
+    float, Field(strict=True, ge=0.0, le=1.0, multiple_of=0.1)
+]
+
+
 def CorpusRAGQuery(
     question: str,
     *,
     project: Union[str, Project],
     index_key: str,
+    retr_k: int = 10,
+    rerank: bool = False,
+    text_weight: ConstrainedWeight = 0.0,
 ) -> Query:
+    """Create a RAG query against a collection
 
-    return _get_rag_query(
+    Args:
+        question (str): the natural-language query
+        project (Union[str, Project]): project to use
+        index_key (str): index key of target private collection (must already be semantically indexed)
+        retr_k (int, optional): num of items to retrieve; defaults to 10
+        rerank (bool, optional): whether to rerank retrieval results; defaults to False
+        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+    """
+
+    return _create_rag_query(
         question=question,
         project=project,
         index_key=index_key,
+        retr_k=retr_k,
+        rerank=rerank,
+        text_weight=text_weight,
     )
 
 
@@ -96,29 +120,58 @@ def DocumentRAGQuery(
     *,
     document_hash: str,
     project: Union[str, Project],
-    index_key: Optional[str] = None,  # set in case of private collection
+    index_key: Optional[str] = None,
+    retr_k: int = 10,
+    rerank: bool = False,
+    text_weight: ConstrainedWeight = 0.0,
 ) -> Query:
+    """Create a RAG query against a specific document
 
-    return _get_rag_query(
+    Args:
+        question (str): the natural-language query
+        document_hash (str): hash of target document
+        project (Union[str, Project]): project to use
+        index_key (str, optional): index key of target private collection (must already be semantically indexed) in case doc within one; defaults to None (doc must already be semantically indexed)
+        retr_k (int, optional): num of items to retrieve; defaults to 10
+        rerank (bool, optional): whether to rerank retrieval results; defaults to False
+        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+    """
+
+    return _create_rag_query(
         question=question,
         document_hash=document_hash,
         project=project,
         index_key=index_key,
+        retr_k=retr_k,
+        rerank=rerank,
+        text_weight=text_weight,
     )
 
 
-def _get_rag_query(
+@validate_arguments
+def _create_rag_query(
     question: str,
     *,
     document_hash: Optional[str] = None,
     project: Union[str, Project],
-    index_key: Optional[str] = None,
+    index_key: Optional[str],
+    retr_k: int,
+    rerank: bool,
+    text_weight: ConstrainedWeight,
 ) -> Query:
     proj_key = project.key if isinstance(project, Project) else project
     idx_key = index_key or "__project__"
 
     query = Query()
-    q_params = {"question": question}
+
+    hybrid_search_text_weight = text_weight or None
+
+    q_params = {
+        "question": question,
+        "retr_k": retr_k,
+        "use_reranker": rerank,
+        "hybrid_search_text_weight": hybrid_search_text_weight,
+    }
     if document_hash:
         q_params["doc_id"] = document_hash
     task = query.add(
@@ -138,12 +191,28 @@ def CorpusSemanticQuery(
     *,
     project: Union[str, Project],
     index_key: str,
+    retr_k: int = 10,
+    rerank: bool = False,
+    text_weight: ConstrainedWeight = 0.0,
 ) -> Query:
+    """Create a semantic retrieval query against a collection
 
-    return _get_semantic_query(
+    Args:
+        question (str): the natural-language query
+        project (Union[str, Project]): project to use
+        index_key (str): index key of target private collection (must already be semantically indexed)
+        retr_k (int, optional): num of items to retrieve; defaults to 10
+        rerank (bool, optional): whether to rerank retrieval results; defaults to False
+        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+    """
+
+    return _create_semantic_query(
         question=question,
         project=project,
         index_key=index_key,
+        retr_k=retr_k,
+        rerank=rerank,
+        text_weight=text_weight,
     )
 
 
@@ -152,29 +221,58 @@ def DocumentSemanticQuery(
     *,
     document_hash: str,
     project: Union[str, Project],
-    index_key: Optional[str] = None,  # set in case of private collection
+    index_key: Optional[str] = None,
+    retr_k: int = 10,
+    rerank: bool = False,
+    text_weight: ConstrainedWeight = 0.0,
 ) -> Query:
+    """Create a semantic retrieval query against a specific document
 
-    return _get_semantic_query(
+    Args:
+        question (str): the natural-language query
+        document_hash (str): hash of target document
+        project (Union[str, Project]): project to use
+        index_key (str, optional): index key of target private collection (must already be semantically indexed) in case doc within one; defaults to None (doc must already be semantically indexed)
+        retr_k (int, optional): num of items to retrieve; defaults to 10
+        rerank (bool, optional): whether to rerank retrieval results; defaults to False
+        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+    """
+
+    return _create_semantic_query(
         question=question,
         document_hash=document_hash,
         project=project,
         index_key=index_key,
+        retr_k=retr_k,
+        rerank=rerank,
+        text_weight=text_weight,
     )
 
 
-def _get_semantic_query(
+@validate_arguments
+def _create_semantic_query(
     question: str,
     *,
     document_hash: Optional[str] = None,
     project: Union[str, Project],
-    index_key: Optional[str] = None,
+    index_key: Optional[str],
+    retr_k: int,
+    rerank: bool,
+    text_weight: ConstrainedWeight,
 ) -> Query:
     proj_key = project.key if isinstance(project, Project) else project
     idx_key = index_key or "__project__"
 
     query = Query()
-    q_params = {"question": question}
+
+    hybrid_search_text_weight = text_weight or None
+
+    q_params = {
+        "question": question,
+        "retr_k": retr_k,
+        "use_reranker": rerank,
+        "hybrid_search_text_weight": hybrid_search_text_weight,
+    }
     if document_hash:
         q_params["doc_id"] = document_hash
     task = query.add(
