@@ -33,9 +33,9 @@ mkdir -p .generated/
 
 echo "Generating client for CPS"
 
-docker run --rm \
+podman run --rm \
     -v "$(pwd):/local" \
-    --user="$(id -u):$(id -g)" \
+    --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
     ${generator_image} generate \
         -i "/local/tools/swagger-client-generator/swagger-cps.json" \
         -g python \
@@ -44,9 +44,9 @@ docker run --rm \
 
 echo "Generating client for the User API"
 
-docker run --rm \
+podman run --rm \
     -v "$(pwd):/local" \
-    --user="$(id -u):$(id -g)" \
+    --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
     ${generator_image} generate \
         -i "/local/tools/swagger-client-generator/swagger-user.json" \
         -g python \
@@ -56,9 +56,9 @@ docker run --rm \
 # echo "Generating client for the CPS KG API"
 # echo "Currently disabled: TODO FIX API Specs"
 
-# # docker run --rm \
+# # podman run --rm \
 # #     -v "$(pwd):/local" \
-# #     --user="$(id -u):$(id -g)" \
+# #     --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
 # #     ${generator_image} generate \
 # #         -i "/local/tools/swagger-client-generator/swagger-cps-kg.json" \
 # #         -g python \
@@ -71,9 +71,9 @@ docker run --rm \
 # echo "Generating client for the KG Query API"
 # echo "Disabled since it generated wrong specs. It won't be updated."
 
-# # docker run --rm \
+# # podman run --rm \
 # #     -v "$(pwd):/local" \
-# #     --user="$(id -u):$(id -g)" \
+# #     --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
 # #     ${generator_image} generate \
 # #         -i "/local/tools/swagger-client-generator/swagger-kg-query.json" \
 # #         -g python \
@@ -85,9 +85,9 @@ docker run --rm \
 # echo "Generating client for the KG Create API"
 # echo "Disabled since it won't be updated."
 
-# # docker run --rm \
+# # podman run --rm \
 # #     -v "$(pwd):/local" \
-# #     --user="$(id -u):$(id -g)" \
+# #     --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
 # #     ${generator_image} generate \
 # #         -i "/local/tools/swagger-client-generator/swagger-kg-create.json" \
 # #         -g python \

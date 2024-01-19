@@ -142,26 +142,8 @@ poetry add NAME
 
 ## Updating the Generated Swagger Client
 
-**Note:** This requires Docker.
-
-To update the Swagger Client with the new API specifications, run:
-
-```bash
-tools/swagger-client-generator <URL to the DS>
-```
-
-Example:
-
-```bash
-tools/swagger-client-generator.sh https://DEEPSEARCH_HOST
-```
-
-If you don't want to download the Swagger Specification, and just want to use the local files in `tools/swagger-client-generator`, run:
-
-```bash
-tools/swagger-client-generator.sh .
-```
-
+To update the Swagger Client with the new API specifications, check out the
+[generator tool README](https://github.com/DS4SD/deepsearch-toolkit/blob/main/tools/swagger-client-generator/README.md).
 
 ## Coding style guidelines
 
