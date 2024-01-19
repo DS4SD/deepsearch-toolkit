@@ -92,7 +92,7 @@ def CorpusRAGQuery(
     index_key: str,
     retr_k: int = 10,
     rerank: bool = False,
-    text_weight: ConstrainedWeight = 0.0,
+    text_weight: ConstrainedWeight = 0.1,
 ) -> Query:
     """Create a RAG query against a collection
 
@@ -102,7 +102,7 @@ def CorpusRAGQuery(
         index_key (str): index key of target private collection (must already be semantically indexed)
         retr_k (int, optional): num of items to retrieve; defaults to 10
         rerank (bool, optional): whether to rerank retrieval results; defaults to False
-        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
     """
 
     return _create_rag_query(
@@ -123,7 +123,7 @@ def DocumentRAGQuery(
     index_key: Optional[str] = None,
     retr_k: int = 10,
     rerank: bool = False,
-    text_weight: ConstrainedWeight = 0.0,
+    text_weight: ConstrainedWeight = 0.1,
 ) -> Query:
     """Create a RAG query against a specific document
 
@@ -134,7 +134,7 @@ def DocumentRAGQuery(
         index_key (str, optional): index key of target private collection (must already be semantically indexed) in case doc within one; defaults to None (doc must already be semantically indexed)
         retr_k (int, optional): num of items to retrieve; defaults to 10
         rerank (bool, optional): whether to rerank retrieval results; defaults to False
-        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
     """
 
     return _create_rag_query(
@@ -164,13 +164,11 @@ def _create_rag_query(
 
     query = Query()
 
-    hybrid_search_text_weight = text_weight or None
-
     q_params = {
         "question": question,
         "retr_k": retr_k,
         "use_reranker": rerank,
-        "hybrid_search_text_weight": hybrid_search_text_weight,
+        "hybrid_search_text_weight": text_weight,
     }
     if document_hash:
         q_params["doc_id"] = document_hash
@@ -193,7 +191,7 @@ def CorpusSemanticQuery(
     index_key: str,
     retr_k: int = 10,
     rerank: bool = False,
-    text_weight: ConstrainedWeight = 0.0,
+    text_weight: ConstrainedWeight = 0.1,
 ) -> Query:
     """Create a semantic retrieval query against a collection
 
@@ -203,7 +201,7 @@ def CorpusSemanticQuery(
         index_key (str): index key of target private collection (must already be semantically indexed)
         retr_k (int, optional): num of items to retrieve; defaults to 10
         rerank (bool, optional): whether to rerank retrieval results; defaults to False
-        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
     """
 
     return _create_semantic_query(
@@ -224,7 +222,7 @@ def DocumentSemanticQuery(
     index_key: Optional[str] = None,
     retr_k: int = 10,
     rerank: bool = False,
-    text_weight: ConstrainedWeight = 0.0,
+    text_weight: ConstrainedWeight = 0.1,
 ) -> Query:
     """Create a semantic retrieval query against a specific document
 
@@ -235,7 +233,7 @@ def DocumentSemanticQuery(
         index_key (str, optional): index key of target private collection (must already be semantically indexed) in case doc within one; defaults to None (doc must already be semantically indexed)
         retr_k (int, optional): num of items to retrieve; defaults to 10
         rerank (bool, optional): whether to rerank retrieval results; defaults to False
-        text_weight (ConstrainedWeight, optional): text weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.0 (i.e. semantic-only)
+        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
     """
 
     return _create_semantic_query(
@@ -265,13 +263,11 @@ def _create_semantic_query(
 
     query = Query()
 
-    hybrid_search_text_weight = text_weight or None
-
     q_params = {
         "question": question,
         "retr_k": retr_k,
         "use_reranker": rerank,
-        "hybrid_search_text_weight": hybrid_search_text_weight,
+        "hybrid_search_text_weight": text_weight,
     }
     if document_hash:
         q_params["doc_id"] = document_hash
