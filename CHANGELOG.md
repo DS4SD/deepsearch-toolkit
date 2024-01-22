@@ -1,3 +1,9 @@
+## [v0.38.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.38.0) - 2024-01-22
+
+### Feature
+
+* Expose sem. params, default to hybrid search ([#159](https://github.com/DS4SD/deepsearch-toolkit/issues/159)) ([`5fa0963`](https://github.com/DS4SD/deepsearch-toolkit/commit/5fa0963bc07956348a27df4a8b97b3118c357463))
+
 ## [v0.37.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.37.1) - 2024-01-16
 
 ### Fix
