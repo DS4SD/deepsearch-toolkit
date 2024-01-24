@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 class PageUrl(BaseModel):
     url: str
     filename: Optional[str] = None
-    meta: dict[str, Any] = {}
+    meta: Dict[str, Any] = {}
 
 
 class CpsApiDataIndices:
