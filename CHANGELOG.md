@@ -1,3 +1,9 @@
+## [v0.38.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.38.1) - 2024-01-24
+
+### Fix
+
+* Py38 compatibility ([#160](https://github.com/DS4SD/deepsearch-toolkit/issues/160)) ([`af32e11`](https://github.com/DS4SD/deepsearch-toolkit/commit/af32e118bd6a549830bf6e87e5dea2322d1718a9))
+
 ## [v0.38.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.38.0) - 2024-01-22
 
 ### Feature
