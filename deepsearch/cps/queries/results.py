@@ -17,7 +17,7 @@ class SearchResultItem(BaseModel):
     def patch_pos(cls, values):
         path_in_doc = values.get("path_in_doc")
         pos_in_doc = values.get("pos_in_doc")
-        if pos_in_doc and isinstance(pos_in_doc, int) and not path_in_doc:
+        if pos_in_doc is not None and isinstance(pos_in_doc, int) and not path_in_doc:
             values["path_in_doc"] = f"main-text.{pos_in_doc}"
         return values
 
