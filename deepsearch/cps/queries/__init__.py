@@ -178,8 +178,8 @@ def _create_rag_query(
         parameters=q_params,
         coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
     )
-    task.output("answer").output_as("answer")
-    task.output("provenance").output_as("provenance")
+    task.output("answers").output_as("answers")
+    task.output("retrieval").output_as("retrieval")
 
     return query
 
@@ -277,6 +277,6 @@ def _create_semantic_query(
         parameters=q_params,
         coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
     )
-    task.output("contexts").output_as("contexts")
+    task.output("items").output_as("items")
 
     return query
