@@ -1,3 +1,9 @@
+## [v0.39.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.39.0) - 2024-01-31
+
+### Feature
+
+* Expose search results to RAG, update types ([#161](https://github.com/DS4SD/deepsearch-toolkit/issues/161)) ([`49ec255`](https://github.com/DS4SD/deepsearch-toolkit/commit/49ec255eae8c9f9f33468fdca8c5c24d67bce700))
+
 ## [v0.38.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.38.1) - 2024-01-24
 
 ### Fix
