@@ -116,7 +116,7 @@ class ZipTarget(BaseModel):
 
     content_type: ZipPackageContentType = ZipPackageContentType.JSON
 
-    add_cells: bool = True
+    add_cells: bool = False
 
 
 class ElasticIndexCoordinates(BaseModel):
