@@ -1,3 +1,9 @@
+## [v0.39.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.39.1) - 2024-02-07
+
+### Fix
+
+* Align records type with API validation ([#163](https://github.com/DS4SD/deepsearch-toolkit/issues/163)) ([`8d0f7be`](https://github.com/DS4SD/deepsearch-toolkit/commit/8d0f7bea7b2ace4d19afa1437002d77b6cc72a9b))
+
 ## [v0.39.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.39.0) - 2024-01-31
 
 ### Feature
