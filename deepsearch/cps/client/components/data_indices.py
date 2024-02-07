@@ -66,7 +66,7 @@ class CpsApiDataIndices:
             description of data index
         type : string, OPTIONAL
             type of data index, default is "Document"
-            possible values: "Document", "DB Records", "Generic", "Experiment"
+            possible values: "Document", "DB Record", "Generic", "Experiment"
         schema_key : string, OPTIONAL
             schema of data index, default is "deepsearch_doc"
             possible values: "deepsearch-doc", "deepsearch-db", "generic"
@@ -77,7 +77,7 @@ class CpsApiDataIndices:
 
         if type == "Document":
             schema_key = "deepsearch-doc"
-        elif type == "DB Records":
+        elif type == "DB Record":
             schema_key = "deepsearch-db"
         elif type == "Generic":
             schema_key = "generic"
