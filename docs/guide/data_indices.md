@@ -34,7 +34,7 @@ In addition, it is possible to specify non-default `type` of data index. For mor
 | Type           | Description                          |
 | -------------- | ------------------------------------ |
 | `Document`     | (Default) Index containing documents uploaded as PDF and converted by the platform. |
-| `DB Records`   | Index containing data matching the DB records schema. This usually orginates from curated data collections, and exposes a schema which can be leveraged in the processing pipeline. |
+| `DB Record`   | Index containing data matching the DB records schema. This usually orginates from curated data collections, and exposes a schema which can be leveraged in the processing pipeline. |
 | `Generic`      | Generic type with the least requirements. |
 | `Experiment`   | Data coming from simulation experiments. |
 
