@@ -1,3 +1,9 @@
+## [v0.39.2](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.39.2) - 2024-02-09
+
+### Fix
+
+* Update dependencies ([#164](https://github.com/DS4SD/deepsearch-toolkit/issues/164)) ([`aaa9aff`](https://github.com/DS4SD/deepsearch-toolkit/commit/aaa9affa8a9d319d120ec54b981c82e44a871d95))
+
 ## [v0.39.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.39.1) - 2024-02-07
 
 ### Fix
