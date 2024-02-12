@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic.v1 import Field, validate_arguments
+from pydantic.v1 import BaseModel, Extra, Field, validate_arguments
 from typing_extensions import Annotated
 
 from deepsearch.cps.client.components.elastic import ElasticSearchQuery
@@ -85,6 +85,26 @@ ConstrainedWeight = Annotated[
 ]
 
 
+class _APISemanticRagParameters(BaseModel, extra=Extra.forbid):
+    doc_id: Optional[str] = None
+    question: str
+    retr_k: int = 10
+    use_reranker: bool = False
+    hybrid_search_text_weight: ConstrainedWeight = 0.1
+    model_id: Optional[str] = None
+    prompt_template: Optional[str] = None
+    gen_params: Optional[Dict[str, Any]] = None
+    gen_from_md: bool = True
+
+
+class _APISemanticRetrievalParameters(BaseModel):
+    doc_id: Optional[str] = None
+    question: str
+    retr_k: int = 10
+    use_reranker: bool = False
+    hybrid_search_text_weight: ConstrainedWeight = 0.1
+
+
 def CorpusRAGQuery(
     question: str,
     *,
@@ -93,6 +113,10 @@ def CorpusRAGQuery(
     retr_k: int = 10,
     rerank: bool = False,
     text_weight: ConstrainedWeight = 0.1,
+    model_id: Optional[str] = None,
+    prompt_template: Optional[str] = None,
+    gen_params: Optional[Dict[str, Any]] = None,
+    gen_from_wider_ctx: bool = True,
 ) -> Query:
     """Create a RAG query against a collection
 
@@ -103,15 +127,24 @@ def CorpusRAGQuery(
         retr_k (int, optional): num of items to retrieve; defaults to 10
         rerank (bool, optional): whether to rerank retrieval results; defaults to False
         text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
+        model_id (str, optional): the LLM to use for generation; defaults to None, i.e. determined by system
+        prompt_template (str, optional): the prompt template to use; defaults to None, i.e. determined by system
+        gen_params (dict, optional): the generation params to send to the Gen AI platforms; defaults to None, i.e. determined by system
+        gen_from_wider_ctx (bool): whether to try to generate based on wider context than indexed passage; defaults to True
     """
-
     return _create_rag_query(
-        question=question,
         project=project,
         index_key=index_key,
-        retr_k=retr_k,
-        rerank=rerank,
-        text_weight=text_weight,
+        params=_APISemanticRagParameters(
+            question=question,
+            retr_k=retr_k,
+            use_reranker=rerank,
+            hybrid_search_text_weight=text_weight,
+            model_id=model_id,
+            prompt_template=prompt_template,
+            gen_params=gen_params,
+            gen_from_md=gen_from_wider_ctx,
+        ),
     )
 
 
@@ -124,6 +157,10 @@ def DocumentRAGQuery(
     retr_k: int = 10,
     rerank: bool = False,
     text_weight: ConstrainedWeight = 0.1,
+    model_id: Optional[str] = None,
+    prompt_template: Optional[str] = None,
+    gen_params: Optional[Dict[str, Any]] = None,
+    gen_from_wider_ctx: bool = True,
 ) -> Query:
     """Create a RAG query against a specific document
 
@@ -135,47 +172,43 @@ def DocumentRAGQuery(
         retr_k (int, optional): num of items to retrieve; defaults to 10
         rerank (bool, optional): whether to rerank retrieval results; defaults to False
         text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
+        model_id (str, optional): the LLM to use for generation; defaults to None, i.e. determined by system
+        prompt_template (str, optional): the prompt template to use; defaults to None, i.e. determined by system
+        gen_params (dict, optional): the generation params to send to the Gen AI platforms; defaults to None, i.e. determined by system
+        gen_from_wider_ctx (bool): whether to try to generate based on wider context than indexed passage; defaults to True
     """
 
     return _create_rag_query(
-        question=question,
-        document_hash=document_hash,
         project=project,
         index_key=index_key,
-        retr_k=retr_k,
-        rerank=rerank,
-        text_weight=text_weight,
+        params=_APISemanticRagParameters(
+            doc_id=document_hash,
+            question=question,
+            retr_k=retr_k,
+            use_reranker=rerank,
+            hybrid_search_text_weight=text_weight,
+            model_id=model_id,
+            prompt_template=prompt_template,
+            gen_params=gen_params,
+            gen_from_md=gen_from_wider_ctx,
+        ),
     )
 
 
 @validate_arguments
 def _create_rag_query(
-    question: str,
-    *,
-    document_hash: Optional[str] = None,
     project: Union[str, Project],
     index_key: Optional[str],
-    retr_k: int,
-    rerank: bool,
-    text_weight: ConstrainedWeight,
+    params: _APISemanticRagParameters,
 ) -> Query:
     proj_key = project.key if isinstance(project, Project) else project
     idx_key = index_key or "__project__"
 
     query = Query()
-
-    q_params = {
-        "question": question,
-        "retr_k": retr_k,
-        "use_reranker": rerank,
-        "hybrid_search_text_weight": text_weight,
-    }
-    if document_hash:
-        q_params["doc_id"] = document_hash
     task = query.add(
         task_id="QA",
         kind_or_task="SemanticRag",
-        parameters=q_params,
+        parameters=params.dict(),
         coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
     )
     task.output("answers").output_as("answers")
@@ -205,12 +238,14 @@ def CorpusSemanticQuery(
     """
 
     return _create_semantic_query(
-        question=question,
         project=project,
         index_key=index_key,
-        retr_k=retr_k,
-        rerank=rerank,
-        text_weight=text_weight,
+        params=_APISemanticRetrievalParameters(
+            question=question,
+            retr_k=retr_k,
+            use_reranker=rerank,
+            hybrid_search_text_weight=text_weight,
+        ),
     )
 
 
@@ -237,44 +272,32 @@ def DocumentSemanticQuery(
     """
 
     return _create_semantic_query(
-        question=question,
-        document_hash=document_hash,
         project=project,
         index_key=index_key,
-        retr_k=retr_k,
-        rerank=rerank,
-        text_weight=text_weight,
+        params=_APISemanticRetrievalParameters(
+            doc_id=document_hash,
+            question=question,
+            retr_k=retr_k,
+            use_reranker=rerank,
+            hybrid_search_text_weight=text_weight,
+        ),
     )
 
 
 @validate_arguments
 def _create_semantic_query(
-    question: str,
-    *,
-    document_hash: Optional[str] = None,
     project: Union[str, Project],
     index_key: Optional[str],
-    retr_k: int,
-    rerank: bool,
-    text_weight: ConstrainedWeight,
+    params: _APISemanticRetrievalParameters,
 ) -> Query:
     proj_key = project.key if isinstance(project, Project) else project
     idx_key = index_key or "__project__"
 
     query = Query()
-
-    q_params = {
-        "question": question,
-        "retr_k": retr_k,
-        "use_reranker": rerank,
-        "hybrid_search_text_weight": text_weight,
-    }
-    if document_hash:
-        q_params["doc_id"] = document_hash
     task = query.add(
         task_id="QA",
         kind_or_task="SemanticRetrieval",
-        parameters=q_params,
+        parameters=params.dict(),
         coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
     )
     task.output("items").output_as("items")

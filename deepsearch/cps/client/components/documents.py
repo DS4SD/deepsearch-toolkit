@@ -9,6 +9,9 @@ from pydantic.v1 import BaseModel, Field
 from typing_extensions import Annotated
 
 from deepsearch.cps.apis import public as sw_client
+from deepsearch.cps.apis.public.models.semantic_ingest_req_params import (
+    SemanticIngestReqParams,
+)
 from deepsearch.cps.apis.public.models.semantic_ingest_request import (
     SemanticIngestRequest,
 )
@@ -89,6 +92,7 @@ class DSApiDocuments:
         self,
         project: Union[Project, str],
         data_source: SemIngestSource,
+        skip_ingested_docs: bool = True,
     ) -> Task:
 
         proj_key = project.key if isinstance(project, Project) else project
@@ -112,10 +116,15 @@ class DSApiDocuments:
             )
         else:
             raise RuntimeError("Unknown data source format for ingest_for_qa")
-
+        req_params = SemanticIngestReqParams(
+            skip_ingested_docs=skip_ingested_docs,
+        )
         task: Task = self.semantic_api.ingest(
             proj_key=proj_key,
-            body=SemanticIngestRequest(source=api_src_data.dict()),
+            body=SemanticIngestRequest(
+                source=api_src_data.dict(),
+                parameters=req_params.to_dict(),
+            ),
         )
 
         return task
