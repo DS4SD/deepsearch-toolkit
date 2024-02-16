@@ -1,10 +1,9 @@
-# SemanticIngestRequest
+# SemanticIngestReqParams
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**parameters** | [**SemanticIngestReqParams**](SemanticIngestReqParams.md) |  | 
-**source** | [**object**](.md) |  | 
+**skip_ingested_docs** | **bool** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
