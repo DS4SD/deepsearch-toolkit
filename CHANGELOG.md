@@ -1,3 +1,9 @@
+## [v0.40.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.40.0) - 2024-02-16
+
+### Feature
+
+* Expose gen AI params ([#165](https://github.com/DS4SD/deepsearch-toolkit/issues/165)) ([`dc3db56`](https://github.com/DS4SD/deepsearch-toolkit/commit/dc3db562ac566d8c0be0649a45aad481af80118d))
+
 ## [v0.39.2](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.39.2) - 2024-02-09
 
 ### Fix
