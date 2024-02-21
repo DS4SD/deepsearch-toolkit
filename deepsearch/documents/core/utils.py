@@ -278,7 +278,7 @@ def iterate_converted_files(result_dir: Path) -> Iterator[IteratedDocument]:
                 if not name.endswith(".json"):
                     continue
 
-                basename = name.rstrip(".json")
+                basename = Path(name).with_suffix(".json")
                 doc_jsondata = json.loads(archive.read(f"{basename}.json"))
                 yield IteratedDocument(
                     archive_path=output_file,
