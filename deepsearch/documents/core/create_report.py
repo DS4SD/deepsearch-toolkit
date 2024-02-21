@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, List, Union
 
 import requests
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from deepsearch.core.util.ccs_utils import get_ccs_project_key
 from deepsearch.cps.client.api import CpsApi

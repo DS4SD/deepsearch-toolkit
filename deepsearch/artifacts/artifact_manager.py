@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 import platformdirs
 import requests
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 DFLT_ARTFCT_INDEX_DIR = os.getenv("DEEPSEARCH_ARTIFACT_INDEX", default=os.getcwd())
 DFLT_ARTFCT_CACHE_DIR = os.getenv(

@@ -5,8 +5,7 @@ from pathlib import Path
 from typing import Any, List, Optional
 
 import requests
-import urllib3
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.apis.public.models.temporary_upload_file_result import (
@@ -19,7 +18,6 @@ from .common_routines import ERROR_MSG, progressbar
 from .models import ConversionSettings, ExportTarget, ZipTarget
 from .utils import URLNavigator, collect_all_local_files, download_url
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 logger = logging.getLogger(__name__)
 
 

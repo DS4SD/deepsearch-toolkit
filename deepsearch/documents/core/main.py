@@ -1,8 +1,6 @@
 from pathlib import Path
 from typing import List, Optional, Union
 
-import urllib3
-
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.input_process import (
     process_cos_input,
@@ -14,8 +12,6 @@ from deepsearch.documents.core.models import (
     ExportTarget,
     S3Coordinates,
 )
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def convert_documents(

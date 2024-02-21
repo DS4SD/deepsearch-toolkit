@@ -4,10 +4,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-import urllib3
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.data_indices import S3Coordinates

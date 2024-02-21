@@ -2,8 +2,6 @@ import os
 from pathlib import Path
 from typing import Any, List, Optional, Union
 
-import urllib3
-
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.convert import (
     download_converted_documents,
@@ -11,8 +9,6 @@ from deepsearch.documents.core.convert import (
 )
 from deepsearch.documents.core.create_report import get_multiple_reports
 from deepsearch.documents.core.models import S3Coordinates
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class DocumentConversionResult:

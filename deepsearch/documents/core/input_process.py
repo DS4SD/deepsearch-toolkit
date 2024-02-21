@@ -3,15 +3,8 @@ import tempfile
 from pathlib import Path
 from typing import List, Optional
 
-import urllib3
-
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.documents.core.results import DocumentConversionResult
-
-from .models import ConversionSettings, ExportTarget, S3Coordinates
-from .utils import batch_single_files
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from .convert import (
     check_status_running_tasks,
@@ -19,6 +12,8 @@ from .convert import (
     send_urls_for_conversion,
     submit_conversion_payload,
 )
+from .models import ConversionSettings, ExportTarget, S3Coordinates
+from .utils import batch_single_files
 
 
 def process_local_input(
