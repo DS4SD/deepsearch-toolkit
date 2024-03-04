@@ -1,3 +1,9 @@
+## [v0.41.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.41.0) - 2024-03-04
+
+### Feature
+
+* Enable control over chunking of URL lists ([#170](https://github.com/DS4SD/deepsearch-toolkit/issues/170)) ([`536666e`](https://github.com/DS4SD/deepsearch-toolkit/commit/536666e3ad6cb871939fb05751cf596cff2cebd8))
+
 ## [v0.40.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.40.0) - 2024-02-16
 
 ### Feature
