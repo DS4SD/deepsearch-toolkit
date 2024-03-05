@@ -1,3 +1,9 @@
+## [v0.42.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.42.0) - 2024-03-05
+
+### Feature
+
+* Add RAG exceptions ([#171](https://github.com/DS4SD/deepsearch-toolkit/issues/171)) ([`533e4c5`](https://github.com/DS4SD/deepsearch-toolkit/commit/533e4c5247e6073ed25ffee11a51a7d14b4b839f))
+
 ## [v0.41.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.41.0) - 2024-03-04
 
 ### Feature
