@@ -31,16 +31,37 @@ class RAGAnswerItem(BaseModel):
     grounding: RAGGroundingInfo
 
 
+class SemanticError(Exception):
+    pass
+
+
+class GenerationError(SemanticError):
+    def __init__(self, msg="", *args, **kwargs):
+        err_msg = "There was an error during generation"
+        if msg:
+            err_msg += f": {msg}"
+        super().__init__(err_msg, *args, **kwargs)
+
+
+class NoSearchResultsError(SemanticError):
+    def __init__(self, msg="Search returned no results", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
 class RAGResult(BaseModel):
     answers: List[RAGAnswerItem]
     search_result_items: List[SearchResultItem]
 
     @classmethod
-    def from_api_output(cls, data: RunQueryResult):
+    def from_api_output(cls, data: RunQueryResult, raise_on_error=True):
         answers: List[RAGAnswerItem] = []
         try:
             search_result_items = data.outputs["retrieval"]["items"]
+            if raise_on_error and len(search_result_items) == 0:
+                raise NoSearchResultsError()
             for answer_item in data.outputs["answers"]:
+                if raise_on_error and (gen_err := answer_item.get("gen_err")):
+                    raise GenerationError(gen_err)
                 answers.append(
                     RAGAnswerItem(
                         answer=answer_item["answer"],
@@ -64,9 +85,11 @@ class SearchResult(BaseModel):
     search_result_items: List[SearchResultItem]
 
     @classmethod
-    def from_api_output(cls, data: RunQueryResult):
+    def from_api_output(cls, data: RunQueryResult, raise_on_error=True):
         try:
             search_result_items = data.outputs["items"]
+            if raise_on_error and len(search_result_items) == 0:
+                raise NoSearchResultsError()
         except KeyError:
             raise ValueError("Unexpected input format.")
         return SearchResult(
