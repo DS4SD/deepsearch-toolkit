@@ -20,3 +20,17 @@ If you don't want to download the Swagger Specification, and just want to use th
 ```bash
 ./tools/swagger-client-generator/generate-client.sh .
 ```
+
+## Podman setup
+
+For mounting the user folder in Podman, make sure the machine was created with the option `-v $HOME:$HOME`.
+
+To re-initialize your default podman machine, you can run the following commands
+
+```sh
+podman machine stop podman-machine-default
+podman machine rm podman-machine-default
+
+podman machine init -v $HOME:$HOME
+podman machine start
+```
