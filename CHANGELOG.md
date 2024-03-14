@@ -1,3 +1,9 @@
+## [v0.43.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.43.0) - 2024-03-14
+
+### Feature
+
+* Generate sdk from new v2 api ([#173](https://github.com/DS4SD/deepsearch-toolkit/issues/173)) ([`0abbf7f`](https://github.com/DS4SD/deepsearch-toolkit/commit/0abbf7f18a86d576fba09ac7980978aae1aaf184))
+
 ## [v0.42.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.42.0) - 2024-03-05
 
 ### Feature
