@@ -38,6 +38,7 @@ class ProjectDataIndexWithStatus(object):
         'documents': 'float',
         'health': 'str',
         'name': 'str',
+        'provenance': 'str',
         'record_properties': 'object',
         'schema_key': 'str',
         'source': 'ProjectDataIndexSource',
@@ -52,6 +53,7 @@ class ProjectDataIndexWithStatus(object):
         'documents': 'documents',
         'health': 'health',
         'name': 'name',
+        'provenance': 'provenance',
         'record_properties': 'record_properties',
         'schema_key': 'schema_key',
         'source': 'source',
@@ -60,7 +62,7 @@ class ProjectDataIndexWithStatus(object):
         'view_of': 'view_of'
     }
 
-    def __init__(self, creation_date=None, description=None, documents=None, health=None, name=None, record_properties=None, schema_key=None, source=None, status=None, type=None, view_of=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, creation_date=None, description=None, documents=None, health=None, name=None, provenance=None, record_properties=None, schema_key=None, source=None, status=None, type=None, view_of=None, local_vars_configuration=None):  # noqa: E501
         """ProjectDataIndexWithStatus - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -71,6 +73,7 @@ class ProjectDataIndexWithStatus(object):
         self._documents = None
         self._health = None
         self._name = None
+        self._provenance = None
         self._record_properties = None
         self._schema_key = None
         self._source = None
@@ -84,6 +87,8 @@ class ProjectDataIndexWithStatus(object):
         self.documents = documents
         self.health = health
         self.name = name
+        if provenance is not None:
+            self.provenance = provenance
         if record_properties is not None:
             self.record_properties = record_properties
         if schema_key is not None:
@@ -208,6 +213,27 @@ class ProjectDataIndexWithStatus(object):
             raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
 
         self._name = name
+
+    @property
+    def provenance(self):
+        """Gets the provenance of this ProjectDataIndexWithStatus.  # noqa: E501
+
+
+        :return: The provenance of this ProjectDataIndexWithStatus.  # noqa: E501
+        :rtype: str
+        """
+        return self._provenance
+
+    @provenance.setter
+    def provenance(self, provenance):
+        """Sets the provenance of this ProjectDataIndexWithStatus.
+
+
+        :param provenance: The provenance of this ProjectDataIndexWithStatus.  # noqa: E501
+        :type: str
+        """
+
+        self._provenance = provenance
 
     @property
     def record_properties(self):

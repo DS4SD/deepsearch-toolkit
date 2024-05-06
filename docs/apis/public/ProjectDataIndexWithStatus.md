@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **documents** | **float** |  | 
 **health** | **str** |  | 
 **name** | **str** |  | 
+**provenance** | **str** |  | [optional] 
 **record_properties** | [**object**](.md) |  | [optional] 
 **schema_key** | **str** | Index&#39;s schema key | [optional] 
 **source** | [**ProjectDataIndexSource**](ProjectDataIndexSource.md) |  | 

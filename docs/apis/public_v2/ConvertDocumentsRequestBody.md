@@ -6,8 +6,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **file_url** | **List[str]** | List of File&#39;s URL to be converted and uploaded to the data index. | [optional] 
+**internal_file_url** | [**List[InternalUrl]**](InternalUrl.md) | List of Internal File&#39;s URLs to be converted and uploaded to the data index. | [optional] 
 **s3_source** | [**S3DocumentSource**](S3DocumentSource.md) | Coordinates to object store to get files to convert. Can specify which files with object keys. | [optional] 
-**scratch_files_id** | **List[str]** | List of CCS&#39;s scratch files id to be converted and uploaded to the data index. | [optional] 
+**upload_to_elastic** | **bool** |  | [optional] 
 **conversion_settings** | [**PartialDirectConversionParameters**](PartialDirectConversionParameters.md) | Specify the conversion settings to use. | [optional] 
 
 ## Example

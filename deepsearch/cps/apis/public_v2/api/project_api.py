@@ -17,10 +17,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import StrictBool, StrictStr
-from typing import Any, Dict, Optional
+from typing import Optional
+from deepsearch.cps.apis.public_v2.models.config import Config
 from deepsearch.cps.apis.public_v2.models.default_values import DefaultValues
 from deepsearch.cps.apis.public_v2.models.project_package_instalation_manifest import ProjectPackageInstalationManifest
-from deepsearch.cps.apis.public_v2.models.response_get_project_integration_config import ResponseGetProjectIntegrationConfig
+from deepsearch.cps.apis.public_v2.models.response_get_project_integration_config_genai import ResponseGetProjectIntegrationConfigGenai
 from deepsearch.cps.apis.public_v2.models.task_context import TaskContext
 
 from deepsearch.cps.apis.public_v2.api_client import ApiClient, RequestSerialized
@@ -42,9 +43,8 @@ class ProjectApi:
 
 
     @validate_call
-    def delete_project_integration_config(
+    def delete_project_integration_config_genai(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
         _request_timeout: Union[
             None,
@@ -58,13 +58,11 @@ class ProjectApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
-        """Delete Project Integration Config
+    ) -> None:
+        """Delete Project Integration Config Genai
 
-        Delete the config for a given project integration.
+        Delete the GenAI config for a given project integration.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
         :param _request_timeout: timeout setting for this request. If one
@@ -89,8 +87,7 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._delete_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._delete_project_integration_config_genai_serialize(
             proj_key=proj_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -99,7 +96,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '204': None,
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -114,9 +111,8 @@ class ProjectApi:
 
 
     @validate_call
-    def delete_project_integration_config_with_http_info(
+    def delete_project_integration_config_genai_with_http_info(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
         _request_timeout: Union[
             None,
@@ -130,13 +126,11 @@ class ProjectApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
-        """Delete Project Integration Config
+    ) -> ApiResponse[None]:
+        """Delete Project Integration Config Genai
 
-        Delete the config for a given project integration.
+        Delete the GenAI config for a given project integration.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
         :param _request_timeout: timeout setting for this request. If one
@@ -161,8 +155,7 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._delete_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._delete_project_integration_config_genai_serialize(
             proj_key=proj_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -171,7 +164,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '204': None,
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -186,9 +179,8 @@ class ProjectApi:
 
 
     @validate_call
-    def delete_project_integration_config_without_preload_content(
+    def delete_project_integration_config_genai_without_preload_content(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
         _request_timeout: Union[
             None,
@@ -203,12 +195,10 @@ class ProjectApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Delete Project Integration Config
+        """Delete Project Integration Config Genai
 
-        Delete the config for a given project integration.
+        Delete the GenAI config for a given project integration.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
         :param _request_timeout: timeout setting for this request. If one
@@ -233,8 +223,7 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._delete_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._delete_project_integration_config_genai_serialize(
             proj_key=proj_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -243,7 +232,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '204': None,
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -253,9 +242,8 @@ class ProjectApi:
         return response_data.response
 
 
-    def _delete_project_integration_config_serialize(
+    def _delete_project_integration_config_genai_serialize(
         self,
-        integration_name,
         proj_key,
         _request_auth,
         _content_type,
@@ -276,8 +264,6 @@ class ProjectApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if integration_name is not None:
-            _path_params['integration_name'] = integration_name
         if proj_key is not None:
             _path_params['proj_key'] = proj_key
         # process the query parameters
@@ -301,7 +287,7 @@ class ProjectApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/project/{proj_key}/integrations/{integration_name}',
+            resource_path='/project/{proj_key}/integrations/genai',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -579,9 +565,8 @@ class ProjectApi:
 
 
     @validate_call
-    def get_project_integration_config(
+    def get_project_integration_config_genai(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
         decode_secrets: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -596,13 +581,11 @@ class ProjectApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ResponseGetProjectIntegrationConfig:
-        """Get Project Integration Config
+    ) -> ResponseGetProjectIntegrationConfigGenai:
+        """Get Project Integration Config Genai
 
-        Get the config for a given project integration.
+        Get the GenAI config for a given project.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
         :param decode_secrets:
@@ -629,8 +612,7 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._get_project_integration_config_genai_serialize(
             proj_key=proj_key,
             decode_secrets=decode_secrets,
             _request_auth=_request_auth,
@@ -640,7 +622,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ResponseGetProjectIntegrationConfig",
+            '200': "ResponseGetProjectIntegrationConfigGenai",
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -655,9 +637,8 @@ class ProjectApi:
 
 
     @validate_call
-    def get_project_integration_config_with_http_info(
+    def get_project_integration_config_genai_with_http_info(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
         decode_secrets: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -672,13 +653,11 @@ class ProjectApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ResponseGetProjectIntegrationConfig]:
-        """Get Project Integration Config
+    ) -> ApiResponse[ResponseGetProjectIntegrationConfigGenai]:
+        """Get Project Integration Config Genai
 
-        Get the config for a given project integration.
+        Get the GenAI config for a given project.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
         :param decode_secrets:
@@ -705,8 +684,7 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._get_project_integration_config_genai_serialize(
             proj_key=proj_key,
             decode_secrets=decode_secrets,
             _request_auth=_request_auth,
@@ -716,7 +694,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ResponseGetProjectIntegrationConfig",
+            '200': "ResponseGetProjectIntegrationConfigGenai",
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -731,9 +709,8 @@ class ProjectApi:
 
 
     @validate_call
-    def get_project_integration_config_without_preload_content(
+    def get_project_integration_config_genai_without_preload_content(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
         decode_secrets: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -749,12 +726,10 @@ class ProjectApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get Project Integration Config
+        """Get Project Integration Config Genai
 
-        Get the config for a given project integration.
+        Get the GenAI config for a given project.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
         :param decode_secrets:
@@ -781,8 +756,7 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._get_project_integration_config_genai_serialize(
             proj_key=proj_key,
             decode_secrets=decode_secrets,
             _request_auth=_request_auth,
@@ -792,7 +766,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ResponseGetProjectIntegrationConfig",
+            '200': "ResponseGetProjectIntegrationConfigGenai",
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -802,9 +776,8 @@ class ProjectApi:
         return response_data.response
 
 
-    def _get_project_integration_config_serialize(
+    def _get_project_integration_config_genai_serialize(
         self,
-        integration_name,
         proj_key,
         decode_secrets,
         _request_auth,
@@ -826,8 +799,6 @@ class ProjectApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if integration_name is not None:
-            _path_params['integration_name'] = integration_name
         if proj_key is not None:
             _path_params['proj_key'] = proj_key
         # process the query parameters
@@ -855,7 +826,7 @@ class ProjectApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/project/{proj_key}/integrations/{integration_name}',
+            resource_path='/project/{proj_key}/integrations/genai',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1450,11 +1421,10 @@ class ProjectApi:
 
 
     @validate_call
-    def update_project_integration_config(
+    def update_project_integration_config_genai(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
-        body: Dict[str, Any],
+        config: Config,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1467,17 +1437,15 @@ class ProjectApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
-        """Update Project Integration Config
+    ) -> None:
+        """Update Project Integration Config Genai
 
-        Update the config for a given project integration.
+        Update the GenAI config for a given project.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
-        :param body: (required)
-        :type body: object
+        :param config: (required)
+        :type config: Config
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1500,10 +1468,9 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._update_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._update_project_integration_config_genai_serialize(
             proj_key=proj_key,
-            body=body,
+            config=config,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1511,7 +1478,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '204': None,
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -1526,11 +1493,10 @@ class ProjectApi:
 
 
     @validate_call
-    def update_project_integration_config_with_http_info(
+    def update_project_integration_config_genai_with_http_info(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
-        body: Dict[str, Any],
+        config: Config,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1543,17 +1509,15 @@ class ProjectApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
-        """Update Project Integration Config
+    ) -> ApiResponse[None]:
+        """Update Project Integration Config Genai
 
-        Update the config for a given project integration.
+        Update the GenAI config for a given project.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
-        :param body: (required)
-        :type body: object
+        :param config: (required)
+        :type config: Config
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1576,10 +1540,9 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._update_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._update_project_integration_config_genai_serialize(
             proj_key=proj_key,
-            body=body,
+            config=config,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1587,7 +1550,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '204': None,
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -1602,11 +1565,10 @@ class ProjectApi:
 
 
     @validate_call
-    def update_project_integration_config_without_preload_content(
+    def update_project_integration_config_genai_without_preload_content(
         self,
-        integration_name: StrictStr,
         proj_key: StrictStr,
-        body: Dict[str, Any],
+        config: Config,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1620,16 +1582,14 @@ class ProjectApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Update Project Integration Config
+        """Update Project Integration Config Genai
 
-        Update the config for a given project integration.
+        Update the GenAI config for a given project.
 
-        :param integration_name: (required)
-        :type integration_name: str
         :param proj_key: (required)
         :type proj_key: str
-        :param body: (required)
-        :type body: object
+        :param config: (required)
+        :type config: Config
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1652,10 +1612,9 @@ class ProjectApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._update_project_integration_config_serialize(
-            integration_name=integration_name,
+        _param = self._update_project_integration_config_genai_serialize(
             proj_key=proj_key,
-            body=body,
+            config=config,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1663,7 +1622,7 @@ class ProjectApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
+            '204': None,
             '422': "HTTPValidationError",
         }
         response_data = self.api_client.call_api(
@@ -1673,11 +1632,10 @@ class ProjectApi:
         return response_data.response
 
 
-    def _update_project_integration_config_serialize(
+    def _update_project_integration_config_genai_serialize(
         self,
-        integration_name,
         proj_key,
-        body,
+        config,
         _request_auth,
         _content_type,
         _headers,
@@ -1697,16 +1655,14 @@ class ProjectApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if integration_name is not None:
-            _path_params['integration_name'] = integration_name
         if proj_key is not None:
             _path_params['proj_key'] = proj_key
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if body is not None:
-            _body_params = body
+        if config is not None:
+            _body_params = config
 
 
         # set the HTTP header `Accept`
@@ -1737,7 +1693,7 @@ class ProjectApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/project/{proj_key}/integrations/{integration_name}',
+            resource_path='/project/{proj_key}/integrations/genai',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

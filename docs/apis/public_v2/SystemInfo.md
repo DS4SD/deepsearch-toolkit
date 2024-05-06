@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **toolkit** | **object** |  | 
 **allow_non_admins_to_make_resources_public** | **bool** |  | 
 **api** | **object** |  | 
+**genai_defaults** | [**Dict[str, GenAIParams]**](GenAIParams.md) |  | 
 
 ## Example
 

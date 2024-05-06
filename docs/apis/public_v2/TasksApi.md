@@ -90,7 +90,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_project_celery_task**
-> TaskResult get_project_celery_task(task_id, proj_key)
+> TaskResult get_project_celery_task(task_id, proj_key, wait=wait)
 
 Get Project Celery Task
 
@@ -129,10 +129,11 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     api_instance = deepsearch.cps.apis.public_v2.TasksApi(api_client)
     task_id = 'task_id_example' # str | 
     proj_key = 'proj_key_example' # str | 
+    wait = 3.4 # float | Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. (optional)
 
     try:
         # Get Project Celery Task
-        api_response = api_instance.get_project_celery_task(task_id, proj_key)
+        api_response = api_instance.get_project_celery_task(task_id, proj_key, wait=wait)
         print("The response of TasksApi->get_project_celery_task:\n")
         pprint(api_response)
     except Exception as e:
@@ -148,6 +149,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**|  | 
  **proj_key** | **str**|  | 
+ **wait** | **float**| Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. | [optional] 
 
 ### Return type
 

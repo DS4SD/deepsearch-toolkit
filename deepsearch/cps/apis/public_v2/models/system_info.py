@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, StrictBool
 from typing import Any, ClassVar, Dict, List
 from deepsearch.cps.apis.public_v2.models.deployment import Deployment
+from deepsearch.cps.apis.public_v2.models.gen_ai_params import GenAIParams
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,7 +34,8 @@ class SystemInfo(BaseModel):
     toolkit: Dict[str, Any]
     allow_non_admins_to_make_resources_public: StrictBool
     api: Dict[str, Any]
-    __properties: ClassVar[List[str]] = ["notifications", "default_project", "deployment", "toolkit", "allow_non_admins_to_make_resources_public", "api"]
+    genai_defaults: Dict[str, GenAIParams]
+    __properties: ClassVar[List[str]] = ["notifications", "default_project", "deployment", "toolkit", "allow_non_admins_to_make_resources_public", "api", "genai_defaults"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,7 +96,7 @@ class SystemInfo(BaseModel):
             "deployment": Deployment.from_dict(obj["deployment"]) if obj.get("deployment") is not None else None,
             "toolkit": obj.get("toolkit"),
             "allow_non_admins_to_make_resources_public": obj.get("allow_non_admins_to_make_resources_public"),
-            "api": obj.get("api")
+            "api": obj.get("api"),
         })
         return _obj
 
