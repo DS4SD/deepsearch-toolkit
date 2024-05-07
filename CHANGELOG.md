@@ -1,3 +1,9 @@
+## [v0.44.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.44.0) - 2024-05-07
+
+### Feature
+
+* Use new sem index, gen ctx extractors ([#174](https://github.com/DS4SD/deepsearch-toolkit/issues/174)) ([`cde4183`](https://github.com/DS4SD/deepsearch-toolkit/commit/cde41835a297dd2151d2793e51161cd54bedddf4))
+
 ## [v0.43.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.43.0) - 2024-03-14
 
 ### Feature
