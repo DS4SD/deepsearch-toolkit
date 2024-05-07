@@ -16,8 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictInt, StrictStr, field_validator
-from typing import Optional
+from pydantic import Field, StrictInt, StrictStr, field_validator
+from typing import Optional, Union
+from typing_extensions import Annotated
 from deepsearch.cps.apis.public_v2.models.task_context import TaskContext
 from deepsearch.cps.apis.public_v2.models.task_result import TaskResult
 
@@ -320,6 +321,7 @@ class TasksApi:
         self,
         task_id: StrictStr,
         proj_key: StrictStr,
+        wait: Annotated[Optional[Union[Annotated[float, Field(le=30.0, strict=True)], Annotated[int, Field(le=30, strict=True)]]], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -341,6 +343,8 @@ class TasksApi:
         :type task_id: str
         :param proj_key: (required)
         :type proj_key: str
+        :param wait: Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.
+        :type wait: float
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -366,6 +370,7 @@ class TasksApi:
         _param = self._get_project_celery_task_serialize(
             task_id=task_id,
             proj_key=proj_key,
+            wait=wait,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -392,6 +397,7 @@ class TasksApi:
         self,
         task_id: StrictStr,
         proj_key: StrictStr,
+        wait: Annotated[Optional[Union[Annotated[float, Field(le=30.0, strict=True)], Annotated[int, Field(le=30, strict=True)]]], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -413,6 +419,8 @@ class TasksApi:
         :type task_id: str
         :param proj_key: (required)
         :type proj_key: str
+        :param wait: Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.
+        :type wait: float
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -438,6 +446,7 @@ class TasksApi:
         _param = self._get_project_celery_task_serialize(
             task_id=task_id,
             proj_key=proj_key,
+            wait=wait,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -464,6 +473,7 @@ class TasksApi:
         self,
         task_id: StrictStr,
         proj_key: StrictStr,
+        wait: Annotated[Optional[Union[Annotated[float, Field(le=30.0, strict=True)], Annotated[int, Field(le=30, strict=True)]]], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -485,6 +495,8 @@ class TasksApi:
         :type task_id: str
         :param proj_key: (required)
         :type proj_key: str
+        :param wait: Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.
+        :type wait: float
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -510,6 +522,7 @@ class TasksApi:
         _param = self._get_project_celery_task_serialize(
             task_id=task_id,
             proj_key=proj_key,
+            wait=wait,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -531,6 +544,7 @@ class TasksApi:
         self,
         task_id,
         proj_key,
+        wait,
         _request_auth,
         _content_type,
         _headers,
@@ -555,6 +569,10 @@ class TasksApi:
         if proj_key is not None:
             _path_params['proj_key'] = proj_key
         # process the query parameters
+        if wait is not None:
+            
+            _query_params.append(('wait', wait))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

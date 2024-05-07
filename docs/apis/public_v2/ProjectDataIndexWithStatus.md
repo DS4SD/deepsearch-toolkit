@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **type** | **str** |  | 
 **view_of** | [**ViewOf**](ViewOf.md) |  | [optional] 
 **record_properties** | **object** |  | [optional] 
+**provenance** | **str** |  | [optional] 
 
 ## Example
 

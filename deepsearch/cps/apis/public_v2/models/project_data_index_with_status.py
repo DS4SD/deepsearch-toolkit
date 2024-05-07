@@ -41,7 +41,8 @@ class ProjectDataIndexWithStatus(BaseModel):
     type: StrictStr
     view_of: Optional[ViewOf] = None
     record_properties: Optional[Dict[str, Any]] = None
-    __properties: ClassVar[List[str]] = ["source", "name", "documents", "health", "status", "creation_date", "metadata", "description", "schema_key", "type", "view_of", "record_properties"]
+    provenance: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["source", "name", "documents", "health", "status", "creation_date", "metadata", "description", "schema_key", "type", "view_of", "record_properties", "provenance"]
 
     @field_validator('schema_key')
     def schema_key_validate_enum(cls, value):
@@ -124,7 +125,8 @@ class ProjectDataIndexWithStatus(BaseModel):
             "schema_key": obj.get("schema_key"),
             "type": obj.get("type"),
             "view_of": ViewOf.from_dict(obj["view_of"]) if obj.get("view_of") is not None else None,
-            "record_properties": obj.get("record_properties")
+            "record_properties": obj.get("record_properties"),
+            "provenance": obj.get("provenance")
         })
         return _obj
 

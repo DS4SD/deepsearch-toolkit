@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, List, Optional, Union
+from typing import TYPE_CHECKING, List, Literal, Optional, Union
 
 from pydantic.v1 import BaseModel
 
@@ -89,12 +89,13 @@ class Project:
 
 
 class SemanticBackendResource(BaseModel):
+    type: Literal["semantic_backend_genai_runner"] = "semantic_backend_genai_runner"
     proj_key: str
     index_key: str
 
     def to_resource(self):
-        return {
-            "type": "semantic_backend_genai_runner",
-            "proj_key": self.proj_key,
-            "index_key": self.index_key,
-        }
+        return self.dict()
+
+
+class SemanticBackendPublicResource(SemanticBackendResource):
+    elastic_id: str

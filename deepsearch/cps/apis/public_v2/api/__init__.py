@@ -1,6 +1,7 @@
 # flake8: noqa
 
 # import apis into api package
+from deepsearch.cps.apis.public_v2.api.content_manager_api import ContentManagerApi
 from deepsearch.cps.apis.public_v2.api.data_indices_api import DataIndicesApi
 from deepsearch.cps.apis.public_v2.api.data_indices_upload_api import DataIndicesUploadApi
 from deepsearch.cps.apis.public_v2.api.knowledge_graphs_api import KnowledgeGraphsApi

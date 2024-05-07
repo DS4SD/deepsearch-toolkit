@@ -18,31 +18,35 @@ import json
 import pprint
 import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Any, Dict, Optional
+from typing import Optional
+from deepsearch.cps.apis.public_v2.models.gen_ai_watsonx import GenAIWatsonx
+from deepsearch.cps.apis.public_v2.models.gen_aiaws_bedrock import GenAIAWSBedrock
+from deepsearch.cps.apis.public_v2.models.gen_aibam import GenAIBAM
+from deepsearch.cps.apis.public_v2.models.gen_aihf_inference_api import GenAIHFInferenceApi
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-RESPONSEGETPROJECTINTEGRATIONCONFIG_ANY_OF_SCHEMAS = ["object", "str"]
+CONFIG_ANY_OF_SCHEMAS = ["GenAIAWSBedrock", "GenAIBAM", "GenAIHFInferenceApi", "GenAIWatsonx"]
 
-class ResponseGetProjectIntegrationConfig(BaseModel):
+class Config(BaseModel):
     """
-    ResponseGetProjectIntegrationConfig
+    Config
     """
 
-    # data type: str
-    anyof_schema_1_validator: Optional[StrictStr] = None
-    # data type: object
-    anyof_schema_2_validator: Optional[Dict[str, Any]] = None
-    # data type: object
-    anyof_schema_3_validator: Optional[Any] = None
-    # data type: object
-    anyof_schema_4_validator: Optional[Any] = None
+    # data type: GenAIBAM
+    anyof_schema_1_validator: Optional[GenAIBAM] = None
+    # data type: GenAIWatsonx
+    anyof_schema_2_validator: Optional[GenAIWatsonx] = None
+    # data type: GenAIHFInferenceApi
+    anyof_schema_3_validator: Optional[GenAIHFInferenceApi] = None
+    # data type: GenAIAWSBedrock
+    anyof_schema_4_validator: Optional[GenAIAWSBedrock] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[object, str]] = None
+        actual_instance: Optional[Union[GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: List[str] = Field(default=Literal["object", "str"])
+    any_of_schemas: List[str] = Field(default=Literal["GenAIAWSBedrock", "GenAIBAM", "GenAIHFInferenceApi", "GenAIWatsonx"])
 
     model_config = {
         "validate_assignment": True,
@@ -61,35 +65,35 @@ class ResponseGetProjectIntegrationConfig(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_anyof(cls, v):
-        instance = ResponseGetProjectIntegrationConfig.model_construct()
+        instance = Config.model_construct()
         error_messages = []
-        # validate data type: str
-        try:
-            instance.anyof_schema_1_validator = v
+        # validate data type: GenAIBAM
+        if not isinstance(v, GenAIBAM):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIBAM`")
+        else:
             return v
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # validate data type: object
-        try:
-            instance.anyof_schema_2_validator = v
+
+        # validate data type: GenAIWatsonx
+        if not isinstance(v, GenAIWatsonx):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIWatsonx`")
+        else:
             return v
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # validate data type: object
-        try:
-            instance.anyof_schema_3_validator = v
+
+        # validate data type: GenAIHFInferenceApi
+        if not isinstance(v, GenAIHFInferenceApi):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIHFInferenceApi`")
+        else:
             return v
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # validate data type: object
-        try:
-            instance.anyof_schema_4_validator = v
+
+        # validate data type: GenAIAWSBedrock
+        if not isinstance(v, GenAIAWSBedrock):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIAWSBedrock`")
+        else:
             return v
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
+
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in ResponseGetProjectIntegrationConfig with anyOf schemas: object, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in Config with anyOf schemas: GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -102,46 +106,34 @@ class ResponseGetProjectIntegrationConfig(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # deserialize data into str
+        # anyof_schema_1_validator: Optional[GenAIBAM] = None
         try:
-            # validation
-            instance.anyof_schema_1_validator = json.loads(json_str)
-            # assign value to actual_instance
-            instance.actual_instance = instance.anyof_schema_1_validator
+            instance.actual_instance = GenAIBAM.from_json(json_str)
             return instance
         except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into object
+             error_messages.append(str(e))
+        # anyof_schema_2_validator: Optional[GenAIWatsonx] = None
         try:
-            # validation
-            instance.anyof_schema_2_validator = json.loads(json_str)
-            # assign value to actual_instance
-            instance.actual_instance = instance.anyof_schema_2_validator
+            instance.actual_instance = GenAIWatsonx.from_json(json_str)
             return instance
         except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into object
+             error_messages.append(str(e))
+        # anyof_schema_3_validator: Optional[GenAIHFInferenceApi] = None
         try:
-            # validation
-            instance.anyof_schema_3_validator = json.loads(json_str)
-            # assign value to actual_instance
-            instance.actual_instance = instance.anyof_schema_3_validator
+            instance.actual_instance = GenAIHFInferenceApi.from_json(json_str)
             return instance
         except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into object
+             error_messages.append(str(e))
+        # anyof_schema_4_validator: Optional[GenAIAWSBedrock] = None
         try:
-            # validation
-            instance.anyof_schema_4_validator = json.loads(json_str)
-            # assign value to actual_instance
-            instance.actual_instance = instance.anyof_schema_4_validator
+            instance.actual_instance = GenAIAWSBedrock.from_json(json_str)
             return instance
         except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
+             error_messages.append(str(e))
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into ResponseGetProjectIntegrationConfig with anyOf schemas: object, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Config with anyOf schemas: GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -155,7 +147,7 @@ class ResponseGetProjectIntegrationConfig(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], object, str]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

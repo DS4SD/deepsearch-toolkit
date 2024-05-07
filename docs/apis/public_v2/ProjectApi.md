@@ -4,20 +4,20 @@ All URIs are relative to */api/cps/public/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**delete_project_integration_config**](ProjectApi.md#delete_project_integration_config) | **DELETE** /project/{proj_key}/integrations/{integration_name} | Delete Project Integration Config
+[**delete_project_integration_config_genai**](ProjectApi.md#delete_project_integration_config_genai) | **DELETE** /project/{proj_key}/integrations/genai | Delete Project Integration Config Genai
 [**get_project_default_values**](ProjectApi.md#get_project_default_values) | **GET** /project/{proj_key}/default_values | Get Project Default Values
-[**get_project_integration_config**](ProjectApi.md#get_project_integration_config) | **GET** /project/{proj_key}/integrations/{integration_name} | Get Project Integration Config
+[**get_project_integration_config_genai**](ProjectApi.md#get_project_integration_config_genai) | **GET** /project/{proj_key}/integrations/genai | Get Project Integration Config Genai
 [**provision_project_packages**](ProjectApi.md#provision_project_packages) | **POST** /project/{proj_key}/packages | Provision Project Packages
 [**update_project_default_values**](ProjectApi.md#update_project_default_values) | **POST** /project/{proj_key}/default_values | Update Project Default Values
-[**update_project_integration_config**](ProjectApi.md#update_project_integration_config) | **POST** /project/{proj_key}/integrations/{integration_name} | Update Project Integration Config
+[**update_project_integration_config_genai**](ProjectApi.md#update_project_integration_config_genai) | **POST** /project/{proj_key}/integrations/genai | Update Project Integration Config Genai
 
 
-# **delete_project_integration_config**
-> object delete_project_integration_config(integration_name, proj_key)
+# **delete_project_integration_config_genai**
+> delete_project_integration_config_genai(proj_key)
 
-Delete Project Integration Config
+Delete Project Integration Config Genai
 
-Delete the config for a given project integration.
+Delete the GenAI config for a given project integration.
 
 ### Example
 
@@ -49,16 +49,13 @@ configuration.api_key['Bearer'] = os.environ["API_KEY"]
 with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.public_v2.ProjectApi(api_client)
-    integration_name = 'integration_name_example' # str | 
     proj_key = 'proj_key_example' # str | 
 
     try:
-        # Delete Project Integration Config
-        api_response = api_instance.delete_project_integration_config(integration_name, proj_key)
-        print("The response of ProjectApi->delete_project_integration_config:\n")
-        pprint(api_response)
+        # Delete Project Integration Config Genai
+        api_instance.delete_project_integration_config_genai(proj_key)
     except Exception as e:
-        print("Exception when calling ProjectApi->delete_project_integration_config: %s\n" % e)
+        print("Exception when calling ProjectApi->delete_project_integration_config_genai: %s\n" % e)
 ```
 
 
@@ -68,12 +65,11 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **integration_name** | **str**|  | 
  **proj_key** | **str**|  | 
 
 ### Return type
 
-**object**
+void (empty response body)
 
 ### Authorization
 
@@ -88,7 +84,7 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successful Response |  -  |
+**204** | Successful Response |  -  |
 **422** | Validation Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -173,12 +169,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_project_integration_config**
-> ResponseGetProjectIntegrationConfig get_project_integration_config(integration_name, proj_key, decode_secrets=decode_secrets)
+# **get_project_integration_config_genai**
+> ResponseGetProjectIntegrationConfigGenai get_project_integration_config_genai(proj_key, decode_secrets=decode_secrets)
 
-Get Project Integration Config
+Get Project Integration Config Genai
 
-Get the config for a given project integration.
+Get the GenAI config for a given project.
 
 ### Example
 
@@ -186,7 +182,7 @@ Get the config for a given project integration.
 
 ```python
 import deepsearch.cps.apis.public_v2
-from deepsearch.cps.apis.public_v2.models.response_get_project_integration_config import ResponseGetProjectIntegrationConfig
+from deepsearch.cps.apis.public_v2.models.response_get_project_integration_config_genai import ResponseGetProjectIntegrationConfigGenai
 from deepsearch.cps.apis.public_v2.rest import ApiException
 from pprint import pprint
 
@@ -211,17 +207,16 @@ configuration.api_key['Bearer'] = os.environ["API_KEY"]
 with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.public_v2.ProjectApi(api_client)
-    integration_name = 'integration_name_example' # str | 
     proj_key = 'proj_key_example' # str | 
     decode_secrets = True # bool |  (optional)
 
     try:
-        # Get Project Integration Config
-        api_response = api_instance.get_project_integration_config(integration_name, proj_key, decode_secrets=decode_secrets)
-        print("The response of ProjectApi->get_project_integration_config:\n")
+        # Get Project Integration Config Genai
+        api_response = api_instance.get_project_integration_config_genai(proj_key, decode_secrets=decode_secrets)
+        print("The response of ProjectApi->get_project_integration_config_genai:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling ProjectApi->get_project_integration_config: %s\n" % e)
+        print("Exception when calling ProjectApi->get_project_integration_config_genai: %s\n" % e)
 ```
 
 
@@ -231,13 +226,12 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **integration_name** | **str**|  | 
  **proj_key** | **str**|  | 
  **decode_secrets** | **bool**|  | [optional] 
 
 ### Return type
 
-[**ResponseGetProjectIntegrationConfig**](ResponseGetProjectIntegrationConfig.md)
+[**ResponseGetProjectIntegrationConfigGenai**](ResponseGetProjectIntegrationConfigGenai.md)
 
 ### Authorization
 
@@ -422,12 +416,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **update_project_integration_config**
-> object update_project_integration_config(integration_name, proj_key, body)
+# **update_project_integration_config_genai**
+> update_project_integration_config_genai(proj_key, config)
 
-Update Project Integration Config
+Update Project Integration Config Genai
 
-Update the config for a given project integration.
+Update the GenAI config for a given project.
 
 ### Example
 
@@ -435,6 +429,7 @@ Update the config for a given project integration.
 
 ```python
 import deepsearch.cps.apis.public_v2
+from deepsearch.cps.apis.public_v2.models.config import Config
 from deepsearch.cps.apis.public_v2.rest import ApiException
 from pprint import pprint
 
@@ -459,17 +454,14 @@ configuration.api_key['Bearer'] = os.environ["API_KEY"]
 with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.public_v2.ProjectApi(api_client)
-    integration_name = 'integration_name_example' # str | 
     proj_key = 'proj_key_example' # str | 
-    body = None # object | 
+    config = deepsearch.cps.apis.public_v2.Config() # Config | 
 
     try:
-        # Update Project Integration Config
-        api_response = api_instance.update_project_integration_config(integration_name, proj_key, body)
-        print("The response of ProjectApi->update_project_integration_config:\n")
-        pprint(api_response)
+        # Update Project Integration Config Genai
+        api_instance.update_project_integration_config_genai(proj_key, config)
     except Exception as e:
-        print("Exception when calling ProjectApi->update_project_integration_config: %s\n" % e)
+        print("Exception when calling ProjectApi->update_project_integration_config_genai: %s\n" % e)
 ```
 
 
@@ -479,13 +471,12 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **integration_name** | **str**|  | 
  **proj_key** | **str**|  | 
- **body** | **object**|  | 
+ **config** | [**Config**](Config.md)|  | 
 
 ### Return type
 
-**object**
+void (empty response body)
 
 ### Authorization
 
@@ -500,7 +491,7 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successful Response |  -  |
+**204** | Successful Response |  -  |
 **422** | Validation Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
