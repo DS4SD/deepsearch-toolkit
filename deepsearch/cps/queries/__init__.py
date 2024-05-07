@@ -110,6 +110,7 @@ class _APISemanticRagParameters(_APISemanticRetrievalParameters):
     gen_ctx_window_size: int = 5000
     gen_ctx_window_lead_weight: float = 0.5
     return_prompt: bool = False
+    gen_timeout: Optional[float] = None
 
 
 @validate_arguments
@@ -128,6 +129,7 @@ def RAGQuery(
     gen_ctx_window_size: int = 5000,
     gen_ctx_window_lead_weight: float = 0.5,
     return_prompt: bool = False,
+    gen_timeout: Optional[float] = None,
 ) -> Query:
     """Create a RAG query
 
@@ -145,6 +147,7 @@ def RAGQuery(
         gen_ctx_window_size (int, optional): (relevant only if gen_ctx_extr_method=="window") max chars to use for extracted gen context (actual extraction quantized on doc item level); defaults to 5000
         gen_ctx_window_lead_weight (float, optional): (relevant only if gen_ctx_extr_method=="window") weight of leading text for distributing remaining window size after extracting the `main_path`; defaults to 0.5 (centered around `main_path`)
         return_prompt (bool, optional): whether to return the instantiated prompt; defaults to False
+        gen_timeout (float, optional): timeout for LLM generation; defaults to None, i.e. determined by system
     """
 
     proj_key = project.key if isinstance(project, Project) else project
@@ -178,6 +181,7 @@ def RAGQuery(
         gen_ctx_window_size=gen_ctx_window_size,
         gen_ctx_window_lead_weight=gen_ctx_window_lead_weight,
         return_prompt=return_prompt,
+        gen_timeout=gen_timeout,
     )
 
     query = Query()
