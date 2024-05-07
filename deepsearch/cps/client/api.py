@@ -14,6 +14,7 @@ from deepsearch.core.client import (
 from deepsearch.core.client.settings import ProfileSettings
 from deepsearch.core.client.settings_manager import SettingsManager
 from deepsearch.cps.apis import public as sw_client
+from deepsearch.cps.apis import public_v2 as sw_client_v2
 from deepsearch.cps.client.components import (
     CpsApiDataCatalogs,
     CpsApiDataIndices,
@@ -44,28 +45,37 @@ class CpsApiClient:
 
         auth = f"Bearer {self.bearer_token_auth.bearer_token}"
 
+        ################################
+        # configure v1 public API client
+        ################################
         sw_config = sw_client.Configuration(
             host=f"{self.config.host}/api/cps/public/v1",
             api_key={"Authorization": auth},
         )
         sw_config.verify_ssl = self.config.verify_ssl
-
-        # Disable client-side validation, because our APIs lie.
         sw_config.client_side_validation = False
-
-        # print(sw_config, sw_config.client_side_validation)
-
         self.swagger_client = sw_client.ApiClient(sw_config)
 
+        ################################
+        # configure v2 public API client
+        ################################
+        sw_config_v2 = sw_client_v2.Configuration(
+            host=f"{self.config.host}/api/cps/public/v2",
+        )
+        sw_config_v2.api_key["Bearer"] = auth
+        sw_config_v2.verify_ssl = self.config.verify_ssl
+        sw_config_v2.client_side_validation = False
+        self.swagger_client_v2 = sw_client_v2.ApiClient(sw_config_v2)
+
+        ##############################
+        # configure v1 user API client
+        ##############################
         sw_user_conf = deepsearch.cps.apis.user.Configuration(
             host=f"{self.config.host}/api/cps/user/v1",
             api_key={"Authorization": auth},
         )
         sw_user_conf.verify_ssl = self.config.verify_ssl
-
-        # Disable client-side validation, because our APIs lie.
         sw_user_conf.client_side_validation = False
-
         self.user_swagger_client = deepsearch.cps.apis.user.ApiClient(sw_user_conf)
 
         self.session = requests.Session()

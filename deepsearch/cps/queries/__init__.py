@@ -1,10 +1,19 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic.v1 import BaseModel, Extra, Field, validate_arguments
+from pydantic.v1 import BaseModel, Field, validate_arguments
 from typing_extensions import Annotated
 
+from deepsearch.cps.client.components.documents import (
+    DataSource,
+    PrivateDataCollectionSource,
+    PrivateDataDocumentSource,
+)
 from deepsearch.cps.client.components.elastic import ElasticSearchQuery
-from deepsearch.cps.client.components.projects import Project, SemanticBackendResource
+from deepsearch.cps.client.components.projects import (
+    Project,
+    SemanticBackendPublicResource,
+    SemanticBackendResource,
+)
 from deepsearch.cps.client.queries import Query, TaskCoordinates
 
 
@@ -85,18 +94,6 @@ ConstrainedWeight = Annotated[
 ]
 
 
-class _APISemanticRagParameters(BaseModel, extra=Extra.forbid):
-    doc_id: Optional[str] = None
-    question: str
-    retr_k: int = 10
-    use_reranker: bool = False
-    hybrid_search_text_weight: ConstrainedWeight = 0.1
-    model_id: Optional[str] = None
-    prompt_template: Optional[str] = None
-    gen_params: Optional[Dict[str, Any]] = None
-    gen_from_md: bool = True
-
-
 class _APISemanticRetrievalParameters(BaseModel):
     doc_id: Optional[str] = None
     question: str
@@ -105,111 +102,90 @@ class _APISemanticRetrievalParameters(BaseModel):
     hybrid_search_text_weight: ConstrainedWeight = 0.1
 
 
-def CorpusRAGQuery(
-    question: str,
-    *,
-    project: Union[str, Project],
-    index_key: str,
-    retr_k: int = 10,
-    rerank: bool = False,
-    text_weight: ConstrainedWeight = 0.1,
-    model_id: Optional[str] = None,
-    prompt_template: Optional[str] = None,
-    gen_params: Optional[Dict[str, Any]] = None,
-    gen_from_wider_ctx: bool = True,
-) -> Query:
-    """Create a RAG query against a collection
-
-    Args:
-        question (str): the natural-language query
-        project (Union[str, Project]): project to use
-        index_key (str): index key of target private collection (must already be semantically indexed)
-        retr_k (int, optional): num of items to retrieve; defaults to 10
-        rerank (bool, optional): whether to rerank retrieval results; defaults to False
-        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
-        model_id (str, optional): the LLM to use for generation; defaults to None, i.e. determined by system
-        prompt_template (str, optional): the prompt template to use; defaults to None, i.e. determined by system
-        gen_params (dict, optional): the generation params to send to the Gen AI platforms; defaults to None, i.e. determined by system
-        gen_from_wider_ctx (bool): whether to try to generate based on wider context than indexed passage; defaults to True
-    """
-    return _create_rag_query(
-        project=project,
-        index_key=index_key,
-        params=_APISemanticRagParameters(
-            question=question,
-            retr_k=retr_k,
-            use_reranker=rerank,
-            hybrid_search_text_weight=text_weight,
-            model_id=model_id,
-            prompt_template=prompt_template,
-            gen_params=gen_params,
-            gen_from_md=gen_from_wider_ctx,
-        ),
-    )
-
-
-def DocumentRAGQuery(
-    question: str,
-    *,
-    document_hash: str,
-    project: Union[str, Project],
-    index_key: Optional[str] = None,
-    retr_k: int = 10,
-    rerank: bool = False,
-    text_weight: ConstrainedWeight = 0.1,
-    model_id: Optional[str] = None,
-    prompt_template: Optional[str] = None,
-    gen_params: Optional[Dict[str, Any]] = None,
-    gen_from_wider_ctx: bool = True,
-) -> Query:
-    """Create a RAG query against a specific document
-
-    Args:
-        question (str): the natural-language query
-        document_hash (str): hash of target document
-        project (Union[str, Project]): project to use
-        index_key (str, optional): index key of target private collection (must already be semantically indexed) in case doc within one; defaults to None (doc must already be semantically indexed)
-        retr_k (int, optional): num of items to retrieve; defaults to 10
-        rerank (bool, optional): whether to rerank retrieval results; defaults to False
-        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
-        model_id (str, optional): the LLM to use for generation; defaults to None, i.e. determined by system
-        prompt_template (str, optional): the prompt template to use; defaults to None, i.e. determined by system
-        gen_params (dict, optional): the generation params to send to the Gen AI platforms; defaults to None, i.e. determined by system
-        gen_from_wider_ctx (bool): whether to try to generate based on wider context than indexed passage; defaults to True
-    """
-
-    return _create_rag_query(
-        project=project,
-        index_key=index_key,
-        params=_APISemanticRagParameters(
-            doc_id=document_hash,
-            question=question,
-            retr_k=retr_k,
-            use_reranker=rerank,
-            hybrid_search_text_weight=text_weight,
-            model_id=model_id,
-            prompt_template=prompt_template,
-            gen_params=gen_params,
-            gen_from_md=gen_from_wider_ctx,
-        ),
-    )
+class _APISemanticRagParameters(_APISemanticRetrievalParameters):
+    model_id: Optional[str] = None
+    prompt_template: Optional[str] = None
+    gen_params: Optional[Dict[str, Any]] = None
+    gen_ctx_extr_method: Literal["window", "page"] = "window"
+    gen_ctx_window_size: int = 5000
+    gen_ctx_window_lead_weight: float = 0.5
+    return_prompt: bool = False
 
 
 @validate_arguments
-def _create_rag_query(
+def RAGQuery(
+    question: str,
+    *,
     project: Union[str, Project],
-    index_key: Optional[str],
-    params: _APISemanticRagParameters,
+    data_source: DataSource,
+    retr_k: int = 10,
+    rerank: bool = False,
+    text_weight: ConstrainedWeight = 0.1,
+    model_id: Optional[str] = None,
+    prompt_template: Optional[str] = None,
+    gen_params: Optional[Dict[str, Any]] = None,
+    gen_ctx_extr_method: Literal["window", "page"] = "window",
+    gen_ctx_window_size: int = 5000,
+    gen_ctx_window_lead_weight: float = 0.5,
+    return_prompt: bool = False,
 ) -> Query:
+    """Create a RAG query
+
+    Args:
+        question (str): the natural-language query
+        project (Union[str, Project]): project to use
+        data_source (DataSource): the data source to query
+        retr_k (int, optional): num of items to retrieve; defaults to 10
+        rerank (bool, optional): whether to rerank retrieval results; defaults to False
+        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
+        model_id (str, optional): the LLM to use for generation; defaults to None, i.e. determined by system
+        prompt_template (str, optional): the prompt template to use; defaults to None, i.e. determined by system
+        gen_params (dict, optional): the generation params to send to the Gen AI platforms; defaults to None, i.e. determined by system
+        gen_ctx_extr_method (Literal["window", "page"], optional): method for gen context extraction from document; defaults to "window"
+        gen_ctx_window_size (int, optional): (relevant only if gen_ctx_extr_method=="window") max chars to use for extracted gen context (actual extraction quantized on doc item level); defaults to 5000
+        gen_ctx_window_lead_weight (float, optional): (relevant only if gen_ctx_extr_method=="window") weight of leading text for distributing remaining window size after extracting the `main_path`; defaults to 0.5 (centered around `main_path`)
+        return_prompt (bool, optional): whether to return the instantiated prompt; defaults to False
+    """
+
     proj_key = project.key if isinstance(project, Project) else project
-    idx_key = index_key or "__project__"
+    index_key = data_source.source.index_key
+
+    if isinstance(
+        data_source, (PrivateDataDocumentSource, PrivateDataCollectionSource)
+    ):
+        coords = SemanticBackendResource(proj_key=proj_key, index_key=index_key)
+    else:
+        coords = SemanticBackendPublicResource(
+            proj_key=proj_key,
+            index_key=index_key,
+            elastic_id=data_source.source.elastic_id,
+        )
+
+    params = _APISemanticRagParameters(
+        doc_id=(
+            None
+            if isinstance(data_source, PrivateDataCollectionSource)
+            else data_source.document_hash
+        ),
+        question=question,
+        retr_k=retr_k,
+        use_reranker=rerank,
+        hybrid_search_text_weight=text_weight,
+        model_id=model_id,
+        prompt_template=prompt_template,
+        gen_params=gen_params,
+        gen_ctx_extr_method=gen_ctx_extr_method,
+        gen_ctx_window_size=gen_ctx_window_size,
+        gen_ctx_window_lead_weight=gen_ctx_window_lead_weight,
+        return_prompt=return_prompt,
+    )
 
     query = Query()
     task = query.add(
         task_id="QA",
         kind_or_task="SemanticRag",
         parameters=params.dict(),
-        coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
+        coordinates=coords,
     )
     task.output("answers").output_as("answers")
     task.output("retrieval").output_as("retrieval")
@@ -217,88 +193,60 @@ def _create_rag_query(
     return query
 
 
-def CorpusSemanticQuery(
+@validate_arguments
+def SemanticQuery(
     question: str,
     *,
     project: Union[str, Project],
-    index_key: str,
+    data_source: DataSource,
     retr_k: int = 10,
     rerank: bool = False,
     text_weight: ConstrainedWeight = 0.1,
 ) -> Query:
-    """Create a semantic retrieval query against a collection
-
-    Args:
-        question (str): the natural-language query
-        project (Union[str, Project]): project to use
-        index_key (str): index key of target private collection (must already be semantically indexed)
-        retr_k (int, optional): num of items to retrieve; defaults to 10
-        rerank (bool, optional): whether to rerank retrieval results; defaults to False
-        text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
-    """
-
-    return _create_semantic_query(
-        project=project,
-        index_key=index_key,
-        params=_APISemanticRetrievalParameters(
-            question=question,
-            retr_k=retr_k,
-            use_reranker=rerank,
-            hybrid_search_text_weight=text_weight,
-        ),
-    )
-
-
-def DocumentSemanticQuery(
-    question: str,
-    *,
-    document_hash: str,
-    project: Union[str, Project],
-    index_key: Optional[str] = None,
-    retr_k: int = 10,
-    rerank: bool = False,
-    text_weight: ConstrainedWeight = 0.1,
-) -> Query:
-    """Create a semantic retrieval query against a specific document
+    """Create a semantic retrieval query
 
     Args:
         question (str): the natural-language query
         document_hash (str): hash of target document
         project (Union[str, Project]): project to use
-        index_key (str, optional): index key of target private collection (must already be semantically indexed) in case doc within one; defaults to None (doc must already be semantically indexed)
+        data_source (DataSource): the data source to query
         retr_k (int, optional): num of items to retrieve; defaults to 10
         rerank (bool, optional): whether to rerank retrieval results; defaults to False
         text_weight (ConstrainedWeight, optional): lexical weight for hybrid search; allowed values: {0.0, 0.1, 0.2, ..., 1.0}; defaults to 0.1
     """
 
-    return _create_semantic_query(
-        project=project,
-        index_key=index_key,
-        params=_APISemanticRetrievalParameters(
-            doc_id=document_hash,
-            question=question,
-            retr_k=retr_k,
-            use_reranker=rerank,
-            hybrid_search_text_weight=text_weight,
-        ),
-    )
-
-
-@validate_arguments
-def _create_semantic_query(
-    project: Union[str, Project],
-    index_key: Optional[str],
-    params: _APISemanticRetrievalParameters,
-) -> Query:
     proj_key = project.key if isinstance(project, Project) else project
-    idx_key = index_key or "__project__"
+    index_key = data_source.source.index_key
+
+    if isinstance(
+        data_source, (PrivateDataDocumentSource, PrivateDataCollectionSource)
+    ):
+        coords = SemanticBackendResource(proj_key=proj_key, index_key=index_key)
+    else:
+        coords = SemanticBackendPublicResource(
+            proj_key=proj_key,
+            index_key=index_key,
+            elastic_id=data_source.source.elastic_id,
+        )
+
+    params = _APISemanticRetrievalParameters(
+        doc_id=(
+            None
+            if isinstance(data_source, PrivateDataCollectionSource)
+            else data_source.document_hash
+        ),
+        question=question,
+        retr_k=retr_k,
+        use_reranker=rerank,
+        hybrid_search_text_weight=text_weight,
+    )
 
     query = Query()
     task = query.add(
         task_id="QA",
         kind_or_task="SemanticRetrieval",
         parameters=params.dict(),
-        coordinates=SemanticBackendResource(proj_key=proj_key, index_key=idx_key),
+        coordinates=coords,
     )
     task.output("items").output_as("items")
 
