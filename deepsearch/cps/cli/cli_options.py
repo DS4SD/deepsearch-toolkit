@@ -38,6 +38,12 @@ CONV_SETTINGS = typer.Option(
     help="""Provide conversion settings to be used on local file upload""",
 )
 
+TARGET_SETTINGS = typer.Option(
+    None,
+    "--target-settings",
+    help="""Provide target conversion settings to be used on local file upload""",
+)
+
 SOURCE_PATH = typer.Option(
     None,
     "--input-file",

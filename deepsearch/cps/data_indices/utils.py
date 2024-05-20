@@ -14,7 +14,7 @@ from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
 from deepsearch.documents.core import convert, input_process
 from deepsearch.documents.core.common_routines import progressbar
-from deepsearch.documents.core.models import ConversionSettings
+from deepsearch.documents.core.models import ConversionSettings, TargetSettings
 from deepsearch.documents.core.utils import cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
@@ -27,6 +27,7 @@ def upload_files(
     local_file: Optional[Union[str, Path]] = None,
     s3_coordinates: Optional[S3Coordinates] = None,
     conv_settings: Optional[ConversionSettings] = None,
+    target_settings: Optional[TargetSettings] = None,
     url_chunk_size: int = 1,
 ):
     """
@@ -53,6 +54,7 @@ def upload_files(
             coords=coords,
             local_file=Path(local_file),
             conv_settings=conv_settings,
+            target_settings=target_settings,
         )
     elif url is None and local_file is None and s3_coordinates is not None:
         return process_external_cos(
@@ -113,6 +115,7 @@ def process_local_file(
     local_file: Path,
     progress_bar: bool = False,
     conv_settings: Optional[ConversionSettings] = None,
+    target_settings: Optional[TargetSettings] = None,
 ):
     """
     Individual files are uploaded for conversion and storage in data index.
@@ -164,6 +167,8 @@ def process_local_file(
             }
             if conv_settings is not None:
                 payload["conversion_settings"] = conv_settings.to_ccs_spec()
+            if target_settings is not None:
+                payload["target_settings"] = target_settings.dict(exclude_none=True)
 
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
