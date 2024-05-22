@@ -1,3 +1,9 @@
+## [v0.45.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.45.0) - 2024-05-22
+
+### Feature
+
+* Add target settings ([#175](https://github.com/DS4SD/deepsearch-toolkit/issues/175)) ([`c4a7b92`](https://github.com/DS4SD/deepsearch-toolkit/commit/c4a7b92cfa3febba01e3076a19a77a832721e37a))
+
 ## [v0.44.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.44.0) - 2024-05-07
 
 ### Feature
