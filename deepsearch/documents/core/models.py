@@ -3,7 +3,7 @@ from enum import Enum
 from textwrap import dedent
 from typing import ClassVar, Dict, List, Literal, Optional, Set, Union, get_args
 
-from pydantic.v1 import BaseModel, Field, ValidationError, conlist, parse_obj_as
+from pydantic.v1 import BaseModel, Field, ValidationError, conlist, root_validator
 
 from deepsearch import CpsApi
 from deepsearch.core.util.ccs_utils import get_ccs_project_key
@@ -627,3 +627,16 @@ class ConversionSettings(BaseModel):
             obj["metadata"] = self.metadata.to_ccs_spec()
 
         return obj
+
+
+class TargetSettings(BaseModel):
+    add_raw_pages: Optional[bool] = None
+    add_annotations: Optional[bool] = None
+
+    @root_validator()
+    def check_raw_or_ann(cls, values):
+        if (values.get("add_raw_pages") is None) and (
+            values.get("add_annotations") is None
+        ):
+            raise ValueError("either 'add_raw_pages' or 'add_annotations' is required")
+        return values
