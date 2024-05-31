@@ -49,10 +49,53 @@ class PrivateDataCollectionSource(BaseModel):
     source: ElasticProjectDataCollectionSource
 
 
-DataSource = Union[
-    PublicDataDocumentSource,
+PrivateDataSource = Union[
     PrivateDataDocumentSource,
     PrivateDataCollectionSource,
+]
+
+
+def create_private_data_source(
+    proj_key: str,
+    index_key: str,
+    document_hash: Optional[str] = None,
+) -> PrivateDataSource:
+    source = ElasticProjectDataCollectionSource(
+        proj_key=proj_key,
+        index_key=index_key,
+    )
+    return (
+        PrivateDataDocumentSource(
+            source=source,
+            document_hash=document_hash,
+        )
+        if document_hash is not None
+        else PrivateDataCollectionSource(
+            source=source,
+        )
+    )
+
+
+PublicDataSource = PublicDataDocumentSource
+
+
+def create_public_data_source(
+    elastic_id: str,
+    index_key: str,
+    document_hash: str,
+) -> PublicDataSource:
+    return PublicDataDocumentSource(
+        source=ElasticDataCollectionSource(
+            elastic_id=elastic_id,
+            index_key=index_key,
+        ),
+        document_hash=document_hash,
+    )
+
+
+DataSource = Union[
+    PrivateDataSource,
+    PublicDataSource,
 ]
 
 
