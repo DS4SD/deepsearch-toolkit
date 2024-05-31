@@ -1,3 +1,9 @@
+## [v0.46.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.46.0) - 2024-05-31
+
+### Feature
+
+* Add data source helpers ([#176](https://github.com/DS4SD/deepsearch-toolkit/issues/176)) ([`c5e7103`](https://github.com/DS4SD/deepsearch-toolkit/commit/c5e71036dd31957bd63b64456782cd69f17c6b5a))
+
 ## [v0.45.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.45.0) - 2024-05-22
 
 ### Feature
