@@ -1,3 +1,9 @@
+## [v0.47.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.47.0) - 2024-06-06
+
+### Feature
+
+* Export to html ([#178](https://github.com/DS4SD/deepsearch-toolkit/issues/178)) ([`00f75f8`](https://github.com/DS4SD/deepsearch-toolkit/commit/00f75f89d11998c1f5e6a9cf9711abf0c9271468))
+
 ## [v0.46.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.46.0) - 2024-05-31
 
 ### Feature
