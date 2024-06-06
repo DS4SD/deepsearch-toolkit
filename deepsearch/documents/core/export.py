@@ -204,16 +204,25 @@ class JsonToHTML:
         subenumeration = False
         subsubenumeration = False
 
+        opened_list = False
+
         # loop though content
         for item in data["main-text"]:
+
             # if this is a reference, get it
             if "$ref" in item:
                 item = self.get_refs(item["$ref"])
+            if "__ref" in item:
+                item = self.get_refs(item["__ref"])
 
             page = self.get_page(item)
             style = self.get_style(item)
 
             if item["type"] == "subtitle-level-1" or item["type"] == "subtitle":
+
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
 
                 if subtitle_l6:
                     body += "</section>\n"
@@ -242,14 +251,18 @@ class JsonToHTML:
 
                 body += "<section>\n"
 
-                body += '<p><span class="title" info="subtitle_l1" {page}><span style="{style}">'.format(
+                body += '<h2><span class="title" info="subtitle_l1" {page}><span style="{style}">'.format(
                     page=page, style=style
                 )
                 for bbox, text in self.split_item_in_boxes(item):
                     body += "<bbox {bbox}>{text}</bbox>\n".format(bbox=bbox, text=text)
-                body += "</span></span></p>\n"
+                body += "</span></span></h2>\n"
 
             elif item["type"] == "subtitle-level-2" or item["type"] == "subsubtitle":
+
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
 
                 if subtitle_l6:
                     body += "</section>\n"
@@ -283,6 +296,10 @@ class JsonToHTML:
 
             elif item["type"] == "subtitle-level-3" or item["type"] == "subsubsubtitle":
 
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
                 if subtitle_l6:
                     body += "</section>\n"
                     subtitle_l6 = False
@@ -311,6 +328,10 @@ class JsonToHTML:
 
             elif item["type"] == "subtitle-level-4":
 
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
                 if subtitle_l6:
                     body += "</section>\n"
                     subtitle_l6 = False
@@ -335,6 +356,10 @@ class JsonToHTML:
 
             elif item["type"] == "subtitle-level-5":
 
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
                 if subtitle_l6:
                     body += "</section>\n"
                     subtitle_l6 = False
@@ -355,6 +380,10 @@ class JsonToHTML:
 
             elif item["type"] == "subtitle-level-6":
 
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
                 if subtitle_l6:
                     body += "</section>\n"
 
@@ -369,18 +398,62 @@ class JsonToHTML:
                     body += "<bbox {bbox}>{text}</bbox>\n".format(bbox=bbox, text=text)
                 body += "</span></span></p>\n"
 
-            elif item["type"] in ["paragraph", "enumeration"] or item[
-                "type"
-            ].startswith("list-item-level-"):
+            elif item["type"] in ["paragraph"]:
 
-                body += '<p><span info="paragraph" style="{style}" {page}>\n'.format(
-                    page=page, style=style
-                )
-                for bbox, text in self.split_item_in_boxes(item):
-                    body += "<bbox {bbox}>{text}</bbox>\n".format(bbox=bbox, text=text)
-                body += "</span></p>\n"
+                if (
+                    "name" in item
+                    and item["name"].startswith("list-item")
+                    and opened_list
+                ):
+
+                    body += (
+                        '<li><span info="paragraph" style="{style}" {page}>\n'.format(
+                            page=page, style=style
+                        )
+                    )
+                    for bbox, text in self.split_item_in_boxes(item):
+                        body += "<bbox {bbox}>{text}</bbox>\n".format(
+                            bbox=bbox, text=text
+                        )
+                    body += "</span></li>\n"
+
+                elif "name" in item and item["name"].startswith("list-item"):
+
+                    body += "<ul>\n"
+                    opened_list = True
+
+                    body += (
+                        '<li><span info="paragraph" style="{style}" {page}>\n'.format(
+                            page=page, style=style
+                        )
+                    )
+                    for bbox, text in self.split_item_in_boxes(item):
+                        body += "<bbox {bbox}>{text}</bbox>\n".format(
+                            bbox=bbox, text=text
+                        )
+                    body += "</span></li>\n"
+
+                else:
+                    if opened_list:
+                        body += "</ul>\n"
+                        opened_list = False
+
+                    body += (
+                        '<p><span info="paragraph" style="{style}" {page}>\n'.format(
+                            page=page, style=style
+                        )
+                    )
+                    for bbox, text in self.split_item_in_boxes(item):
+                        body += "<bbox {bbox}>{text}</bbox>\n".format(
+                            bbox=bbox, text=text
+                        )
+                    body += "</span></p>\n"
 
             elif item["type"] == "caption":
+
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
 
                 body += '<p><span info="caption" style="{style}" {page}>\n'.format(
                     page=page, style=style
@@ -391,7 +464,37 @@ class JsonToHTML:
 
             elif item["type"] == "footnote":
 
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
                 body += '<p class="footnote" style="{style}" {page}>\n'.format(
+                    page=page, style=style
+                )
+                for bbox, text in self.split_item_in_boxes(item):
+                    body += "<bbox {bbox}>{text}</bbox>\n".format(bbox=bbox, text=text)
+                body += "</p>\n"
+
+            elif item["type"] == "page-footer":
+
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
+                body += '<p class="page-footer" style="{style}" {page}>\n'.format(
+                    page=page, style=style
+                )
+                for bbox, text in self.split_item_in_boxes(item):
+                    body += "<bbox {bbox}>{text}</bbox>\n".format(bbox=bbox, text=text)
+                body += "</p>\n"
+
+            elif item["type"] == "page-header":
+
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
+                body += '<p class="page-header" style="{style}" {page}>\n'.format(
                     page=page, style=style
                 )
                 for bbox, text in self.split_item_in_boxes(item):
@@ -408,10 +511,18 @@ class JsonToHTML:
 
             elif item["type"] == "table":
 
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
+
                 body += self.write_table(item)
 
             ## By defualt dump everything containing text
             elif "text" in item:
+
+                if opened_list:
+                    body += "</ul>\n"
+                    opened_list = False
 
                 body += '<p><span info="{type}" style="{style}" {page}>\n'.format(
                     page=page, style=style, type=item["type"]
