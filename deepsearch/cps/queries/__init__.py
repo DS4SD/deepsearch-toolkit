@@ -15,6 +15,7 @@ from deepsearch.cps.client.components.projects import (
     SemanticBackendResource,
 )
 from deepsearch.cps.client.queries import Query, TaskCoordinates
+from deepsearch.cps.queries.results import ChunkRef
 
 
 def Wf(wf_query: Dict[str, Any], kg: TaskCoordinates) -> Query:
@@ -110,6 +111,7 @@ class _APISemanticRagParameters(_APISemanticRetrievalParameters):
     gen_ctx_window_size: int = 5000
     gen_ctx_window_lead_weight: float = 0.5
     return_prompt: bool = False
+    chunk_refs: Optional[List[ChunkRef]] = None
     gen_timeout: Optional[float] = None
 
 
@@ -129,6 +131,7 @@ def RAGQuery(
     gen_ctx_window_size: int = 5000,
     gen_ctx_window_lead_weight: float = 0.5,
     return_prompt: bool = False,
+    chunk_refs: Optional[List[ChunkRef]] = None,
     gen_timeout: Optional[float] = None,
 ) -> Query:
     """Create a RAG query
@@ -147,6 +150,7 @@ def RAGQuery(
         gen_ctx_window_size (int, optional): (relevant only if gen_ctx_extr_method=="window") max chars to use for extracted gen context (actual extraction quantized on doc item level); defaults to 5000
         gen_ctx_window_lead_weight (float, optional): (relevant only if gen_ctx_extr_method=="window") weight of leading text for distributing remaining window size after extracting the `main_path`; defaults to 0.5 (centered around `main_path`)
         return_prompt (bool, optional): whether to return the instantiated prompt; defaults to False
+        chunk_refs (Optional[List[ChunkRef]], optional): list of explicit chunk references to use instead of performing retrieval; defaults to None (i.e. retrieval-mode)
         gen_timeout (float, optional): timeout for LLM generation; defaults to None, i.e. determined by system
     """
 
@@ -181,6 +185,7 @@ def RAGQuery(
         gen_ctx_window_size=gen_ctx_window_size,
         gen_ctx_window_lead_weight=gen_ctx_window_lead_weight,
         return_prompt=return_prompt,
+        chunk_refs=chunk_refs,
         gen_timeout=gen_timeout,
     )
 
