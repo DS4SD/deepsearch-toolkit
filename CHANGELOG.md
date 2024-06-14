@@ -1,3 +1,9 @@
+## [v0.48.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.48.0) - 2024-06-14
+
+### Feature
+
+* Add QA on given chunk refs ([#181](https://github.com/DS4SD/deepsearch-toolkit/issues/181)) ([`995dda0`](https://github.com/DS4SD/deepsearch-toolkit/commit/995dda00ddc874aa039367ae3fd5e51c02c05f5b))
+
 ## [v0.47.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.47.0) - 2024-06-06
 
 ### Feature
