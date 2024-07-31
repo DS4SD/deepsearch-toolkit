@@ -30,10 +30,10 @@ class NLPController(BaseController):
         cfg = self._model.get_nlp_config()
         metadata = NLPModelMetadata(
             supported_object_types=cfg.supported_types,  # type: ignore[arg-type]
-            **self._get_metadata().dict(),  # passing parent metadata dict as kwargs
+            **self._get_metadata().model_dump(),  # passing parent metadata dict as kwargs
         )
         spec = NLPInfoOutputDefinitionsSpec(
-            definition=cfg.labels.dict(),
+            definition=cfg.labels.model_dump(),
             metadata=metadata,
         )
         definitions = NLPInfoOutputDefinitions(

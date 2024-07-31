@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 
 def _resolve_item(item, doc):

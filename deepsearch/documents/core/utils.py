@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterator, List
 
 import requests
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 from tqdm import tqdm
 
 from deepsearch.cps.client.api import CpsApi

@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic.v1 import root_validator
+from pydantic import model_validator
 
 from deepsearch.model.base.types import (
     BaseAppPredInput,
@@ -22,7 +22,7 @@ class GenerateAnswers(StrictModel):
     questions: List[str]
     extras: Optional[Dict[str, Any]] = None
 
-    @root_validator
+    @model_validator(mode="after")
     def check_lengths_match(cls, values):
         contx, quest = values.get("contexts"), values.get("questions")
         if len(contx) != len(quest):

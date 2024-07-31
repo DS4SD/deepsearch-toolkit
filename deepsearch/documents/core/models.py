@@ -1,9 +1,21 @@
 import collections
 from enum import Enum
 from textwrap import dedent
-from typing import ClassVar, Dict, List, Literal, Optional, Set, Union, get_args
+from typing import (
+    ClassVar,
+    Dict,
+    Hashable,
+    List,
+    Literal,
+    Optional,
+    TypeVar,
+    Union,
+    get_args,
+)
 
-from pydantic.v1 import BaseModel, Field, ValidationError, conlist, root_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, model_validator
+from pydantic_core import PydanticCustomError
+from typing_extensions import Annotated
 
 from deepsearch import CpsApi
 from deepsearch.core.util.ccs_utils import get_ccs_project_key
@@ -84,7 +96,7 @@ class MongoS3TargetCoordinates(BaseModel):
     """Coordinates to a Mongo collection, and optionally, an S3 bucket"""
 
     mongo: MongoCollectionCoordinates
-    s3: Optional[S3Coordinates]
+    s3: Optional[S3Coordinates] = None
 
 
 class MongoS3Target(BaseModel):
@@ -128,7 +140,7 @@ class ElasticIndexCoordinates(BaseModel):
 
 class ElasticS3TargetCoordinates(BaseModel):
     elastic: ElasticIndexCoordinates
-    s3: Optional[S3Coordinates]
+    s3: Optional[S3Coordinates] = None
 
 
 class ElasticS3Target(BaseModel):
@@ -340,32 +352,47 @@ class TesseractOcrLanguage(str, Enum):
     yor = "yor"
 
 
+# Unique check, https://github.com/pydantic/pydantic-core/pull/820#issuecomment-1670475909
+
+T = TypeVar("T", bound=Hashable)
+
+
+def _validate_unique_list(v: List[T]) -> List[T]:
+    if len(v) != len(set(v)):
+        raise PydanticCustomError("unique_list", "List must be unique")
+    return v
+
+
+UniqueList = Annotated[
+    List[T],
+    AfterValidator(_validate_unique_list),
+    Field(json_schema_extra={"uniqueItems": True}),
+]
+
+
 class TesseractOcrEngine(BaseModel):
     id: ClassVar[str] = "tesseract-ocr"
-    languages: conlist(TesseractOcrLanguage, min_items=1, unique_items=True) = [  # type: ignore
+    languages: Annotated[UniqueList[TesseractOcrLanguage], Field(min_length=1)] = [
         TesseractOcrLanguage.eng,
         TesseractOcrLanguage.deu,
     ]
-
-    class Config:
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class AlpineOcrEngine(BaseModel):
     id: ClassVar[str] = "alpine-ocr"
-    languages: conlist(  # type: ignore
-        AlpineOcrLanguage, min_items=1, max_items=1, unique_items=True
-    ) = [AlpineOcrLanguage.English]
-
-    class Config:
-        use_enum_values = True
+    languages: Annotated[
+        UniqueList[AlpineOcrLanguage],
+        Field(min_length=1, max_length=1),
+    ] = [AlpineOcrLanguage.English]
+    model_config = ConfigDict(use_enum_values=True)
 
 
 OcrEngine = Union[AlpineOcrEngine, TesseractOcrEngine]
 
 
 class ProjectConversionModel(BaseModel):
-    name: Optional[str]  # named model (config)
+    name: Optional[str] = None  # named model (config)
     config_id: str  # the model config key. Validate with available models CCS project.
     proj_key: str
 
@@ -441,11 +468,11 @@ class DefaultConversionModel(BaseModel):
         return stages_to_models  # FIXME: Dummy
 
     def to_ccs_spec(self):
-        return self.dict()
+        return self.model_dump()
 
     @classmethod
     def from_ccs_spec(cls, obj):
-        return cls.parse_obj(obj)
+        return cls.model_validate(obj)
 
 
 ConversionModel = Union[DefaultConversionModel, ProjectConversionModel]
@@ -453,7 +480,7 @@ ConversionModel = Union[DefaultConversionModel, ProjectConversionModel]
 
 class ConversionPipelineSettings(BaseModel):
     clusters: ConversionModel
-    tables: Optional[ConversionModel]
+    tables: Optional[ConversionModel] = None
 
     @classmethod
     def from_ccs_spec(cls, obj):
@@ -536,7 +563,7 @@ class OCRSettings(BaseModel):
         return {
             "enabled": self.enabled,
             "backend": self.engine.id,
-            "backend_settings": self.engine.dict(),
+            "backend_settings": self.engine.model_dump(),
             "merge_mode": self.merge_mode,
         }
 
@@ -564,16 +591,16 @@ class ConversionMetadata(BaseModel):
 
     @classmethod
     def from_ccs_spec(cls, obj):
-        return cls.parse_obj(obj or {})
+        return cls.model_validate(obj or {})
 
     def to_ccs_spec(self):
-        return self.dict()
+        return self.model_dump()
 
 
 class ConversionSettings(BaseModel):
-    pipeline: Optional[ConversionPipelineSettings]
-    ocr: Optional[OCRSettings]
-    metadata: Optional[ConversionMetadata]
+    pipeline: Optional[ConversionPipelineSettings] = None
+    ocr: Optional[OCRSettings] = None
+    metadata: Optional[ConversionMetadata] = None
 
     @classmethod
     def from_project(cls, api: CpsApi, proj_key: str) -> "ConversionSettings":
@@ -633,7 +660,8 @@ class TargetSettings(BaseModel):
     add_raw_pages: Optional[bool] = None
     add_annotations: Optional[bool] = None
 
-    @root_validator()
+    @model_validator(mode="after")
+    @classmethod
     def check_raw_or_ann(cls, values):
         if (values.get("add_raw_pages") is None) and (
             values.get("add_annotations") is None

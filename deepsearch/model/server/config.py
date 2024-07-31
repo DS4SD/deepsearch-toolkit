@@ -1,8 +1,7 @@
-from pydantic.v1 import BaseSettings, SecretStr
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     api_key: SecretStr
-
-    class Config:
-        env_prefix = "DS_MODEL_"
+    model_config = SettingsConfigDict(env_prefix="DS_MODEL_")

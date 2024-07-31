@@ -168,7 +168,9 @@ def process_local_file(
             if conv_settings is not None:
                 payload["conversion_settings"] = conv_settings.to_ccs_spec()
             if target_settings is not None:
-                payload["target_settings"] = target_settings.dict(exclude_none=True)
+                payload["target_settings"] = target_settings.model_dump(
+                    exclude_none=True
+                )
 
             task_id = api.data_indices.upload_file(coords=coords, body=payload)
             task_ids.append(task_id)
@@ -203,7 +205,7 @@ def process_external_cos(
         bar_format=progressbar.bar_format,
     ) as progress:
         # upload using coordinates
-        payload = {"s3_source": {"coordinates": s3_coordinates.dict()}}
+        payload = {"s3_source": {"coordinates": s3_coordinates.model_dump()}}
         task_id = api.data_indices.upload_file(
             coords=coords,
             body=payload,

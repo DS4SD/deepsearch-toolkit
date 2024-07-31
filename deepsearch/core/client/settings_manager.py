@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import platformdirs
-from pydantic.v1 import ValidationError
+from pydantic import ValidationError
 
 from deepsearch.core.cli.profile_utils import (
     MSG_AMBIGUOUS_SUCCESSOR,
@@ -111,7 +111,7 @@ class SettingsManager:
         if self._main_settings.profile is None:
             legacy_cfg_path = self.config_root_path / LEGACY_CFG_FILENAME
             if legacy_cfg_path.exists():
-                legacy_cfg = DeepSearchConfig.parse_file(legacy_cfg_path)
+                legacy_cfg = DeepSearchConfig.model_validate(legacy_cfg_path)
                 if isinstance(legacy_cfg.auth, DeepSearchKeyAuth):
                     new_cfg = ProfileSettings(
                         host=legacy_cfg.host,
