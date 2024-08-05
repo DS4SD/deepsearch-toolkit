@@ -2,6 +2,11 @@
 
 set -e
 
+DOCKER="${DOCKER:-podman}"
+DOCKER_OPTS="${DOCKER_OPTS:- --userns=keep-id:uid=\"$(id -u)\",gid=\"$(id -g)\"}"
+
+echo "DOCKER_OPTS=${DOCKER_OPTS}"
+
 curdir=$(dirname $0)
 rootdir=$curdir/../../
 
@@ -32,33 +37,33 @@ fi
 rm -rf .generated/ || true
 mkdir -p .generated/
 
-echo "Generating client for CPS"
+# echo "Generating client for CPS"
 
-podman run --rm \
-    -v "$(pwd):/local" \
-    --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
-    ${generator_image} generate \
-        -i "/local/tools/swagger-client-generator/swagger-cps.json" \
-        -g python \
-        -o /local/.generated/cps-public \
-        -c /local/tools/swagger-client-generator/openapi-generator-config-cps.json
+# ${DOCKER} run --rm \
+#     -v "$(pwd):/local" \
+#     ${DOCKER_OPTS} \
+#     ${generator_image} generate \
+#         -i "/local/tools/swagger-client-generator/swagger-cps.json" \
+#         -g python \
+#         -o /local/.generated/cps-public \
+#         -c /local/tools/swagger-client-generator/openapi-generator-config-cps.json
 
-echo "Generating client for the User API"
+# echo "Generating client for the User API"
 
-podman run --rm \
-    -v "$(pwd):/local" \
-    --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
-    ${generator_image} generate \
-        -i "/local/tools/swagger-client-generator/swagger-user.json" \
-        -g python \
-        -o /local/.generated/cps-user \
-        -c /local/tools/swagger-client-generator/openapi-generator-config-user.json
+# ${DOCKER} run --rm \
+#     -v "$(pwd):/local" \
+#     ${DOCKER_OPTS} \
+#     ${generator_image} generate \
+#         -i "/local/tools/swagger-client-generator/swagger-user.json" \
+#         -g python \
+#         -o /local/.generated/cps-user \
+#         -c /local/tools/swagger-client-generator/openapi-generator-config-user.json
 
 echo "Generating client for DS API v2"
 
-podman run --rm \
+${DOCKER} run --rm \
     -v "$(pwd):/local" \
-    --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
+    ${DOCKER_OPTS} \
     ${generator_image_v2} generate \
         -i "/local/tools/swagger-client-generator/openapi-ds-v2.json" \
         -g python \
@@ -68,7 +73,7 @@ podman run --rm \
 # echo "Generating client for the CPS KG API"
 # echo "Currently disabled: TODO FIX API Specs"
 
-# # podman run --rm \
+# # ${DOCKER} run --rm \
 # #     -v "$(pwd):/local" \
 # #     --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
 # #     ${generator_image} generate \
@@ -83,7 +88,7 @@ podman run --rm \
 # echo "Generating client for the KG Query API"
 # echo "Disabled since it generated wrong specs. It won't be updated."
 
-# # podman run --rm \
+# # ${DOCKER} run --rm \
 # #     -v "$(pwd):/local" \
 # #     --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
 # #     ${generator_image} generate \
@@ -97,7 +102,7 @@ podman run --rm \
 # echo "Generating client for the KG Create API"
 # echo "Disabled since it won't be updated."
 
-# # podman run --rm \
+# # ${DOCKER} run --rm \
 # #     -v "$(pwd):/local" \
 # #     --userns=keep-id:uid="$(id -u)",gid="$(id -g)" \
 # #     ${generator_image} generate \
@@ -111,16 +116,16 @@ podman run --rm \
 echo "Merging packages..."
 
 # Remove generated API client code
-rm -rf $rootdir/deepsearch/cps/apis/public || true
-rm -rf $rootdir/deepsearch/cps/apis/user || true
+# rm -rf $rootdir/deepsearch/cps/apis/public || true
+# rm -rf $rootdir/deepsearch/cps/apis/user || true
 rm -rf $rootdir/deepsearch/cps/apis/public_v2 || true
 # rm -rf $rootdir/deepsearch/cps/apis/kg || true
 
 mkdir -p $rootdir/deepsearch/cps/apis
 touch $rootdir/deepsearch/cps/apis/__init__.py
 
-cp -R .generated/cps-public/deepsearch/cps/apis/ $rootdir/deepsearch/cps/apis/
-cp -R .generated/cps-user/deepsearch/cps/apis/ $rootdir/deepsearch/cps/apis/
+# cp -R .generated/cps-public/deepsearch/cps/apis/ $rootdir/deepsearch/cps/apis/
+# cp -R .generated/cps-user/deepsearch/cps/apis/ $rootdir/deepsearch/cps/apis/
 cp -R .generated/ds-public-v2/deepsearch/cps/apis/ $rootdir/deepsearch/cps/apis/
 # cp -R .generated/cps-kg-create/deepsearch/cps/apis/ $rootdir/deepsearch/cps/apis/
 # cp -R .generated/cps-kg-query/deepsearch/cps/apis/ $rootdir/deepsearch/cps/apis/
@@ -139,8 +144,8 @@ mkdir -p $rootdir/docs/apis/user
 mkdir -p $rootdir/docs/apis/kg/query
 mkdir -p $rootdir/docs/apis/kg/create
 
-cp -R .generated/cps-public/docs/* $rootdir/docs/apis/public
-cp -R .generated/cps-user/docs/* $rootdir/docs/apis/user
+# cp -R .generated/cps-public/docs/* $rootdir/docs/apis/public
+# cp -R .generated/cps-user/docs/* $rootdir/docs/apis/user
 cp -R .generated/ds-public-v2/docs/* $rootdir/docs/apis/public_v2
 # cp -R .generated/cps-kg-query/docs/* $rootdir/docs/apis/kg/create
 # cp -R .generated/cps-kg-create/docs/* $rootdir/docs/apis/kg/query
