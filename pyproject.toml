@@ -72,7 +72,7 @@ all = [
 
 [tool.poetry.group.dev.dependencies]
 black = {extras = ["jupyter"], version = "^22.1.0"}
-pylint = "^2.15.8"
+pylint = "^3.2.6"
 pytest = "^7.0.1"
 pre-commit = "^2.17.0"
 mypy = "^1.0.0"
@@ -96,7 +96,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 88
-target-version = ["py38"]
+target-version = ["py39"]
 include = '\.pyi?$'
 extend-exclude = """
 # Exclude generated API code
@@ -107,7 +107,7 @@ extend-exclude = """
 profile = "black"
 line_length = 88
 skip_glob = ["docs", "deepsearch/cps/apis"]
-py_version=38
+py_version=39
 known_first_party = ["cps"]
 
 [tool.mypy]
@@ -115,7 +115,7 @@ plugins = ["pydantic.mypy"]
 pretty = true
 # strict = true
 no_implicit_optional = true
-python_version = 3.8
+python_version = "3.9"
 
 # We are not going to bother about generated code...
 [[tool.mypy.overrides]]

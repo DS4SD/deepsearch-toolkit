@@ -6,9 +6,10 @@ import pathlib
 import urllib
 import zipfile as z
 from pathlib import Path
-from typing import Any, Dict, Iterator, List
+from typing import Any, Dict, Iterator, List, Optional
 
 import requests
+from docling_core.types import Document as DsDocument
 from pydantic import BaseModel
 from tqdm import tqdm
 
@@ -264,7 +265,8 @@ def write_taskids(result_dir: Path, list_to_write: List[str]) -> None:
 class IteratedDocument(BaseModel):
     archive_path: Path
     file_path: Path
-    document: Dict[str, Any]
+    document: DsDocument
+    cells: Optional[Dict[str, Any]] = None
 
 
 def iterate_converted_files(result_dir: Path) -> Iterator[IteratedDocument]:
@@ -279,9 +281,17 @@ def iterate_converted_files(result_dir: Path) -> Iterator[IteratedDocument]:
                     continue
 
                 basename = name.rstrip(".json")
-                doc_jsondata = json.loads(archive.read(f"{basename}.json"))
+                doc: DsDocument = DsDocument.model_validate_json(
+                    archive.read(f"{basename}.json")
+                )
+
+                cells_data = None
+                if f"{basename}.cells" in all_files:
+                    cells_data = json.loads(archive.read(f"{basename}.cells"))
+
                 yield IteratedDocument(
                     archive_path=output_file,
                     file_path=Path(name),
-                    document=doc_jsondata,
+                    document=doc,
+                    cells=cells_data,
                 )

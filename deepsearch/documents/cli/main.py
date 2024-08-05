@@ -4,7 +4,6 @@ from enum import Enum
 import urllib3
 
 from deepsearch.core.cli.utils import cli_handler
-from deepsearch.documents.core.export import export_to_markdown
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -109,7 +108,7 @@ def convert(
             exported_filename = (
                 markdown_output_dir / f"{clean_archive_name}_{clean_filename}.md"
             )
-            markdown_content = export_to_markdown(converted_document.document)
+            markdown_content = converted_document.document.export_to_markdown()
             with exported_filename.open("w") as f:
                 f.write(markdown_content)
 
