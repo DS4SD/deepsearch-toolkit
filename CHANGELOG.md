@@ -1,3 +1,13 @@
+## [v1.0.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.0.0) - 2024-08-05
+
+### Feature
+
+* Release v1.0.0 with docling-core, python 3.8 removal ([#183](https://github.com/DS4SD/deepsearch-toolkit/issues/183)) ([`adf261d`](https://github.com/DS4SD/deepsearch-toolkit/commit/adf261d4a59a1b4190c52740f3f304bec683a259))
+
+### Breaking
+
+* Release v1.0.0 with docling-core, python 3.8 removal ([#183](https://github.com/DS4SD/deepsearch-toolkit/issues/183)) ([`adf261d`](https://github.com/DS4SD/deepsearch-toolkit/commit/adf261d4a59a1b4190c52740f3f304bec683a259))
+
 ## [v0.48.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v0.48.0) - 2024-06-14
 
 ### Feature
