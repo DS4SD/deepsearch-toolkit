@@ -2,10 +2,10 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Optional
 
-from pydantic.v1 import BaseModel, Extra, Field, PositiveFloat
+from pydantic import BaseModel, Field, PositiveFloat
 
 
-class StrictModel(BaseModel, extra=Extra.forbid):
+class StrictModel(BaseModel, extra="forbid"):
     # TODO use only where needed
     pass
 

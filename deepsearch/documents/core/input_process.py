@@ -114,7 +114,7 @@ def process_cos_input(
         cps_proj_key=cps_proj_key,
         source={
             "type": "s3",
-            "coordinates": source_cos.dict(),
+            "coordinates": source_cos.model_dump(),
         },
         target=target,
         conversion_settings=conversion_settings,

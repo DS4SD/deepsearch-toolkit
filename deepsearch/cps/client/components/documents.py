@@ -5,7 +5,7 @@ import json
 import urllib.parse
 from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from deepsearch.cps.apis.public_v2 import SemanticApi
 from deepsearch.cps.apis.public_v2.models.cps_task import CpsTask

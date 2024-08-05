@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
 import requests
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.apis.public.models.attachment_upload_data import (
@@ -40,7 +40,7 @@ class CpsApiDataIndices:
 
         # filter out saved searchs index
         return [
-            DataIndex.parse_obj(item.to_dict())
+            DataIndex.model_validate(item.to_dict())
             for item in response
             if item.to_dict()["type"] != "View"
         ]
@@ -94,7 +94,7 @@ class CpsApiDataIndices:
             self.sw_api.create_project_data_index(proj_key=proj_key, data=data)
         )
 
-        return DataIndex.parse_obj(response.to_dict())
+        return DataIndex.model_validate(response.to_dict())
 
     def delete(
         self,
@@ -146,7 +146,7 @@ class CpsApiDataIndices:
         task: Task = self.sw_api.html_print_convert_upload(
             proj_key=coords.proj_key,
             index_key=coords.index_key,
-            body={"urls": [item.dict() for item in urls]},
+            body={"urls": [item.model_dump() for item in urls]},
         )
         return task
 

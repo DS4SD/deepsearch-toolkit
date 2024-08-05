@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 import requests
-from pydantic.v1 import ValidationError
+from pydantic import ValidationError
 
 import deepsearch.cps.apis.user
 from deepsearch.core.client import (

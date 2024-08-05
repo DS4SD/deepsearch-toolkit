@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic.v1 import BaseModel, Field, validate_arguments
+from pydantic import BaseModel, Field, validate_call
+from pydantic_settings import SettingsConfigDict
 from typing_extensions import Annotated
 
 from deepsearch.cps.client.components.documents import (
@@ -114,8 +115,10 @@ class _APISemanticRagParameters(_APISemanticRetrievalParameters):
     chunk_refs: Optional[List[ChunkRef]] = None
     gen_timeout: Optional[float] = None
 
+    model_config = SettingsConfigDict(protected_namespaces=())
 
-@validate_arguments
+
+@validate_call
 def RAGQuery(
     question: str,
     *,
@@ -202,7 +205,7 @@ def RAGQuery(
     return query
 
 
-@validate_arguments
+@validate_call
 def SemanticQuery(
     question: str,
     *,
@@ -254,7 +257,7 @@ def SemanticQuery(
     task = query.add(
         task_id="QA",
         kind_or_task="SemanticRetrieval",
-        parameters=params.dict(),
+        parameters=params.model_dump(),
         coordinates=coords,
     )
     task.output("items").output_as("items")

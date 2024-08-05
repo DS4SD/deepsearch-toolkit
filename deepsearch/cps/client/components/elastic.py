@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Any, Dict, List, Union
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from deepsearch.cps.apis import public as sw_client
 from deepsearch.cps.client.components.data_indices import (
@@ -31,7 +31,9 @@ class CpsApiElastic:
             index_type="all", index_domain=domain
         )
 
-        return [ElasticDataCollection.parse_obj(item.to_dict()) for item in response]
+        return [
+            ElasticDataCollection.model_validate(item.to_dict()) for item in response
+        ]
 
 
 class ElasticDataCollectionSource(BaseModel):

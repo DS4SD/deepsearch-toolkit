@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from deepsearch.cps.client.components.queries import RunQueryResult
 
@@ -71,7 +71,9 @@ class RAGResult(BaseModel):
                         grounding=RAGGroundingInfo(
                             retr_items=(
                                 [
-                                    SearchResultItem.parse_obj(search_result_items[i])
+                                    SearchResultItem.model_validate(
+                                        search_result_items[i]
+                                    )
                                     for i in retr_idxs
                                 ]
                                 if retr_idxs is not None and retrieval_part is not None

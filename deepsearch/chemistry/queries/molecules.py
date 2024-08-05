@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Union
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from deepsearch.cps.client.queries import Query
 

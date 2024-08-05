@@ -4,17 +4,18 @@ from getpass import getpass
 from pathlib import Path
 from typing import Dict, Optional, Union
 
-from pydantic.v1 import BaseSettings, SecretStr
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class DumpableSettings(BaseSettings):
     @classmethod
-    def get_env_var_name(cls, attr_name) -> str:
-        return cls.Config.env_prefix + attr_name.upper()
+    def get_env_var_name(cls, attr_name: str) -> str:
+        return cls.model_config["env_prefix"] + attr_name.upper()
 
     def _get_serializable_dict(self) -> Dict[str, str]:
         result = {}
-        model_dict = self.dict()
+        model_dict = self.model_dump()
         for k in model_dict:
             new_key = self.get_env_var_name(attr_name=k)
             if isinstance((old_val := model_dict[k]), SecretStr):
@@ -38,9 +39,7 @@ class ProfileSettings(DumpableSettings):
     username: str
     api_key: SecretStr
     verify_ssl: bool = True
-
-    class Config:
-        env_prefix = "DEEPSEARCH_"
+    model_config = SettingsConfigDict(env_prefix="DEEPSEARCH_")
 
     @classmethod
     def from_cli_prompt(cls) -> ProfileSettings:
@@ -54,13 +53,9 @@ class ProfileSettings(DumpableSettings):
 
 class MainSettings(DumpableSettings):
     profile: Optional[str] = None
-
-    class Config:
-        env_prefix = "DEEPSEARCH_"
+    model_config = SettingsConfigDict(env_prefix="DEEPSEARCH_")
 
 
 class CLISettings(DumpableSettings):
     show_cli_stack_traces: bool = False
-
-    class Config:
-        env_prefix = "DEEPSEARCH_"
+    model_config = SettingsConfigDict(env_prefix="DEEPSEARCH_")

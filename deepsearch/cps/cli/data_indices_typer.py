@@ -165,7 +165,7 @@ def upload_files(
 
     if conv_settings is not None:
         try:
-            final_conv_settings = ConversionSettings.parse_obj(
+            final_conv_settings = ConversionSettings.model_validate(
                 json.loads(conv_settings)
             )
         except json.JSONDecodeError:
@@ -177,7 +177,7 @@ def upload_files(
 
     if target_settings is not None:
         try:
-            final_target_settings = TargetSettings.parse_file(target_settings)
+            final_target_settings = TargetSettings.model_validate_json(target_settings)
         except Exception as e:
             raise e
     else:
