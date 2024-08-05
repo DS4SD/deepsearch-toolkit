@@ -17,20 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.file_source import FileSource
+from deepsearch.cps.apis.public_v2.models.http_source import HttpSource
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GenAIPartialParams(BaseModel):
+class ConvertDocumentRequest(BaseModel):
     """
-    GenAIPartialParams
+    ConvertDocumentRequest
     """ # noqa: E501
-    model_id: Optional[StrictStr] = None
-    prompt_template: Optional[StrictStr] = None
-    params: Optional[Dict[str, Any]] = None
-    timeout: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["model_id", "prompt_template", "params", "timeout"]
+    http_source: Optional[HttpSource] = None
+    file_source: Optional[FileSource] = None
+    __properties: ClassVar[List[str]] = ["http_source", "file_source"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +50,7 @@ class GenAIPartialParams(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a JSON string"""
+        """Create an instance of ConvertDocumentRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,11 +71,17 @@ class GenAIPartialParams(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of http_source
+        if self.http_source:
+            _dict['http_source'] = self.http_source.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of file_source
+        if self.file_source:
+            _dict['file_source'] = self.file_source.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a dict"""
+        """Create an instance of ConvertDocumentRequest from a dict"""
         if obj is None:
             return None
 
@@ -83,10 +89,8 @@ class GenAIPartialParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "model_id": obj.get("model_id"),
-            "prompt_template": obj.get("prompt_template"),
-            "params": obj.get("params"),
-            "timeout": obj.get("timeout")
+            "http_source": HttpSource.from_dict(obj["http_source"]) if obj.get("http_source") is not None else None,
+            "file_source": FileSource.from_dict(obj["file_source"]) if obj.get("file_source") is not None else None
         })
         return _obj
 

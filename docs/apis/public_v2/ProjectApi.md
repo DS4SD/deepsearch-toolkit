@@ -4,6 +4,8 @@ All URIs are relative to */api/cps/public/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**check_wait_ccs_task_task**](ProjectApi.md#check_wait_ccs_task_task) | **GET** /project/{proj_key}/convert_tasks/{task_id} | Check Wait Ccs Task Task
+[**convert_pdf_document**](ProjectApi.md#convert_pdf_document) | **POST** /project/{proj_key}/convert | Convert Pdf Document
 [**delete_project_integration_config_genai**](ProjectApi.md#delete_project_integration_config_genai) | **DELETE** /project/{proj_key}/integrations/genai | Delete Project Integration Config Genai
 [**get_project_default_values**](ProjectApi.md#get_project_default_values) | **GET** /project/{proj_key}/default_values | Get Project Default Values
 [**get_project_integration_config_genai**](ProjectApi.md#get_project_integration_config_genai) | **GET** /project/{proj_key}/integrations/genai | Get Project Integration Config Genai
@@ -11,6 +13,173 @@ Method | HTTP request | Description
 [**update_project_default_values**](ProjectApi.md#update_project_default_values) | **POST** /project/{proj_key}/default_values | Update Project Default Values
 [**update_project_integration_config_genai**](ProjectApi.md#update_project_integration_config_genai) | **POST** /project/{proj_key}/integrations/genai | Update Project Integration Config Genai
 
+
+# **check_wait_ccs_task_task**
+> TaskResult check_wait_ccs_task_task(task_id, proj_key, wait=wait)
+
+Check Wait Ccs Task Task
+
+Check status of a CCS conversion task.
+
+### Example
+
+* Api Key Authentication (Bearer):
+
+```python
+import deepsearch.cps.apis.public_v2
+from deepsearch.cps.apis.public_v2.models.task_result import TaskResult
+from deepsearch.cps.apis.public_v2.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to /api/cps/public/v2
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public_v2.Configuration(
+    host = "/api/cps/public/v2"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration.api_key['Bearer'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Bearer'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public_v2.ProjectApi(api_client)
+    task_id = 'task_id_example' # str | 
+    proj_key = 'proj_key_example' # str | 
+    wait = 3.4 # float | Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. (optional)
+
+    try:
+        # Check Wait Ccs Task Task
+        api_response = api_instance.check_wait_ccs_task_task(task_id, proj_key, wait=wait)
+        print("The response of ProjectApi->check_wait_ccs_task_task:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling ProjectApi->check_wait_ccs_task_task: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **task_id** | **str**|  | 
+ **proj_key** | **str**|  | 
+ **wait** | **float**| Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. | [optional] 
+
+### Return type
+
+[**TaskResult**](TaskResult.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Successful Response |  -  |
+**422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **convert_pdf_document**
+> CcsTask convert_pdf_document(proj_key, convert_document_request)
+
+Convert Pdf Document
+
+Convert a PDF document directly to CCS.
+
+### Example
+
+* Api Key Authentication (Bearer):
+
+```python
+import deepsearch.cps.apis.public_v2
+from deepsearch.cps.apis.public_v2.models.ccs_task import CcsTask
+from deepsearch.cps.apis.public_v2.models.convert_document_request import ConvertDocumentRequest
+from deepsearch.cps.apis.public_v2.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to /api/cps/public/v2
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public_v2.Configuration(
+    host = "/api/cps/public/v2"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration.api_key['Bearer'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Bearer'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public_v2.ProjectApi(api_client)
+    proj_key = 'proj_key_example' # str | 
+    convert_document_request = deepsearch.cps.apis.public_v2.ConvertDocumentRequest() # ConvertDocumentRequest | 
+
+    try:
+        # Convert Pdf Document
+        api_response = api_instance.convert_pdf_document(proj_key, convert_document_request)
+        print("The response of ProjectApi->convert_pdf_document:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling ProjectApi->convert_pdf_document: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **proj_key** | **str**|  | 
+ **convert_document_request** | [**ConvertDocumentRequest**](ConvertDocumentRequest.md)|  | 
+
+### Return type
+
+[**CcsTask**](CcsTask.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Successful Response |  -  |
+**422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_project_integration_config_genai**
 > delete_project_integration_config_genai(proj_key)

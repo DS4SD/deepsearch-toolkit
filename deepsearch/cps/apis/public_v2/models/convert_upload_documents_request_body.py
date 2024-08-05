@@ -17,34 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.internal_url import InternalUrl
 from deepsearch.cps.apis.public_v2.models.partial_direct_conversion_parameters import PartialDirectConversionParameters
+from deepsearch.cps.apis.public_v2.models.s3_document_source import S3DocumentSource
 from deepsearch.cps.apis.public_v2.models.target_conversion_parameters import TargetConversionParameters
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ConvertDocumentsRequestBody(BaseModel):
+class ConvertUploadDocumentsRequestBody(BaseModel):
     """
-    ConvertDocumentsRequestBody
+    ConvertUploadDocumentsRequestBody
     """ # noqa: E501
+    file_url: Optional[List[StrictStr]] = Field(default=None, description="List of File's URL to be converted and uploaded to the data index.")
+    internal_file_url: Optional[List[InternalUrl]] = Field(default=None, description="List of Internal File's URLs to be converted and uploaded to the data index.")
+    s3_source: Optional[S3DocumentSource] = Field(default=None, description="Coordinates to object store to get files to convert. Can specify which files with object keys.")
+    upload_to_elastic: Optional[StrictBool] = None
     conversion_settings: Optional[PartialDirectConversionParameters] = Field(default=None, description="Specify the conversion settings to use.")
     target_settings: Optional[TargetConversionParameters] = Field(default=None, description="Specify the target settings to use.")
-    document_hashes: Optional[List[StrictStr]] = Field(default=None, description="List of document hashes to be used as filter.")
-    without_operations: Optional[List[StrictStr]] = Field(default=None, description="List of Operation Status documents don't have to be used as filter.")
-    upload_to_elastic: Optional[StrictBool] = None
-    __properties: ClassVar[List[str]] = ["conversion_settings", "target_settings", "document_hashes", "without_operations", "upload_to_elastic"]
-
-    @field_validator('without_operations')
-    def without_operations_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        for i in value:
-            if i not in set(['PENDING', 'FAILURE', 'SUCCESS']):
-                raise ValueError("each list item must be one of ('PENDING', 'FAILURE', 'SUCCESS')")
-        return value
+    __properties: ClassVar[List[str]] = ["file_url", "internal_file_url", "s3_source", "upload_to_elastic", "conversion_settings", "target_settings"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -64,7 +56,7 @@ class ConvertDocumentsRequestBody(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ConvertDocumentsRequestBody from a JSON string"""
+        """Create an instance of ConvertUploadDocumentsRequestBody from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -85,6 +77,16 @@ class ConvertDocumentsRequestBody(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in internal_file_url (list)
+        _items = []
+        if self.internal_file_url:
+            for _item in self.internal_file_url:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['internal_file_url'] = _items
+        # override the default output from pydantic by calling `to_dict()` of s3_source
+        if self.s3_source:
+            _dict['s3_source'] = self.s3_source.to_dict()
         # override the default output from pydantic by calling `to_dict()` of conversion_settings
         if self.conversion_settings:
             _dict['conversion_settings'] = self.conversion_settings.to_dict()
@@ -95,7 +97,7 @@ class ConvertDocumentsRequestBody(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ConvertDocumentsRequestBody from a dict"""
+        """Create an instance of ConvertUploadDocumentsRequestBody from a dict"""
         if obj is None:
             return None
 
@@ -103,11 +105,12 @@ class ConvertDocumentsRequestBody(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "file_url": obj.get("file_url"),
+            "internal_file_url": [InternalUrl.from_dict(_item) for _item in obj["internal_file_url"]] if obj.get("internal_file_url") is not None else None,
+            "s3_source": S3DocumentSource.from_dict(obj["s3_source"]) if obj.get("s3_source") is not None else None,
+            "upload_to_elastic": obj.get("upload_to_elastic"),
             "conversion_settings": PartialDirectConversionParameters.from_dict(obj["conversion_settings"]) if obj.get("conversion_settings") is not None else None,
-            "target_settings": TargetConversionParameters.from_dict(obj["target_settings"]) if obj.get("target_settings") is not None else None,
-            "document_hashes": obj.get("document_hashes"),
-            "without_operations": obj.get("without_operations"),
-            "upload_to_elastic": obj.get("upload_to_elastic")
+            "target_settings": TargetConversionParameters.from_dict(obj["target_settings"]) if obj.get("target_settings") is not None else None
         })
         return _obj
 

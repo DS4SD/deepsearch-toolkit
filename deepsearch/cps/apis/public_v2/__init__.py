@@ -50,9 +50,13 @@ from deepsearch.cps.apis.public_v2.models.bag_flavour_full_data import BagFlavou
 from deepsearch.cps.apis.public_v2.models.ccs_project import CCSProject
 from deepsearch.cps.apis.public_v2.models.cps_package import CPSPackage
 from deepsearch.cps.apis.public_v2.models.cps_summary import CPSSummary
+from deepsearch.cps.apis.public_v2.models.ccs_task import CcsTask
 from deepsearch.cps.apis.public_v2.models.collection_metadata_settings import CollectionMetadataSettings
 from deepsearch.cps.apis.public_v2.models.config import Config
+from deepsearch.cps.apis.public_v2.models.convert_document_request import ConvertDocumentRequest
 from deepsearch.cps.apis.public_v2.models.convert_documents_request_body import ConvertDocumentsRequestBody
+from deepsearch.cps.apis.public_v2.models.convert_documents_sources import ConvertDocumentsSources
+from deepsearch.cps.apis.public_v2.models.convert_upload_documents_request_body import ConvertUploadDocumentsRequestBody
 from deepsearch.cps.apis.public_v2.models.cps_task import CpsTask
 from deepsearch.cps.apis.public_v2.models.data import Data
 from deepsearch.cps.apis.public_v2.models.data_flow import DataFlow
@@ -70,6 +74,7 @@ from deepsearch.cps.apis.public_v2.models.elastic_index_search_query_options imp
 from deepsearch.cps.apis.public_v2.models.elastic_index_source import ElasticIndexSource
 from deepsearch.cps.apis.public_v2.models.elastic_instance_data_index import ElasticInstanceDataIndex
 from deepsearch.cps.apis.public_v2.models.elastic_metadata import ElasticMetadata
+from deepsearch.cps.apis.public_v2.models.file_source import FileSource
 from deepsearch.cps.apis.public_v2.models.flavour import Flavour
 from deepsearch.cps.apis.public_v2.models.flavours_default_quota import FlavoursDefaultQuota
 from deepsearch.cps.apis.public_v2.models.flavours_quota import FlavoursQuota
@@ -85,6 +90,7 @@ from deepsearch.cps.apis.public_v2.models.gen_ai_watsonx import GenAIWatsonx
 from deepsearch.cps.apis.public_v2.models.gen_ai_watsonx_config import GenAIWatsonxConfig
 from deepsearch.cps.apis.public_v2.models.grouped_project_documents import GroupedProjectDocuments
 from deepsearch.cps.apis.public_v2.models.http_validation_error import HTTPValidationError
+from deepsearch.cps.apis.public_v2.models.http_source import HttpSource
 from deepsearch.cps.apis.public_v2.models.internal_url import InternalUrl
 from deepsearch.cps.apis.public_v2.models.json_upload_request_body import JsonUploadRequestBody
 from deepsearch.cps.apis.public_v2.models.list_project_flavours import ListProjectFlavours
@@ -128,6 +134,7 @@ from deepsearch.cps.apis.public_v2.models.source import Source
 from deepsearch.cps.apis.public_v2.models.source1 import Source1
 from deepsearch.cps.apis.public_v2.models.storage_summary_task import StorageSummaryTask
 from deepsearch.cps.apis.public_v2.models.system_info import SystemInfo
+from deepsearch.cps.apis.public_v2.models.target_conversion_parameters import TargetConversionParameters
 from deepsearch.cps.apis.public_v2.models.task_context import TaskContext
 from deepsearch.cps.apis.public_v2.models.task_result import TaskResult
 from deepsearch.cps.apis.public_v2.models.temporary_upload_file_result import TemporaryUploadFileResult
@@ -135,6 +142,7 @@ from deepsearch.cps.apis.public_v2.models.temporary_url import TemporaryUrl
 from deepsearch.cps.apis.public_v2.models.temporary_url_fields import TemporaryUrlFields
 from deepsearch.cps.apis.public_v2.models.token_response import TokenResponse
 from deepsearch.cps.apis.public_v2.models.upload_date import UploadDate
+from deepsearch.cps.apis.public_v2.models.upload_elastic_request_body import UploadElasticRequestBody
 from deepsearch.cps.apis.public_v2.models.upload_job import UploadJob
 from deepsearch.cps.apis.public_v2.models.urls import Urls
 from deepsearch.cps.apis.public_v2.models.validation_error import ValidationError

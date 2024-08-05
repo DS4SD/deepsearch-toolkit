@@ -17,20 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, StrictBool
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GenAIPartialParams(BaseModel):
+class TargetConversionParameters(BaseModel):
     """
-    GenAIPartialParams
+    Specify target settings (add_raw_pages, add_annotations).  Fields left null are set to platform defaults.
     """ # noqa: E501
-    model_id: Optional[StrictStr] = None
-    prompt_template: Optional[StrictStr] = None
-    params: Optional[Dict[str, Any]] = None
-    timeout: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["model_id", "prompt_template", "params", "timeout"]
+    add_raw_pages: Optional[StrictBool] = None
+    add_annotations: Optional[StrictBool] = None
+    __properties: ClassVar[List[str]] = ["add_raw_pages", "add_annotations"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +48,7 @@ class GenAIPartialParams(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a JSON string"""
+        """Create an instance of TargetConversionParameters from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,7 +73,7 @@ class GenAIPartialParams(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a dict"""
+        """Create an instance of TargetConversionParameters from a dict"""
         if obj is None:
             return None
 
@@ -83,10 +81,8 @@ class GenAIPartialParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "model_id": obj.get("model_id"),
-            "prompt_template": obj.get("prompt_template"),
-            "params": obj.get("params"),
-            "timeout": obj.get("timeout")
+            "add_raw_pages": obj.get("add_raw_pages"),
+            "add_annotations": obj.get("add_annotations")
         })
         return _obj
 

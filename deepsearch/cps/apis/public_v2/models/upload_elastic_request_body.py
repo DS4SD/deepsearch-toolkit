@@ -17,26 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.partial_direct_conversion_parameters import PartialDirectConversionParameters
-from deepsearch.cps.apis.public_v2.models.target_conversion_parameters import TargetConversionParameters
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ConvertDocumentsRequestBody(BaseModel):
+class UploadElasticRequestBody(BaseModel):
     """
-    ConvertDocumentsRequestBody
+    UploadElasticRequestBody
     """ # noqa: E501
-    conversion_settings: Optional[PartialDirectConversionParameters] = Field(default=None, description="Specify the conversion settings to use.")
-    target_settings: Optional[TargetConversionParameters] = Field(default=None, description="Specify the target settings to use.")
     document_hashes: Optional[List[StrictStr]] = Field(default=None, description="List of document hashes to be used as filter.")
-    without_operations: Optional[List[StrictStr]] = Field(default=None, description="List of Operation Status documents don't have to be used as filter.")
-    upload_to_elastic: Optional[StrictBool] = None
-    __properties: ClassVar[List[str]] = ["conversion_settings", "target_settings", "document_hashes", "without_operations", "upload_to_elastic"]
+    with_operations: Optional[List[StrictStr]] = Field(default=None, description="List of Operation Status documents don't have to be used as filter.")
+    __properties: ClassVar[List[str]] = ["document_hashes", "with_operations"]
 
-    @field_validator('without_operations')
-    def without_operations_validate_enum(cls, value):
+    @field_validator('with_operations')
+    def with_operations_validate_enum(cls, value):
         """Validates the enum"""
         if value is None:
             return value
@@ -64,7 +59,7 @@ class ConvertDocumentsRequestBody(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ConvertDocumentsRequestBody from a JSON string"""
+        """Create an instance of UploadElasticRequestBody from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -85,17 +80,11 @@ class ConvertDocumentsRequestBody(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of conversion_settings
-        if self.conversion_settings:
-            _dict['conversion_settings'] = self.conversion_settings.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of target_settings
-        if self.target_settings:
-            _dict['target_settings'] = self.target_settings.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ConvertDocumentsRequestBody from a dict"""
+        """Create an instance of UploadElasticRequestBody from a dict"""
         if obj is None:
             return None
 
@@ -103,11 +92,8 @@ class ConvertDocumentsRequestBody(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "conversion_settings": PartialDirectConversionParameters.from_dict(obj["conversion_settings"]) if obj.get("conversion_settings") is not None else None,
-            "target_settings": TargetConversionParameters.from_dict(obj["target_settings"]) if obj.get("target_settings") is not None else None,
             "document_hashes": obj.get("document_hashes"),
-            "without_operations": obj.get("without_operations"),
-            "upload_to_elastic": obj.get("upload_to_elastic")
+            "with_operations": obj.get("with_operations")
         })
         return _obj
 
