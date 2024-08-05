@@ -17,20 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.internal_url import InternalUrl
+from deepsearch.cps.apis.public_v2.models.s3_document_source import S3DocumentSource
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GenAIPartialParams(BaseModel):
+class ConvertDocumentsSources(BaseModel):
     """
-    GenAIPartialParams
+    ConvertDocumentsSources
     """ # noqa: E501
-    model_id: Optional[StrictStr] = None
-    prompt_template: Optional[StrictStr] = None
-    params: Optional[Dict[str, Any]] = None
-    timeout: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["model_id", "prompt_template", "params", "timeout"]
+    file_url: Optional[List[StrictStr]] = Field(default=None, description="List of File's URL to be converted and uploaded to the data index.")
+    internal_file_url: Optional[List[InternalUrl]] = Field(default=None, description="List of Internal File's URLs to be converted and uploaded to the data index.")
+    s3_source: Optional[S3DocumentSource] = Field(default=None, description="Coordinates to object store to get files to convert. Can specify which files with object keys.")
+    __properties: ClassVar[List[str]] = ["file_url", "internal_file_url", "s3_source"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +51,7 @@ class GenAIPartialParams(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a JSON string"""
+        """Create an instance of ConvertDocumentsSources from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,11 +72,21 @@ class GenAIPartialParams(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in internal_file_url (list)
+        _items = []
+        if self.internal_file_url:
+            for _item in self.internal_file_url:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['internal_file_url'] = _items
+        # override the default output from pydantic by calling `to_dict()` of s3_source
+        if self.s3_source:
+            _dict['s3_source'] = self.s3_source.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a dict"""
+        """Create an instance of ConvertDocumentsSources from a dict"""
         if obj is None:
             return None
 
@@ -83,10 +94,9 @@ class GenAIPartialParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "model_id": obj.get("model_id"),
-            "prompt_template": obj.get("prompt_template"),
-            "params": obj.get("params"),
-            "timeout": obj.get("timeout")
+            "file_url": obj.get("file_url"),
+            "internal_file_url": [InternalUrl.from_dict(_item) for _item in obj["internal_file_url"]] if obj.get("internal_file_url") is not None else None,
+            "s3_source": S3DocumentSource.from_dict(obj["s3_source"]) if obj.get("s3_source") is not None else None
         })
         return _obj
 

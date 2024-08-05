@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **model_id** | **str** |  | 
 **prompt_template** | **str** |  | 
 **params** | **object** |  | 
+**timeout** | **float** |  | 
 
 ## Example
 

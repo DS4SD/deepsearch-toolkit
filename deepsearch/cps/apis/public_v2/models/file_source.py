@@ -17,20 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GenAIPartialParams(BaseModel):
+class FileSource(BaseModel):
     """
-    GenAIPartialParams
+    FileSource
     """ # noqa: E501
-    model_id: Optional[StrictStr] = None
-    prompt_template: Optional[StrictStr] = None
-    params: Optional[Dict[str, Any]] = None
-    timeout: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["model_id", "prompt_template", "params", "timeout"]
+    base64_string: StrictStr
+    filename: StrictStr
+    __properties: ClassVar[List[str]] = ["base64_string", "filename"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +48,7 @@ class GenAIPartialParams(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a JSON string"""
+        """Create an instance of FileSource from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,7 +73,7 @@ class GenAIPartialParams(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GenAIPartialParams from a dict"""
+        """Create an instance of FileSource from a dict"""
         if obj is None:
             return None
 
@@ -83,10 +81,8 @@ class GenAIPartialParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "model_id": obj.get("model_id"),
-            "prompt_template": obj.get("prompt_template"),
-            "params": obj.get("params"),
-            "timeout": obj.get("timeout")
+            "base64_string": obj.get("base64_string"),
+            "filename": obj.get("filename")
         })
         return _obj
 

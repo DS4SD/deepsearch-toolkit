@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,8 @@ class GenAIParams(BaseModel):
     model_id: StrictStr
     prompt_template: StrictStr
     params: Dict[str, Any]
-    __properties: ClassVar[List[str]] = ["model_id", "prompt_template", "params"]
+    timeout: Union[StrictFloat, StrictInt]
+    __properties: ClassVar[List[str]] = ["model_id", "prompt_template", "params", "timeout"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,7 +85,8 @@ class GenAIParams(BaseModel):
         _obj = cls.model_validate({
             "model_id": obj.get("model_id"),
             "prompt_template": obj.get("prompt_template"),
-            "params": obj.get("params")
+            "params": obj.get("params"),
+            "timeout": obj.get("timeout")
         })
         return _obj
 

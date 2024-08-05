@@ -5,11 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**file_url** | **List[str]** | List of File&#39;s URL to be converted and uploaded to the data index. | [optional] 
-**internal_file_url** | [**List[InternalUrl]**](InternalUrl.md) | List of Internal File&#39;s URLs to be converted and uploaded to the data index. | [optional] 
-**s3_source** | [**S3DocumentSource**](S3DocumentSource.md) | Coordinates to object store to get files to convert. Can specify which files with object keys. | [optional] 
-**upload_to_elastic** | **bool** |  | [optional] 
 **conversion_settings** | [**PartialDirectConversionParameters**](PartialDirectConversionParameters.md) | Specify the conversion settings to use. | [optional] 
+**target_settings** | [**TargetConversionParameters**](TargetConversionParameters.md) | Specify the target settings to use. | [optional] 
+**document_hashes** | **List[str]** | List of document hashes to be used as filter. | [optional] 
+**without_operations** | **List[str]** | List of Operation Status documents don&#39;t have to be used as filter. | [optional] 
+**upload_to_elastic** | **bool** |  | [optional] 
 
 ## Example
 
