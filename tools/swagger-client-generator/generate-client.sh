@@ -144,11 +144,16 @@ mkdir -p $rootdir/docs/apis/user
 mkdir -p $rootdir/docs/apis/kg/query
 mkdir -p $rootdir/docs/apis/kg/create
 
-# cp -R .generated/cps-public/docs/* $rootdir/docs/apis/public
-# cp -R .generated/cps-user/docs/* $rootdir/docs/apis/user
-cp -R .generated/ds-public-v2/docs/* $rootdir/docs/apis/public_v2
-# cp -R .generated/cps-kg-query/docs/* $rootdir/docs/apis/kg/create
-# cp -R .generated/cps-kg-create/docs/* $rootdir/docs/apis/kg/query
+# cp -R .generated/cps-public/docs/README.md $rootdir/docs/apis/public/
+# cp -R .generated/cps-public/docs $rootdir/docs/apis/public/
+# cp -R .generated/cps-user/docs/README.md $rootdir/docs/apis/user/
+# cp -R .generated/cps-user/docs $rootdir/docs/apis/user/
+cp -R .generated/ds-public-v2/README.md $rootdir/docs/apis/public_v2/
+cp -R .generated/ds-public-v2/docs $rootdir/docs/apis/public_v2/
+# cp -R .generated/cps-kg-query/docs/README.md $rootdir/docs/apis/kg/create/
+# cp -R .generated/cps-kg-query/docs $rootdir/docs/apis/kg/create/
+# cp -R .generated/cps-kg-create/docs/README.md $rootdir/docs/apis/kg/query/
+# cp -R .generated/cps-kg-create/docs $rootdir/docs/apis/kg/query/
 
 # Delete the staging directory.
 rm -rf .generated/

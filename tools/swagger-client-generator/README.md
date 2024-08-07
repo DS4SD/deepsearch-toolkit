@@ -34,3 +34,11 @@ podman machine rm podman-machine-default
 podman machine init -v $HOME:$HOME
 podman machine start
 ```
+
+## Docker setup
+
+For using the Docker CLI, make sure to specify the `DOCKER` and `DOCKER_OPTS` parameters when running the script
+
+```bash
+DOCKER=docker DOCKER_OPTS=" " ./tools/swagger-client-generator/generate-client.sh <BASE_PATH>
+```
