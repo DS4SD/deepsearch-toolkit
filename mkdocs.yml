@@ -63,8 +63,8 @@ nav:
   - API reference:
       - Toolkit reference: api-reference.md
       - OpenAPI:
-          - User API: apis/user/UserApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
-          - Public API: apis/public/KnowledgeGraphsApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
+          # - User API: apis/user/UserApi.md # TODO we should point to the main index of the generated docs, but this is currently missing
+          - Public API: apis/public_v2/ # TODO we should point to the main index of the generated docs, but this is currently missing
       - CLI reference: cli-reference.md
 
 # Copyright
@@ -112,8 +112,8 @@ markdown_extensions:
   - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.smartsymbols
