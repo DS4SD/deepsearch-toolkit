@@ -34,9 +34,9 @@ class CpsApiDataIndices:
         self.sw_api = sw_client.DataIndicesApi(self.api.client.swagger_client)
 
     def list(self, proj_key: str) -> List[DataIndex]:
-        response: list[
-            sw_client.ProjectDataIndexWithStatus
-        ] = self.sw_api.get_project_data_indices(proj_key=proj_key)
+        response: list[sw_client.ProjectDataIndexWithStatus] = (
+            self.sw_api.get_project_data_indices(proj_key=proj_key)
+        )
 
         # filter out saved searchs index
         return [

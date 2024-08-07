@@ -25,10 +25,10 @@ class CpsApiElastic:
         self.sw_api = sw_client.ElasticApi(self.api.client.swagger_client)
 
     def list(self, domain: str = "all") -> List[ElasticDataCollection]:
-        response: list[
-            sw_client.DataCollection
-        ] = self.sw_api.list_indices_from_elastic_instance(
-            index_type="all", index_domain=domain
+        response: list[sw_client.DataCollection] = (
+            self.sw_api.list_indices_from_elastic_instance(
+                index_type="all", index_domain=domain
+            )
         )
 
         return [

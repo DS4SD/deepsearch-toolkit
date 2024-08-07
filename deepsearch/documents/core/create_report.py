@@ -60,7 +60,11 @@ def get_multiple_reports(
     Generates reports for multiple tasks_ids and associated documents.
     """
     reports = []
-    count, count_doc, count_failed_doc, = (
+    (
+        count,
+        count_doc,
+        count_failed_doc,
+    ) = (
         0,
         0,
         0,
