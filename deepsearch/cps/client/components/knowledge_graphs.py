@@ -129,10 +129,12 @@ class CpsApiKg(ApiConnectedObject):
         if name is not None:
             body["snapshot"]["name"] = name
 
-        task: ProjectTask = self.api.knowledge_graphs.sw_api.backend_create_project_kg_snapshot_from_data_flow_assembly(
-            proj_key=self.project,
-            bag_key=self.key,
-            body=body,
+        task: ProjectTask = (
+            self.api.knowledge_graphs.sw_api.backend_create_project_kg_snapshot_from_data_flow_assembly(
+                proj_key=self.project,
+                bag_key=self.key,
+                body=body,
+            )
         )
 
         return task

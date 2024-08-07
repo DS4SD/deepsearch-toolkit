@@ -15,8 +15,7 @@ from typing import (
 class Resource(Protocol):
     """Models which implement this Protocol can be passed as coordinates to tasks"""
 
-    def to_resource(self) -> Dict[str, Any]:
-        ...
+    def to_resource(self) -> Dict[str, Any]: ...
 
 
 class Output:
@@ -49,8 +48,7 @@ TOutputs = TypeVar("TOutputs", covariant=True)
 
 class TaskWithWellKnownOutputs(Protocol[TOutputs]):
     @property
-    def outputs(self) -> TOutputs:
-        ...
+    def outputs(self) -> TOutputs: ...
 
 
 class Task:
@@ -111,12 +109,10 @@ class Task:
 
     def _build_coordinates(self) -> Dict[str, Any]:
         @overload
-        def _build(value: Dict[str, Any]) -> Dict[str, Any]:
-            ...
+        def _build(value: Dict[str, Any]) -> Dict[str, Any]: ...
 
         @overload
-        def _build(value: TaskCoordinates) -> Dict[str, Any]:
-            ...
+        def _build(value: TaskCoordinates) -> Dict[str, Any]: ...
 
         def _build(value: Any) -> Any:
             if isinstance(value, tuple):

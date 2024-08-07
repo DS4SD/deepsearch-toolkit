@@ -100,12 +100,12 @@ class ModelApp:
                     "MY_POD_NAME", "local"
                 )
                 result.headers["X-Request-Arrival-Time"] = str(request_arrival_time)
-                result.headers[
-                    "X-Request-Attempt-Number"
-                ] = request.metadata.annotations.deepsearch_res_ibm_com_x_attempt_number
-                result.headers[
-                    "X-Request-Transaction-Id"
-                ] = request.metadata.annotations.deepsearch_res_ibm_com_x_transaction_id
+                result.headers["X-Request-Attempt-Number"] = (
+                    request.metadata.annotations.deepsearch_res_ibm_com_x_attempt_number
+                )
+                result.headers["X-Request-Transaction-Id"] = (
+                    request.metadata.annotations.deepsearch_res_ibm_com_x_transaction_id
+                )
 
                 return result
             except (asyncio.TimeoutError, HTTPException) as e:

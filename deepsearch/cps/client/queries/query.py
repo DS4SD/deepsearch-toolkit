@@ -12,8 +12,7 @@ class Query:
         self.paginated_task: Optional[Task] = None
 
     @overload
-    def add(self, kind_or_task: TTask) -> TTask:
-        ...
+    def add(self, kind_or_task: TTask) -> TTask: ...
 
     @overload
     def add(
@@ -24,8 +23,7 @@ class Query:
         parameters: Optional[Dict[str, Any]] = None,
         inputs: Optional[TaskInputs] = None,
         coordinates: Optional[TaskCoordinates] = None,
-    ) -> Task:
-        ...
+    ) -> Task: ...
 
     def add(
         self,

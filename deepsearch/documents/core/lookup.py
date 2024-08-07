@@ -35,9 +35,9 @@ class EntitiesLookup:
 
     def __init__(self, document: Dict[str, Any]):
         self.document = document
-        self._lookup: Dict[
-            str, Dict[str, List[EntitiesLookup._MatchedEntry]]
-        ] = {}  # {entity_type: {entity_instance: [reference, ...]}}
+        self._lookup: Dict[str, Dict[str, List[EntitiesLookup._MatchedEntry]]] = (
+            {}
+        )  # {entity_type: {entity_instance: [reference, ...]}}
         self._build()
 
     def _build(self):

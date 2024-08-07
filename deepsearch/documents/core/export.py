@@ -734,9 +734,11 @@ class JsonToHTML:
 
         table_min_bbox_str = " ".join(
             [
-                'data-min-{}="{}"'.format(k, v)
-                if k != "page"
-                else 'data-{}="{}"'.format(k, v)
+                (
+                    'data-min-{}="{}"'.format(k, v)
+                    if k != "page"
+                    else 'data-{}="{}"'.format(k, v)
+                )
                 for k, v in table_bbox.items()
             ]
         )
