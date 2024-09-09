@@ -1,3 +1,9 @@
+## [v1.0.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.0.1) - 2024-09-09
+
+### Fix
+
+* Compatibility with platformdirs >= 4 ([#186](https://github.com/DS4SD/deepsearch-toolkit/issues/186)) ([`2dfbcd7`](https://github.com/DS4SD/deepsearch-toolkit/commit/2dfbcd7460b27221bc0a96ff8ee0e506a6c3e450))
+
 ## [v1.0.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.0.0) - 2024-08-05
 
 ### Feature
