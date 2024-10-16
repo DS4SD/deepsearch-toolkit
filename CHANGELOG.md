@@ -1,3 +1,9 @@
+## [v1.1.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.1.0) - 2024-10-16
+
+### Feature
+
+* Upgrade to new docling-core ([#187](https://github.com/DS4SD/deepsearch-toolkit/issues/187)) ([`0ee10ce`](https://github.com/DS4SD/deepsearch-toolkit/commit/0ee10ce51edc0abca7321f66600546c94ce7f7be))
+
 ## [v1.0.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.0.1) - 2024-09-09
 
 ### Fix
