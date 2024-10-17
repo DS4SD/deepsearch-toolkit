@@ -3,7 +3,7 @@ import logging
 import warnings
 from typing import Any, Dict
 
-from docling_core.types import Document as DsDocument
+from docling_core.types.legacy_doc.document import ExportedCCSDocument as DsDocument
 
 _log = logging.getLogger(__name__)
 
