@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional
 
 import requests
-from docling_core.types import Document as DsDocument
+from docling_core.types.legacy_doc.document import ExportedCCSDocument as DsDocument
 from pydantic import BaseModel
 from tqdm import tqdm
 
