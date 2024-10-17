@@ -1,3 +1,9 @@
+## [v1.1.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.1.1) - 2024-10-17
+
+### Fix
+
+* Fix legacy doc ref ([#188](https://github.com/DS4SD/deepsearch-toolkit/issues/188)) ([`2b2544b`](https://github.com/DS4SD/deepsearch-toolkit/commit/2b2544bfc5c9940088c7d18eb1f0b57974c40d08))
+
 ## [v1.1.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.1.0) - 2024-10-16
 
 ### Feature
