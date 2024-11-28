@@ -43,7 +43,9 @@ def MoleculeQuery(
     num_items: int = 10,
 ) -> Query:
     """
-    Use the vector database in Deep Search for querying molecules
+    DEPRECATED: Migrate to compounds queries.
+
+    Use the knowledge database in Deep Search for querying molecules
     by substructure or similarity.
     The result is contained in the `molecules` output of the response.
     """
@@ -97,6 +99,8 @@ def MoleculesInPatentsQuery(
     partial_lookup: bool = False,
 ) -> Query:
     """
+    DEPRECATED: Migrate to compounds queries.
+
     List all molecules contained in a list of patents.
     The result is contained in the `molecules` output of the response.
     """
@@ -134,6 +138,8 @@ def PatentsWithMoleculesQuery(
     num_items: int = 10,
 ) -> Query:
     """
+    DEPRECATED: Migrate to documents queries.
+
     List all patents containing any of the input molecules.
     The result is contained in the `patents` output of the response.
     """
