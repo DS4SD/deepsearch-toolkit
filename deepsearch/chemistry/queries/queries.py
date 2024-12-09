@@ -24,6 +24,7 @@ class DocumentsQuery(ChemistryQuery):
 class CompoundsByIds(CompoundsQuery):
     """Query compounds that have any of the given identifiers."""
 
+    inchikeys: list[str] = []
     persistent_ids: list[str] = []
 
 
