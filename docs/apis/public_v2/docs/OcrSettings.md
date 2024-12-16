@@ -6,9 +6,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **enabled** | **bool** |  | [optional] [default to False]
-**backend** | **str** |  | [optional] 
-**backend_settings** | **object** |  | [optional] 
-**merge_mode** | **str** |  | [optional] 
+**backend** | [**Backend**](Backend.md) |  | [optional] 
+**backend_settings** | [**BackendSettings**](BackendSettings.md) |  | [optional] 
+**merge_mode** | [**MergeMode**](MergeMode.md) |  | [optional] 
 
 ## Example
 

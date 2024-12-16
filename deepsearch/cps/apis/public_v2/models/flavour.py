@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.display_name import DisplayName
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +28,7 @@ class Flavour(BaseModel):
     Flavour
     """ # noqa: E501
     name: StrictStr
-    display_name: Optional[StrictStr] = None
+    display_name: Optional[DisplayName] = None
     __properties: ClassVar[List[str]] = ["name", "display_name"]
 
     model_config = ConfigDict(
@@ -69,6 +70,9 @@ class Flavour(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of display_name
+        if self.display_name:
+            _dict['display_name'] = self.display_name.to_dict()
         return _dict
 
     @classmethod
@@ -82,7 +86,7 @@ class Flavour(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "display_name": obj.get("display_name")
+            "display_name": DisplayName.from_dict(obj["display_name"]) if obj.get("display_name") is not None else None
         })
         return _obj
 

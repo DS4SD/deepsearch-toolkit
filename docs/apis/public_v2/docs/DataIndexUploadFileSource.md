@@ -5,8 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**conversion_settings** | [**ConversionSettings**](ConversionSettings.md) |  | [optional] 
+**target_settings** | [**ConvertDocumentsRequestBodyTargetSettings**](ConvertDocumentsRequestBodyTargetSettings.md) |  | [optional] 
 **urls** | [**Urls**](Urls.md) |  | 
-**conversion_settings** | [**PartialDirectConversionParameters**](PartialDirectConversionParameters.md) | Specify the conversion settings to use. | [optional] 
+**headers** | [**Headers**](Headers.md) |  | [optional] 
 
 ## Example
 

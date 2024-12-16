@@ -19,6 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.dc_key import DcKey
+from deepsearch.cps.apis.public_v2.models.kg_key import KgKey
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,8 +28,8 @@ class StorageSummaryTask(BaseModel):
     """
     StorageSummaryTask
     """ # noqa: E501
-    dc_key: Optional[StrictStr] = None
-    kg_key: Optional[StrictStr] = None
+    dc_key: Optional[DcKey] = None
+    kg_key: Optional[KgKey] = None
     kind: StrictStr
     proj_key: StrictStr
     task_id: StrictStr
@@ -79,6 +81,12 @@ class StorageSummaryTask(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of dc_key
+        if self.dc_key:
+            _dict['dc_key'] = self.dc_key.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of kg_key
+        if self.kg_key:
+            _dict['kg_key'] = self.kg_key.to_dict()
         return _dict
 
     @classmethod
@@ -91,8 +99,8 @@ class StorageSummaryTask(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "dc_key": obj.get("dc_key"),
-            "kg_key": obj.get("kg_key"),
+            "dc_key": DcKey.from_dict(obj["dc_key"]) if obj.get("dc_key") is not None else None,
+            "kg_key": KgKey.from_dict(obj["kg_key"]) if obj.get("kg_key") is not None else None,
             "kind": obj.get("kind"),
             "proj_key": obj.get("proj_key"),
             "task_id": obj.get("task_id")

@@ -29,7 +29,7 @@ function download_swagger {
 if [[ "${base_path}" == http* ]]; then
     download_swagger "${base_path}/public/v1/swagger.json" "${curdir}/swagger-cps.json"
     download_swagger "${base_path}/public/v2/openapi.json" "${curdir}/openapi-ds-v2.json"
-    download_swagger "${base_path}/user/v1/swagger.json" "${curdir}/swagger-user.json"
+    download_swagger "${base_path}/user/v1/openapi.json" "${curdir}/swagger-user.json"
     download_swagger "${base_path}/kg/v1/swagger.json" "${curdir}/swagger-cps-kg.json"
 fi
 

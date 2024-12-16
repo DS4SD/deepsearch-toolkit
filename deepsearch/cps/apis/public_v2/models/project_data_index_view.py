@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.description import Description
 from deepsearch.cps.apis.public_v2.models.view_of import ViewOf
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +29,7 @@ class ProjectDataIndexView(BaseModel):
     ProjectDataIndexView
     """ # noqa: E501
     name: StrictStr
-    description: Optional[StrictStr] = None
+    description: Optional[Description] = None
     view_of: ViewOf
     __properties: ClassVar[List[str]] = ["name", "description", "view_of"]
 
@@ -71,6 +72,9 @@ class ProjectDataIndexView(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of description
+        if self.description:
+            _dict['description'] = self.description.to_dict()
         # override the default output from pydantic by calling `to_dict()` of view_of
         if self.view_of:
             _dict['view_of'] = self.view_of.to_dict()
@@ -87,7 +91,7 @@ class ProjectDataIndexView(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "description": obj.get("description"),
+            "description": Description.from_dict(obj["description"]) if obj.get("description") is not None else None,
             "view_of": ViewOf.from_dict(obj["view_of"]) if obj.get("view_of") is not None else None
         })
         return _obj

@@ -316,8 +316,8 @@ configuration.api_key['Bearer'] = os.environ["API_KEY"]
 with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.public_v2.SystemApi(api_client)
-    proj_key = 'proj_key_example' # str |  (optional)
-    term = 'term_example' # str |  (optional)
+    proj_key = deepsearch.cps.apis.public_v2.ProjKey() # ProjKey |  (optional)
+    term = deepsearch.cps.apis.public_v2.Term() # Term |  (optional)
 
     try:
         # List System Knowledge Graphs
@@ -335,8 +335,8 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **proj_key** | **str**|  | [optional] 
- **term** | **str**|  | [optional] 
+ **proj_key** | [**ProjKey**](.md)|  | [optional] 
+ **term** | [**Term**](.md)|  | [optional] 
 
 ### Return type
 

@@ -12,10 +12,10 @@ from tqdm import tqdm
 from deepsearch.cps.client.api import CpsApi
 from deepsearch.cps.client.components.data_indices import S3Coordinates
 from deepsearch.cps.client.components.elastic import ElasticProjectDataCollectionSource
-from deepsearch.documents.core import convert, input_process
+from deepsearch.documents.core import convert
 from deepsearch.documents.core.common_routines import progressbar
 from deepsearch.documents.core.models import ConversionSettings, TargetSettings
-from deepsearch.documents.core.utils import cleanup, create_root_dir
+from deepsearch.documents.core.utils import batch_single_files, cleanup, create_root_dir
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +106,7 @@ def process_url_input(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
 
-    return
+    return statuses
 
 
 def process_local_file(
@@ -124,9 +124,7 @@ def process_local_file(
     # process multiple files from local directory
     root_dir = create_root_dir()
     # batch individual pdfs into zips and add them to root_dir
-    batched_files = input_process.batch_single_files(
-        source_path=local_file, root_dir=root_dir
-    )
+    batched_files = batch_single_files(source_path=local_file, root_dir=root_dir)
 
     # collect'em all
     files_zip: List[Any] = []
@@ -166,7 +164,7 @@ def process_local_file(
                 "file_url": file_url_array,
             }
             if conv_settings is not None:
-                payload["conversion_settings"] = conv_settings.to_ccs_spec()
+                payload["conversion_settings"] = conv_settings.model_dump()
             if target_settings is not None:
                 payload["target_settings"] = target_settings.model_dump(
                     exclude_none=True
@@ -182,7 +180,8 @@ def process_local_file(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
     cleanup(root_dir=root_dir)
-    return
+
+    return statuses
 
 
 def process_external_cos(
@@ -218,4 +217,4 @@ def process_external_cos(
     statuses = convert.check_cps_status_running_tasks(
         api=api, cps_proj_key=coords.proj_key, task_ids=task_ids
     )
-    return
+    return statuses

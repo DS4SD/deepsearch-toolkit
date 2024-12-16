@@ -5,12 +5,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**file_url** | **List[str]** | List of File&#39;s URL to be converted and uploaded to the data index. | [optional] 
-**internal_file_url** | [**List[InternalUrl]**](InternalUrl.md) | List of Internal File&#39;s URLs to be converted and uploaded to the data index. | [optional] 
-**s3_source** | [**S3DocumentSource**](S3DocumentSource.md) | Coordinates to object store to get files to convert. Can specify which files with object keys. | [optional] 
-**upload_to_elastic** | **bool** |  | [optional] 
-**conversion_settings** | [**PartialDirectConversionParameters**](PartialDirectConversionParameters.md) | Specify the conversion settings to use. | [optional] 
-**target_settings** | [**TargetConversionParameters**](TargetConversionParameters.md) | Specify the target settings to use. | [optional] 
+**file_url** | [**FileUrl**](FileUrl.md) |  | [optional] 
+**http_source** | [**HttpSource**](HttpSource.md) |  | [optional] 
+**s3_source** | [**ConvertDocumentsSourcesS3Source**](ConvertDocumentsSourcesS3Source.md) |  | [optional] 
+**upload_to_elastic** | [**UploadToElastic**](UploadToElastic.md) |  | [optional] 
+**meta** | [**ConvertUploadDocumentsRequestBodyMeta**](ConvertUploadDocumentsRequestBodyMeta.md) |  | [optional] 
+**conversion_settings** | [**ConversionSettings**](ConversionSettings.md) |  | [optional] 
+**target_settings** | [**ConvertDocumentsRequestBodyTargetSettings**](ConvertDocumentsRequestBodyTargetSettings.md) |  | [optional] 
 
 ## Example
 

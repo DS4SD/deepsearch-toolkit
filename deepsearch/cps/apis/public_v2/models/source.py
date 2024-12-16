@@ -18,29 +18,27 @@ import json
 import pprint
 import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Optional
-from deepsearch.cps.apis.public_v2.models.elastic_index_source import ElasticIndexSource
-from deepsearch.cps.apis.public_v2.models.project_data_index_source import ProjectDataIndexSource
+from typing import Any, Optional
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-SOURCE_ANY_OF_SCHEMAS = ["ElasticIndexSource", "ProjectDataIndexSource"]
+SOURCE_ANY_OF_SCHEMAS = ["object", "str"]
 
 class Source(BaseModel):
     """
     Source
     """
 
-    # data type: ElasticIndexSource
-    anyof_schema_1_validator: Optional[ElasticIndexSource] = None
-    # data type: ProjectDataIndexSource
-    anyof_schema_2_validator: Optional[ProjectDataIndexSource] = None
+    # data type: str
+    anyof_schema_1_validator: Optional[StrictStr] = None
+    # data type: object
+    anyof_schema_2_validator: Optional[Any] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[ElasticIndexSource, ProjectDataIndexSource]] = None
+        actual_instance: Optional[Union[object, str]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: List[str] = Field(default=Literal["ElasticIndexSource", "ProjectDataIndexSource"])
+    any_of_schemas: List[str] = Field(default=Literal["object", "str"])
 
     model_config = {
         "validate_assignment": True,
@@ -61,21 +59,21 @@ class Source(BaseModel):
     def actual_instance_must_validate_anyof(cls, v):
         instance = Source.model_construct()
         error_messages = []
-        # validate data type: ElasticIndexSource
-        if not isinstance(v, ElasticIndexSource):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `ElasticIndexSource`")
-        else:
+        # validate data type: str
+        try:
+            instance.anyof_schema_1_validator = v
             return v
-
-        # validate data type: ProjectDataIndexSource
-        if not isinstance(v, ProjectDataIndexSource):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `ProjectDataIndexSource`")
-        else:
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # validate data type: object
+        try:
+            instance.anyof_schema_2_validator = v
             return v
-
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Source with anyOf schemas: ElasticIndexSource, ProjectDataIndexSource. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in Source with anyOf schemas: object, str. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -88,22 +86,28 @@ class Source(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # anyof_schema_1_validator: Optional[ElasticIndexSource] = None
+        # deserialize data into str
         try:
-            instance.actual_instance = ElasticIndexSource.from_json(json_str)
+            # validation
+            instance.anyof_schema_1_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_1_validator
             return instance
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[ProjectDataIndexSource] = None
+            error_messages.append(str(e))
+        # deserialize data into object
         try:
-            instance.actual_instance = ProjectDataIndexSource.from_json(json_str)
+            # validation
+            instance.anyof_schema_2_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_2_validator
             return instance
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
+            error_messages.append(str(e))
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Source with anyOf schemas: ElasticIndexSource, ProjectDataIndexSource. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Source with anyOf schemas: object, str. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -117,7 +121,7 @@ class Source(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], ElasticIndexSource, ProjectDataIndexSource]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], object, str]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

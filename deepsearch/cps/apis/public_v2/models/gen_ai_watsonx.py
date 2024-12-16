@@ -17,10 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.gen_ai_partial_params import GenAIPartialParams
 from deepsearch.cps.apis.public_v2.models.gen_ai_watsonx_config import GenAIWatsonxConfig
+from deepsearch.cps.apis.public_v2.models.gen_aiaws_bedrock_proj_params import GenAIAWSBedrockProjParams
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,18 +30,8 @@ class GenAIWatsonx(BaseModel):
     """ # noqa: E501
     kind: Optional[StrictStr] = 'watsonx'
     config: GenAIWatsonxConfig
-    proj_params: Optional[GenAIPartialParams] = None
+    proj_params: Optional[GenAIAWSBedrockProjParams] = None
     __properties: ClassVar[List[str]] = ["kind", "config", "proj_params"]
-
-    @field_validator('kind')
-    def kind_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['watsonx']):
-            raise ValueError("must be one of enum values ('watsonx')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -102,7 +92,7 @@ class GenAIWatsonx(BaseModel):
         _obj = cls.model_validate({
             "kind": obj.get("kind") if obj.get("kind") is not None else 'watsonx',
             "config": GenAIWatsonxConfig.from_dict(obj["config"]) if obj.get("config") is not None else None,
-            "proj_params": GenAIPartialParams.from_dict(obj["proj_params"]) if obj.get("proj_params") is not None else None
+            "proj_params": GenAIAWSBedrockProjParams.from_dict(obj["proj_params"]) if obj.get("proj_params") is not None else None
         })
         return _obj
 

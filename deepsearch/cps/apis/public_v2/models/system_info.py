@@ -18,9 +18,10 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictBool
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from deepsearch.cps.apis.public_v2.models.deployment import Deployment
 from deepsearch.cps.apis.public_v2.models.gen_ai_params import GenAIParams
+from deepsearch.cps.apis.public_v2.models.project_data_index_conversion_settings_output import ProjectDataIndexConversionSettingsOutput
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,7 +36,8 @@ class SystemInfo(BaseModel):
     allow_non_admins_to_make_resources_public: StrictBool
     api: Dict[str, Any]
     genai_defaults: Dict[str, GenAIParams]
-    __properties: ClassVar[List[str]] = ["notifications", "default_project", "deployment", "toolkit", "allow_non_admins_to_make_resources_public", "api", "genai_defaults"]
+    conversion_settings_defaults: Optional[ProjectDataIndexConversionSettingsOutput] = None
+    __properties: ClassVar[List[str]] = ["notifications", "default_project", "deployment", "toolkit", "allow_non_admins_to_make_resources_public", "api", "genai_defaults", "conversion_settings_defaults"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,6 +81,9 @@ class SystemInfo(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of deployment
         if self.deployment:
             _dict['deployment'] = self.deployment.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of conversion_settings_defaults
+        if self.conversion_settings_defaults:
+            _dict['conversion_settings_defaults'] = self.conversion_settings_defaults.to_dict()
         return _dict
 
     @classmethod
@@ -97,6 +102,7 @@ class SystemInfo(BaseModel):
             "toolkit": obj.get("toolkit"),
             "allow_non_admins_to_make_resources_public": obj.get("allow_non_admins_to_make_resources_public"),
             "api": obj.get("api"),
+            "conversion_settings_defaults": ProjectDataIndexConversionSettingsOutput.from_dict(obj["conversion_settings_defaults"]) if obj.get("conversion_settings_defaults") is not None else None
         })
         return _obj
 

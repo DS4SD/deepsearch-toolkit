@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **access_key** | **str** |  | 
 **secret_key** | **str** |  | 
 **bucket** | **str** |  | 
-**key_prefix** | **str** |  | [optional] 
+**key_prefix** | [**KeyPrefix**](KeyPrefix.md) |  | [optional] 
 **location** | **str** |  | 
 
 ## Example

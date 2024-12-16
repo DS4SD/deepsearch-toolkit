@@ -7,11 +7,11 @@ Specify conversion settings (OCR, Assemble, ML Models) directly.  Fields left nu
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **type** | **str** |  | [optional] [default to 'direct']
-**ocr** | [**OcrSettings**](OcrSettings.md) |  | [optional] 
-**assemble** | [**AssembleSettings**](AssembleSettings.md) |  | [optional] 
-**metadata** | [**CollectionMetadataSettings**](CollectionMetadataSettings.md) |  | [optional] 
-**page_labels** | **Dict[str, object]** |  | [optional] 
-**model_pipeline** | [**ModelPipelineSettings**](ModelPipelineSettings.md) |  | [optional] 
+**ocr** | [**PartialDirectConversionParametersOcr**](PartialDirectConversionParametersOcr.md) |  | [optional] 
+**assemble** | [**PartialDirectConversionParametersAssemble**](PartialDirectConversionParametersAssemble.md) |  | [optional] 
+**metadata** | [**PartialDirectConversionParametersMetadata**](PartialDirectConversionParametersMetadata.md) |  | [optional] 
+**page_labels** | [**PageLabels**](PageLabels.md) |  | [optional] 
+**model_pipeline** | [**PartialDirectConversionParametersModelPipeline**](PartialDirectConversionParametersModelPipeline.md) |  | [optional] 
 
 ## Example
 

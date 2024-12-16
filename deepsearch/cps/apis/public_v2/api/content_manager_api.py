@@ -16,8 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictInt, StrictStr, field_validator
-from typing import Optional
+from pydantic import StrictInt, StrictStr
+from typing import Any, Optional
+from deepsearch.cps.apis.public_v2.models.document_meta import DocumentMeta
 from deepsearch.cps.apis.public_v2.models.document_statistics import DocumentStatistics
 from deepsearch.cps.apis.public_v2.models.project_agents import ProjectAgents
 from deepsearch.cps.apis.public_v2.models.project_document import ProjectDocument
@@ -26,6 +27,7 @@ from deepsearch.cps.apis.public_v2.models.project_documents import ProjectDocume
 from deepsearch.cps.apis.public_v2.models.response_document_artifacts import ResponseDocumentArtifacts
 from deepsearch.cps.apis.public_v2.models.response_grouped_documents import ResponseGroupedDocuments
 from deepsearch.cps.apis.public_v2.models.response_upload_jobs import ResponseUploadJobs
+from deepsearch.cps.apis.public_v2.models.status_filter import StatusFilter
 
 from deepsearch.cps.apis.public_v2.api_client import ApiClient, RequestSerialized
 from deepsearch.cps.apis.public_v2.api_response import ApiResponse
@@ -43,6 +45,325 @@ class ContentManagerApi:
         if api_client is None:
             api_client = ApiClient.get_default()
         self.api_client = api_client
+
+
+    @validate_call
+    def add_project_data_index_document_metadata(
+        self,
+        index_key: StrictStr,
+        document_hash: StrictStr,
+        proj_key: StrictStr,
+        document_meta: DocumentMeta,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Add Project Data Index Document Metadata
+
+        Insert project document metadata.
+
+        :param index_key: (required)
+        :type index_key: str
+        :param document_hash: (required)
+        :type document_hash: str
+        :param proj_key: (required)
+        :type proj_key: str
+        :param document_meta: (required)
+        :type document_meta: DocumentMeta
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._add_project_data_index_document_metadata_serialize(
+            index_key=index_key,
+            document_hash=document_hash,
+            proj_key=proj_key,
+            document_meta=document_meta,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '422': "HTTPValidationError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def add_project_data_index_document_metadata_with_http_info(
+        self,
+        index_key: StrictStr,
+        document_hash: StrictStr,
+        proj_key: StrictStr,
+        document_meta: DocumentMeta,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Add Project Data Index Document Metadata
+
+        Insert project document metadata.
+
+        :param index_key: (required)
+        :type index_key: str
+        :param document_hash: (required)
+        :type document_hash: str
+        :param proj_key: (required)
+        :type proj_key: str
+        :param document_meta: (required)
+        :type document_meta: DocumentMeta
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._add_project_data_index_document_metadata_serialize(
+            index_key=index_key,
+            document_hash=document_hash,
+            proj_key=proj_key,
+            document_meta=document_meta,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '422': "HTTPValidationError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def add_project_data_index_document_metadata_without_preload_content(
+        self,
+        index_key: StrictStr,
+        document_hash: StrictStr,
+        proj_key: StrictStr,
+        document_meta: DocumentMeta,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Add Project Data Index Document Metadata
+
+        Insert project document metadata.
+
+        :param index_key: (required)
+        :type index_key: str
+        :param document_hash: (required)
+        :type document_hash: str
+        :param proj_key: (required)
+        :type proj_key: str
+        :param document_meta: (required)
+        :type document_meta: DocumentMeta
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._add_project_data_index_document_metadata_serialize(
+            index_key=index_key,
+            document_hash=document_hash,
+            proj_key=proj_key,
+            document_meta=document_meta,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '422': "HTTPValidationError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _add_project_data_index_document_metadata_serialize(
+        self,
+        index_key,
+        document_hash,
+        proj_key,
+        document_meta,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if index_key is not None:
+            _path_params['index_key'] = index_key
+        if document_hash is not None:
+            _path_params['document_hash'] = document_hash
+        if proj_key is not None:
+            _path_params['proj_key'] = proj_key
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if document_meta is not None:
+            _body_params = document_meta
+
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            [
+                'application/json'
+            ]
+        )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/project/{proj_key}/data_indices/{index_key}/documents/{document_hash}/metadata',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
 
 
     @validate_call
@@ -1189,8 +1510,8 @@ class ContentManagerApi:
         index_key: StrictStr,
         document_hash: StrictStr,
         proj_key: StrictStr,
-        agent_name: Optional[StrictStr] = None,
-        status: Optional[StrictStr] = None,
+        agent_name: Optional[Any] = None,
+        status: Optional[StatusFilter] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1215,9 +1536,9 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param agent_name:
-        :type agent_name: str
+        :type agent_name: AgentName
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1273,8 +1594,8 @@ class ContentManagerApi:
         index_key: StrictStr,
         document_hash: StrictStr,
         proj_key: StrictStr,
-        agent_name: Optional[StrictStr] = None,
-        status: Optional[StrictStr] = None,
+        agent_name: Optional[Any] = None,
+        status: Optional[StatusFilter] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1299,9 +1620,9 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param agent_name:
-        :type agent_name: str
+        :type agent_name: AgentName
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1357,8 +1678,8 @@ class ContentManagerApi:
         index_key: StrictStr,
         document_hash: StrictStr,
         proj_key: StrictStr,
-        agent_name: Optional[StrictStr] = None,
-        status: Optional[StrictStr] = None,
+        agent_name: Optional[Any] = None,
+        status: Optional[StatusFilter] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1383,9 +1704,9 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param agent_name:
-        :type agent_name: str
+        :type agent_name: AgentName
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1470,7 +1791,7 @@ class ContentManagerApi:
             
         if status is not None:
             
-            _query_params.append(('status', status))
+            _query_params.append(('status', status.value))
             
         # process the header parameters
         # process the form parameters
@@ -2096,7 +2417,7 @@ class ContentManagerApi:
         index_key: StrictStr,
         agent_name: StrictStr,
         proj_key: StrictStr,
-        status: Optional[StrictStr] = None,
+        status: Optional[StatusFilter] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
         _request_timeout: Union[
@@ -2123,7 +2444,7 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param page:
         :type page: int
         :param page_size:
@@ -2184,7 +2505,7 @@ class ContentManagerApi:
         index_key: StrictStr,
         agent_name: StrictStr,
         proj_key: StrictStr,
-        status: Optional[StrictStr] = None,
+        status: Optional[StatusFilter] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
         _request_timeout: Union[
@@ -2211,7 +2532,7 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param page:
         :type page: int
         :param page_size:
@@ -2272,7 +2593,7 @@ class ContentManagerApi:
         index_key: StrictStr,
         agent_name: StrictStr,
         proj_key: StrictStr,
-        status: Optional[StrictStr] = None,
+        status: Optional[StatusFilter] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
         _request_timeout: Union[
@@ -2299,7 +2620,7 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param page:
         :type page: int
         :param page_size:
@@ -2386,7 +2707,7 @@ class ContentManagerApi:
         # process the query parameters
         if status is not None:
             
-            _query_params.append(('status', status))
+            _query_params.append(('status', status.value))
             
         if page is not None:
             
@@ -2438,7 +2759,7 @@ class ContentManagerApi:
         index_key: StrictStr,
         agent_name: StrictStr,
         proj_key: StrictStr,
-        status: Optional[StrictStr] = None,
+        status: Optional[StatusFilter] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
         _request_timeout: Union[
@@ -2465,7 +2786,7 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param page:
         :type page: int
         :param page_size:
@@ -2526,7 +2847,7 @@ class ContentManagerApi:
         index_key: StrictStr,
         agent_name: StrictStr,
         proj_key: StrictStr,
-        status: Optional[StrictStr] = None,
+        status: Optional[StatusFilter] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
         _request_timeout: Union[
@@ -2553,7 +2874,7 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param page:
         :type page: int
         :param page_size:
@@ -2614,7 +2935,7 @@ class ContentManagerApi:
         index_key: StrictStr,
         agent_name: StrictStr,
         proj_key: StrictStr,
-        status: Optional[StrictStr] = None,
+        status: Optional[StatusFilter] = None,
         page: Optional[StrictInt] = None,
         page_size: Optional[StrictInt] = None,
         _request_timeout: Union[
@@ -2641,7 +2962,7 @@ class ContentManagerApi:
         :param proj_key: (required)
         :type proj_key: str
         :param status:
-        :type status: str
+        :type status: StatusFilter
         :param page:
         :type page: int
         :param page_size:
@@ -2728,7 +3049,7 @@ class ContentManagerApi:
         # process the query parameters
         if status is not None:
             
-            _query_params.append(('status', status))
+            _query_params.append(('status', status.value))
             
         if page is not None:
             

@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**model_id** | **str** |  | [optional] 
-**prompt_template** | **str** |  | [optional] 
-**params** | **object** |  | [optional] 
-**timeout** | **float** |  | [optional] 
+**model_id** | [**ModelId**](ModelId.md) |  | [optional] 
+**prompt_template** | [**PromptTemplate**](PromptTemplate.md) |  | [optional] 
+**params** | [**Params**](Params.md) |  | [optional] 
+**timeout** | [**Timeout**](Timeout.md) |  | [optional] 
 
 ## Example
 

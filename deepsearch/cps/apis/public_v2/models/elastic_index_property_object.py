@@ -17,8 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.enabled import Enabled
+from deepsearch.cps.apis.public_v2.models.ignore_above import IgnoreAbove
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,8 +29,8 @@ class ElasticIndexPropertyObject(BaseModel):
     ElasticIndexPropertyObject
     """ # noqa: E501
     type: StrictStr
-    enabled: Optional[StrictBool] = None
-    ignore_above: Optional[StrictInt] = None
+    enabled: Optional[Enabled] = None
+    ignore_above: Optional[IgnoreAbove] = None
     __properties: ClassVar[List[str]] = ["type", "enabled", "ignore_above"]
 
     model_config = ConfigDict(
@@ -70,6 +72,12 @@ class ElasticIndexPropertyObject(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of enabled
+        if self.enabled:
+            _dict['enabled'] = self.enabled.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of ignore_above
+        if self.ignore_above:
+            _dict['ignore_above'] = self.ignore_above.to_dict()
         return _dict
 
     @classmethod
@@ -83,8 +91,8 @@ class ElasticIndexPropertyObject(BaseModel):
 
         _obj = cls.model_validate({
             "type": obj.get("type"),
-            "enabled": obj.get("enabled"),
-            "ignore_above": obj.get("ignore_above")
+            "enabled": Enabled.from_dict(obj["enabled"]) if obj.get("enabled") is not None else None,
+            "ignore_above": IgnoreAbove.from_dict(obj["ignore_above"]) if obj.get("ignore_above") is not None else None
         })
         return _obj
 

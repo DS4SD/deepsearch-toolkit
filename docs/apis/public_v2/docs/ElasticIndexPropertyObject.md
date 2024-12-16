@@ -6,8 +6,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **type** | **str** |  | 
-**enabled** | **bool** |  | [optional] 
-**ignore_above** | **int** |  | [optional] 
+**enabled** | [**Enabled**](Enabled.md) |  | [optional] 
+**ignore_above** | [**IgnoreAbove**](IgnoreAbove.md) |  | [optional] 
 
 ## Example
 

@@ -17,8 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.document_hashes import DocumentHashes
+from deepsearch.cps.apis.public_v2.models.with_operations import WithOperations
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,20 +28,9 @@ class UploadElasticRequestBody(BaseModel):
     """
     UploadElasticRequestBody
     """ # noqa: E501
-    document_hashes: Optional[List[StrictStr]] = Field(default=None, description="List of document hashes to be used as filter.")
-    with_operations: Optional[List[StrictStr]] = Field(default=None, description="List of Operation Status documents don't have to be used as filter.")
+    document_hashes: Optional[DocumentHashes] = None
+    with_operations: Optional[WithOperations] = None
     __properties: ClassVar[List[str]] = ["document_hashes", "with_operations"]
-
-    @field_validator('with_operations')
-    def with_operations_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        for i in value:
-            if i not in set(['PENDING', 'FAILURE', 'SUCCESS']):
-                raise ValueError("each list item must be one of ('PENDING', 'FAILURE', 'SUCCESS')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,6 +71,12 @@ class UploadElasticRequestBody(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of document_hashes
+        if self.document_hashes:
+            _dict['document_hashes'] = self.document_hashes.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of with_operations
+        if self.with_operations:
+            _dict['with_operations'] = self.with_operations.to_dict()
         return _dict
 
     @classmethod
@@ -92,8 +89,8 @@ class UploadElasticRequestBody(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "document_hashes": obj.get("document_hashes"),
-            "with_operations": obj.get("with_operations")
+            "document_hashes": DocumentHashes.from_dict(obj["document_hashes"]) if obj.get("document_hashes") is not None else None,
+            "with_operations": WithOperations.from_dict(obj["with_operations"]) if obj.get("with_operations") is not None else None
         })
         return _obj
 

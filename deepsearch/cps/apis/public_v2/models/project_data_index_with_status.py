@@ -17,11 +17,14 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.elastic_metadata import ElasticMetadata
-from deepsearch.cps.apis.public_v2.models.source import Source
-from deepsearch.cps.apis.public_v2.models.view_of import ViewOf
+from deepsearch.cps.apis.public_v2.models.project_data_index_with_status_metadata import ProjectDataIndexWithStatusMetadata
+from deepsearch.cps.apis.public_v2.models.provenance import Provenance
+from deepsearch.cps.apis.public_v2.models.record_properties import RecordProperties
+from deepsearch.cps.apis.public_v2.models.schema_key import SchemaKey
+from deepsearch.cps.apis.public_v2.models.source3 import Source3
+from deepsearch.cps.apis.public_v2.models.view_of1 import ViewOf1
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,30 +32,20 @@ class ProjectDataIndexWithStatus(BaseModel):
     """
     ProjectDataIndexWithStatus
     """ # noqa: E501
-    source: Source
+    source: Source3
     name: StrictStr
     documents: StrictInt
     health: StrictStr
     status: StrictStr
     creation_date: StrictStr
-    metadata: Optional[ElasticMetadata] = None
+    metadata: Optional[ProjectDataIndexWithStatusMetadata] = None
     description: StrictStr
-    schema_key: Optional[StrictStr] = None
+    schema_key: Optional[SchemaKey] = None
     type: StrictStr
-    view_of: Optional[ViewOf] = None
-    record_properties: Optional[Dict[str, Any]] = None
-    provenance: Optional[StrictStr] = None
+    view_of: Optional[ViewOf1] = None
+    record_properties: Optional[RecordProperties] = None
+    provenance: Optional[Provenance] = None
     __properties: ClassVar[List[str]] = ["source", "name", "documents", "health", "status", "creation_date", "metadata", "description", "schema_key", "type", "view_of", "record_properties", "provenance"]
-
-    @field_validator('schema_key')
-    def schema_key_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['deepsearch-doc', 'deepsearch-db', 'generic']):
-            raise ValueError("must be one of enum values ('deepsearch-doc', 'deepsearch-db', 'generic')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -99,9 +92,18 @@ class ProjectDataIndexWithStatus(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
             _dict['metadata'] = self.metadata.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of schema_key
+        if self.schema_key:
+            _dict['schema_key'] = self.schema_key.to_dict()
         # override the default output from pydantic by calling `to_dict()` of view_of
         if self.view_of:
             _dict['view_of'] = self.view_of.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of record_properties
+        if self.record_properties:
+            _dict['record_properties'] = self.record_properties.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of provenance
+        if self.provenance:
+            _dict['provenance'] = self.provenance.to_dict()
         return _dict
 
     @classmethod
@@ -114,19 +116,19 @@ class ProjectDataIndexWithStatus(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "source": Source.from_dict(obj["source"]) if obj.get("source") is not None else None,
+            "source": Source3.from_dict(obj["source"]) if obj.get("source") is not None else None,
             "name": obj.get("name"),
             "documents": obj.get("documents"),
             "health": obj.get("health"),
             "status": obj.get("status"),
             "creation_date": obj.get("creation_date"),
-            "metadata": ElasticMetadata.from_dict(obj["metadata"]) if obj.get("metadata") is not None else None,
+            "metadata": ProjectDataIndexWithStatusMetadata.from_dict(obj["metadata"]) if obj.get("metadata") is not None else None,
             "description": obj.get("description"),
-            "schema_key": obj.get("schema_key"),
+            "schema_key": SchemaKey.from_dict(obj["schema_key"]) if obj.get("schema_key") is not None else None,
             "type": obj.get("type"),
-            "view_of": ViewOf.from_dict(obj["view_of"]) if obj.get("view_of") is not None else None,
-            "record_properties": obj.get("record_properties"),
-            "provenance": obj.get("provenance")
+            "view_of": ViewOf1.from_dict(obj["view_of"]) if obj.get("view_of") is not None else None,
+            "record_properties": RecordProperties.from_dict(obj["record_properties"]) if obj.get("record_properties") is not None else None,
+            "provenance": Provenance.from_dict(obj["provenance"]) if obj.get("provenance") is not None else None
         })
         return _obj
 

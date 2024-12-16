@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **object** |  | 
-**description** | **object** |  | [optional] 
+**description** | [**Description**](Description.md) |  | [optional] 
 **view_of** | [**ViewOf**](ViewOf.md) |  | 
 **schema_key** | **object** |  | [optional] 
 

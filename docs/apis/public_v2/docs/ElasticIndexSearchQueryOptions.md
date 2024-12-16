@@ -5,12 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**source** | **List[str]** |  | [optional] 
-**from_** | **int** |  | [optional] 
-**size** | **int** |  | [optional] 
-**query** | **object** |  | [optional] 
-**aggs** | **object** |  | [optional] 
-**sort** | **List[object]** |  | [optional] 
+**source** | [**Source2**](Source2.md) |  | [optional] 
+**from_** | [**ModelFrom**](ModelFrom.md) |  | [optional] 
+**size** | [**Size1**](Size1.md) |  | [optional] 
+**query** | [**Query**](Query.md) |  | [optional] 
+**aggs** | [**Aggs**](Aggs.md) |  | [optional] 
+**sort** | [**Sort**](Sort.md) |  | [optional] 
 
 ## Example
 

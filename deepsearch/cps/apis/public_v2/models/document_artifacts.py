@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.document_artifacts_item import DocumentArtifactsItem
+from deepsearch.cps.apis.public_v2.models.document_artifacts_document_meta_json import DocumentArtifactsDocumentMetaJson
 from deepsearch.cps.apis.public_v2.models.document_artifacts_page_item import DocumentArtifactsPageItem
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,14 +28,14 @@ class DocumentArtifacts(BaseModel):
     """
     DocumentArtifacts
     """ # noqa: E501
-    document_meta_json: Optional[DocumentArtifactsItem] = None
-    document_pdf: Optional[DocumentArtifactsItem] = None
-    document_json: Optional[DocumentArtifactsItem] = None
-    document_glm_json: Optional[DocumentArtifactsItem] = None
-    document_md: Optional[DocumentArtifactsItem] = None
+    document_meta_json: Optional[DocumentArtifactsDocumentMetaJson] = None
+    document_pdf: Optional[DocumentArtifactsDocumentMetaJson] = None
+    document_json: Optional[DocumentArtifactsDocumentMetaJson] = None
+    document_legacy_json: Optional[DocumentArtifactsDocumentMetaJson] = None
+    document_md: Optional[DocumentArtifactsDocumentMetaJson] = None
     page_pdfs: Optional[List[DocumentArtifactsPageItem]] = None
     page_images: Optional[List[DocumentArtifactsPageItem]] = None
-    __properties: ClassVar[List[str]] = ["document_meta_json", "document_pdf", "document_json", "document_glm_json", "document_md", "page_pdfs", "page_images"]
+    __properties: ClassVar[List[str]] = ["document_meta_json", "document_pdf", "document_json", "document_legacy_json", "document_md", "page_pdfs", "page_images"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,9 +85,9 @@ class DocumentArtifacts(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of document_json
         if self.document_json:
             _dict['document_json'] = self.document_json.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of document_glm_json
-        if self.document_glm_json:
-            _dict['document_glm_json'] = self.document_glm_json.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of document_legacy_json
+        if self.document_legacy_json:
+            _dict['document_legacy_json'] = self.document_legacy_json.to_dict()
         # override the default output from pydantic by calling `to_dict()` of document_md
         if self.document_md:
             _dict['document_md'] = self.document_md.to_dict()
@@ -117,11 +117,11 @@ class DocumentArtifacts(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "document_meta_json": DocumentArtifactsItem.from_dict(obj["document_meta_json"]) if obj.get("document_meta_json") is not None else None,
-            "document_pdf": DocumentArtifactsItem.from_dict(obj["document_pdf"]) if obj.get("document_pdf") is not None else None,
-            "document_json": DocumentArtifactsItem.from_dict(obj["document_json"]) if obj.get("document_json") is not None else None,
-            "document_glm_json": DocumentArtifactsItem.from_dict(obj["document_glm_json"]) if obj.get("document_glm_json") is not None else None,
-            "document_md": DocumentArtifactsItem.from_dict(obj["document_md"]) if obj.get("document_md") is not None else None,
+            "document_meta_json": DocumentArtifactsDocumentMetaJson.from_dict(obj["document_meta_json"]) if obj.get("document_meta_json") is not None else None,
+            "document_pdf": DocumentArtifactsDocumentMetaJson.from_dict(obj["document_pdf"]) if obj.get("document_pdf") is not None else None,
+            "document_json": DocumentArtifactsDocumentMetaJson.from_dict(obj["document_json"]) if obj.get("document_json") is not None else None,
+            "document_legacy_json": DocumentArtifactsDocumentMetaJson.from_dict(obj["document_legacy_json"]) if obj.get("document_legacy_json") is not None else None,
+            "document_md": DocumentArtifactsDocumentMetaJson.from_dict(obj["document_md"]) if obj.get("document_md") is not None else None,
             "page_pdfs": [DocumentArtifactsPageItem.from_dict(_item) for _item in obj["page_pdfs"]] if obj.get("page_pdfs") is not None else None,
             "page_images": [DocumentArtifactsPageItem.from_dict(_item) for _item in obj["page_images"]] if obj.get("page_images") is not None else None
         })

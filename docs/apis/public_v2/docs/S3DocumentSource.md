@@ -7,7 +7,7 @@ Specifies documents to import from an S3 bucket
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **coordinates** | [**S3Coordinates**](S3Coordinates.md) |  | 
-**object_keys** | **List[str]** | List of s3 object keys to retrieve from bucket to be converted and uploaded to the data index. | [optional] 
+**object_keys** | [**ObjectKeys**](ObjectKeys.md) |  | [optional] 
 
 ## Example
 

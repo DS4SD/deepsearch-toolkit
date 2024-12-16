@@ -16,8 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
-from typing import Optional
+from typing import Any, Optional
 from deepsearch.cps.apis.public_v2.models.cps_package import CPSPackage
 from deepsearch.cps.apis.public_v2.models.modules_config import ModulesConfig
 from deepsearch.cps.apis.public_v2.models.system_info import SystemInfo
@@ -1012,8 +1011,8 @@ class SystemApi:
     @validate_call
     def list_system_knowledge_graphs(
         self,
-        proj_key: Optional[StrictStr] = None,
-        term: Optional[StrictStr] = None,
+        proj_key: Optional[Any] = None,
+        term: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1032,9 +1031,9 @@ class SystemApi:
         List all Knowledge Graphs in the system.
 
         :param proj_key:
-        :type proj_key: str
+        :type proj_key: ProjKey
         :param term:
-        :type term: str
+        :type term: Term
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1084,8 +1083,8 @@ class SystemApi:
     @validate_call
     def list_system_knowledge_graphs_with_http_info(
         self,
-        proj_key: Optional[StrictStr] = None,
-        term: Optional[StrictStr] = None,
+        proj_key: Optional[Any] = None,
+        term: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1104,9 +1103,9 @@ class SystemApi:
         List all Knowledge Graphs in the system.
 
         :param proj_key:
-        :type proj_key: str
+        :type proj_key: ProjKey
         :param term:
-        :type term: str
+        :type term: Term
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1156,8 +1155,8 @@ class SystemApi:
     @validate_call
     def list_system_knowledge_graphs_without_preload_content(
         self,
-        proj_key: Optional[StrictStr] = None,
-        term: Optional[StrictStr] = None,
+        proj_key: Optional[Any] = None,
+        term: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1176,9 +1175,9 @@ class SystemApi:
         List all Knowledge Graphs in the system.
 
         :param proj_key:
-        :type proj_key: str
+        :type proj_key: ProjKey
         :param term:
-        :type term: str
+        :type term: Term
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

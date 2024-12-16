@@ -19,9 +19,7 @@ URL = typer.Option(
     None,
     "--url",
     "-u",
-    help="""Provide single url or
-            absolute path to file containing 
-            multiple urls separated by empty lines.""",
+    help="""Provide single url""",
 )
 
 COORDINATES_PATH = typer.Option(
@@ -84,6 +82,14 @@ GET_REPORT = typer.Option(
     "-r",
     is_flag=True,
     help="Generate report after document conversion",
+)
+
+EXPORT_MD = typer.Option(
+    False,
+    "--export-md",
+    "-md",
+    is_flag=True,
+    help="Download MD file after document conversion",
 )
 
 TASK_IDS = typer.Option(

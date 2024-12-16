@@ -17,8 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.add_annotations import AddAnnotations
+from deepsearch.cps.apis.public_v2.models.add_raw_pages import AddRawPages
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,8 +28,8 @@ class TargetConversionParameters(BaseModel):
     """
     Specify target settings (add_raw_pages, add_annotations).  Fields left null are set to platform defaults.
     """ # noqa: E501
-    add_raw_pages: Optional[StrictBool] = None
-    add_annotations: Optional[StrictBool] = None
+    add_raw_pages: Optional[AddRawPages] = None
+    add_annotations: Optional[AddAnnotations] = None
     __properties: ClassVar[List[str]] = ["add_raw_pages", "add_annotations"]
 
     model_config = ConfigDict(
@@ -69,6 +71,12 @@ class TargetConversionParameters(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of add_raw_pages
+        if self.add_raw_pages:
+            _dict['add_raw_pages'] = self.add_raw_pages.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of add_annotations
+        if self.add_annotations:
+            _dict['add_annotations'] = self.add_annotations.to_dict()
         return _dict
 
     @classmethod
@@ -81,8 +89,8 @@ class TargetConversionParameters(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "add_raw_pages": obj.get("add_raw_pages"),
-            "add_annotations": obj.get("add_annotations")
+            "add_raw_pages": AddRawPages.from_dict(obj["add_raw_pages"]) if obj.get("add_raw_pages") is not None else None,
+            "add_annotations": AddAnnotations.from_dict(obj["add_annotations"]) if obj.get("add_annotations") is not None else None
         })
         return _obj
 

@@ -14,11 +14,11 @@ Name | Type | Description | Notes
 **progress** | **float** |  | 
 **meta** | **object** |  | 
 **created_at** | **datetime** |  | 
-**started_at** | **datetime** |  | [optional] 
-**completed_at** | **datetime** |  | [optional] 
-**start_count** | **int** |  | [optional] 
-**error_reason** | **str** |  | [optional] 
-**related_tasks** | **List[object]** |  | [optional] 
+**started_at** | [**StartedAt**](StartedAt.md) |  | [optional] 
+**completed_at** | [**CompletedAt**](CompletedAt.md) |  | [optional] 
+**start_count** | [**StartCount**](StartCount.md) |  | [optional] 
+**error_reason** | [**ErrorReason**](ErrorReason.md) |  | [optional] 
+**related_tasks** | [**RelatedTasks**](RelatedTasks.md) |  | [optional] 
 
 ## Example
 

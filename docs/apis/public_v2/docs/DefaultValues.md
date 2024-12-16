@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ccs_project** | [**CCSProject**](CCSProject.md) |  | 
-**dataflow** | [**DataFlow**](DataFlow.md) |  | [optional] 
+**dataflow** | [**DefaultValuesDataflow**](DefaultValuesDataflow.md) |  | [optional] 
 
 ## Example
 

@@ -5,9 +5,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**index_key** | **object** |  | 
-**elastic_id** | **object** |  | 
-**proj_key** | **object** |  | 
 
 ## Example
 

@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
-**display_name** | **str** |  | [optional] 
+**display_name** | [**DisplayName**](DisplayName.md) |  | [optional] 
 
 ## Example
 

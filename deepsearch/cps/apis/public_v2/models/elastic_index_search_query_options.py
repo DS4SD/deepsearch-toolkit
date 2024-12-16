@@ -17,8 +17,14 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.aggs import Aggs
+from deepsearch.cps.apis.public_v2.models.model_from import ModelFrom
+from deepsearch.cps.apis.public_v2.models.query import Query
+from deepsearch.cps.apis.public_v2.models.size1 import Size1
+from deepsearch.cps.apis.public_v2.models.sort import Sort
+from deepsearch.cps.apis.public_v2.models.source2 import Source2
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,12 +32,12 @@ class ElasticIndexSearchQueryOptions(BaseModel):
     """
     ElasticIndexSearchQueryOptions
     """ # noqa: E501
-    source: Optional[List[StrictStr]] = Field(default=None, alias="_source")
-    from_: Optional[StrictInt] = None
-    size: Optional[StrictInt] = None
-    query: Optional[Dict[str, Any]] = None
-    aggs: Optional[Dict[str, Any]] = None
-    sort: Optional[List[Dict[str, Any]]] = None
+    source: Optional[Source2] = Field(default=None, alias="_source")
+    from_: Optional[ModelFrom] = None
+    size: Optional[Size1] = None
+    query: Optional[Query] = None
+    aggs: Optional[Aggs] = None
+    sort: Optional[Sort] = None
     __properties: ClassVar[List[str]] = ["_source", "from_", "size", "query", "aggs", "sort"]
 
     model_config = ConfigDict(
@@ -73,6 +79,24 @@ class ElasticIndexSearchQueryOptions(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of source
+        if self.source:
+            _dict['_source'] = self.source.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of from_
+        if self.from_:
+            _dict['from_'] = self.from_.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of size
+        if self.size:
+            _dict['size'] = self.size.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of query
+        if self.query:
+            _dict['query'] = self.query.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of aggs
+        if self.aggs:
+            _dict['aggs'] = self.aggs.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of sort
+        if self.sort:
+            _dict['sort'] = self.sort.to_dict()
         return _dict
 
     @classmethod
@@ -85,12 +109,12 @@ class ElasticIndexSearchQueryOptions(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_source": obj.get("_source"),
-            "from_": obj.get("from_"),
-            "size": obj.get("size"),
-            "query": obj.get("query"),
-            "aggs": obj.get("aggs"),
-            "sort": obj.get("sort")
+            "_source": Source2.from_dict(obj["_source"]) if obj.get("_source") is not None else None,
+            "from_": ModelFrom.from_dict(obj["from_"]) if obj.get("from_") is not None else None,
+            "size": Size1.from_dict(obj["size"]) if obj.get("size") is not None else None,
+            "query": Query.from_dict(obj["query"]) if obj.get("query") is not None else None,
+            "aggs": Aggs.from_dict(obj["aggs"]) if obj.get("aggs") is not None else None,
+            "sort": Sort.from_dict(obj["sort"]) if obj.get("sort") is not None else None
         })
         return _obj
 

@@ -5,19 +5,19 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**source** | [**Source**](Source.md) |  | 
+**source** | [**Source3**](Source3.md) |  | 
 **name** | **str** |  | 
 **documents** | **int** |  | 
 **health** | **str** |  | 
 **status** | **str** |  | 
 **creation_date** | **str** |  | 
-**metadata** | [**ElasticMetadata**](ElasticMetadata.md) |  | [optional] 
+**metadata** | [**ProjectDataIndexWithStatusMetadata**](ProjectDataIndexWithStatusMetadata.md) |  | [optional] 
 **description** | **str** |  | 
-**schema_key** | **str** |  | [optional] 
+**schema_key** | [**SchemaKey**](SchemaKey.md) |  | [optional] 
 **type** | **str** |  | 
-**view_of** | [**ViewOf**](ViewOf.md) |  | [optional] 
-**record_properties** | **object** |  | [optional] 
-**provenance** | **str** |  | [optional] 
+**view_of** | [**ViewOf1**](ViewOf1.md) |  | [optional] 
+**record_properties** | [**RecordProperties**](RecordProperties.md) |  | [optional] 
+**provenance** | [**Provenance**](Provenance.md) |  | [optional] 
 
 ## Example
 

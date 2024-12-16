@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
 from deepsearch.cps.apis.public_v2.models.semantic_ingest_req_params import SemanticIngestReqParams
-from deepsearch.cps.apis.public_v2.models.source1 import Source1
+from deepsearch.cps.apis.public_v2.models.source4 import Source4
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class SemanticIngestRequest(BaseModel):
     """
     SemanticIngestRequest
     """ # noqa: E501
-    source: Source1
+    source: Source4
     parameters: SemanticIngestReqParams
     __properties: ClassVar[List[str]] = ["source", "parameters"]
 
@@ -89,7 +89,7 @@ class SemanticIngestRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "source": Source1.from_dict(obj["source"]) if obj.get("source") is not None else None,
+            "source": Source4.from_dict(obj["source"]) if obj.get("source") is not None else None,
             "parameters": SemanticIngestReqParams.from_dict(obj["parameters"]) if obj.get("parameters") is not None else None
         })
         return _obj

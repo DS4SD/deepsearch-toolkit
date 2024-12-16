@@ -5,15 +5,15 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**aliases** | **List[str]** |  | [optional] 
-**created** | **str** |  | [optional] 
-**description** | **str** |  | [optional] 
-**display_name** | **str** |  | [optional] 
-**source** | **str** |  | [optional] 
-**storage** | **str** |  | [optional] 
-**version** | **str** |  | [optional] 
-**type** | **str** |  | [optional] 
-**domain** | **List[str]** |  | [optional] 
+**aliases** | [**Aliases**](Aliases.md) |  | [optional] 
+**created** | [**Created**](Created.md) |  | [optional] 
+**description** | [**Description**](Description.md) |  | [optional] 
+**display_name** | [**DisplayName**](DisplayName.md) |  | [optional] 
+**source** | [**Source1**](Source1.md) |  | [optional] 
+**storage** | [**Storage**](Storage.md) |  | [optional] 
+**version** | [**Version1**](Version1.md) |  | [optional] 
+**type** | [**Type**](Type.md) |  | [optional] 
+**domain** | [**Domain**](Domain.md) |  | [optional] 
 **classification** | **List[str]** |  | 
 
 ## Example

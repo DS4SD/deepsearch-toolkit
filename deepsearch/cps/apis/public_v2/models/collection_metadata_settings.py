@@ -17,8 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.description import Description
+from deepsearch.cps.apis.public_v2.models.display_name import DisplayName
+from deepsearch.cps.apis.public_v2.models.license import License
+from deepsearch.cps.apis.public_v2.models.source1 import Source1
+from deepsearch.cps.apis.public_v2.models.version1 import Version1
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,11 +31,11 @@ class CollectionMetadataSettings(BaseModel):
     """
     CollectionMetadataSettings
     """ # noqa: E501
-    description: Optional[StrictStr] = None
-    display_name: Optional[StrictStr] = None
-    license: Optional[StrictStr] = None
-    source: Optional[StrictStr] = None
-    version: Optional[StrictStr] = None
+    description: Optional[Description] = None
+    display_name: Optional[DisplayName] = None
+    license: Optional[License] = None
+    source: Optional[Source1] = None
+    version: Optional[Version1] = None
     __properties: ClassVar[List[str]] = ["description", "display_name", "license", "source", "version"]
 
     model_config = ConfigDict(
@@ -72,6 +77,21 @@ class CollectionMetadataSettings(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of description
+        if self.description:
+            _dict['description'] = self.description.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of display_name
+        if self.display_name:
+            _dict['display_name'] = self.display_name.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of license
+        if self.license:
+            _dict['license'] = self.license.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of source
+        if self.source:
+            _dict['source'] = self.source.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of version
+        if self.version:
+            _dict['version'] = self.version.to_dict()
         return _dict
 
     @classmethod
@@ -84,11 +104,11 @@ class CollectionMetadataSettings(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "description": obj.get("description"),
-            "display_name": obj.get("display_name"),
-            "license": obj.get("license"),
-            "source": obj.get("source"),
-            "version": obj.get("version")
+            "description": Description.from_dict(obj["description"]) if obj.get("description") is not None else None,
+            "display_name": DisplayName.from_dict(obj["display_name"]) if obj.get("display_name") is not None else None,
+            "license": License.from_dict(obj["license"]) if obj.get("license") is not None else None,
+            "source": Source1.from_dict(obj["source"]) if obj.get("source") is not None else None,
+            "version": Version1.from_dict(obj["version"]) if obj.get("version") is not None else None
         })
         return _obj
 
