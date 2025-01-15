@@ -198,7 +198,7 @@ def download_converted_documents(
         count = 1
         for url in download_urls:
             filename = Path(urllib.parse.urlparse(url).path).name
-            download_name = Path(os.path.join(result_dir, filename[-10:]))
+            download_name = Path(os.path.join(result_dir))
             download_url(url, download_name),
             count += 1
             progress.update(1)

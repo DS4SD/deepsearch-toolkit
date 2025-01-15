@@ -24,7 +24,7 @@ from deepsearch.cps.apis.public_v2.models.semantic_ingest_source_private_data_do
 from deepsearch.cps.apis.public_v2.models.semantic_ingest_source_public_data_document import (
     SemanticIngestSourcePublicDataDocument,
 )
-from deepsearch.cps.apis.public_v2.models.source1 import Source1
+from deepsearch.cps.apis.public_v2.models.source4 import Source4
 from deepsearch.cps.client.components.data_indices import (
     ElasticProjectDataCollectionSource,
 )
@@ -137,7 +137,7 @@ class DSApiDocuments:
             raise RuntimeError("Unknown data source format for semantic_ingest")
 
         semantic_ingest_request = SemanticIngestRequest(
-            source=Source1(
+            source=Source4(
                 actual_instance=api_src_data,
             ),
             parameters=SemanticIngestReqParams(
