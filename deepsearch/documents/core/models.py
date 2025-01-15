@@ -184,10 +184,7 @@ class TargetSettings(BaseModel):
     add_annotations: Optional[bool] = None
 
     @model_validator(mode="after")
-    @classmethod
-    def check_raw_or_ann(cls, values):
-        if (values.get("add_raw_pages") is None) and (
-            values.get("add_annotations") is None
-        ):
+    def check_raw_or_ann(self):
+        if self.add_raw_pages is None and self.add_annotations is None:
             raise ValueError("either 'add_raw_pages' or 'add_annotations' is required")
-        return values
+        return self
