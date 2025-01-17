@@ -48,8 +48,8 @@ tabulate = ">=0.8.9, <1.0.0"
 pluggy = "^1.0.0"
 tqdm = "^4.64.0"
 
-fastapi = {version = "^0.112.0", optional = true}
-uvicorn = {version = "^0.30.5", optional = true}
+fastapi = {version = "^0.115.3", optional = true}
+uvicorn = {version = ">=0.32.0", optional = true}
 anyio = { version = "^3.6.2", optional = true }
 docling-core = "^2.0.0"
 
