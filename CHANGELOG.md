@@ -1,3 +1,15 @@
+## [v2.0.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v2.0.0) - 2025-01-17
+
+### Feature
+
+* Chemistry Queries for PatCID2 ([#191](https://github.com/DS4SD/deepsearch-toolkit/issues/191)) ([`32bcf5c`](https://github.com/DS4SD/deepsearch-toolkit/commit/32bcf5c585c839a5e3591a679d10827e7e0a7d03))
+* Change conversion tasks to cps api ([#190](https://github.com/DS4SD/deepsearch-toolkit/issues/190)) ([`4150e78`](https://github.com/DS4SD/deepsearch-toolkit/commit/4150e785b85937321b57ebec7978f2b69e5a2b07))
+
+### Breaking
+
+* Chemistry Queries for PatCID2 ([#191](https://github.com/DS4SD/deepsearch-toolkit/issues/191)) ([`32bcf5c`](https://github.com/DS4SD/deepsearch-toolkit/commit/32bcf5c585c839a5e3591a679d10827e7e0a7d03))
+* change conversion tasks to cps api ([#190](https://github.com/DS4SD/deepsearch-toolkit/issues/190)) ([`4150e78`](https://github.com/DS4SD/deepsearch-toolkit/commit/4150e785b85937321b57ebec7978f2b69e5a2b07))
+
 ## [v1.1.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v1.1.1) - 2024-10-17
 
 ### Fix
