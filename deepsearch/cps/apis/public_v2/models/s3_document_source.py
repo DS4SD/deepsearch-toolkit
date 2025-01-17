@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.object_keys import ObjectKeys
 from deepsearch.cps.apis.public_v2.models.s3_coordinates import S3Coordinates
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +29,7 @@ class S3DocumentSource(BaseModel):
     Specifies documents to import from an S3 bucket
     """ # noqa: E501
     coordinates: S3Coordinates
-    object_keys: Optional[List[StrictStr]] = Field(default=None, description="List of s3 object keys to retrieve from bucket to be converted and uploaded to the data index.")
+    object_keys: Optional[ObjectKeys] = None
     __properties: ClassVar[List[str]] = ["coordinates", "object_keys"]
 
     model_config = ConfigDict(
@@ -73,6 +74,9 @@ class S3DocumentSource(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of coordinates
         if self.coordinates:
             _dict['coordinates'] = self.coordinates.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of object_keys
+        if self.object_keys:
+            _dict['object_keys'] = self.object_keys.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +90,7 @@ class S3DocumentSource(BaseModel):
 
         _obj = cls.model_validate({
             "coordinates": S3Coordinates.from_dict(obj["coordinates"]) if obj.get("coordinates") is not None else None,
-            "object_keys": obj.get("object_keys")
+            "object_keys": ObjectKeys.from_dict(obj["object_keys"]) if obj.get("object_keys") is not None else None
         })
         return _obj
 

@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from deepsearch.cps.apis.public_v2.models.ccs_project import CCSProject
-from deepsearch.cps.apis.public_v2.models.data_flow import DataFlow
+from deepsearch.cps.apis.public_v2.models.default_values_dataflow import DefaultValuesDataflow
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,7 @@ class DefaultValues(BaseModel):
     DefaultValues
     """ # noqa: E501
     ccs_project: CCSProject
-    dataflow: Optional[DataFlow] = None
+    dataflow: Optional[DefaultValuesDataflow] = None
     __properties: ClassVar[List[str]] = ["ccs_project", "dataflow"]
 
     model_config = ConfigDict(
@@ -90,7 +90,7 @@ class DefaultValues(BaseModel):
 
         _obj = cls.model_validate({
             "ccs_project": CCSProject.from_dict(obj["ccs_project"]) if obj.get("ccs_project") is not None else None,
-            "dataflow": DataFlow.from_dict(obj["dataflow"]) if obj.get("dataflow") is not None else None
+            "dataflow": DefaultValuesDataflow.from_dict(obj["dataflow"]) if obj.get("dataflow") is not None else None
         })
         return _obj
 

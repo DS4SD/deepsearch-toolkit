@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.gen_ai_partial_params import GenAIPartialParams
+from deepsearch.cps.apis.public_v2.models.gen_aiaws_bedrock_proj_params import GenAIAWSBedrockProjParams
 from deepsearch.cps.apis.public_v2.models.gen_aibam_config import GenAIBAMConfig
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,18 +30,8 @@ class GenAIBAM(BaseModel):
     """ # noqa: E501
     kind: Optional[StrictStr] = 'bam'
     config: GenAIBAMConfig
-    proj_params: Optional[GenAIPartialParams] = None
+    proj_params: Optional[GenAIAWSBedrockProjParams] = None
     __properties: ClassVar[List[str]] = ["kind", "config", "proj_params"]
-
-    @field_validator('kind')
-    def kind_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['bam']):
-            raise ValueError("must be one of enum values ('bam')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -102,7 +92,7 @@ class GenAIBAM(BaseModel):
         _obj = cls.model_validate({
             "kind": obj.get("kind") if obj.get("kind") is not None else 'bam',
             "config": GenAIBAMConfig.from_dict(obj["config"]) if obj.get("config") is not None else None,
-            "proj_params": GenAIPartialParams.from_dict(obj["proj_params"]) if obj.get("proj_params") is not None else None
+            "proj_params": GenAIAWSBedrockProjParams.from_dict(obj["proj_params"]) if obj.get("proj_params") is not None else None
         })
         return _obj
 

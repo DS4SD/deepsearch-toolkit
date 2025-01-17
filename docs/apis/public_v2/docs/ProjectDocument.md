@@ -6,11 +6,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **document_hash** | **str** |  | 
-**filename** | **str** |  | 
-**file_uri** | **str** |  | [optional] 
-**ref_uri** | **str** |  | [optional] 
-**number_pages** | **int** |  | [optional] 
-**status** | **str** |  | [optional] 
+**filename** | [**Filename**](Filename.md) |  | [optional] 
+**file_uri** | [**FileUri**](FileUri.md) |  | [optional] 
+**ref_uri** | [**RefUri**](RefUri.md) |  | [optional] 
+**number_pages** | [**NumberPages**](NumberPages.md) |  | [optional] 
+**status** | [**Status**](Status.md) |  | [optional] 
 
 ## Example
 

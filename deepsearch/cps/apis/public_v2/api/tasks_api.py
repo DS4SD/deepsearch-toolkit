@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictInt, StrictStr, field_validator
-from typing import Optional, Union
+from typing import Any, Optional
 from typing_extensions import Annotated
 from deepsearch.cps.apis.public_v2.models.task_context import TaskContext
 from deepsearch.cps.apis.public_v2.models.task_result import TaskResult
@@ -321,7 +321,7 @@ class TasksApi:
         self,
         task_id: StrictStr,
         proj_key: StrictStr,
-        wait: Annotated[Optional[Union[Annotated[float, Field(le=30.0, strict=True)], Annotated[int, Field(le=30, strict=True)]]], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
+        wait: Annotated[Optional[Any], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -344,7 +344,7 @@ class TasksApi:
         :param proj_key: (required)
         :type proj_key: str
         :param wait: Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.
-        :type wait: float
+        :type wait: Wait1
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -397,7 +397,7 @@ class TasksApi:
         self,
         task_id: StrictStr,
         proj_key: StrictStr,
-        wait: Annotated[Optional[Union[Annotated[float, Field(le=30.0, strict=True)], Annotated[int, Field(le=30, strict=True)]]], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
+        wait: Annotated[Optional[Any], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -420,7 +420,7 @@ class TasksApi:
         :param proj_key: (required)
         :type proj_key: str
         :param wait: Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.
-        :type wait: float
+        :type wait: Wait1
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -473,7 +473,7 @@ class TasksApi:
         self,
         task_id: StrictStr,
         proj_key: StrictStr,
-        wait: Annotated[Optional[Union[Annotated[float, Field(le=30.0, strict=True)], Annotated[int, Field(le=30, strict=True)]]], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
+        wait: Annotated[Optional[Any], Field(description="Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -496,7 +496,7 @@ class TasksApi:
         :param proj_key: (required)
         :type proj_key: str
         :param wait: Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls.
-        :type wait: float
+        :type wait: Wait1
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -889,7 +889,7 @@ class TasksApi:
     def list_project_tasks(
         self,
         proj_key: StrictStr,
-        task_type: Optional[StrictStr] = None,
+        task_type: Optional[Any] = None,
         skip: Optional[StrictInt] = None,
         limit: Optional[StrictInt] = None,
         sort_by: Optional[StrictStr] = None,
@@ -914,7 +914,7 @@ class TasksApi:
         :param proj_key: (required)
         :type proj_key: str
         :param task_type:
-        :type task_type: str
+        :type task_type: TaskType
         :param skip:
         :type skip: int
         :param limit:
@@ -977,7 +977,7 @@ class TasksApi:
     def list_project_tasks_with_http_info(
         self,
         proj_key: StrictStr,
-        task_type: Optional[StrictStr] = None,
+        task_type: Optional[Any] = None,
         skip: Optional[StrictInt] = None,
         limit: Optional[StrictInt] = None,
         sort_by: Optional[StrictStr] = None,
@@ -1002,7 +1002,7 @@ class TasksApi:
         :param proj_key: (required)
         :type proj_key: str
         :param task_type:
-        :type task_type: str
+        :type task_type: TaskType
         :param skip:
         :type skip: int
         :param limit:
@@ -1065,7 +1065,7 @@ class TasksApi:
     def list_project_tasks_without_preload_content(
         self,
         proj_key: StrictStr,
-        task_type: Optional[StrictStr] = None,
+        task_type: Optional[Any] = None,
         skip: Optional[StrictInt] = None,
         limit: Optional[StrictInt] = None,
         sort_by: Optional[StrictStr] = None,
@@ -1090,7 +1090,7 @@ class TasksApi:
         :param proj_key: (required)
         :type proj_key: str
         :param task_type:
-        :type task_type: str
+        :type task_type: TaskType
         :param skip:
         :type skip: int
         :param limit:

@@ -18,35 +18,27 @@ import json
 import pprint
 import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Optional
-from deepsearch.cps.apis.public_v2.models.semantic_ingest_source_private_data_collection import SemanticIngestSourcePrivateDataCollection
-from deepsearch.cps.apis.public_v2.models.semantic_ingest_source_private_data_document import SemanticIngestSourcePrivateDataDocument
-from deepsearch.cps.apis.public_v2.models.semantic_ingest_source_public_data_document import SemanticIngestSourcePublicDataDocument
-from deepsearch.cps.apis.public_v2.models.semantic_ingest_source_url import SemanticIngestSourceUrl
+from typing import Any, Optional
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-SOURCE1_ANY_OF_SCHEMAS = ["SemanticIngestSourcePrivateDataCollection", "SemanticIngestSourcePrivateDataDocument", "SemanticIngestSourcePublicDataDocument", "SemanticIngestSourceUrl"]
+SOURCE1_ANY_OF_SCHEMAS = ["object", "str"]
 
 class Source1(BaseModel):
     """
     Source1
     """
 
-    # data type: SemanticIngestSourceUrl
-    anyof_schema_1_validator: Optional[SemanticIngestSourceUrl] = None
-    # data type: SemanticIngestSourcePublicDataDocument
-    anyof_schema_2_validator: Optional[SemanticIngestSourcePublicDataDocument] = None
-    # data type: SemanticIngestSourcePrivateDataDocument
-    anyof_schema_3_validator: Optional[SemanticIngestSourcePrivateDataDocument] = None
-    # data type: SemanticIngestSourcePrivateDataCollection
-    anyof_schema_4_validator: Optional[SemanticIngestSourcePrivateDataCollection] = None
+    # data type: str
+    anyof_schema_1_validator: Optional[StrictStr] = None
+    # data type: object
+    anyof_schema_2_validator: Optional[Any] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[SemanticIngestSourcePrivateDataCollection, SemanticIngestSourcePrivateDataDocument, SemanticIngestSourcePublicDataDocument, SemanticIngestSourceUrl]] = None
+        actual_instance: Optional[Union[object, str]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: List[str] = Field(default=Literal["SemanticIngestSourcePrivateDataCollection", "SemanticIngestSourcePrivateDataDocument", "SemanticIngestSourcePublicDataDocument", "SemanticIngestSourceUrl"])
+    any_of_schemas: List[str] = Field(default=Literal["object", "str"])
 
     model_config = {
         "validate_assignment": True,
@@ -67,33 +59,21 @@ class Source1(BaseModel):
     def actual_instance_must_validate_anyof(cls, v):
         instance = Source1.model_construct()
         error_messages = []
-        # validate data type: SemanticIngestSourceUrl
-        if not isinstance(v, SemanticIngestSourceUrl):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `SemanticIngestSourceUrl`")
-        else:
+        # validate data type: str
+        try:
+            instance.anyof_schema_1_validator = v
             return v
-
-        # validate data type: SemanticIngestSourcePublicDataDocument
-        if not isinstance(v, SemanticIngestSourcePublicDataDocument):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `SemanticIngestSourcePublicDataDocument`")
-        else:
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # validate data type: object
+        try:
+            instance.anyof_schema_2_validator = v
             return v
-
-        # validate data type: SemanticIngestSourcePrivateDataDocument
-        if not isinstance(v, SemanticIngestSourcePrivateDataDocument):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `SemanticIngestSourcePrivateDataDocument`")
-        else:
-            return v
-
-        # validate data type: SemanticIngestSourcePrivateDataCollection
-        if not isinstance(v, SemanticIngestSourcePrivateDataCollection):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `SemanticIngestSourcePrivateDataCollection`")
-        else:
-            return v
-
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Source1 with anyOf schemas: SemanticIngestSourcePrivateDataCollection, SemanticIngestSourcePrivateDataDocument, SemanticIngestSourcePublicDataDocument, SemanticIngestSourceUrl. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in Source1 with anyOf schemas: object, str. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -106,34 +86,28 @@ class Source1(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # anyof_schema_1_validator: Optional[SemanticIngestSourceUrl] = None
+        # deserialize data into str
         try:
-            instance.actual_instance = SemanticIngestSourceUrl.from_json(json_str)
+            # validation
+            instance.anyof_schema_1_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_1_validator
             return instance
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[SemanticIngestSourcePublicDataDocument] = None
+            error_messages.append(str(e))
+        # deserialize data into object
         try:
-            instance.actual_instance = SemanticIngestSourcePublicDataDocument.from_json(json_str)
+            # validation
+            instance.anyof_schema_2_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_2_validator
             return instance
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_3_validator: Optional[SemanticIngestSourcePrivateDataDocument] = None
-        try:
-            instance.actual_instance = SemanticIngestSourcePrivateDataDocument.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_4_validator: Optional[SemanticIngestSourcePrivateDataCollection] = None
-        try:
-            instance.actual_instance = SemanticIngestSourcePrivateDataCollection.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
+            error_messages.append(str(e))
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Source1 with anyOf schemas: SemanticIngestSourcePrivateDataCollection, SemanticIngestSourcePrivateDataDocument, SemanticIngestSourcePublicDataDocument, SemanticIngestSourceUrl. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Source1 with anyOf schemas: object, str. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -147,7 +121,7 @@ class Source1(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], SemanticIngestSourcePrivateDataCollection, SemanticIngestSourcePrivateDataDocument, SemanticIngestSourcePublicDataDocument, SemanticIngestSourceUrl]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], object, str]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

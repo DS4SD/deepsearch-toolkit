@@ -13,44 +13,48 @@
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
-import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Optional
+from typing import Any, List, Optional
+from deepsearch.cps.apis.public_v2.models.gen_ai_openai import GenAIOpenai
 from deepsearch.cps.apis.public_v2.models.gen_ai_watsonx import GenAIWatsonx
 from deepsearch.cps.apis.public_v2.models.gen_aiaws_bedrock import GenAIAWSBedrock
 from deepsearch.cps.apis.public_v2.models.gen_aibam import GenAIBAM
+from deepsearch.cps.apis.public_v2.models.gen_aicpd import GenAICPD
 from deepsearch.cps.apis.public_v2.models.gen_aihf_inference_api import GenAIHFInferenceApi
-from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
+from pydantic import StrictStr, Field
+from typing import Union, List, Optional, Dict
 from typing_extensions import Literal, Self
-from pydantic import Field
 
-CONFIG_ANY_OF_SCHEMAS = ["GenAIAWSBedrock", "GenAIBAM", "GenAIHFInferenceApi", "GenAIWatsonx"]
+CONFIG_ONE_OF_SCHEMAS = ["GenAIAWSBedrock", "GenAIBAM", "GenAICPD", "GenAIHFInferenceApi", "GenAIOpenai", "GenAIWatsonx"]
 
 class Config(BaseModel):
     """
     Config
     """
-
     # data type: GenAIBAM
-    anyof_schema_1_validator: Optional[GenAIBAM] = None
+    oneof_schema_1_validator: Optional[GenAIBAM] = None
     # data type: GenAIWatsonx
-    anyof_schema_2_validator: Optional[GenAIWatsonx] = None
+    oneof_schema_2_validator: Optional[GenAIWatsonx] = None
+    # data type: GenAICPD
+    oneof_schema_3_validator: Optional[GenAICPD] = None
     # data type: GenAIHFInferenceApi
-    anyof_schema_3_validator: Optional[GenAIHFInferenceApi] = None
+    oneof_schema_4_validator: Optional[GenAIHFInferenceApi] = None
+    # data type: GenAIOpenai
+    oneof_schema_5_validator: Optional[GenAIOpenai] = None
     # data type: GenAIAWSBedrock
-    anyof_schema_4_validator: Optional[GenAIAWSBedrock] = None
-    if TYPE_CHECKING:
-        actual_instance: Optional[Union[GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx]] = None
-    else:
-        actual_instance: Any = None
-    any_of_schemas: List[str] = Field(default=Literal["GenAIAWSBedrock", "GenAIBAM", "GenAIHFInferenceApi", "GenAIWatsonx"])
+    oneof_schema_6_validator: Optional[GenAIAWSBedrock] = None
+    actual_instance: Optional[Union[GenAIAWSBedrock, GenAIBAM, GenAICPD, GenAIHFInferenceApi, GenAIOpenai, GenAIWatsonx]] = None
+    one_of_schemas: List[str] = Field(default=Literal["GenAIAWSBedrock", "GenAIBAM", "GenAICPD", "GenAIHFInferenceApi", "GenAIOpenai", "GenAIWatsonx"])
 
-    model_config = {
-        "validate_assignment": True,
-        "protected_namespaces": (),
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
+
+
+    discriminator_value_class_map: Dict[str, str] = {
     }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -64,41 +68,51 @@ class Config(BaseModel):
             super().__init__(**kwargs)
 
     @field_validator('actual_instance')
-    def actual_instance_must_validate_anyof(cls, v):
+    def actual_instance_must_validate_oneof(cls, v):
         instance = Config.model_construct()
         error_messages = []
+        match = 0
         # validate data type: GenAIBAM
         if not isinstance(v, GenAIBAM):
             error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIBAM`")
         else:
-            return v
-
+            match += 1
         # validate data type: GenAIWatsonx
         if not isinstance(v, GenAIWatsonx):
             error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIWatsonx`")
         else:
-            return v
-
+            match += 1
+        # validate data type: GenAICPD
+        if not isinstance(v, GenAICPD):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GenAICPD`")
+        else:
+            match += 1
         # validate data type: GenAIHFInferenceApi
         if not isinstance(v, GenAIHFInferenceApi):
             error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIHFInferenceApi`")
         else:
-            return v
-
+            match += 1
+        # validate data type: GenAIOpenai
+        if not isinstance(v, GenAIOpenai):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIOpenai`")
+        else:
+            match += 1
         # validate data type: GenAIAWSBedrock
         if not isinstance(v, GenAIAWSBedrock):
             error_messages.append(f"Error! Input type `{type(v)}` is not `GenAIAWSBedrock`")
         else:
-            return v
-
-        if error_messages:
+            match += 1
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when setting `actual_instance` in Config with oneOf schemas: GenAIAWSBedrock, GenAIBAM, GenAICPD, GenAIHFInferenceApi, GenAIOpenai, GenAIWatsonx. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Config with anyOf schemas: GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Config with oneOf schemas: GenAIAWSBedrock, GenAIBAM, GenAICPD, GenAIHFInferenceApi, GenAIOpenai, GenAIWatsonx. Details: " + ", ".join(error_messages))
         else:
             return v
 
     @classmethod
-    def from_dict(cls, obj: Dict[str, Any]) -> Self:
+    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
@@ -106,34 +120,51 @@ class Config(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # anyof_schema_1_validator: Optional[GenAIBAM] = None
+        match = 0
+
+        # deserialize data into GenAIBAM
         try:
             instance.actual_instance = GenAIBAM.from_json(json_str)
-            return instance
+            match += 1
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[GenAIWatsonx] = None
+            error_messages.append(str(e))
+        # deserialize data into GenAIWatsonx
         try:
             instance.actual_instance = GenAIWatsonx.from_json(json_str)
-            return instance
+            match += 1
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_3_validator: Optional[GenAIHFInferenceApi] = None
+            error_messages.append(str(e))
+        # deserialize data into GenAICPD
+        try:
+            instance.actual_instance = GenAICPD.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into GenAIHFInferenceApi
         try:
             instance.actual_instance = GenAIHFInferenceApi.from_json(json_str)
-            return instance
+            match += 1
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_4_validator: Optional[GenAIAWSBedrock] = None
+            error_messages.append(str(e))
+        # deserialize data into GenAIOpenai
+        try:
+            instance.actual_instance = GenAIOpenai.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into GenAIAWSBedrock
         try:
             instance.actual_instance = GenAIAWSBedrock.from_json(json_str)
-            return instance
+            match += 1
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
+            error_messages.append(str(e))
 
-        if error_messages:
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when deserializing the JSON string into Config with oneOf schemas: GenAIAWSBedrock, GenAIBAM, GenAICPD, GenAIHFInferenceApi, GenAIOpenai, GenAIWatsonx. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Config with anyOf schemas: GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Config with oneOf schemas: GenAIAWSBedrock, GenAIBAM, GenAICPD, GenAIHFInferenceApi, GenAIOpenai, GenAIWatsonx. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -147,7 +178,7 @@ class Config(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], GenAIAWSBedrock, GenAIBAM, GenAIHFInferenceApi, GenAIWatsonx]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], GenAIAWSBedrock, GenAIBAM, GenAICPD, GenAIHFInferenceApi, GenAIOpenai, GenAIWatsonx]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -155,6 +186,7 @@ class Config(BaseModel):
         if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
             return self.actual_instance.to_dict()
         else:
+            # primitive type
             return self.actual_instance
 
     def to_str(self) -> str:

@@ -5,8 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**http_source** | [**HttpSource**](HttpSource.md) |  | [optional] 
-**file_source** | [**FileSource**](FileSource.md) |  | [optional] 
+**http_source** | [**ConvertDocumentRequestHttpSource**](ConvertDocumentRequestHttpSource.md) |  | [optional] 
+**file_source** | [**ConvertDocumentRequestFileSource**](ConvertDocumentRequestFileSource.md) |  | [optional] 
+**settings** | [**ConvertDocumentRequestSettings**](ConvertDocumentRequestSettings.md) |  | [optional] 
+**image_urls** | [**ConvertDocumentRequestImageUrls**](ConvertDocumentRequestImageUrls.md) |  | [optional] 
+**truncate_pages** | [**TruncatePages**](TruncatePages.md) |  | [optional] 
 
 ## Example
 

@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **allow_non_admins_to_make_resources_public** | **bool** |  | 
 **api** | **object** |  | 
 **genai_defaults** | [**Dict[str, GenAIParams]**](GenAIParams.md) |  | 
+**conversion_settings_defaults** | [**ProjectDataIndexConversionSettingsOutput**](ProjectDataIndexConversionSettingsOutput.md) |  | [optional] 
 
 ## Example
 

@@ -17,8 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.backend import Backend
+from deepsearch.cps.apis.public_v2.models.backend_settings import BackendSettings
+from deepsearch.cps.apis.public_v2.models.merge_mode import MergeMode
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,9 +30,9 @@ class OcrSettings(BaseModel):
     OcrSettings
     """ # noqa: E501
     enabled: Optional[StrictBool] = False
-    backend: Optional[StrictStr] = None
-    backend_settings: Optional[Dict[str, Any]] = None
-    merge_mode: Optional[StrictStr] = None
+    backend: Optional[Backend] = None
+    backend_settings: Optional[BackendSettings] = None
+    merge_mode: Optional[MergeMode] = None
     __properties: ClassVar[List[str]] = ["enabled", "backend", "backend_settings", "merge_mode"]
 
     model_config = ConfigDict(
@@ -71,6 +74,15 @@ class OcrSettings(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of backend
+        if self.backend:
+            _dict['backend'] = self.backend.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of backend_settings
+        if self.backend_settings:
+            _dict['backend_settings'] = self.backend_settings.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of merge_mode
+        if self.merge_mode:
+            _dict['merge_mode'] = self.merge_mode.to_dict()
         return _dict
 
     @classmethod
@@ -84,9 +96,9 @@ class OcrSettings(BaseModel):
 
         _obj = cls.model_validate({
             "enabled": obj.get("enabled") if obj.get("enabled") is not None else False,
-            "backend": obj.get("backend"),
-            "backend_settings": obj.get("backend_settings"),
-            "merge_mode": obj.get("merge_mode")
+            "backend": Backend.from_dict(obj["backend"]) if obj.get("backend") is not None else None,
+            "backend_settings": BackendSettings.from_dict(obj["backend_settings"]) if obj.get("backend_settings") is not None else None,
+            "merge_mode": MergeMode.from_dict(obj["merge_mode"]) if obj.get("merge_mode") is not None else None
         })
         return _obj
 

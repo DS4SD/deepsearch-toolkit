@@ -19,8 +19,11 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.file_source import FileSource
-from deepsearch.cps.apis.public_v2.models.http_source import HttpSource
+from deepsearch.cps.apis.public_v2.models.convert_document_request_file_source import ConvertDocumentRequestFileSource
+from deepsearch.cps.apis.public_v2.models.convert_document_request_http_source import ConvertDocumentRequestHttpSource
+from deepsearch.cps.apis.public_v2.models.convert_document_request_image_urls import ConvertDocumentRequestImageUrls
+from deepsearch.cps.apis.public_v2.models.convert_document_request_settings import ConvertDocumentRequestSettings
+from deepsearch.cps.apis.public_v2.models.truncate_pages import TruncatePages
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,9 +31,12 @@ class ConvertDocumentRequest(BaseModel):
     """
     ConvertDocumentRequest
     """ # noqa: E501
-    http_source: Optional[HttpSource] = None
-    file_source: Optional[FileSource] = None
-    __properties: ClassVar[List[str]] = ["http_source", "file_source"]
+    http_source: Optional[ConvertDocumentRequestHttpSource] = None
+    file_source: Optional[ConvertDocumentRequestFileSource] = None
+    settings: Optional[ConvertDocumentRequestSettings] = None
+    image_urls: Optional[ConvertDocumentRequestImageUrls] = None
+    truncate_pages: Optional[TruncatePages] = None
+    __properties: ClassVar[List[str]] = ["http_source", "file_source", "settings", "image_urls", "truncate_pages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,6 +83,15 @@ class ConvertDocumentRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of file_source
         if self.file_source:
             _dict['file_source'] = self.file_source.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of settings
+        if self.settings:
+            _dict['settings'] = self.settings.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of image_urls
+        if self.image_urls:
+            _dict['image_urls'] = self.image_urls.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of truncate_pages
+        if self.truncate_pages:
+            _dict['truncate_pages'] = self.truncate_pages.to_dict()
         return _dict
 
     @classmethod
@@ -89,8 +104,11 @@ class ConvertDocumentRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "http_source": HttpSource.from_dict(obj["http_source"]) if obj.get("http_source") is not None else None,
-            "file_source": FileSource.from_dict(obj["file_source"]) if obj.get("file_source") is not None else None
+            "http_source": ConvertDocumentRequestHttpSource.from_dict(obj["http_source"]) if obj.get("http_source") is not None else None,
+            "file_source": ConvertDocumentRequestFileSource.from_dict(obj["file_source"]) if obj.get("file_source") is not None else None,
+            "settings": ConvertDocumentRequestSettings.from_dict(obj["settings"]) if obj.get("settings") is not None else None,
+            "image_urls": ConvertDocumentRequestImageUrls.from_dict(obj["image_urls"]) if obj.get("image_urls") is not None else None,
+            "truncate_pages": TruncatePages.from_dict(obj["truncate_pages"]) if obj.get("truncate_pages") is not None else None
         })
         return _obj
 

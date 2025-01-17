@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.key_prefix import KeyPrefix
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,7 +34,7 @@ class S3Coordinates(BaseModel):
     access_key: StrictStr = Field(alias="access-key")
     secret_key: StrictStr = Field(alias="secret-key")
     bucket: StrictStr
-    key_prefix: Optional[StrictStr] = None
+    key_prefix: Optional[KeyPrefix] = None
     location: StrictStr
     __properties: ClassVar[List[str]] = ["host", "port", "ssl", "verifySSL", "access-key", "secret-key", "bucket", "key_prefix", "location"]
 
@@ -76,6 +77,9 @@ class S3Coordinates(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of key_prefix
+        if self.key_prefix:
+            _dict['key_prefix'] = self.key_prefix.to_dict()
         return _dict
 
     @classmethod
@@ -95,7 +99,7 @@ class S3Coordinates(BaseModel):
             "access-key": obj.get("access-key"),
             "secret-key": obj.get("secret-key"),
             "bucket": obj.get("bucket"),
-            "key_prefix": obj.get("key_prefix"),
+            "key_prefix": KeyPrefix.from_dict(obj["key_prefix"]) if obj.get("key_prefix") is not None else None,
             "location": obj.get("location")
         })
         return _obj

@@ -20,6 +20,11 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from deepsearch.cps.apis.public_v2.models.completed_at import CompletedAt
+from deepsearch.cps.apis.public_v2.models.error_reason import ErrorReason
+from deepsearch.cps.apis.public_v2.models.related_tasks import RelatedTasks
+from deepsearch.cps.apis.public_v2.models.start_count import StartCount
+from deepsearch.cps.apis.public_v2.models.started_at import StartedAt
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -36,11 +41,11 @@ class TaskContext(BaseModel):
     progress: Union[StrictFloat, StrictInt]
     meta: Dict[str, Any]
     created_at: datetime
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    start_count: Optional[StrictInt] = None
-    error_reason: Optional[StrictStr] = None
-    related_tasks: Optional[List[Any]] = None
+    started_at: Optional[StartedAt] = None
+    completed_at: Optional[CompletedAt] = None
+    start_count: Optional[StartCount] = None
+    error_reason: Optional[ErrorReason] = None
+    related_tasks: Optional[RelatedTasks] = None
     __properties: ClassVar[List[str]] = ["proj_key", "user_key", "task_type", "task_id", "task_status", "execution_mode", "progress", "meta", "created_at", "started_at", "completed_at", "start_count", "error_reason", "related_tasks"]
 
     model_config = ConfigDict(
@@ -82,6 +87,21 @@ class TaskContext(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of started_at
+        if self.started_at:
+            _dict['started_at'] = self.started_at.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of completed_at
+        if self.completed_at:
+            _dict['completed_at'] = self.completed_at.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of start_count
+        if self.start_count:
+            _dict['start_count'] = self.start_count.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of error_reason
+        if self.error_reason:
+            _dict['error_reason'] = self.error_reason.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of related_tasks
+        if self.related_tasks:
+            _dict['related_tasks'] = self.related_tasks.to_dict()
         return _dict
 
     @classmethod
@@ -103,11 +123,11 @@ class TaskContext(BaseModel):
             "progress": obj.get("progress"),
             "meta": obj.get("meta"),
             "created_at": obj.get("created_at"),
-            "started_at": obj.get("started_at"),
-            "completed_at": obj.get("completed_at"),
-            "start_count": obj.get("start_count"),
-            "error_reason": obj.get("error_reason"),
-            "related_tasks": obj.get("related_tasks")
+            "started_at": StartedAt.from_dict(obj["started_at"]) if obj.get("started_at") is not None else None,
+            "completed_at": CompletedAt.from_dict(obj["completed_at"]) if obj.get("completed_at") is not None else None,
+            "start_count": StartCount.from_dict(obj["start_count"]) if obj.get("start_count") is not None else None,
+            "error_reason": ErrorReason.from_dict(obj["error_reason"]) if obj.get("error_reason") is not None else None,
+            "related_tasks": RelatedTasks.from_dict(obj["related_tasks"]) if obj.get("related_tasks") is not None else None
         })
         return _obj
 

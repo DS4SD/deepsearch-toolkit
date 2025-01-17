@@ -8,17 +8,7 @@ For the tasks on this page, you are required to identify your project within Dee
 The toolkit provides an easy method to convert documents from your local machine. The [`deepsearch documents`](../cli-reference.md#documents) component processes your input, uploads local files, submits for conversion and downloads the results to your machine. 
 
 
-Following inputs are supported:
-
-1. Single document in PDF format.
-2. Multiple documents in ZIP format.
-3. Directory containing multiple documents in PDF and ZIP formats.
-
-??? warning
-        ZIP files containing additional ZIP files are not supported.
-
-
-Let `PATH_DOCS` be the path to a PDF document or a ZIP file or a directory in your local machine. 
+Let `PATH_DOCS` be the path to a PDF document in your local machine. 
 
 === "CLI"
     <div class="termy">
@@ -73,47 +63,6 @@ Let `URL` be the web address for an online document.
 
 --- 
 
-### Multiple URLs
-
-Multiple online documents can also be conveniently converted. 
-
-- For CLI:
-Create a text file containing the web addresses for online documents, separated by empty lines. For example, the contents of `ONLINE-DOCS.txt` could be:
-
-```text
-URL1
-URL2
-URL3
-```
-Let `PATH_ONLINE_DOCS` be the path to this text file.
-
-- For python:
-Simply pass a python list object containing multiple urls. Let `URL` be a list containing several URLs. 
-
-=== "CLI"
-    <div class="termy">
-
-    ```console
-    deepsearch documents convert -p PROJ_KEY -u PATH_ONLINE_DOCS
-    ```
-
-    </div>
-
-
-=== "Python"       
-    ```python
-    import deepsearch as ds
-    URL = ["https:///URL1", "https://URL2", "https://URL3"]
-    documents = ds.convert_documents(api=api,proj_key=PROJ_KEY, urls=URL)
-
-    # Let's download all the converted documents locally in RESULT_DIR
-    documents.download_all(result_dir = RESULT_DIR)
-    ```
-
-As we saw [before](#converting-local-documents), converted documents are automatically downloaded when using the CLI. Using python, the user specifies the directory where converted documents are downloaded. 
-
----
-
 ## Generating reports
 
 It is possible to create reports which inform the user about the document conversion tasks and their statuses. Such a report is useful in analysis and debugging large tasks.
@@ -149,14 +98,12 @@ The `DocumentConversionResult` object has a built-in method for generating repor
 
 You can exercise control over the conversion settings used in document conversion through the python SDK as follows.
 
-To do so, initialise a `ConversionSettings` object, either using the system defaults, or the settings of a particular project.
+To do so, initialise a `ConversionSettings` object.
 
 ```python
 from deepsearch.documents.core.models import ConversionSettings
 
-conv_settings = ConversionSettings.from_defaults(api)
-# or by using the project key:
-conv_settings = ConversionSettings.from_project(api, proj_key=PROJ_KEY)
+conv_settings = ConversionSettings()
 
 # Modify conv_settings, see sections below...
 
@@ -171,89 +118,49 @@ documents = ds.convert_documents(
 
 ### Modify the conversion pipeline models
 
-You can modify the behaviour of the conversion pipeline by setting custom models for a task, or disabling them altogether. Currently, you may modify which models to use for layout segmentation (`clusters`), and for table structure prediction (`tables`).
+You can modify the behaviour of the conversion pipeline by setting custom models for a task, or disabling them altogether. Currently, you may modify which models to use for table structure prediction (`tables`).
 
 #### Example 1: Disable the table structure predictions
 
-You can simply disable a model by setting it to `None`
+You can simply disable a model by setting it to `False`
 
 ```python
-conv_settings.pipeline.tables = None
+conv_settings.table_structure.do_table_structure = False
 
 ```
 
 #### Example 2: Pick an alternative system model for table structure
 
-Deep Search may offer multiple alternative models for the same task, e.g. for table structure prediction. You can list all available models, and set a different model.
+Deep Search offer two alternative models for the same task, e.g. for table structure prediction. You can choose between `fast` and `accurate` where's default is `fast`.
 
 
-```python
-from deepsearch.documents.core.models import DefaultConversionModel
-
-# Find out which system models are available
-available_models = DefaultConversionModel.get_models(api) 
-
-for m in available_models:
-  print(f"Got model type={m.type}, name={m.name}")
-
-
-# Modify the settings to use another model (assuming it is available)
-conv_settings.pipeline.tables = \
-    DefaultConversionModel(type="WalnutTableStructureModel")
-```
-
-#### Example 3: Pick a custom project model for table structure
-
-If you previously set up a custom model in your project, you can choose it the same way as above.
+You can simply change the table structure by setting it to `accurate`
 
 ```python
-from deepsearch.documents.core.models import ProjectConversionModel
-
-project_models = ProjectConversionModel.get_models(api, proj_key)
-
-for pm in project_models:
-  if pm.name == "my-ts-model-test-1": # basic example: match by name
-    conv_settings.pipeline.tables = pm
+conv_settings.table_structure.table_structure_mode = "accurate"
 
 ```
 
 ### Modify OCR settings
 
-If you want to use OCR, you can enable it and choose an OCR backend.
+By default OCR is enable, you can disable it or choose an OCR backend.
 
-#### Example 1: Enable default OCR
+#### Example 1: Disable default OCR
 
 ```python
-from deepsearch.documents.core.models import ConversionSettings, OCRSettings
+from deepsearch.documents.core.models import ConversionSettings
 
-conv_settings = ConversionSettings.from_defaults(api)
-conv_settings.ocr.enabled = True
+conv_settings = ConversionSettings()
+conv_settings.ocr.do_ocr = False
 ```
 
 #### Example 2: Choose alternative OCR engine
 
-```python
-from deepsearch.documents.core.models import ConversionSettings, OCRSettings
-
-conv_settings = ConversionSettings.from_defaults(api)
-conv_settings.ocr.enabled = True
-
-# Find out which OCR backends are available
-engines = OCRSettings.get_backends(api)
-
-for b in engines:
-  print(f"Got OCR backend id={b.id}")
-
-# We pick the first engine from the list above
-conv_settings.ocr.engine = engines[0]
-```
-
-#### Example 3: Specify OCR engine and language
+The default OCR engine is `easyocr`, you can change it to alternative `tesserocr`.
 
 ```python
-from deepsearch.documents.core.models import ConversionSettings, OCRSettings, AlpineOcrEngine
+from deepsearch.documents.core.models import ConversionSettings
 
-conv_settings = ConversionSettings.from_defaults(api)
-conv_settings.ocr.enabled = True
-conv_settings.ocr.engine = AlpineOcrEngine(languages=[AlpineOcrLanguage.Japanese])
+conv_settings = ConversionSettings()
+conv_settings.ocr.kind = "tesserocr"
 ```

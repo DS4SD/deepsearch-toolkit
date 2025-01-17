@@ -6,8 +6,8 @@ Specify target settings (add_raw_pages, add_annotations).  Fields left null are 
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**add_raw_pages** | **bool** |  | [optional] 
-**add_annotations** | **bool** |  | [optional] 
+**add_raw_pages** | [**AddRawPages**](AddRawPages.md) |  | [optional] 
+**add_annotations** | [**AddAnnotations**](AddAnnotations.md) |  | [optional] 
 
 ## Example
 

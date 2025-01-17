@@ -1,12 +1,11 @@
 # HttpSource
 
+List of Internal File's URLs to be converted and uploaded to the data index.
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**url** | **str** |  | 
-**headers** | **object** |  | 
 
 ## Example
 

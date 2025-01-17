@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **properties** | [**Dict[str, Properties]**](Properties.md) |  | 
 **type** | **object** |  | 
-**enabled** | **object** |  | [optional] 
-**ignore_above** | **object** |  | [optional] 
+**enabled** | [**Enabled**](Enabled.md) |  | [optional] 
+**ignore_above** | [**IgnoreAbove**](IgnoreAbove.md) |  | [optional] 
 
 ## Example
 

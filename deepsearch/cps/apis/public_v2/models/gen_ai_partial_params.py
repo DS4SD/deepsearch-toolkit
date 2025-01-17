@@ -17,8 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.model_id import ModelId
+from deepsearch.cps.apis.public_v2.models.params import Params
+from deepsearch.cps.apis.public_v2.models.prompt_template import PromptTemplate
+from deepsearch.cps.apis.public_v2.models.timeout import Timeout
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,10 +30,10 @@ class GenAIPartialParams(BaseModel):
     """
     GenAIPartialParams
     """ # noqa: E501
-    model_id: Optional[StrictStr] = None
-    prompt_template: Optional[StrictStr] = None
-    params: Optional[Dict[str, Any]] = None
-    timeout: Optional[Union[StrictFloat, StrictInt]] = None
+    model_id: Optional[ModelId] = None
+    prompt_template: Optional[PromptTemplate] = None
+    params: Optional[Params] = None
+    timeout: Optional[Timeout] = None
     __properties: ClassVar[List[str]] = ["model_id", "prompt_template", "params", "timeout"]
 
     model_config = ConfigDict(
@@ -71,6 +75,18 @@ class GenAIPartialParams(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of model_id
+        if self.model_id:
+            _dict['model_id'] = self.model_id.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of prompt_template
+        if self.prompt_template:
+            _dict['prompt_template'] = self.prompt_template.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of params
+        if self.params:
+            _dict['params'] = self.params.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of timeout
+        if self.timeout:
+            _dict['timeout'] = self.timeout.to_dict()
         return _dict
 
     @classmethod
@@ -83,10 +99,10 @@ class GenAIPartialParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "model_id": obj.get("model_id"),
-            "prompt_template": obj.get("prompt_template"),
-            "params": obj.get("params"),
-            "timeout": obj.get("timeout")
+            "model_id": ModelId.from_dict(obj["model_id"]) if obj.get("model_id") is not None else None,
+            "prompt_template": PromptTemplate.from_dict(obj["prompt_template"]) if obj.get("prompt_template") is not None else None,
+            "params": Params.from_dict(obj["params"]) if obj.get("params") is not None else None,
+            "timeout": Timeout.from_dict(obj["timeout"]) if obj.get("timeout") is not None else None
         })
         return _obj
 

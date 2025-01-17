@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**source** | [**Source1**](Source1.md) |  | 
+**source** | [**Source4**](Source4.md) |  | 
 **parameters** | [**SemanticIngestReqParams**](SemanticIngestReqParams.md) |  | 
 
 ## Example

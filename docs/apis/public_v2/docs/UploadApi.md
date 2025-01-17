@@ -130,7 +130,7 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.public_v2.UploadApi(api_client)
     proj_key = 'proj_key_example' # str | 
-    scratch_ids = 'scratch_ids_example' # str |  (optional)
+    scratch_ids = deepsearch.cps.apis.public_v2.ScratchIds() # ScratchIds |  (optional)
 
     try:
         # List Project Scratch Files
@@ -149,7 +149,7 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **proj_key** | **str**|  | 
- **scratch_ids** | **str**|  | [optional] 
+ **scratch_ids** | [**ScratchIds**](.md)|  | [optional] 
 
 ### Return type
 
@@ -212,11 +212,11 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.public_v2.UploadApi(api_client)
     proj_key = 'proj_key_example' # str | 
-    page = 56 # int |  (optional)
+    page = deepsearch.cps.apis.public_v2.Page() # Page |  (optional)
     items_per_page = 20 # int |  (optional) (default to 20)
-    search_string = 'search_string_example' # str |  (optional)
-    begin_date = 56 # int |  (optional)
-    end_date = 56 # int |  (optional)
+    search_string = deepsearch.cps.apis.public_v2.SearchString() # SearchString |  (optional)
+    begin_date = deepsearch.cps.apis.public_v2.BeginDate() # BeginDate |  (optional)
+    end_date = deepsearch.cps.apis.public_v2.EndDate() # EndDate |  (optional)
 
     try:
         # List Project Scratch Files Paginated
@@ -235,11 +235,11 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **proj_key** | **str**|  | 
- **page** | **int**|  | [optional] 
+ **page** | [**Page**](.md)|  | [optional] 
  **items_per_page** | **int**|  | [optional] [default to 20]
- **search_string** | **str**|  | [optional] 
- **begin_date** | **int**|  | [optional] 
- **end_date** | **int**|  | [optional] 
+ **search_string** | [**SearchString**](.md)|  | [optional] 
+ **begin_date** | [**BeginDate**](.md)|  | [optional] 
+ **end_date** | [**EndDate**](.md)|  | [optional] 
 
 ### Return type
 

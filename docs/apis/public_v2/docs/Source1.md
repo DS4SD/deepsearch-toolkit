@@ -5,12 +5,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **object** |  | 
-**url** | **object** |  | 
-**elastic_id** | **object** |  | 
-**index_key** | **object** |  | 
-**document_hash** | **object** |  | 
-**proj_key** | **object** |  | 
 
 ## Example
 

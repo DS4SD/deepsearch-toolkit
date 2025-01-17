@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**document_hashes** | **List[str]** | List of document hashes to be used as filter. | [optional] 
-**with_operations** | **List[str]** | List of Operation Status documents don&#39;t have to be used as filter. | [optional] 
+**document_hashes** | [**DocumentHashes**](DocumentHashes.md) |  | [optional] 
+**with_operations** | [**WithOperations**](WithOperations.md) |  | [optional] 
 
 ## Example
 

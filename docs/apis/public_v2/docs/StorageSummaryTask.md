@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**dc_key** | **str** |  | [optional] 
-**kg_key** | **str** |  | [optional] 
+**dc_key** | [**DcKey**](DcKey.md) |  | [optional] 
+**kg_key** | [**KgKey**](KgKey.md) |  | [optional] 
 **kind** | **str** |  | 
 **proj_key** | **str** |  | 
 **task_id** | **str** |  | 

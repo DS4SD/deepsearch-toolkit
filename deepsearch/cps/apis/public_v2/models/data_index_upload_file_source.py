@@ -17,9 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.partial_direct_conversion_parameters import PartialDirectConversionParameters
+from deepsearch.cps.apis.public_v2.models.conversion_settings import ConversionSettings
+from deepsearch.cps.apis.public_v2.models.convert_documents_request_body_target_settings import ConvertDocumentsRequestBodyTargetSettings
+from deepsearch.cps.apis.public_v2.models.headers import Headers
 from deepsearch.cps.apis.public_v2.models.urls import Urls
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,9 +30,11 @@ class DataIndexUploadFileSource(BaseModel):
     """
     DataIndexUploadFileSource
     """ # noqa: E501
+    conversion_settings: Optional[ConversionSettings] = None
+    target_settings: Optional[ConvertDocumentsRequestBodyTargetSettings] = None
     urls: Urls
-    conversion_settings: Optional[PartialDirectConversionParameters] = Field(default=None, description="Specify the conversion settings to use.")
-    __properties: ClassVar[List[str]] = ["urls", "conversion_settings"]
+    headers: Optional[Headers] = None
+    __properties: ClassVar[List[str]] = ["conversion_settings", "target_settings", "urls", "headers"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,12 +75,18 @@ class DataIndexUploadFileSource(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of urls
-        if self.urls:
-            _dict['urls'] = self.urls.to_dict()
         # override the default output from pydantic by calling `to_dict()` of conversion_settings
         if self.conversion_settings:
             _dict['conversion_settings'] = self.conversion_settings.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of target_settings
+        if self.target_settings:
+            _dict['target_settings'] = self.target_settings.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of urls
+        if self.urls:
+            _dict['urls'] = self.urls.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of headers
+        if self.headers:
+            _dict['headers'] = self.headers.to_dict()
         return _dict
 
     @classmethod
@@ -89,8 +99,10 @@ class DataIndexUploadFileSource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "conversion_settings": ConversionSettings.from_dict(obj["conversion_settings"]) if obj.get("conversion_settings") is not None else None,
+            "target_settings": ConvertDocumentsRequestBodyTargetSettings.from_dict(obj["target_settings"]) if obj.get("target_settings") is not None else None,
             "urls": Urls.from_dict(obj["urls"]) if obj.get("urls") is not None else None,
-            "conversion_settings": PartialDirectConversionParameters.from_dict(obj["conversion_settings"]) if obj.get("conversion_settings") is not None else None
+            "headers": Headers.from_dict(obj["headers"]) if obj.get("headers") is not None else None
         })
         return _obj
 

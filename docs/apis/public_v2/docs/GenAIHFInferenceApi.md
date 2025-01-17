@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **kind** | **str** |  | [optional] [default to 'hf_api']
 **config** | [**GenAIHFInferenceApiConfig**](GenAIHFInferenceApiConfig.md) |  | 
-**proj_params** | [**GenAIPartialParams**](GenAIPartialParams.md) |  | [optional] 
+**proj_params** | [**GenAIAWSBedrockProjParams**](GenAIAWSBedrockProjParams.md) |  | [optional] 
 
 ## Example
 

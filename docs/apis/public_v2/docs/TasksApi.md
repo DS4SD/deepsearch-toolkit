@@ -129,7 +129,7 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     api_instance = deepsearch.cps.apis.public_v2.TasksApi(api_client)
     task_id = 'task_id_example' # str | 
     proj_key = 'proj_key_example' # str | 
-    wait = 3.4 # float | Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. (optional)
+    wait = deepsearch.cps.apis.public_v2.Wait1() # Wait1 | Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. (optional)
 
     try:
         # Get Project Celery Task
@@ -149,7 +149,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**|  | 
  **proj_key** | **str**|  | 
- **wait** | **float**| Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. | [optional] 
+ **wait** | [**Wait1**](.md)| Optionally block this method call for a few seconds to wait for the result instead of polling through multiple calls. | [optional] 
 
 ### Return type
 
@@ -294,7 +294,7 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = deepsearch.cps.apis.public_v2.TasksApi(api_client)
     proj_key = 'proj_key_example' # str | 
-    task_type = 'task_type_example' # str |  (optional)
+    task_type = deepsearch.cps.apis.public_v2.TaskType() # TaskType |  (optional)
     skip = 0 # int |  (optional) (default to 0)
     limit = 50 # int |  (optional) (default to 50)
     sort_by = '_id' # str |  (optional) (default to '_id')
@@ -317,7 +317,7 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **proj_key** | **str**|  | 
- **task_type** | **str**|  | [optional] 
+ **task_type** | [**TaskType**](.md)|  | [optional] 
  **skip** | **int**|  | [optional] [default to 0]
  **limit** | **int**|  | [optional] [default to 50]
  **sort_by** | **str**|  | [optional] [default to &#39;_id&#39;]

@@ -17,12 +17,15 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from deepsearch.cps.apis.public_v2.models.internal_url import InternalUrl
-from deepsearch.cps.apis.public_v2.models.partial_direct_conversion_parameters import PartialDirectConversionParameters
-from deepsearch.cps.apis.public_v2.models.s3_document_source import S3DocumentSource
-from deepsearch.cps.apis.public_v2.models.target_conversion_parameters import TargetConversionParameters
+from deepsearch.cps.apis.public_v2.models.conversion_settings import ConversionSettings
+from deepsearch.cps.apis.public_v2.models.convert_documents_request_body_target_settings import ConvertDocumentsRequestBodyTargetSettings
+from deepsearch.cps.apis.public_v2.models.convert_documents_sources_s3_source import ConvertDocumentsSourcesS3Source
+from deepsearch.cps.apis.public_v2.models.convert_upload_documents_request_body_meta import ConvertUploadDocumentsRequestBodyMeta
+from deepsearch.cps.apis.public_v2.models.file_url import FileUrl
+from deepsearch.cps.apis.public_v2.models.http_source import HttpSource
+from deepsearch.cps.apis.public_v2.models.upload_to_elastic import UploadToElastic
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,13 +33,14 @@ class ConvertUploadDocumentsRequestBody(BaseModel):
     """
     ConvertUploadDocumentsRequestBody
     """ # noqa: E501
-    file_url: Optional[List[StrictStr]] = Field(default=None, description="List of File's URL to be converted and uploaded to the data index.")
-    internal_file_url: Optional[List[InternalUrl]] = Field(default=None, description="List of Internal File's URLs to be converted and uploaded to the data index.")
-    s3_source: Optional[S3DocumentSource] = Field(default=None, description="Coordinates to object store to get files to convert. Can specify which files with object keys.")
-    upload_to_elastic: Optional[StrictBool] = None
-    conversion_settings: Optional[PartialDirectConversionParameters] = Field(default=None, description="Specify the conversion settings to use.")
-    target_settings: Optional[TargetConversionParameters] = Field(default=None, description="Specify the target settings to use.")
-    __properties: ClassVar[List[str]] = ["file_url", "internal_file_url", "s3_source", "upload_to_elastic", "conversion_settings", "target_settings"]
+    file_url: Optional[FileUrl] = None
+    http_source: Optional[HttpSource] = None
+    s3_source: Optional[ConvertDocumentsSourcesS3Source] = None
+    upload_to_elastic: Optional[UploadToElastic] = None
+    meta: Optional[ConvertUploadDocumentsRequestBodyMeta] = None
+    conversion_settings: Optional[ConversionSettings] = None
+    target_settings: Optional[ConvertDocumentsRequestBodyTargetSettings] = None
+    __properties: ClassVar[List[str]] = ["file_url", "http_source", "s3_source", "upload_to_elastic", "meta", "conversion_settings", "target_settings"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,16 +81,21 @@ class ConvertUploadDocumentsRequestBody(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in internal_file_url (list)
-        _items = []
-        if self.internal_file_url:
-            for _item in self.internal_file_url:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['internal_file_url'] = _items
+        # override the default output from pydantic by calling `to_dict()` of file_url
+        if self.file_url:
+            _dict['file_url'] = self.file_url.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of http_source
+        if self.http_source:
+            _dict['http_source'] = self.http_source.to_dict()
         # override the default output from pydantic by calling `to_dict()` of s3_source
         if self.s3_source:
             _dict['s3_source'] = self.s3_source.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of upload_to_elastic
+        if self.upload_to_elastic:
+            _dict['upload_to_elastic'] = self.upload_to_elastic.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of meta
+        if self.meta:
+            _dict['meta'] = self.meta.to_dict()
         # override the default output from pydantic by calling `to_dict()` of conversion_settings
         if self.conversion_settings:
             _dict['conversion_settings'] = self.conversion_settings.to_dict()
@@ -105,12 +114,13 @@ class ConvertUploadDocumentsRequestBody(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "file_url": obj.get("file_url"),
-            "internal_file_url": [InternalUrl.from_dict(_item) for _item in obj["internal_file_url"]] if obj.get("internal_file_url") is not None else None,
-            "s3_source": S3DocumentSource.from_dict(obj["s3_source"]) if obj.get("s3_source") is not None else None,
-            "upload_to_elastic": obj.get("upload_to_elastic"),
-            "conversion_settings": PartialDirectConversionParameters.from_dict(obj["conversion_settings"]) if obj.get("conversion_settings") is not None else None,
-            "target_settings": TargetConversionParameters.from_dict(obj["target_settings"]) if obj.get("target_settings") is not None else None
+            "file_url": FileUrl.from_dict(obj["file_url"]) if obj.get("file_url") is not None else None,
+            "http_source": HttpSource.from_dict(obj["http_source"]) if obj.get("http_source") is not None else None,
+            "s3_source": ConvertDocumentsSourcesS3Source.from_dict(obj["s3_source"]) if obj.get("s3_source") is not None else None,
+            "upload_to_elastic": UploadToElastic.from_dict(obj["upload_to_elastic"]) if obj.get("upload_to_elastic") is not None else None,
+            "meta": ConvertUploadDocumentsRequestBodyMeta.from_dict(obj["meta"]) if obj.get("meta") is not None else None,
+            "conversion_settings": ConversionSettings.from_dict(obj["conversion_settings"]) if obj.get("conversion_settings") is not None else None,
+            "target_settings": ConvertDocumentsRequestBodyTargetSettings.from_dict(obj["target_settings"]) if obj.get("target_settings") is not None else None
         })
         return _obj
 

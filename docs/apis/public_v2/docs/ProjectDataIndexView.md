@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
-**description** | **str** |  | [optional] 
+**description** | [**Description**](Description.md) |  | [optional] 
 **view_of** | [**ViewOf**](ViewOf.md) |  | 
 
 ## Example

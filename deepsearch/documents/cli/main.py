@@ -1,5 +1,4 @@
 import urllib
-from enum import Enum
 
 import urllib3
 
@@ -11,7 +10,9 @@ from pathlib import Path
 
 import typer
 
+from deepsearch.cps.apis import public_v2 as sw_client
 from deepsearch.cps.cli.cli_options import (
+    EXPORT_MD,
     GET_REPORT,
     PROGRESS_BAR,
     PROJ_KEY,
@@ -20,14 +21,10 @@ from deepsearch.cps.cli.cli_options import (
     URL,
 )
 from deepsearch.cps.client.api import CpsApi
-from deepsearch.documents.core.create_report import get_multiple_reports
+from deepsearch.documents.core.convert import get_wait_task_result
+from deepsearch.documents.core.create_report import generate_report_csv
 from deepsearch.documents.core.main import convert_documents
-from deepsearch.documents.core.utils import (
-    create_root_dir,
-    iterate_converted_files,
-    read_lines,
-    write_taskids,
-)
+from deepsearch.documents.core.utils import create_root_dir, read_lines, write_taskids
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -40,11 +37,11 @@ app = typer.Typer(no_args_is_help=True)
 @cli_handler()
 def convert(
     proj_key: str = PROJ_KEY,
-    urls: str = URL,
+    url: str = URL,
     source_path: Path = SOURCE_PATH,
     progress_bar: bool = PROGRESS_BAR,
     get_report: bool = GET_REPORT,
-    export_md: bool = False,
+    export_md: bool = EXPORT_MD,
 ):
     """
     Document conversion via Deep Search Technology.
@@ -58,30 +55,29 @@ def convert(
     For converting a document from the web, please provide its url.
 
     source_path : string/path [OPTIONAL]
-    For converting local files, please provide absolute path to file or to directory
-    containing multiple files.
+    For converting local files, please provide absolute path to file.
 
     NOTE: Either url or source_path should be supplied.
     """
     api = CpsApi.from_env()
 
-    input_urls = None
-    if urls is not None:
-        if urllib.parse.urlparse(urls).scheme in ("http", "https"):
-            input_urls = [urls]
-        else:
-            input_urls = read_lines(Path(urls))
+    input_url = None
+    if url is not None and urllib.parse.urlparse(url).scheme in ("http", "https"):
+        input_url = url
+
+    print(export_md)
 
     result = convert_documents(
         proj_key=proj_key,
-        urls=input_urls,
+        url=input_url,
         source_path=source_path,
         progress_bar=progress_bar,
         api=api,
+        export_md=export_md,
     )
     result_dir = create_root_dir()
     # save task ids
-    write_taskids(result_dir=result_dir, list_to_write=result.task_ids)
+    write_taskids(result_dir=result_dir, list_to_write=[result.task_id])
     result.download_all(progress_bar=True, result_dir=result_dir)
     typer.echo(
         f"""
@@ -89,35 +85,6 @@ def convert(
         {result_dir.absolute()}
         """
     )
-
-    if export_md:
-        markdown_output_dir = result_dir / "export_markdown"
-        markdown_output_dir.mkdir(exist_ok=True)
-
-        for converted_document in iterate_converted_files(result_dir):
-            # The output exported filename will be composed by
-            # - the name of the zip file where it is contained
-            # - the name of the file inside the zip archive
-            # For example json_000001_2206.00785.md, where "json_000001" is the name of the zip archive and "2206.00785" the filename
-            clean_archive_name = converted_document.archive_path.name.replace(
-                "/", "_"
-            ).replace(".zip", "")
-            clean_filename = converted_document.file_path.name.replace(
-                "/", "_"
-            ).replace(".json", "")
-            exported_filename = (
-                markdown_output_dir / f"{clean_archive_name}_{clean_filename}.md"
-            )
-            markdown_content = converted_document.document.export_to_markdown()
-            with exported_filename.open("w") as f:
-                f.write(markdown_content)
-
-        typer.echo(
-            f"""
-        The converted documents have been exported to markdown. You can find them in folder
-        {markdown_output_dir}
-            """
-        )
 
     if get_report:
         info = result.generate_report(result_dir=result_dir, progress_bar=True)
@@ -156,13 +123,14 @@ def get_report(proj_key: str = PROJ_KEY, source_taskids: Path = TASK_IDS):
     api = CpsApi.from_env()
     task_ids = read_lines(source_taskids)
     result_dir = Path(source_taskids).parent.expanduser().resolve()
-    info = get_multiple_reports(
-        api=api,
-        cps_proj_key=proj_key,
-        task_ids=task_ids,
-        source_files=None,
+    sw_api = sw_client.ProjectApi(api.client.swagger_client_v2)
+    task_result = get_wait_task_result(
+        sw_api=sw_api, cps_proj_key=proj_key, task_id=task_ids[0]
+    )
+    info = generate_report_csv(
+        task_result=task_result,
+        task_id=task_ids[0],
         result_dir=result_dir,
-        progress_bar=True,
     )
     for key in info:
         pad = 35

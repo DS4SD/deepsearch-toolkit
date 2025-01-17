@@ -20,7 +20,7 @@ def list(
     results = [
         {
             "name": c.name,
-            "instance": ElasticDataCollectionSource.parse_obj(c.source).elastic_id,
+            "instance": ElasticDataCollectionSource.model_validate(c.source).elastic_id,
             "index": c.source.index_key,
             "domains": c.metadata.domain,
             "documents": c.documents,

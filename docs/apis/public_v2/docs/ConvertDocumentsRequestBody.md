@@ -5,11 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**conversion_settings** | [**PartialDirectConversionParameters**](PartialDirectConversionParameters.md) | Specify the conversion settings to use. | [optional] 
-**target_settings** | [**TargetConversionParameters**](TargetConversionParameters.md) | Specify the target settings to use. | [optional] 
-**document_hashes** | **List[str]** | List of document hashes to be used as filter. | [optional] 
-**without_operations** | **List[str]** | List of Operation Status documents don&#39;t have to be used as filter. | [optional] 
-**upload_to_elastic** | **bool** |  | [optional] 
+**conversion_settings** | [**ConversionSettings**](ConversionSettings.md) |  | [optional] 
+**target_settings** | [**ConvertDocumentsRequestBodyTargetSettings**](ConvertDocumentsRequestBodyTargetSettings.md) |  | [optional] 
+**document_hashes** | [**DocumentHashes**](DocumentHashes.md) |  | [optional] 
+**without_operations** | [**WithoutOperations**](WithoutOperations.md) |  | [optional] 
+**upload_to_elastic** | [**UploadToElastic**](UploadToElastic.md) |  | [optional] 
 
 ## Example
 

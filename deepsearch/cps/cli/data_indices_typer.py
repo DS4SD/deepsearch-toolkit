@@ -183,7 +183,7 @@ def upload_files(
     else:
         final_target_settings = None
 
-    utils.upload_files(
+    task_status = utils.upload_files(
         api=api,
         coords=coords,
         url=urls,
@@ -193,7 +193,7 @@ def upload_files(
         target_settings=final_target_settings,
     )
 
-    typer.echo("Tasks have been queued successfully")
+    typer.echo(f"Tasks finished with status: {task_status}")
 
 
 @app.command(

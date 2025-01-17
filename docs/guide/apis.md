@@ -32,11 +32,11 @@ sw_kg_api = sw_client.KnowledgeGraphsApi(api.client.swagger_client)
 ## Interacting with the API directly via `requests`
 
 Another option is interacting with the CPS API directly using the endpoints. CPS provides a Swagger UI for inspecting all API endpoints (documented with schemas). To access the API documentation please use the following URLs:
-- User API: `https://{HOST}/api/cps/user/v1/ui/`
+- User API: `https://{HOST}/api/cps/user/v1/docs/`
 - Public API: `https://{HOST}/api/cps/public/v1/ui/`
 
 For example:
-- User API: https://deepsearch-experience.res.ibm.com/api/cps/user/v1/ui/
+- User API: https://deepsearch-experience.res.ibm.com/api/cps/user/v1/docs/
 - Public API: https://deepsearch-experience.res.ibm.com/api/cps/public/v1/ui/
 
 

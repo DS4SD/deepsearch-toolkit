@@ -17,8 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from deepsearch.cps.apis.public_v2.models.file_uri import FileUri
+from deepsearch.cps.apis.public_v2.models.filename import Filename
+from deepsearch.cps.apis.public_v2.models.number_pages import NumberPages
+from deepsearch.cps.apis.public_v2.models.ref_uri import RefUri
+from deepsearch.cps.apis.public_v2.models.status import Status
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,11 +32,11 @@ class ProjectDocument(BaseModel):
     ProjectDocument
     """ # noqa: E501
     document_hash: StrictStr
-    filename: StrictStr
-    file_uri: Optional[StrictStr] = None
-    ref_uri: Optional[StrictStr] = None
-    number_pages: Optional[StrictInt] = None
-    status: Optional[StrictStr] = None
+    filename: Optional[Filename] = None
+    file_uri: Optional[FileUri] = None
+    ref_uri: Optional[RefUri] = None
+    number_pages: Optional[NumberPages] = None
+    status: Optional[Status] = None
     __properties: ClassVar[List[str]] = ["document_hash", "filename", "file_uri", "ref_uri", "number_pages", "status"]
 
     model_config = ConfigDict(
@@ -73,6 +78,21 @@ class ProjectDocument(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of filename
+        if self.filename:
+            _dict['filename'] = self.filename.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of file_uri
+        if self.file_uri:
+            _dict['file_uri'] = self.file_uri.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of ref_uri
+        if self.ref_uri:
+            _dict['ref_uri'] = self.ref_uri.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of number_pages
+        if self.number_pages:
+            _dict['number_pages'] = self.number_pages.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of status
+        if self.status:
+            _dict['status'] = self.status.to_dict()
         return _dict
 
     @classmethod
@@ -86,11 +106,11 @@ class ProjectDocument(BaseModel):
 
         _obj = cls.model_validate({
             "document_hash": obj.get("document_hash"),
-            "filename": obj.get("filename"),
-            "file_uri": obj.get("file_uri"),
-            "ref_uri": obj.get("ref_uri"),
-            "number_pages": obj.get("number_pages"),
-            "status": obj.get("status")
+            "filename": Filename.from_dict(obj["filename"]) if obj.get("filename") is not None else None,
+            "file_uri": FileUri.from_dict(obj["file_uri"]) if obj.get("file_uri") is not None else None,
+            "ref_uri": RefUri.from_dict(obj["ref_uri"]) if obj.get("ref_uri") is not None else None,
+            "number_pages": NumberPages.from_dict(obj["number_pages"]) if obj.get("number_pages") is not None else None,
+            "status": Status.from_dict(obj["status"]) if obj.get("status") is not None else None
         })
         return _obj
 

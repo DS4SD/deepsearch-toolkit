@@ -5,11 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**description** | **str** |  | [optional] 
-**display_name** | **str** |  | [optional] 
-**license** | **str** |  | [optional] 
-**source** | **str** |  | [optional] 
-**version** | **str** |  | [optional] 
+**description** | [**Description**](Description.md) |  | [optional] 
+**display_name** | [**DisplayName**](DisplayName.md) |  | [optional] 
+**license** | [**License**](License.md) |  | [optional] 
+**source** | [**Source1**](Source1.md) |  | [optional] 
+**version** | [**Version1**](Version1.md) |  | [optional] 
 
 ## Example
 

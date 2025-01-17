@@ -4,6 +4,7 @@ All URIs are relative to */api/cps/public/v2*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**add_project_data_index_document_metadata**](ContentManagerApi.md#add_project_data_index_document_metadata) | **POST** /project/{proj_key}/data_indices/{index_key}/documents/{document_hash}/metadata | Add Project Data Index Document Metadata
 [**get_all_project_data_index_documents**](ContentManagerApi.md#get_all_project_data_index_documents) | **GET** /project/{proj_key}/data_indices/{index_key}/documents/ | Get All Project Data Index Documents
 [**get_project_agents**](ContentManagerApi.md#get_project_agents) | **GET** /project/{proj_key}/data_indices/documents/agents | Get Project Agents
 [**get_project_conversion_statistics**](ContentManagerApi.md#get_project_conversion_statistics) | **GET** /project/{proj_key}/data_indices/{index_key}/documents/statistics | Get Project Conversion Statistics
@@ -18,6 +19,90 @@ Method | HTTP request | Description
 [**get_project_documents_by_transaction**](ContentManagerApi.md#get_project_documents_by_transaction) | **GET** /project/{proj_key}/data_indices/{index_key}/documents/transactions/{transaction_id} | Get Project Documents By Transaction
 [**get_project_index_upload_jobs**](ContentManagerApi.md#get_project_index_upload_jobs) | **GET** /project/{proj_key}/data_indices/{index_key}/documents/upload_jobs | Get Project Index Upload Jobs
 
+
+# **add_project_data_index_document_metadata**
+> add_project_data_index_document_metadata(index_key, document_hash, proj_key, document_meta)
+
+Add Project Data Index Document Metadata
+
+Insert project document metadata.
+
+### Example
+
+* Api Key Authentication (Bearer):
+
+```python
+import deepsearch.cps.apis.public_v2
+from deepsearch.cps.apis.public_v2.models.document_meta import DocumentMeta
+from deepsearch.cps.apis.public_v2.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to /api/cps/public/v2
+# See configuration.py for a list of all supported configuration parameters.
+configuration = deepsearch.cps.apis.public_v2.Configuration(
+    host = "/api/cps/public/v2"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: Bearer
+configuration.api_key['Bearer'] = os.environ["API_KEY"]
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['Bearer'] = 'Bearer'
+
+# Enter a context with an instance of the API client
+with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = deepsearch.cps.apis.public_v2.ContentManagerApi(api_client)
+    index_key = 'index_key_example' # str | 
+    document_hash = 'document_hash_example' # str | 
+    proj_key = 'proj_key_example' # str | 
+    document_meta = deepsearch.cps.apis.public_v2.DocumentMeta() # DocumentMeta | 
+
+    try:
+        # Add Project Data Index Document Metadata
+        api_instance.add_project_data_index_document_metadata(index_key, document_hash, proj_key, document_meta)
+    except Exception as e:
+        print("Exception when calling ContentManagerApi->add_project_data_index_document_metadata: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **index_key** | **str**|  | 
+ **document_hash** | **str**|  | 
+ **proj_key** | **str**|  | 
+ **document_meta** | [**DocumentMeta**](DocumentMeta.md)|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**204** | Successful Response |  -  |
+**422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_all_project_data_index_documents**
 > ProjectDocuments get_all_project_data_index_documents(index_key, proj_key, page=page, page_size=page_size)
@@ -364,6 +449,7 @@ Get events of a project document.
 
 ```python
 import deepsearch.cps.apis.public_v2
+from deepsearch.cps.apis.public_v2.models.status_filter import StatusFilter
 from deepsearch.cps.apis.public_v2.rest import ApiException
 from pprint import pprint
 
@@ -391,8 +477,8 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     index_key = 'index_key_example' # str | 
     document_hash = 'document_hash_example' # str | 
     proj_key = 'proj_key_example' # str | 
-    agent_name = 'agent_name_example' # str |  (optional)
-    status = 'status_example' # str |  (optional)
+    agent_name = deepsearch.cps.apis.public_v2.AgentName() # AgentName |  (optional)
+    status = deepsearch.cps.apis.public_v2.StatusFilter() # StatusFilter |  (optional)
 
     try:
         # Get Project Data Index Document Events
@@ -413,8 +499,8 @@ Name | Type | Description  | Notes
  **index_key** | **str**|  | 
  **document_hash** | **str**|  | 
  **proj_key** | **str**|  | 
- **agent_name** | **str**|  | [optional] 
- **status** | **str**|  | [optional] 
+ **agent_name** | [**AgentName**](.md)|  | [optional] 
+ **status** | [**StatusFilter**](.md)|  | [optional] 
 
 ### Return type
 
@@ -620,6 +706,7 @@ Get project documents, can be filter by status.
 ```python
 import deepsearch.cps.apis.public_v2
 from deepsearch.cps.apis.public_v2.models.project_documents import ProjectDocuments
+from deepsearch.cps.apis.public_v2.models.status_filter import StatusFilter
 from deepsearch.cps.apis.public_v2.rest import ApiException
 from pprint import pprint
 
@@ -647,7 +734,7 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     index_key = 'index_key_example' # str | 
     agent_name = 'agent_name_example' # str | 
     proj_key = 'proj_key_example' # str | 
-    status = 'status_example' # str |  (optional)
+    status = deepsearch.cps.apis.public_v2.StatusFilter() # StatusFilter |  (optional)
     page = 1 # int |  (optional) (default to 1)
     page_size = 25 # int |  (optional) (default to 25)
 
@@ -670,7 +757,7 @@ Name | Type | Description  | Notes
  **index_key** | **str**|  | 
  **agent_name** | **str**|  | 
  **proj_key** | **str**|  | 
- **status** | **str**|  | [optional] 
+ **status** | [**StatusFilter**](.md)|  | [optional] 
  **page** | **int**|  | [optional] [default to 1]
  **page_size** | **int**|  | [optional] [default to 25]
 
@@ -710,6 +797,7 @@ Get project documents grouped by upload.
 ```python
 import deepsearch.cps.apis.public_v2
 from deepsearch.cps.apis.public_v2.models.response_grouped_documents import ResponseGroupedDocuments
+from deepsearch.cps.apis.public_v2.models.status_filter import StatusFilter
 from deepsearch.cps.apis.public_v2.rest import ApiException
 from pprint import pprint
 
@@ -737,7 +825,7 @@ with deepsearch.cps.apis.public_v2.ApiClient(configuration) as api_client:
     index_key = 'index_key_example' # str | 
     agent_name = 'agent_name_example' # str | 
     proj_key = 'proj_key_example' # str | 
-    status = 'status_example' # str |  (optional)
+    status = deepsearch.cps.apis.public_v2.StatusFilter() # StatusFilter |  (optional)
     page = 1 # int |  (optional) (default to 1)
     page_size = 25 # int |  (optional) (default to 25)
 
@@ -760,7 +848,7 @@ Name | Type | Description  | Notes
  **index_key** | **str**|  | 
  **agent_name** | **str**|  | 
  **proj_key** | **str**|  | 
- **status** | **str**|  | [optional] 
+ **status** | [**StatusFilter**](.md)|  | [optional] 
  **page** | **int**|  | [optional] [default to 1]
  **page_size** | **int**|  | [optional] [default to 25]
 

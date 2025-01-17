@@ -1,67 +1,17 @@
 import datetime
 import glob
-import json
 import os
 import pathlib
-import urllib
 import zipfile as z
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, List
 
 import requests
-from docling_core.types.legacy_doc.document import ExportedCCSDocument as DsDocument
-from pydantic import BaseModel
 from tqdm import tqdm
-
-from deepsearch.cps.client.api import CpsApi
 
 from .common_routines import progressbar
 
 ALLOWED_FILE_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".tiff", ".tif", ".png", ".gif"]
-
-
-class URLNavigator:
-    def __init__(self, api: CpsApi) -> None:
-        self.api = api
-        self.url_host = self.api.client.swagger_client.configuration.host
-        self.url_linked_ccs = urllib.parse.urljoin(self.url_host, "/api/linked-ccs")
-        self.url_user_management = "/user/v1"
-        self.url_public_apis = "/public/v4"
-
-    def url_request_status(self, ccs_proj_key: str, task_id: str):
-        wait = 5
-        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/tasks/{task_id}/status?wait={wait}"
-
-    def url_convert(self, ccs_proj_key: str):
-        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/pipelines/convert"
-
-    def url_result(self, ccs_proj_key: str, task_id: str):
-        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/result"
-
-    def url_report_tasks(self, ccs_proj_key: str, task_id: str):
-        report_name = "tasks"
-        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/reports/{report_name}"
-
-    def url_report_metrics(self, ccs_proj_key: str, task_id: str):
-        report_name = "metrics"
-        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/document_conversions/{task_id}/reports/{report_name}"
-
-    def url_conversion_defaults(self):
-        return (
-            f"{self.url_linked_ccs}{self.url_public_apis}/settings/conversion_defaults"
-        )
-
-    def url_collection_settings(self, ccs_proj_key: str, collection_name: str):
-        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/collections/{collection_name}/settings"
-
-    def url_system_models(self):
-        return f"{self.url_linked_ccs}{self.url_public_apis}/settings/system_models"
-
-    def url_project_models(self, ccs_proj_key: str):
-        return f"{self.url_linked_ccs}{self.url_public_apis}/projects/{ccs_proj_key}/models"
-
-    def url_system_ocr_backends(self):
-        return f"{self.url_linked_ccs}{self.url_public_apis}/settings/ocr_backends"
 
 
 def batch_single_files(
@@ -168,38 +118,6 @@ def batch_single_files(
     return bfiles
 
 
-def collect_all_local_files(source_path: Path, root_dir: Path):
-    """
-    Function to scan directory and collect all batches for conversion
-
-    Input:
-    -----
-
-    source_path : Path
-        user provided path
-
-    root_dir : Path
-        path for temporary batched files
-    """
-    files_zip: List[Any] = []
-    # scan for existing zips
-    if os.path.isdir(source_path):
-        files_zip = glob.glob(os.path.join(source_path, "**/*.zip"), recursive=True)
-    elif os.path.isfile(source_path):
-        file_extension = pathlib.Path(source_path).suffix
-        if file_extension == ".zip":
-            files_zip = [source_path]
-
-    # scan for batched zips
-    if root_dir is not None:
-        files_tmpzip = glob.glob(
-            os.path.join(root_dir, "tmpzip/**/*.zip"), recursive=True
-        )
-        files_zip = files_tmpzip + files_zip  # order is important!
-
-    return files_zip
-
-
 def create_root_dir() -> Path:
     """
     Creates root directory labelled with timestamp
@@ -260,38 +178,3 @@ def write_taskids(result_dir: Path, list_to_write: List[str]) -> None:
         for t in list_to_write:
             text_file.write(t + "\n")
     return
-
-
-class IteratedDocument(BaseModel):
-    archive_path: Path
-    file_path: Path
-    document: DsDocument
-    cells: Optional[Dict[str, Any]] = None
-
-
-def iterate_converted_files(result_dir: Path) -> Iterator[IteratedDocument]:
-    """
-    Iterate through all the converted documents in the downloaded results.
-    """
-    for output_file in Path(result_dir).rglob("json*.zip"):
-        with z.ZipFile(output_file) as archive:
-            all_files = archive.namelist()
-            for name in all_files:
-                if not name.endswith(".json"):
-                    continue
-
-                basename = name.rstrip(".json")
-                doc: DsDocument = DsDocument.model_validate_json(
-                    archive.read(f"{basename}.json")
-                )
-
-                cells_data = None
-                if f"{basename}.cells" in all_files:
-                    cells_data = json.loads(archive.read(f"{basename}.cells"))
-
-                yield IteratedDocument(
-                    archive_path=output_file,
-                    file_path=Path(name),
-                    document=doc,
-                    cells=cells_data,
-                )

@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import StrictInt, StrictStr
-from typing import Optional
+from typing import Any, Optional
 from deepsearch.cps.apis.public_v2.models.project_scratch_files import ProjectScratchFiles
 from deepsearch.cps.apis.public_v2.models.project_scratch_files_paginated import ProjectScratchFilesPaginated
 from deepsearch.cps.apis.public_v2.models.temporary_upload_file_result import TemporaryUploadFileResult
@@ -320,7 +320,7 @@ class UploadApi:
     def list_project_scratch_files(
         self,
         proj_key: StrictStr,
-        scratch_ids: Optional[StrictStr] = None,
+        scratch_ids: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -341,7 +341,7 @@ class UploadApi:
         :param proj_key: (required)
         :type proj_key: str
         :param scratch_ids:
-        :type scratch_ids: str
+        :type scratch_ids: ScratchIds
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -392,7 +392,7 @@ class UploadApi:
     def list_project_scratch_files_with_http_info(
         self,
         proj_key: StrictStr,
-        scratch_ids: Optional[StrictStr] = None,
+        scratch_ids: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -413,7 +413,7 @@ class UploadApi:
         :param proj_key: (required)
         :type proj_key: str
         :param scratch_ids:
-        :type scratch_ids: str
+        :type scratch_ids: ScratchIds
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -464,7 +464,7 @@ class UploadApi:
     def list_project_scratch_files_without_preload_content(
         self,
         proj_key: StrictStr,
-        scratch_ids: Optional[StrictStr] = None,
+        scratch_ids: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -485,7 +485,7 @@ class UploadApi:
         :param proj_key: (required)
         :type proj_key: str
         :param scratch_ids:
-        :type scratch_ids: str
+        :type scratch_ids: ScratchIds
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -598,11 +598,11 @@ class UploadApi:
     def list_project_scratch_files_paginated(
         self,
         proj_key: StrictStr,
-        page: Optional[StrictInt] = None,
+        page: Optional[Any] = None,
         items_per_page: Optional[StrictInt] = None,
-        search_string: Optional[StrictStr] = None,
-        begin_date: Optional[StrictInt] = None,
-        end_date: Optional[StrictInt] = None,
+        search_string: Optional[Any] = None,
+        begin_date: Optional[Any] = None,
+        end_date: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -623,15 +623,15 @@ class UploadApi:
         :param proj_key: (required)
         :type proj_key: str
         :param page:
-        :type page: int
+        :type page: Page
         :param items_per_page:
         :type items_per_page: int
         :param search_string:
-        :type search_string: str
+        :type search_string: SearchString
         :param begin_date:
-        :type begin_date: int
+        :type begin_date: BeginDate
         :param end_date:
-        :type end_date: int
+        :type end_date: EndDate
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -686,11 +686,11 @@ class UploadApi:
     def list_project_scratch_files_paginated_with_http_info(
         self,
         proj_key: StrictStr,
-        page: Optional[StrictInt] = None,
+        page: Optional[Any] = None,
         items_per_page: Optional[StrictInt] = None,
-        search_string: Optional[StrictStr] = None,
-        begin_date: Optional[StrictInt] = None,
-        end_date: Optional[StrictInt] = None,
+        search_string: Optional[Any] = None,
+        begin_date: Optional[Any] = None,
+        end_date: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -711,15 +711,15 @@ class UploadApi:
         :param proj_key: (required)
         :type proj_key: str
         :param page:
-        :type page: int
+        :type page: Page
         :param items_per_page:
         :type items_per_page: int
         :param search_string:
-        :type search_string: str
+        :type search_string: SearchString
         :param begin_date:
-        :type begin_date: int
+        :type begin_date: BeginDate
         :param end_date:
-        :type end_date: int
+        :type end_date: EndDate
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -774,11 +774,11 @@ class UploadApi:
     def list_project_scratch_files_paginated_without_preload_content(
         self,
         proj_key: StrictStr,
-        page: Optional[StrictInt] = None,
+        page: Optional[Any] = None,
         items_per_page: Optional[StrictInt] = None,
-        search_string: Optional[StrictStr] = None,
-        begin_date: Optional[StrictInt] = None,
-        end_date: Optional[StrictInt] = None,
+        search_string: Optional[Any] = None,
+        begin_date: Optional[Any] = None,
+        end_date: Optional[Any] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -799,15 +799,15 @@ class UploadApi:
         :param proj_key: (required)
         :type proj_key: str
         :param page:
-        :type page: int
+        :type page: Page
         :param items_per_page:
         :type items_per_page: int
         :param search_string:
-        :type search_string: str
+        :type search_string: SearchString
         :param begin_date:
-        :type begin_date: int
+        :type begin_date: BeginDate
         :param end_date:
-        :type end_date: int
+        :type end_date: EndDate
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

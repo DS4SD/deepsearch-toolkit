@@ -5,11 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**document_meta_json** | [**DocumentArtifactsItem**](DocumentArtifactsItem.md) |  | [optional] 
-**document_pdf** | [**DocumentArtifactsItem**](DocumentArtifactsItem.md) |  | [optional] 
-**document_json** | [**DocumentArtifactsItem**](DocumentArtifactsItem.md) |  | [optional] 
-**document_glm_json** | [**DocumentArtifactsItem**](DocumentArtifactsItem.md) |  | [optional] 
-**document_md** | [**DocumentArtifactsItem**](DocumentArtifactsItem.md) |  | [optional] 
+**document_meta_json** | [**DocumentArtifactsDocumentMetaJson**](DocumentArtifactsDocumentMetaJson.md) |  | [optional] 
+**document_pdf** | [**DocumentArtifactsDocumentMetaJson**](DocumentArtifactsDocumentMetaJson.md) |  | [optional] 
+**document_json** | [**DocumentArtifactsDocumentMetaJson**](DocumentArtifactsDocumentMetaJson.md) |  | [optional] 
+**document_legacy_json** | [**DocumentArtifactsDocumentMetaJson**](DocumentArtifactsDocumentMetaJson.md) |  | [optional] 
+**document_md** | [**DocumentArtifactsDocumentMetaJson**](DocumentArtifactsDocumentMetaJson.md) |  | [optional] 
 **page_pdfs** | [**List[DocumentArtifactsPageItem]**](DocumentArtifactsPageItem.md) |  | [optional] [default to []]
 **page_images** | [**List[DocumentArtifactsPageItem]**](DocumentArtifactsPageItem.md) |  | [optional] [default to []]
 

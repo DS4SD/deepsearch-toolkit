@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **kind** | **object** |  | [optional] 
 **config** | [**GenAIAWSBedrockConfig**](GenAIAWSBedrockConfig.md) |  | 
-**proj_params** | [**GenAIPartialParams**](GenAIPartialParams.md) |  | [optional] 
+**proj_params** | [**GenAIAWSBedrockProjParams**](GenAIAWSBedrockProjParams.md) |  | [optional] 
 
 ## Example
 
