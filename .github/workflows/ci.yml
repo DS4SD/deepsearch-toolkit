@@ -19,7 +19,7 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-poetry
       - name: Build docs
         run: poetry run mkdocs build --verbose --clean
