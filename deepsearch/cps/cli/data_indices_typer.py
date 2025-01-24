@@ -58,7 +58,7 @@ def list(
             for index in indices
         ]
     except ValueError as e:
-        print(f"Error occurred: {e}")
+        raise RuntimeError("Could not parse index object") from e
 
     cli_output(results, output, headers="keys")
     return
