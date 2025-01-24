@@ -32,7 +32,7 @@ deepsearch = "deepsearch.cli:app"
 python = "^3.9"
 
 # Dependencies from generated packages
-urllib3 = "^1.26.8"
+urllib3 = ">=1.21.1, <3"
 six = "^1.16.0"
 certifi = "^2024.07.04"
 python-dateutil = "^2.8.2"
