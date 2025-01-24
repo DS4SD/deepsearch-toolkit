@@ -1,3 +1,9 @@
+## [v2.0.1](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v2.0.1) - 2025-01-24
+
+### Fix
+
+* Change urrlib3 dependency version ([#194](https://github.com/DS4SD/deepsearch-toolkit/issues/194)) ([`d542d6f`](https://github.com/DS4SD/deepsearch-toolkit/commit/d542d6f27247a00c53f0e869c2109db92b69923a))
+
 ## [v2.0.0](https://github.com/DS4SD/deepsearch-toolkit/releases/tag/v2.0.0) - 2025-01-17
 
 ### Feature
